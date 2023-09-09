@@ -1,0 +1,25 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Cokee.ClassService.MainWindow"
+        mc:Ignorable="d"
+        Left="1900" Top="1000"
+        Title="CokeeClassService" Height="100" Width="100"
+        WindowStartupLocation="Manual"  ShowInTaskbar="False"
+        WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True"
+        ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
+    <Grid>
+        <Image Source="/Resources/head.jpg">
+            <Image.Clip>
+                <EllipseGeometry RadiusX="50" RadiusY="50" Center="50,50" />
+            </Image.Clip>
+        </Image>
+        <ui:Card Background="White">
+            <Grid>
+                <TextBlock Text="666"></TextBlock>
+            </Grid>
+        </ui:Card>
+    </Grid>
+</Window>
