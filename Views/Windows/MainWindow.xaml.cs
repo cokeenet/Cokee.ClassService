@@ -24,6 +24,13 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
+            this.Left = SystemParameters.PrimaryScreenWidth - 200;
+            this.Top = SystemParameters.PrimaryScreenHeight - 200;
+        }
+
+        private void Click(object sender, MouseButtonEventArgs e)
+        {
+            cardPopup.IsOpen= true;
         }
     }
 }

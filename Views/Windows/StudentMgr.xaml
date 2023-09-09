@@ -4,9 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:pages="clr-namespace:Cokee.ClassService.Views.Pages"
-             Title="Settings" Width="995"
-    Height="595" ExtendsContentIntoTitleBar="True" Loaded="load" WindowBackdropType="Mica" WindowCornerPreference="Round"
+             Title="StudentMgr" Width="995"
+    Height="595" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
     <Grid>
 
@@ -15,7 +14,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:TitleBar
-            Title="CokeeDP Settings" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="False" Icon="pack://application:,,,/Image/hd1.jpg"
+            Title="学生管理" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="False" 
             ShowMaximize="False" ShowMinimize="True" UseSnapLayout="True" />
         <Grid Grid.Row="1" Margin="3,3,3,3">
             <Grid.ColumnDefinitions>
@@ -24,29 +23,24 @@
             </Grid.ColumnDefinitions>
 
             <ui:NavigationStore
-                x:Name="RootNavigation" Grid.Column="0" Margin="6,0,6,0"
-                Frame="{Binding ElementName=RootFrame}"
+               Grid.Column="0" Margin="6,0,6,0"
                 SelectedPageIndex="0">
                 <ui:NavigationStore.Items>
                     <ui:NavigationItem
-                        Content="设置" Icon="Home24"
-                        PageType="{x:Type pages:Main}" />
+                        Content="设置" Icon="Home24"/>
                     <ui:NavigationSeparator />
-                    <ui:NavigationItem Content="定时任务" Icon="ClockAlarm32" PageType="{x:Type pages:TimeTask}" />
-                    <ui:NavigationItem Content="生日提醒" Icon="FoodCake24" PageType="{x:Type pages:Birth}" />
+                    <ui:NavigationItem Content="定时任务" Icon="ClockAlarm32" />
+                    <ui:NavigationItem Content="生日提醒" Icon="FoodCake24" />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem
-                        Content="深色模式" Icon="DarkTheme24" Click="DarkMode" />
+                        Content="深色模式" Icon="DarkTheme24"/>
                     <ui:NavigationItem
-                        Content="关于" Icon="Info24"
-                        PageType="{x:Type pages:About}" />
+                        Content="关于" Icon="Info24"/>
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
             <Border
-                Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
-                <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" NavigationUIVisibility="Visible" />
-            </Border>
+                Grid.Column="1" Margin="0" CornerRadius="8,0,0,0"/>
         </Grid>
 
         <ui:Snackbar

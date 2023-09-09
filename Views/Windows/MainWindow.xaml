@@ -11,15 +11,21 @@
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True"
         ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
     <Grid>
-        <Image Source="/Resources/head.jpg">
+        <Image Source="/Resources/head.jpg" x:Name="head" MouseDown="Click">
             <Image.Clip>
                 <EllipseGeometry RadiusX="50" RadiusY="50" Center="50,50" />
             </Image.Clip>
         </Image>
-        <ui:Card Background="White">
-            <Grid>
-                <TextBlock Text="666"></TextBlock>
-            </Grid>
-        </ui:Card>
+        <Popup x:Name="cardPopup" IsOpen="True" PlacementTarget="{Binding ElementName=head}" Placement="Top">
+            <ui:Card>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ui:Button Content="BBBBBBBB"/>
+                </Grid>
+            </ui:Card>
+        </Popup>
     </Grid>
 </Window>

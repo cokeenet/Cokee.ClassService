@@ -12,12 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using Wpf.Ui.Controls;
+
 namespace Cokee.ClassService.Views.Windows
 {
     /// <summary>
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
-    public partial class StudentMgr : Window
+    public partial class StudentMgr : UiWindow
     {
         public StudentMgr()
         {
