@@ -13,14 +13,15 @@ namespace Cokee.ClassService.Views.Windows
     public partial class StudentMgr : UiWindow
     {
         public event EventHandler<bool> RandomEvent;
+        public event EventHandler<bool> AddStuEvent;
         public StudentMgr()
         {
             InitializeComponent();
         }
 
-        private void ClassSetting(object sender, RoutedEventArgs e)
+        private void AddStu(object sender, RoutedEventArgs e)
         {
-
+            AddStuEvent?.Invoke(this, true);
         }
 
         private void Random(object sender, RoutedEventArgs e)

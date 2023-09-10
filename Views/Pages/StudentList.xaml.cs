@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 
 using Wpf.Ui.Controls;
 
+using Path = System.IO.Path;
+
 namespace Cokee.ClassService.Views.Pages
 {
     public class VisibilityConverter : IValueConverter
@@ -100,7 +102,8 @@ namespace Cokee.ClassService.Views.Pages
         {
             InitializeComponent();
             Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
-            students=JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
+            if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
+            else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
             Students.ItemsSource = students;
         }
 

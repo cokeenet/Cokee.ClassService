@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Cokee.ClassService.Views.Pages;
+using Cokee.ClassService.Views.Windows;
 
 using Newtonsoft.Json;
 
@@ -35,13 +36,14 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
+            Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a,b)=> this.Visibility=Visibility.Visible;
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
             try
             {
-                string[] lines = stutb.Text.Split('\n');
+                string[] lines = stutb.Text.Split("\r");
                 List<Student> students = new List<Student>();
                 foreach (string line in lines)
                 {
