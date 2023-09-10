@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using Cokee.ClassService.Views.Windows;
+
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 namespace Cokee.ClassService
@@ -24,13 +27,45 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
-            this.Left = SystemParameters.PrimaryScreenWidth - 200;
-            this.Top = SystemParameters.PrimaryScreenHeight - 200;
+            this.Width = SystemParameters.PrimaryScreenWidth;
+            this.Height = SystemParameters.PrimaryScreenHeight;
         }
 
-        private void Click(object sender, MouseButtonEventArgs e)
+        private void MouseDown(object sender, MouseButtonEventArgs e)
         {
-            cardPopup.IsOpen= true;
+            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
+            else cardPopup.IsOpen = false;
+        }
+
+        private void StuMgr(object sender, RoutedEventArgs e)
+        {
+            new StudentMgr().Show();
+        }
+
+        private void MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void StartInk(object sender, RoutedEventArgs e)
+        {
+            if (!inkcanvas.IsEnabled) inkcanvas.IsEnabled = true;
+            else inkcanvas.IsEnabled = false;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+
         }
     }
 }

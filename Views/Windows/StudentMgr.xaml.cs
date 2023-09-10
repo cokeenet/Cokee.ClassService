@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
+using Newtonsoft.Json;
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -19,11 +8,29 @@ namespace Cokee.ClassService.Views.Windows
     /// <summary>
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
+    
+
     public partial class StudentMgr : UiWindow
     {
+        public event EventHandler<bool> RandomEvent;
         public StudentMgr()
         {
             InitializeComponent();
+        }
+
+        private void ClassSetting(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Random(object sender, RoutedEventArgs e)
+        {
+            RandomEvent?.Invoke(this, true);
+        }
+
+        private void NavigationItem_Click_2(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
