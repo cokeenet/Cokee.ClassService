@@ -20,8 +20,14 @@
             <ScrollViewer Grid.Row="2">
                 <TextBox x:Name="stutb" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"/>
             </ScrollViewer>
-            <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="3"/>
-
+            <Grid Grid.Row="3" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm" Grid.Row="3"/>
+                <ui:Button Grid.Column="1" Icon="Dismiss48" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Cancel"/>
+            </Grid>
         </Grid>
     </ui:Card>
 </UserControl>

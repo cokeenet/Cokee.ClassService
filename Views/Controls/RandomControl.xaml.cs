@@ -47,6 +47,18 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Boy_UC(object sender, RoutedEventArgs e) => AllowGirl = 1;
         private void CancelBtn(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+
+        private void numbox_TC(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null) 
+            {
+                var a = Convert.ToInt32(textBox.Text);
+                if (a >= 0) Number = a;
+            }
+
+        }
+
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
             if (Number <= 0) { Number = 0;numbox.Text = "0"; }

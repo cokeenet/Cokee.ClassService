@@ -1,22 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 using Cokee.ClassService.Views.Windows;
-
-using Wpf.Ui;
-using Wpf.Ui.Controls;
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -24,19 +11,45 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool isDragging=false;
+        private Point startPoint;
+
         public MainWindow()
         {
             InitializeComponent();
-            this.Width = Sc;
-            this.Height = SystemParameters.PrimaryScreenHeight;
+            this.Width = SystemParameters.WorkArea.Width;
+            this.Height = SystemParameters.WorkArea.Height;
+            this.Top = SystemParameters.WorkArea.Top;
+            this.Left = SystemParameters.WorkArea.Left;
         }
 
         private void MouseDown(object sender, MouseButtonEventArgs e)
         {
+            isDragging = true;
+            startPoint = e.GetPosition(sender as Grid);
+        }
+        private void mouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var grid = sender as Grid;
+                var currentPosition = e.GetPosition(grid);
+                double offsetX = currentPosition.X - startPoint.X;
+                double offsetY = currentPosition.Y - startPoint.Y;
+
+                // 更新位移变换
+                transT.X += offsetX;
+                transT.Y += offsetY;
+
+                // 更新起始点
+                startPoint = currentPosition;
+            }
+        }
+        private void Click(object sender, MouseButtonEventArgs e)
+        {
             if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
             else cardPopup.IsOpen = false;
         }
-
         private void StuMgr(object sender, RoutedEventArgs e)
         {
             new StudentMgr().Show();
@@ -67,5 +80,7 @@ namespace Cokee.ClassService
         {
 
         }
+
+        
     }
 }

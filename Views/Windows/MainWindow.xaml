@@ -18,8 +18,21 @@
                 <DrawingAttributes Color="Red" FitToCurve="True" Height="4" Width="4"/>
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
-        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,100"  Width="100" Height="100">
-            <Image Source="/Resources/head.jpg" x:Name="head" MouseDown="MouseDown" MouseUp="MouseUp">
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,100"  Width="100" Height="100" MouseDown="MouseDown" MouseUp="MouseUp" MouseMove="mouseMove" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform X="0"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Image Source="/Resources/head.jpg" x:Name="head" MouseDown="Click" RenderTransformOrigin="0.5,0.5" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform x:Name="transT"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
                 <Image.Clip>
                     <EllipseGeometry RadiusX="50" RadiusY="50" Center="50,50" />
                 </Image.Clip>

@@ -43,5 +43,7 @@ namespace Cokee.ClassService.Views.Controls
             }
             this.Visibility = Visibility.Collapsed;
         }
+
+        private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
     }
 }

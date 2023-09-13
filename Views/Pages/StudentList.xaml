@@ -23,14 +23,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ui:Card Margin="10">
+                        <ui:Card Margin="10" VerticalAlignment="Stretch">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Image Source="/Resources/head.jpg" Width="50" Height="50">
+                                <Image Source="{Binding HeadPicUrl}" Width="50" Height="50">
                                     <Image.Clip>
                                         <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
                                     </Image.Clip>

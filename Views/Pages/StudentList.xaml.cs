@@ -69,9 +69,11 @@ namespace Cokee.ClassService.Views.Pages
         public int Score { get; set; }
         public DateTime BirthDay { get; set; }
         public string? RoleStr { get; set; }
-        public int Role { get;set; }
+        public int Role { get; set; }
         public string? Desc { get; set; }
         public bool IsMinorLang { get; set; }
+        [JsonIgnore]
+        public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
         public Student(string name, int sex, DateTime birth, bool isMinorLang = false)
         {
             ID = new Random().Next(9000000);
@@ -97,6 +99,7 @@ namespace Cokee.ClassService.Views.Pages
     public partial class StudentList : UiPage
     {
         public const string DATA_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
+        public const string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass";
         List<Student> students = new List<Student>();
         public StudentList()
         {
