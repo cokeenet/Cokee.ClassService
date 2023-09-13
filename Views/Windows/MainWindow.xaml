@@ -18,7 +18,7 @@
                 <DrawingAttributes Color="Red" FitToCurve="True" Height="4" Width="4"/>
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
-        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,100,100"  Width="100" Height="100">
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,100"  Width="100" Height="100">
             <Image Source="/Resources/head.jpg" x:Name="head" MouseDown="MouseDown" MouseUp="MouseUp">
                 <Image.Clip>
                     <EllipseGeometry RadiusX="50" RadiusY="50" Center="50,50" />

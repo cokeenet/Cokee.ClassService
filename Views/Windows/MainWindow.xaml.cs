@@ -27,7 +27,7 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
-            this.Width = SystemParameters.PrimaryScreenWidth;
+            this.Width = Sc;
             this.Height = SystemParameters.PrimaryScreenHeight;
         }
 
