@@ -82,6 +82,10 @@ namespace Cokee.ClassService.Views.Pages
             BirthDay = birth;
             IsMinorLang = isMinorLang;
         }
+        public Student(string name)
+        {
+            Name = name;
+        }
         public List<Student> LoadFromFile(string path)
         {
             string json = File.ReadAllText(path);
