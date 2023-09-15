@@ -47,8 +47,7 @@ namespace Cokee.ClassService
         }
         private void Click(object sender, MouseButtonEventArgs e)
         {
-            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
-            else cardPopup.IsOpen = false;
+
         }
         private void StuMgr(object sender, RoutedEventArgs e)
         {
@@ -57,7 +56,8 @@ namespace Cokee.ClassService
 
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
-
+            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
+            else cardPopup.IsOpen = false;
         }
 
         private void StartInk(object sender, RoutedEventArgs e)

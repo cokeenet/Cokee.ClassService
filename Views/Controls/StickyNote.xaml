@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CokeeDP.Views.Controls.StickyNote"
+﻿<UserControl x:Class="CokeeClass.Views.Controls.StickyNote"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -16,7 +16,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Label x:Name="name" Content="From"/>
-            <InkCanvas x:Name="ink" EditingMode="InkAndGesture" Background="Black" Grid.Row="1">
+            <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="White" Width="4.00314960629921" Height="4.00314960629921"/>
                 </InkCanvas.DefaultDrawingAttributes>

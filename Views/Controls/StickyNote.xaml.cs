@@ -1,6 +1,8 @@
-﻿using Cokee.ClassService.Views.Pages;
+﻿using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Pages;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +22,7 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 
-namespace CokeeDP.Views.Controls
+namespace CokeeClass.Views.Controls
 {
     /// <summary>
     /// PostNote.xaml 的交互逻辑
@@ -28,15 +30,16 @@ namespace CokeeDP.Views.Controls
     public partial class StickyNote : UserControl
     {
     
-        public static readonly DependencyProperty NameProperty =
-      DependencyProperty.Register("StudentName", typeof(string), typeof(StickyNote), new PropertyMetadata(0));
+        public static new readonly DependencyProperty NameProperty =
+      DependencyProperty.Register("StudentName", typeof(string), typeof(StickyNote), new PropertyMetadata(null));
+
         public StickyNote()
         {
             InitializeComponent();
             string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink";
-            if (File.Exists(DATA_DIR + $"\\0.ink"))
+            if (File.Exists(DATA_DIR + $"\\ {NameProperty.Name}.ink"))
             {
-                FileStream fs = new FileStream(DATA_DIR + $"\\0.ink", FileMode.Open);
+                FileStream fs = new FileStream(DATA_DIR + $"\\{NameProperty.Name}.ink", FileMode.Open);
                 ink.Strokes = new StrokeCollection(fs);
                 fs.Close();
             }
