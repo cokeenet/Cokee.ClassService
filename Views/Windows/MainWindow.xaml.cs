@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -83,7 +84,9 @@ namespace Cokee.ClassService
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            List<string> list = new List<string>();
 
+            Stickys.
         }
     }
 }

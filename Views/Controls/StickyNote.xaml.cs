@@ -33,6 +33,11 @@ namespace CokeeClass.Views.Controls
         public static new readonly DependencyProperty NameProperty =
       DependencyProperty.Register("StudentName", typeof(string), typeof(StickyNote), new PropertyMetadata(null));
 
+        public string StudentName
+        {
+            get { return (string)GetValue(NameProperty); }
+            set { SetValue(NameProperty, value); }
+        }
         public StickyNote()
         {
             InitializeComponent();
