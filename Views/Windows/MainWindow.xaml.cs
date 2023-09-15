@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Cokee.ClassService.Views.Windows;
+using CokeeClass.Views.Controls;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
-using Cokee.ClassService.Views.Windows;
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isDragging=false;
+        private bool isDragging = false;
         private Point startPoint;
 
         public MainWindow()
@@ -84,9 +86,20 @@ namespace Cokee.ClassService
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
-
-            Stickys.
+            List<StickyItem> list = new List<StickyItem>();
+            if (Sclview.Visibility == Visibility.Collapsed)
+            {
+                string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink";
+                var dir = new DirectoryInfo(DATA_DIR);
+                foreach (FileInfo item in dir.GetFiles())
+                {
+                    list.Add(new StickyItem(item.Name.Replace(".ink","")));
+                }
+                Sclview.Visibility = Visibility.Visible;
+                MessageBox.Show(list.FirstOrDefault().Name);
+                Stickys.ItemsSource = list;
+            }
+            else Sclview.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -14,7 +14,7 @@ using Cokee.ClassService.Views.Windows;
 using Newtonsoft.Json;
 
 using Wpf.Ui.Controls;
-
+using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 
 namespace Cokee.ClassService.Views.Pages
@@ -82,10 +82,10 @@ namespace Cokee.ClassService.Views.Pages
             BirthDay = birth;
             IsMinorLang = isMinorLang;
         }
-        public Student(string name)
+       /* public Student(string name)
         {
             Name = name;
-        }
+        }*/
         public List<Student> LoadFromFile(string path)
         {
             string json = File.ReadAllText(path);
@@ -107,12 +107,21 @@ namespace Cokee.ClassService.Views.Pages
         List<Student> students = new List<Student>();
         public StudentList()
         {
-            InitializeComponent();
-            Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
-            if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
-            else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
-            Students.ItemsSource = students;
-        }
+            try
+            {
+                InitializeComponent();
+                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
+                if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
+                else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
+                Students.ItemsSource = students;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Clipboard.SetText(ex.ToString());
+            }
+}
 
         private void StudentList_RandomEvent(object? sender, bool e) => randomcontrol.Visibility = Visibility.Visible;
 

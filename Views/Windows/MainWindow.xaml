@@ -58,18 +58,20 @@
                 </Grid>
             </ui:Card>
         </Popup>
-        <ItemsControl x:Name="Stickys" Margin="0,0,0,442">
+        <ScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,100,0,100" HorizontalScrollBarVisibility="Auto">
+        <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,100,0,100">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="3" />
+                    <UniformGrid Columns="2" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:StickyNote  StudentName="{Binding Name}"/>
+                    <local:StickyNote Margin="10" StudentName="{Binding Name}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
         </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
