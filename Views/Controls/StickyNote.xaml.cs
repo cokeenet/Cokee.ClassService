@@ -52,7 +52,7 @@ namespace CokeeClass.Views.Controls
             InitializeComponent();
             string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink\\{StudentName}.ink";
             name.Content = StudentName;
-            MessageBox.Show(INK_FILE);
+            //MessageBox.Show(INK_FILE);
             if (File.Exists(INK_FILE))
             {
                 FileStream fs = new FileStream(INK_FILE, FileMode.Open);

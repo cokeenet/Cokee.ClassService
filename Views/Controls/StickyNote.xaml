@@ -15,8 +15,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label x:Name="name" Content="From "/>
-            <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1">
+            <Label x:Name="name" Content="{Binding}"/>
+            <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1" Tag="{Binding}">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="White" Width="4.00314960629921" Height="4.00314960629921"/>
                 </InkCanvas.DefaultDrawingAttributes>

@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
+
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -16,7 +19,7 @@ namespace Cokee.ClassService
     {
         private bool isDragging = false;
         private Point startPoint;
-
+        private Timer secondTimer = new Timer(1000);
         public MainWindow()
         {
             InitializeComponent();
@@ -24,9 +27,19 @@ namespace Cokee.ClassService
             this.Height = SystemParameters.WorkArea.Height;
             this.Top = SystemParameters.WorkArea.Top;
             this.Left = SystemParameters.WorkArea.Left;
+            secondTimer.Elapsed += SecondTimer_Elapsed;
+            secondTimer.Start();
         }
 
-        private void MouseDown(object sender, MouseButtonEventArgs e)
+        private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() => 
+            {
+                time.Text = DateTime.Now.ToString("hh:mm");
+            }));
+        }
+
+        private void mouseDown(object sender, MouseButtonEventArgs e)
         {
             isDragging = true;
             startPoint = e.GetPosition(sender as Grid);
@@ -48,7 +61,7 @@ namespace Cokee.ClassService
                 startPoint = currentPosition;
             }
         }
-        private void Click(object sender, MouseButtonEventArgs e)
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
         }
@@ -65,11 +78,18 @@ namespace Cokee.ClassService
 
         private void StartInk(object sender, RoutedEventArgs e)
         {
-            if (!inkcanvas.IsEnabled) inkcanvas.IsEnabled = true;
-            else inkcanvas.IsEnabled = false;
+            if (inkGrid.Visibility==Visibility.Collapsed)
+            {
+                inkGrid.Visibility = Visibility.Visible;
+
+            }
+            else 
+            {
+                inkGrid.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void ShowTime(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
@@ -104,7 +124,8 @@ namespace Cokee.ClassService
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-
+            if (postNote.Visibility == Visibility.Collapsed) postNote.Visibility = Visibility.Visible;
+            else postNote.Visibility = Visibility.Collapsed;
         }
     }
 }

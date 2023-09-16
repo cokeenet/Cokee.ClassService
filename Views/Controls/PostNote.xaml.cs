@@ -73,7 +73,7 @@ namespace CokeeDP.Views.Controls
                 FileStream fs = new FileStream(@$"D:\Program Files (x86)\CokeeTech\CokeeDP\ink\{stud}.ink", FileMode.OpenOrCreate);
                 ink.Strokes.Save(fs);
                 fs.Close();
-                MessageBox.Show("saved.");
+                MessageBox.Show("已保存。");
                 ink.Strokes=new StrokeCollection();
                 atu.Text = null;
                 //this.Visibility = Visibility.Collapsed;
@@ -85,7 +85,7 @@ namespace CokeeDP.Views.Controls
             }
         }
 
-        private void eraser(object sender, RoutedEventArgs e)
+        private void Eraser(object sender, RoutedEventArgs e)
         {
             if (!IsEraser)
             {
