@@ -1,18 +1,12 @@
-﻿using System;
+﻿using Cokee.ClassService.Views.Windows;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Shapes;
-
-using Cokee.ClassService.Views.Windows;
-
-using Newtonsoft.Json;
-
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
@@ -81,20 +75,7 @@ namespace Cokee.ClassService.Views.Pages
             Name = name;
             BirthDay = birth;
             IsMinorLang = isMinorLang;
-        }
-       /* public Student(string name)
-        {
-            Name = name;
-        }*/
-        public List<Student> LoadFromFile(string path)
-        {
-            string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<List<Student>>(json);
-        }
-        public void SaveToFile(string path, List<Student> students)
-        {
-            string json = JsonConvert.SerializeObject(students);
-            File.WriteAllText(path, json);
+
         }
     }
     /// <summary>
@@ -121,7 +102,7 @@ namespace Cokee.ClassService.Views.Pages
                 MessageBox.Show(ex.ToString());
                 Clipboard.SetText(ex.ToString());
             }
-}
+        }
 
         private void StudentList_RandomEvent(object? sender, bool e) => randomcontrol.Visibility = Visibility.Visible;
 
@@ -130,18 +111,18 @@ namespace Cokee.ClassService.Views.Pages
             string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2];
             List<Student> randoms = new List<Student>();
             int i = 1;
-            while (i<=Convert.ToInt32(Num))
+            while (i <= Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
                 if (AllowMLang == "0" && a.IsMinorLang) continue;
                 else if (AllowGirl == "0" && a.Sex == 0) continue;
                 else
-                { 
+                {
                     randoms.Add(a);
                     i++;
                 }
             }
-            randomres.ItemsSource=randoms;
+            randomres.ItemsSource = randoms;
             randomres.Visibility = Visibility.Visible;
         }
     }

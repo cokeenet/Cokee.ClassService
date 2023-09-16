@@ -96,7 +96,7 @@ namespace Cokee.ClassService
                     list.Add(new StickyItem(item.Name.Replace(".ink","")));
                 }
                 Sclview.Visibility = Visibility.Visible;
-                MessageBox.Show(list.FirstOrDefault().Name);
+                MessageBox.Show(list[50].Name);
                 Stickys.ItemsSource = list;
             }
             else Sclview.Visibility = Visibility.Collapsed;

@@ -40,19 +40,19 @@ namespace CokeeClass.Views.Controls
     {
     
         public static new readonly DependencyProperty NameProperty =
-      DependencyProperty.Register("StudentName", typeof(StickyItem), typeof(StickyNote), new PropertyMetadata(null));
+      DependencyProperty.Register("StudentName", typeof(string), typeof(StickyNote), new PropertyMetadata(null));
 
-        public StickyItem StudentName
+        public string StudentName
         {
-            get { return (StickyItem)GetValue(NameProperty); }
+            get { return (string)GetValue(NameProperty); }
             set { SetValue(NameProperty, value); }
         }
         public StickyNote()
         {
             InitializeComponent();
-            string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink\\{StudentName.Name}.ink";
-            name.Content = StudentName.Name;
-            //MessageBox.Show(INK_FILE);
+            string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink\\{StudentName}.ink";
+            name.Content = StudentName;
+            MessageBox.Show(INK_FILE);
             if (File.Exists(INK_FILE))
             {
                 FileStream fs = new FileStream(INK_FILE, FileMode.Open);
