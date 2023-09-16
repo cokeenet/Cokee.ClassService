@@ -29,12 +29,12 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding HeadPicUrl}" Width="50" HorizontalAlignment="Left" Margin="6,0,0,0">
+                        <Image Source="{Binding HeadPicUrl}" Width="100" HorizontalAlignment="Left" Margin="6,0,0,0" Height="100">
                             <Image.Clip>
-                                <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
+                                <EllipseGeometry RadiusX="50" RadiusY="50" Center="50,50" />
                             </Image.Clip>
                         </Image>
-                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding Name}"/>
+                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding Name}" />
                     </Grid>
 
                     <ui:CardControl Grid.Row="1" Margin="10">
