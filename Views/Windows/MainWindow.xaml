@@ -50,7 +50,7 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" Foreground="Black"/>
             </ui:Badge>
         </Grid>
-        <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" AllowsTransparency="True" Grid.RowSpan="2">
+        <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" Grid.RowSpan="2" AllowsTransparency="False">
 
             <ui:Card VerticalAlignment="Top" HorizontalAlignment="Center">
                 <Grid HorizontalAlignment="Center">
@@ -70,7 +70,7 @@
                 </Grid>
             </ui:Card>
         </Popup>
-        <ScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Margin="0,100,0,100" Visibility="Collapsed">
+        <ScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Margin="0,100,0,100" Visibility="Collapsed" Background="#F2333333">
             <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
