@@ -1,4 +1,5 @@
-﻿using Cokee.ClassService.Views.Windows;
+﻿using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Windows;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -58,12 +59,12 @@ namespace Cokee.ClassService.Views.Pages
     public class Student
     {
         public int ID { get; set; }
-        public int Sex { get; set; }
+        public int Sex { get; set; }//0 girl 1 boy
         public string Name { get; set; }
         public int Score { get; set; }
         public DateTime BirthDay { get; set; }
         public string? RoleStr { get; set; }
-        public int Role { get; set; }
+        public int Role { get; set; } //0-3
         public string? Desc { get; set; }
         public bool IsMinorLang { get; set; }
         [JsonIgnore]
@@ -124,6 +125,16 @@ namespace Cokee.ClassService.Views.Pages
             }
             randomres.ItemsSource = randoms;
             randomres.Visibility = Visibility.Visible;
+        }
+
+        private void Card_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Card card = sender as Card;
+            if (card.Tag is Student) 
+            {
+                studentInfo.Visibility = Visibility.Visible;
+                studentInfo.DataContext = card.Tag;
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.Invoke(new Action(() => 
             {
-                time.Text = DateTime.Now.ToString("hh:mm");
+                time.Text = DateTime.Now.ToString("HH:mm");
             }));
         }
 
@@ -78,14 +78,25 @@ namespace Cokee.ClassService
 
         private void StartInk(object sender, RoutedEventArgs e)
         {
-            if (inkGrid.Visibility==Visibility.Collapsed)
+            if (inkcanvas.IsEnabled==false)
             {
-                inkGrid.Visibility = Visibility.Visible;
-
+                this.Width = SystemParameters.FullPrimaryScreenWidth;
+                this.Height = SystemParameters.FullPrimaryScreenHeight;
+                this.Top = 0;
+                this.Left = 0;
+                inkcanvas.IsEnabled = true;
+                inkTool.Visibility = Visibility.Visible;
+                inkBg.Opacity = 0.01;
             }
             else 
             {
-                inkGrid.Visibility = Visibility.Collapsed;
+                this.Width = SystemParameters.WorkArea.Width;
+                this.Height = SystemParameters.WorkArea.Height;
+                this.Top = SystemParameters.WorkArea.Top;
+                this.Left = SystemParameters.WorkArea.Left;
+                inkcanvas.IsEnabled = false;
+                inkTool.Visibility = Visibility.Collapsed;
+                inkBg.Opacity = 0;
             }
         }
 
@@ -104,25 +115,25 @@ namespace Cokee.ClassService
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ShowStickys(object sender, RoutedEventArgs e)
         {
             List<StickyItem> list = new List<StickyItem>();
             if (Sclview.Visibility == Visibility.Collapsed)
             {
-                string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink";
+                string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink";
                 var dir = new DirectoryInfo(DATA_DIR);
                 foreach (FileInfo item in dir.GetFiles())
                 {
                     list.Add(new StickyItem(item.Name.Replace(".ink","")));
                 }
                 Sclview.Visibility = Visibility.Visible;
-                MessageBox.Show(list[50].Name);
+                //MessageBox.Show(list[50].Name);
                 Stickys.ItemsSource = list;
             }
             else Sclview.Visibility = Visibility.Collapsed;
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void PostNote(object sender, RoutedEventArgs e)
         {
             if (postNote.Visibility == Visibility.Collapsed) postNote.Visibility = Visibility.Visible;
             else postNote.Visibility = Visibility.Collapsed;

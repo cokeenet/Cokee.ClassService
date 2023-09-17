@@ -5,17 +5,25 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.0.81.23259</AssemblyVersion>
-    <FileVersion>1.0.81.23259</FileVersion>
+    <AssemblyVersion>1.0.90.23260</AssemblyVersion>
+    <FileVersion>1.0.90.23260</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>head.ico</ApplicationIcon>
+    <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
+    <Description>A Student Manage Software for your Classroom</Description>
+    <Authors>Cokee</Authors>
+    <Title>Cokee.ClassService</Title>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="head.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog" Version="3.0.1" />
     <PackageReference Include="Serilog.Sink.AppCenter" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="VPet-Simulator.Core" Version="1.0.5.1" />
     <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
 

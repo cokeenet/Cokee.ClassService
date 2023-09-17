@@ -31,6 +31,7 @@ namespace Cokee.ClassService
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception,"发生错误");
+
             e.Handled = true;
         }
     }

@@ -49,8 +49,8 @@ namespace CokeeClass.Views.Controls
         }
         public StickyNote()
         {
-            InitializeComponent();
-            string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeDP\\ink\\{StudentName}.ink";
+            InitializeComponent();   
+            string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink\\{StudentName}.ink";
             name.Content = StudentName;
             //MessageBox.Show(INK_FILE);
             if (File.Exists(INK_FILE))

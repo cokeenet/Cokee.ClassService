@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" 
-             Height="100" Width="800">
-    <ui:Card x:Name="card" VerticalAlignment="Stretch">
-        <Grid Margin="5" Height="60">
+             Height="100" Width="940">
+    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="18">
+        <Grid x:Name="mainGrid" Margin="5" Height="60">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -17,13 +17,27 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ui:Button Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Appearance="Primary" Content="选择" Margin="5" FontSize="18"/>
-            <ui:Button Icon="Pen24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="笔" Grid.Column="1" Margin="5" FontSize="18"/>
-            <ui:Button Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="橡皮" Grid.Column="2" Margin="5" FontSize="18"/>
-            <ui:Button Icon="Eraser24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Grid.Column="3" Margin="5" FontSize="18"/>
-            <ui:Button Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" FontSize="18"/>
-
+            <ui:Button x:Name="curBtn" Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Cursor" IconFilled="True"/>
+            <ui:Button x:Name="penBtn" Icon="Pen24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Appearance="Primary"  Content="笔" Grid.Column="1" Margin="5" Click="Button_Click" Tag="Pen" IconFilled="True"/>
+            <ui:Button x:Name="eraserBtn" Icon="Eraser24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="橡皮" Grid.Column="2" Margin="5" Click="Button_Click" Tag="Eraser" IconFilled="True"/>
+            <ui:Button x:Name="backBtn" Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Grid.Column="3" Margin="5" Click="Button_Click" Tag="Back" IconFilled="True"/>
+            <ui:Button x:Name="moreBtn" Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More" IconFilled="True"/>
+            <ui:Button x:Name="exitBtn" Icon="ArrowExit20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit" IconFilled="True"/>
+            <Popup x:Name="penMenu" IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="True" PopupAnimation="Scroll">
+                <ui:Card>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="色板"/>
+                        <ui:VirtualizingItemsControl ItemsSource="{Binding BrushCollection}"/>
+                    </Grid>
+                </ui:Card>
+            </Popup>
+            
         </Grid>
     </ui:Card>
 

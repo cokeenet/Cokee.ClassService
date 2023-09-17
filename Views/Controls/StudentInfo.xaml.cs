@@ -34,5 +34,30 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+
+        private void sexCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ToggleSwitch_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
