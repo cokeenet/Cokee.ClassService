@@ -30,6 +30,7 @@ namespace CokeeDP.Views.Controls
     public partial class PostNote : UserControl
     {
         public bool IsEraser=false;
+        public const string INK_DIR = @"D:\Program Files (x86)\CokeeTech\CokeeClass\ink";
         public Student stu=null;
         public string stud = "";
         List<Student> students = new List<Student>();
@@ -68,12 +69,12 @@ namespace CokeeDP.Views.Controls
             //  if (stu == null) return;
             try
             {
-
-
-                FileStream fs = new FileStream(@$"D:\Program Files (x86)\CokeeTech\CokeeDP\ink\{stud}.ink", FileMode.OpenOrCreate);
+                if (!Directory.Exists(INK_DIR)) Directory.CreateDirectory(INK_DIR);
+                if (string.IsNullOrEmpty(stud)) MessageBox.Show("未填写姓名。");
+                FileStream fs = new FileStream(@$"{INK_DIR}\{stud}.ink", FileMode.OpenOrCreate);
                 ink.Strokes.Save(fs);
                 fs.Close();
-                MessageBox.Show("saved.");
+                MessageBox.Show("已保存。");
                 ink.Strokes=new StrokeCollection();
                 atu.Text = null;
                 //this.Visibility = Visibility.Collapsed;
@@ -85,7 +86,7 @@ namespace CokeeDP.Views.Controls
             }
         }
 
-        private void eraser(object sender, RoutedEventArgs e)
+        private void Eraser(object sender, RoutedEventArgs e)
         {
             if (!IsEraser)
             {
@@ -101,8 +102,15 @@ namespace CokeeDP.Views.Controls
         {
             AutoSuggestBox atu=sender as AutoSuggestBox;
             atu.Text=atu.Text.Trim();
-            //MessageBox.Show(atu.Text.Trim());
             stud=atu.Text.Trim();
+            if (File.Exists(@$"{INK_DIR}\{stud}.ink"))
+            {
+                if (MessageBox.Show("文件已存在。确认覆盖？", "FileExist", MessageBoxButton.OKCancel) != MessageBoxResult.OK) 
+                { 
+                    atu.Text = "";
+                    stud = "";
+                }
+            }
            /* foreach (Student item in students)
             {
                 MessageBox.Show(atu.Text.Trim());

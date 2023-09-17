@@ -4,10 +4,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="500">
+             mc:Ignorable="d" Height="400" Width="500"
+             d:DesignHeight="600" DataContext="{Binding Student}">
     <ui:Card VerticalAlignment="Stretch">
-        <Grid Margin="0,10,0,0">
+        <Grid VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -15,42 +15,89 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Content="学生信息" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" />
-            <Label HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" />
-            <ScrollViewer Grid.Row="2" d:DataContext="{d:SampleData}">
+            <Label HorizontalAlignment="Center" Content="{Binding ID}" d:Content="00000" ContentStringFormat="ID {0}" FontSize="14" VerticalAlignment="Center" Grid.Row="1" />
+            <ScrollViewer Grid.Row="2" >
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding HeadPicUrl}" Width="50" HorizontalAlignment="Left" Margin="6,0,0,0">
+                        <Image Source="/Resources/head.jpg" Width="80" HorizontalAlignment="Left" Margin="5" Height="80" Grid.RowSpan="2" MouseDown="Image_MouseDown">
                             <Image.Clip>
-                                <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
+                                <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                             </Image.Clip>
                         </Image>
-                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding Name}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="43.78"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="姓名" FontSize="16" VerticalAlignment="Bottom" Margin="5"/>
+                            <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding Name}" Grid.Row="0" />
+                            <Label Content="简介" FontSize="16" VerticalAlignment="Bottom" Margin="5" Grid.Row="1"/>
+                            <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding Desc}" Grid.Row="1" />
+                        </Grid>
                     </Grid>
 
-                    <ui:CardControl Grid.Row="1" Margin="10">
-                        
+                    <ui:CardControl Grid.Row="1" Margin="10" Icon="People28">
+                        <ui:CardControl.Header>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="性别"/>
+                        </ui:CardControl.Header>
+                        <ComboBox x:Name="sexCombo" SelectionChanged="ComboBoxSelect" SelectedIndex="{Binding Sex}" Tag="Sex">
+                            <ComboBoxItem Content="男"/>
+                            <ComboBoxItem Content="女"/>
+                        </ComboBox>
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="1" Margin="10"/>
+                    <ui:CardControl Grid.Row="2" Margin="10" Icon="Notebook32">
+                        <ui:CardControl.Header>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="职位"/>
+                        </ui:CardControl.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ui:TextBox LostFocus="TextBox_LostFocus" Margin="0,0,5,0" MinWidth="180" Text="{Binding RoleStr}"/>
+                            <ComboBox x:Name="levelCombo" SelectionChanged="ComboBoxSelect" Grid.Column="1" SelectedIndex="{Binding Role}" Tag="Role">
+                                <ComboBoxItem Content="无职位"/>
+                                <ComboBoxItem Content="Level 1"/>
+                                <ComboBoxItem Content="Level 2"/>
+                                <ComboBoxItem Content="Level 3"/>
+                            </ComboBox>
+                        </Grid>
+                    </ui:CardControl>
+                    <ui:CardControl Grid.Row="3" Margin="10" Icon="FoodCake24">
+                        <ui:CardControl.Header>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="生日"/>
+                        </ui:CardControl.Header>
+                        <DatePicker MinWidth="100" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
+                    </ui:CardControl>
+                    <ui:CardControl Grid.Row="4" Margin="10,0,10,0" Icon="LocalLanguage28">
+                        <ui:CardControl.Header>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="小语种"/>
+                        </ui:CardControl.Header>
+                        <ui:ToggleSwitch IsChecked="{Binding IsMinorLang}" Click="ToggleSwitch_Click"/>
+                    </ui:CardControl>
+
                 </Grid>
             </ScrollViewer>
-            <Grid Grid.Row="3" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm" Grid.Row="3" />
-                <ui:Button Grid.Column="1" Icon="Dismiss48" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Cancel" />
-            </Grid>
+            <ui:Button Grid.Row="3" Content="保存" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm" />
         </Grid>
     </ui:Card>
 </UserControl>

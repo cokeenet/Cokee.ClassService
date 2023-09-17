@@ -23,7 +23,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ui:Card Margin="10" VerticalAlignment="Stretch">
+                        <ui:Card Margin="10" VerticalAlignment="Stretch" Tag="{Binding}" MouseDown="Card_MouseDown">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -46,5 +46,6 @@
         <Controls:RandomControl x:Name="randomcontrol" Background="#F2333333" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
         <Controls:RandomResult x:Name="randomres" Background="#F2333333" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:NewStudent Background="#F2333333" Width="500" Height="400" Visibility="Collapsed"/>
+        <Controls:StudentInfo x:Name="studentInfo" Background="#F2333333"  Width="500" Height="400" Visibility="Collapsed"/>
     </Grid>
 </ui:UiPage>
