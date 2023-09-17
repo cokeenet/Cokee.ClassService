@@ -38,21 +38,18 @@ namespace CokeeClass.Views.Controls
     }
     public partial class StickyNote : UserControl
     {
-    
-        public static new readonly DependencyProperty NameProperty =
-      DependencyProperty.Register("StudentName", typeof(string), typeof(StickyNote), new PropertyMetadata(null));
-
-        public string StudentName
-        {
-            get { return (string)GetValue(NameProperty); }
-            set { SetValue(NameProperty, value); }
-        }
+        
         public StickyNote()
         {
-            InitializeComponent();   
-            string INK_FILE = $"D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink\\{StudentName}.ink";
-            name.Content = StudentName;
-            //MessageBox.Show(INK_FILE);
+            InitializeComponent();
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            string stu = e.NewValue.ToString();
+            //MessageBox.Show();
+            name.Content = stu;
+            string INK_FILE=@$"D:\Program Files (x86)\CokeeTech\CokeeClass\ink\{stu}.ink";
             if (File.Exists(INK_FILE))
             {
                 FileStream fs = new FileStream(INK_FILE, FileMode.Open);
@@ -60,7 +57,5 @@ namespace CokeeClass.Views.Controls
                 fs.Close();
             }
         }
-
-
     }
 }

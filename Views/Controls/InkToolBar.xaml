@@ -26,16 +26,29 @@
             <ui:Button x:Name="moreBtn" Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More" IconFilled="True"/>
             <ui:Button x:Name="exitBtn" Icon="ArrowExit20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit" IconFilled="True"/>
             <Popup x:Name="penMenu" IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="True" PopupAnimation="Scroll">
-                <ui:Card>
+                <ui:Card HorizontalAlignment="Left" VerticalAlignment="Stretch" d:LayoutOverrides="VerticalAlignment">
                     <Grid>
-                        <Grid.RowDefinitions>
+                        <d:Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
-                        </Grid.RowDefinitions>
+                        </d:Grid.RowDefinitions>
                         <Label Content="色板"/>
-                        <ui:VirtualizingItemsControl ItemsSource="{Binding BrushCollection}"/>
+                        <ItemsControl x:Name="color" d:ItemsSource="{d:SampleData ItemCount=9}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}" d:Row="1">
+                            <d:ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </d:ItemsControl.ItemsPanel>
+                            <d:ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ui:Button Background="Red" Width="100" Height="40" Margin="5"/>
+                                </DataTemplate>
+                            </d:ItemsControl.ItemTemplate>
+
+                        </ItemsControl>
                     </Grid>
                 </ui:Card>
+
             </Popup>
             
         </Grid>

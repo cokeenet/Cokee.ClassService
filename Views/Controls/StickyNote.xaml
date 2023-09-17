@@ -5,18 +5,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CokeeDP.Views.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="290" d:DesignWidth="480">
-
-        <ui:Card VerticalAlignment="Stretch">
+             mc:Ignorable="d" DataContext="{Binding Name}" DataContextChanged="UserControl_DataContextChanged">
+    <ui:Card VerticalAlignment="Stretch">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label x:Name="name" Content="{Binding}"/>
-            <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1" Tag="{Binding}">
+            <Label x:Name="name" Content="{Binding Name}" ContentStringFormat="From {0}"/>
+            <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1" Width="470" Height="300">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="White" Width="4.00314960629921" Height="4.00314960629921"/>
                 </InkCanvas.DefaultDrawingAttributes>

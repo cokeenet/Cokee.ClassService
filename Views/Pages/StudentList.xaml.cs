@@ -67,7 +67,6 @@ namespace Cokee.ClassService.Views.Pages
         public int Role { get; set; } //0-3
         public string? Desc { get; set; }
         public bool IsMinorLang { get; set; }
-        [JsonIgnore]
         public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
         public Student(string name, int sex, DateTime birth, bool isMinorLang = false)
         {
@@ -93,6 +92,7 @@ namespace Cokee.ClassService.Views.Pages
             {
                 InitializeComponent();
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
+               // Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().EditStudent += StudentList_RandomEvent;
                 if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
                 else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
                 Students.ItemsSource = students;

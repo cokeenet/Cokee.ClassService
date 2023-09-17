@@ -39,8 +39,10 @@ namespace Cokee.ClassService.Views.Controls
         public InkToolBar()
         {
             InitializeComponent();
+
             if(inkCanvas!=null)
             {
+                inkCanvas.EraserShape = new RectangleStylusShape(1000, 1000);
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -59,7 +61,7 @@ namespace Cokee.ClassService.Views.Controls
                     break;
                 case "Eraser":
                     SetBtnState(eraserBtn);
-                    inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                    inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                     break;
                 case "Back":
                     inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count-1);
@@ -80,6 +82,11 @@ namespace Cokee.ClassService.Views.Controls
                 button.Appearance = ControlAppearance.Secondary;
             }
             btn.Appearance = ControlAppearance.Primary;
+        }
+
+        private void ListView_Selected(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
