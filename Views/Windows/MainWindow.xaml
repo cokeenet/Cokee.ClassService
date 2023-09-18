@@ -71,7 +71,7 @@
             </ui:Card>
         </Popup>
         <ScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Margin="0,100,0,100" Visibility="Collapsed" Background="#F2333333">
-            <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}">
+            <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}" Background="#F2333333">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
