@@ -145,16 +145,21 @@ namespace Cokee.ClassService.Views.Pages
 
         private void StudentInfo_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Student stu = e.NewValue as Student;
+            Student stu = e.NewValue as Student, stu1 = null;
             MessageBox.Show(e.NewValue.ToString());
+            // students.
             foreach (var item in students)
             {
-                if (item.ID == stu.ID) 
+                if (item.ID == stu.ID)
                 {
-                    students.Remove(item);
-                    students.Add(stu);
-                    SaveData();
+                    stu1 = item;
                 }
+            }
+            if (stu1 != null)
+            {
+                students.Remove(stu1);
+                students.Add(stu);
+                MessageBox.Show("saved.");
             }
         }
     }
