@@ -1,5 +1,4 @@
-﻿using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
+﻿using Cokee.ClassService.Views.Windows;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -92,7 +91,7 @@ namespace Cokee.ClassService.Views.Pages
             {
                 InitializeComponent();
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
-               // Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().EditStudent += StudentList_RandomEvent;
+                // Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().EditStudent += StudentList_RandomEvent;
                 if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
                 else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
                 Students.ItemsSource = students;
@@ -107,6 +106,12 @@ namespace Cokee.ClassService.Views.Pages
 
         private void StudentList_RandomEvent(object? sender, bool e) => randomcontrol.Visibility = Visibility.Visible;
 
+        public void SaveData()
+        {
+            string json = JsonConvert.SerializeObject(students);
+            File.WriteAllText(DATA_FILE, json);
+            MessageBox.Show("data saved.");
+        }
         private void RandomStart(object sender, string e)
         {
             string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2];
@@ -130,10 +135,26 @@ namespace Cokee.ClassService.Views.Pages
         private void Card_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Card card = sender as Card;
-            if (card.Tag is Student) 
+            if (card.Tag is Student)
             {
                 studentInfo.Visibility = Visibility.Visible;
                 studentInfo.DataContext = card.Tag;
+                studentInfo.DataContextChanged += StudentInfo_DataContextChanged;
+            }
+        }
+
+        private void StudentInfo_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Student stu = e.NewValue as Student;
+            MessageBox.Show(e.NewValue.ToString());
+            foreach (var item in students)
+            {
+                if (item.ID == stu.ID) 
+                {
+                    students.Remove(item);
+                    students.Add(stu);
+                    SaveData();
+                }
             }
         }
     }

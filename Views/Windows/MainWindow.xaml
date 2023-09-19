@@ -18,7 +18,7 @@
         <Grid x:Name="inkGrid">
             <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False">
                 <InkCanvas.DefaultDrawingAttributes>
-                    <DrawingAttributes Color="Red" FitToCurve="True" Height="4" Width="4"/>
+                    <DrawingAttributes Color="Red" Height="4" Width="4"/>
                 </InkCanvas.DefaultDrawingAttributes>
                 <InkCanvas.Background>
                     <SolidColorBrush x:Name="inkBg" Color="White" Opacity="0.00" />
@@ -63,7 +63,7 @@
                     </Grid.RowDefinitions>
                     <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Center"/>
                     <ui:Button Content="快速批注" Icon="Pen48" Grid.Row="1" Margin="5" Click="StartInk" HorizontalAlignment="Center"/>
-                    <ui:Button Content="显示时间" Icon="Clock32" Grid.Row="2" Margin="5" HorizontalAlignment="Center" Click="ShowTime"/>
+                    <ui:Button Content="Coffine" Icon="DrinkCoffee24" Grid.Row="2" Margin="5" HorizontalAlignment="Center" MouseRightButtonDown="ShowTime"/>
                     <ui:Button Content="显示便利贴" Icon="Note48" Grid.Row="3" Margin="5" Click="ShowStickys" HorizontalAlignment="Center"/>
                     <ui:Button Content="添加便利贴" Icon="NoteAdd48" Grid.Row="4" Margin="5" Click="PostNote" HorizontalAlignment="Center"/>
 
@@ -85,6 +85,6 @@
 
             </ItemsControl>
         </ScrollViewer>
-        <Controls:PostNote x:Name="postNote" Margin="710,325,710,265" Visibility="Collapsed"/>
+        <Controls:PostNote x:Name="postNote" Visibility="Collapsed" Background="#F2333333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Window>

@@ -135,6 +135,7 @@ namespace Cokee.ClassService
 
         private void PostNote(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show(postNote.Visibility.ToString());
             if (postNote.Visibility == Visibility.Collapsed) postNote.Visibility = Visibility.Visible;
             else postNote.Visibility = Visibility.Collapsed;
         }

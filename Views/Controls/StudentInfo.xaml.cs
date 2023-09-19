@@ -36,7 +36,7 @@ namespace Cokee.ClassService.Views.Controls
         public StudentInfo()
         {
             InitializeComponent();
-            if(DataContext!=null&&DataContext is Student) stu = DataContext as Student;
+            //if(DataContext!=null&&DataContext is Student) stu = DataContext as Student;
         }
         private void Confirm(object sender, RoutedEventArgs e)
         {
@@ -48,7 +48,8 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBoxSelect(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox combo = sender as ComboBox;
+           /* ComboBox combo = sender as ComboBox;
+            if(combo != null&&combo.SelectedIndex!=-1)
             switch (combo.Tag.ToString())
             {
                 case "Sex":
@@ -57,14 +58,14 @@ namespace Cokee.ClassService.Views.Controls
                 case "Role":
                     stu.Role = combo.SelectedIndex;
                     break;
-            }
+            }*/
             
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox text = sender as TextBox;
-            stu.RoleStr = text.Text;
+          //  stu.RoleStr = text.Text;
         }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
@@ -83,13 +84,13 @@ namespace Cokee.ClassService.Views.Controls
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             DatePicker datePicker = sender as DatePicker;
-            if(datePicker.SelectedDate!=null) stu.BirthDay = (DateTime)datePicker.SelectedDate;
+            //if(datePicker.SelectedDate!=null) stu.BirthDay = (DateTime)datePicker.SelectedDate;
         }
 
         private void ToggleSwitch_Click(object sender, RoutedEventArgs e)
         {
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            stu.IsMinorLang = (bool)toggleSwitch.IsChecked;
+            //stu.IsMinorLang = (bool)toggleSwitch.IsChecked;
         }
     }
 }
