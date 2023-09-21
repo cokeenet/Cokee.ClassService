@@ -8,6 +8,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Cokee.ClassService
@@ -48,8 +49,8 @@ namespace Cokee.ClassService
         {
             if (isDragging && e.LeftButton == MouseButtonState.Pressed)
             {
-                var grid = sender as Grid;
-                var currentPosition = e.GetPosition(grid);
+                //var grid = sender as Grid;
+                var currentPosition = e.GetPosition(floatGrid);
                 double offsetX = currentPosition.X - startPoint.X;
                 double offsetY = currentPosition.Y - startPoint.Y;
 
@@ -72,6 +73,11 @@ namespace Cokee.ClassService
 
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
+            DoubleAnimation doubleAnimation=new DoubleAnimation();
+            doubleAnimation.Duration = new Duration(new TimeSpan(10000));
+            doubleAnimation.EasingFunction = new CircleEase();
+            doubleAnimation.To= 360;
+            rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
             else cardPopup.IsOpen = false;
         }
