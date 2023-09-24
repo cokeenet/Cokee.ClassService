@@ -124,7 +124,7 @@ namespace Cokee.ClassService
                 var pos = e.GetPosition(this);
                 var dp = pos - startPoint;
                 //var transform = c.RenderTransform as TranslateTransform;
-                if (_mouseDownControlPosition.X + dp.X >= 0 || _mouseDownControlPosition.Y + dp.Y >= 0) MouseUp(null,null);
+                //if (_mouseDownControlPosition.X + dp.X <= 0 || _mouseDownControlPosition.Y + dp.Y <= 0) MouseUp(null,null);
                 transT.X = _mouseDownControlPosition.X + dp.X;
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
