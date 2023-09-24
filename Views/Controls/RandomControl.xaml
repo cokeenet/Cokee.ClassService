@@ -6,15 +6,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400">
+             Height="300" d:DesignWidth="400">
     <ui:Card VerticalAlignment="Stretch">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Content="请选择人数" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
         <Grid Grid.Row="1">
@@ -24,16 +24,18 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ui:Button Icon="Subtract48" HorizontalAlignment="Right" Margin="10" FontSize="36" Click="SubBtn"/>
-            <TextBox x:Name="numbox" Grid.Column="1" Margin="5" Text="0" FontSize="36" TextAlignment="Center" InputScope="Number" TextChanged="numbox_TC"/>
+            <TextBox x:Name="numbox" Grid.Column="1" Margin="5" Text="1" FontSize="36" TextAlignment="Center" InputScope="Number" TextChanged="numbox_TC"/>
             <ui:Button Icon="Add48" Grid.Column="2" Margin="10" FontSize="36" Click="AddBtn"/>
         </Grid>
             <Grid Grid.Row="2" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <CheckBox Content="不抽小语种" HorizontalAlignment="Center" Checked="MLang_C" Unchecked="MLang_UC"/>
                 <CheckBox Grid.Column="1" Content="只抽男生" HorizontalAlignment="Center" Checked="Boy_C" Unchecked="Boy_UC"/>
+                <CheckBox Grid.Column="2" Content="允许重复" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
             </Grid>
             <Grid Grid.Row="3" Margin="5">
                 <Grid.ColumnDefinitions>

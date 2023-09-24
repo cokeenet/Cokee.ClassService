@@ -7,7 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+
+using Clipboard = Wpf.Ui.Common.Clipboard;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 
@@ -40,13 +44,17 @@ namespace Cokee.ClassService.Views.Pages
         {
             int role = (int)value;
 
-            if (role == 1)
+            switch (role)
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                case 0:
+                    return ControlAppearance.Transparent;
+                case 1:
+                    return ControlAppearance.Secondary;
+                case 2:
+                    return ControlAppearance.Success;
+                case 3:
+                    return ControlAppearance.Danger;
+                default: return ControlAppearance.Info;
             }
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -65,6 +73,7 @@ namespace Cokee.ClassService.Views.Pages
         public string? RoleStr { get; set; }
         public int Role { get; set; } //0-3
         public string? Desc { get; set; }
+        public string? QQ { get; set; }
         public bool IsMinorLang { get; set; }
         public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
         public Student(string name, int sex, DateTime birth, bool isMinorLang = false)
@@ -91,9 +100,10 @@ namespace Cokee.ClassService.Views.Pages
             {
                 InitializeComponent();
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
-                // Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().EditStudent += StudentList_RandomEvent;
+                studentInfo.EditStudent += StudentInfo_EditStudent;
                 if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
                 else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
+                students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
                 Students.ItemsSource = students;
 
             }
@@ -104,22 +114,31 @@ namespace Cokee.ClassService.Views.Pages
             }
         }
 
+       
+
         private void StudentList_RandomEvent(object? sender, bool e) => randomcontrol.Visibility = Visibility.Visible;
 
         public void SaveData()
         {
+            students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+            foreach (var item in students)
+            {
+                if (item.QQ != null&&item.QQ.Length >= 6) 
+                    item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
+            }
             string json = JsonConvert.SerializeObject(students);
             File.WriteAllText(DATA_FILE, json);
-            MessageBox.Show("data saved.");
+            MessageBox.Show("数据已保存.");
         }
         private void RandomStart(object sender, string e)
         {
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2];
+            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2],AllowExist= e.Split("|")[3];
             List<Student> randoms = new List<Student>();
             int i = 1;
             while (i <= Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
+                if (randoms.Exists(f => f.Name == a.Name) && AllowExist == "0") continue;
                 if (AllowMLang == "0" && a.IsMinorLang) continue;
                 else if (AllowGirl == "0" && a.Sex == 0) continue;
                 else
@@ -139,27 +158,18 @@ namespace Cokee.ClassService.Views.Pages
             {
                 studentInfo.Visibility = Visibility.Visible;
                 studentInfo.DataContext = card.Tag;
-                studentInfo.DataContextChanged += StudentInfo_DataContextChanged;
             }
         }
-
-        private void StudentInfo_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void StudentInfo_EditStudent(object? sender, Student e)
         {
-            Student stu = e.NewValue as Student, stu1 = null;
-            MessageBox.Show(e.NewValue.ToString());
-            // students.
-            foreach (var item in students)
+            Student stu1 = null;
+            //MessageBox.Show(e.RoleStr.ToString());
+            int index = students.FindIndex(f => f.ID == e.ID);
+            if (index!=-1)
             {
-                if (item.ID == stu.ID)
-                {
-                    stu1 = item;
-                }
-            }
-            if (stu1 != null)
-            {
-                students.Remove(stu1);
-                students.Add(stu);
-                MessageBox.Show("saved.");
+                students[index] = e;
+                SaveData();
+                //MessageBox.Show("saved.");
             }
         }
     }

@@ -11,14 +11,16 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Content="学生信息" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" />
             <Label HorizontalAlignment="Center" Content="{Binding ID}" d:Content="00000" ContentStringFormat="ID {0}" FontSize="14" VerticalAlignment="Center" Grid.Row="1" />
-            <ScrollViewer Grid.Row="2" >
+            <ScrollViewer Grid.Row="2" Grid.RowSpan="2" >
                 <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -34,7 +36,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding HeadPicUrl,Mode=TwoWay}" Width="80" HorizontalAlignment="Left" Margin="5" Height="80" Grid.RowSpan="2" MouseDown="Image_MouseDown">
+                        <Image Source="{Binding HeadPicUrl,Mode=TwoWay}" Width="80" HorizontalAlignment="Left" Margin="5" Height="80" Grid.RowSpan="2">
                             <Image.Clip>
                                 <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                             </Image.Clip>
@@ -59,7 +61,7 @@
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="性别"/>
                         </ui:CardControl.Header>
-                        <ComboBox x:Name="sexCombo" SelectionChanged="ComboBoxSelect" SelectedIndex="{Binding Sex,Mode=TwoWay}" Tag="Sex">
+                        <ComboBox x:Name="sexCombo" SelectedIndex="{Binding Sex,Mode=TwoWay}" Tag="Sex">
                             <ComboBoxItem Content="女"/>
                             <ComboBoxItem Content="男"/>
                         </ComboBox>
@@ -73,8 +75,8 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <ui:TextBox LostFocus="TextBox_LostFocus" Margin="0,0,5,0" MinWidth="180" Text="{Binding RoleStr,Mode=TwoWay}"/>
-                            <ComboBox x:Name="levelCombo" SelectionChanged="ComboBoxSelect" Grid.Column="1" SelectedIndex="{Binding Role,Mode=TwoWay}" Tag="Role">
+                            <ui:TextBox Margin="0,0,5,0" MinWidth="180" Text="{Binding RoleStr,Mode=TwoWay}"/>
+                            <ComboBox x:Name="levelCombo" Grid.Column="1" SelectedIndex="{Binding Role,Mode=TwoWay}" Tag="Role">
                                 <ComboBoxItem Content="无职位"/>
                                 <ComboBoxItem Content="Level 1"/>
                                 <ComboBoxItem Content="Level 2"/>
@@ -86,18 +88,29 @@
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="生日"/>
                         </ui:CardControl.Header>
-                        <DatePicker MinWidth="100" SelectedDate="{Binding BirthDay,Mode=TwoWay}" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
+                        <DatePicker MinWidth="100" SelectedDate="{Binding BirthDay,Mode=TwoWay}"/>
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="4" Margin="10,0,10,0" Icon="LocalLanguage28">
+                    <ui:CardControl Grid.Row="4" Margin="10" Icon="Chat48">
+                        
+                        <ui:CardControl.Header>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock FontSize="13" FontWeight="Medium" Text="QQ"/>
+                                <TextBlock
+                        FontSize="12" Opacity="0.7" Text="将使用QQ头像" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ui:TextBox Text="{Binding QQ}" MinWidth="150"/>
+                    </ui:CardControl>
+                    <ui:CardControl Grid.Row="5" Margin="10" Icon="LocalLanguage28">
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="小语种"/>
                         </ui:CardControl.Header>
-                        <ui:ToggleSwitch IsChecked="{Binding IsMinorLang,Mode=TwoWay}" Click="ToggleSwitch_Click"/>
+                        <ui:ToggleSwitch IsChecked="{Binding IsMinorLang,Mode=TwoWay}" />
                     </ui:CardControl>
 
                 </Grid>
             </ScrollViewer>
-            <ui:Button Grid.Row="3" Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm" />
+            <ui:Button Grid.Row="4" Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10" Click="Confirm" />
         </Grid>
     </ui:Card>
 </UserControl>

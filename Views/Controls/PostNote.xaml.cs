@@ -105,11 +105,12 @@ namespace CokeeDP.Views.Controls
             stud=atu.Text.Trim();
             if (File.Exists(@$"{INK_DIR}\{stud}.ink"))
             {
-                if (MessageBox.Show("文件已存在。确认覆盖？", "FileExist", MessageBoxButton.OKCancel) != MessageBoxResult.OK) 
+                if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", MessageBoxButton.OKCancel) != MessageBoxResult.OK) 
                 { 
                     atu.Text = "";
                     stud = "";
                 }
+                else File.Move(@$"{INK_DIR}\{stud}.ink", @$"{INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
             }
            /* foreach (Student item in students)
             {

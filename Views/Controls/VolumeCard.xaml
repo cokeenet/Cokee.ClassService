@@ -1,0 +1,30 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Cokee.ClassService.Views.Controls.VolumeCard"
+    Height="140" Width="290"
+             mc:Ignorable="d">
+    <ui:Card x:Name="audioCard" VerticalAlignment="Stretch">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ui:SymbolIcon Symbol="Speaker248" Margin="5"/>
+            <TextBlock x:Name="spk" Text="扬声器" Grid.Column="1" Margin="5" MaxWidth="200"/>
+            <TextBlock x:Name="vol" Text="--%" Margin="5" Grid.Row="1" MaxWidth="40"/>
+            <Slider x:Name="slider" Grid.Row="1" Margin="5" Maximum="100" ValueChanged="SliderChanged" Grid.Column="1" MinWidth="200"/>
+            <ui:Button Grid.Row="2" Icon="Dismiss48" HorizontalAlignment="Right" Grid.Column="1" Margin="5" Click="Button_Click"/>
+        </Grid>
+    </ui:Card>
+
+
+</UserControl>

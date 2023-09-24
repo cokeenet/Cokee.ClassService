@@ -28,7 +28,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class InkToolBar : UserControl
     {
-        public static new readonly DependencyProperty InkCanvasProperty =
+        public static readonly DependencyProperty InkCanvasProperty =
      DependencyProperty.Register("inkCanvas", typeof(InkCanvas), typeof(InkToolBar), new PropertyMetadata(null));
         public InkCanvas inkCanvas
         {
@@ -52,15 +52,20 @@ namespace Cokee.ClassService.Views.Controls
             {
                 case "Cursor":
                     SetBtnState(curBtn);
-                    inkCanvas.EditingMode = InkCanvasEditingMode.Select;
+                    inkCanvas.IsEnabled = false;
+                    inkCanvas.Background.Opacity = 0;
                     break;
                 case "Pen":
+                    inkCanvas.IsEnabled = true;
+                    inkCanvas.Background.Opacity = 0.01;
                     if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
                     else SetBtnState(penBtn);
                     inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                     break;
                 case "Eraser":
                     SetBtnState(eraserBtn);
+                    inkCanvas.IsEnabled = true;
+                    inkCanvas.Background.Opacity = 0.01;
                     inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                     break;
                 case "Back":
@@ -88,5 +93,7 @@ namespace Cokee.ClassService.Views.Controls
         {
 
         }
+
+        private void ClearScr(object sender, MouseButtonEventArgs e) => inkCanvas.Strokes.Clear();
     }
 }

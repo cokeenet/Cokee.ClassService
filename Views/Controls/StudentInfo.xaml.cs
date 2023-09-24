@@ -31,42 +31,19 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class StudentInfo : UserControl
     {
-        public Student stu;
         public event EventHandler<Student> EditStudent;
         public StudentInfo()
         {
             InitializeComponent();
-            //if(DataContext!=null&&DataContext is Student) stu = DataContext as Student;
         }
         private void Confirm(object sender, RoutedEventArgs e)
         {
             
             this.Visibility = Visibility.Collapsed;
+            if(DataContext!=null) EditStudent.Invoke(this, DataContext as Student);
         }
 
         private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
-
-        private void ComboBoxSelect(object sender, SelectionChangedEventArgs e)
-        {
-           /* ComboBox combo = sender as ComboBox;
-            if(combo != null&&combo.SelectedIndex!=-1)
-            switch (combo.Tag.ToString())
-            {
-                case "Sex":
-                    stu.Sex = combo.SelectedIndex;
-                    break;
-                case "Role":
-                    stu.Role = combo.SelectedIndex;
-                    break;
-            }*/
-            
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox text = sender as TextBox;
-          //  stu.RoleStr = text.Text;
-        }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -79,18 +56,6 @@ namespace Cokee.ClassService.Views.Controls
             {
                 //if(File.Exists(openFileDialog.FileName))
             }
-        }
-
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            DatePicker datePicker = sender as DatePicker;
-            //if(datePicker.SelectedDate!=null) stu.BirthDay = (DateTime)datePicker.SelectedDate;
-        }
-
-        private void ToggleSwitch_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            //stu.IsMinorLang = (bool)toggleSwitch.IsChecked;
         }
     }
 }
