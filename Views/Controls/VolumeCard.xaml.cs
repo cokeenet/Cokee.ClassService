@@ -34,7 +34,7 @@ namespace Cokee.ClassService.Views.Controls
             speakDevice = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).ToArray().FirstOrDefault();
             spk.Text = speakDevice.DeviceFriendlyName;
             vol.Text= $"{speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f}%";
-            slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevel;
+            slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f;
         }
 
         private void SliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
