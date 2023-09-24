@@ -35,8 +35,8 @@
                                         <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
                                     </Image.Clip>
                                 </Image>
-                                <Label Grid.Row="1" Content="{Binding Name}" FontSize="12" Margin="5" HorizontalAlignment="Center"/>
-                                <ui:Badge Grid.Row="2" Content="{Binding Role}" FontSize="10" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}"/>
+                                <Label Grid.Row="1" Content="{Binding Name}" FontSize="14" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}"/>
                             </Grid>
                         </ui:Card>
                     </DataTemplate>

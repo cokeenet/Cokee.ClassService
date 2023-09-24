@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" 
              Height="100" Width="940">
-    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="18">
+    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="18" Background="#01FFFFFF">
         <Grid x:Name="mainGrid" Margin="5" Height="60">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -16,41 +16,28 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ui:Button x:Name="curBtn" Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Cursor" IconFilled="True"/>
+            <ui:Button x:Name="curBtn" Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="指针" Margin="5" Click="Button_Click" Tag="Cursor" IconFilled="True"/>
             <ui:Button x:Name="penBtn" Icon="Pen24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Appearance="Primary"  Content="笔" Grid.Column="1" Margin="5" Click="Button_Click" Tag="Pen" IconFilled="True"/>
-            <ui:Button x:Name="eraserBtn" Icon="Eraser24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="橡皮" Grid.Column="2" Margin="5" Click="Button_Click" Tag="Eraser" IconFilled="True"/>
+            <ui:Button x:Name="eraserBtn" Icon="Eraser24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="橡皮" Grid.Column="2" Margin="5" Click="Button_Click" Tag="Eraser" IconFilled="True" MouseRightButtonDown="ClearScr"/>
             <ui:Button x:Name="backBtn" Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Grid.Column="3" Margin="5" Click="Button_Click" Tag="Back" IconFilled="True"/>
-            <ui:Button x:Name="moreBtn" Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More" IconFilled="True"/>
+            <ui:Button x:Name="moreBtn" Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More" IconFilled="True" Visibility="Collapsed"/>
             <ui:Button x:Name="exitBtn" Icon="ArrowExit20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit" IconFilled="True"/>
             <Popup x:Name="penMenu" IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="True" PopupAnimation="Scroll">
-                <ui:Card HorizontalAlignment="Left" VerticalAlignment="Stretch" d:LayoutOverrides="VerticalAlignment">
+                <ui:Card HorizontalAlignment="Left" VerticalAlignment="Stretch">
                     <Grid>
                         <d:Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                         </d:Grid.RowDefinitions>
                         <Label Content="色板"/>
-                        <ItemsControl x:Name="color" d:ItemsSource="{d:SampleData ItemCount=9}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}" d:Row="1">
-                            <d:ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" />
-                                </ItemsPanelTemplate>
-                            </d:ItemsControl.ItemsPanel>
-                            <d:ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ui:Button Background="Red" Width="100" Height="40" Margin="5"/>
-                                </DataTemplate>
-                            </d:ItemsControl.ItemTemplate>
-
-                        </ItemsControl>
+            
                     </Grid>
                 </ui:Card>
-
             </Popup>
-            
+
         </Grid>
     </ui:Card>
 

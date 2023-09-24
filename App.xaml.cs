@@ -38,6 +38,7 @@ namespace Cokee.ClassService
             Log.Error(e.Exception,"发生错误");
             Crashes.TrackError(e.Exception);
             MessageBox.Show(e.Exception.ToString(), "Bug Tracked! 发生错误");
+            Clipboard.SetText(e.Exception.ToString());
             e.Handled = true;
         }
     }
