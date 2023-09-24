@@ -74,9 +74,11 @@ namespace Cokee.ClassService
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
             DoubleAnimation doubleAnimation=new DoubleAnimation();
-            doubleAnimation.Duration = new Duration(new TimeSpan(10000));
+            doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(3));
             doubleAnimation.EasingFunction = new CircleEase();
-            doubleAnimation.To= 360;
+            doubleAnimation.To= 359;
+            doubleAnimation.From = 1;
+            //doubleAnimation.BeginAnimation(rotateT.a)
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
             else cardPopup.IsOpen = false;
