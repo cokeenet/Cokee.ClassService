@@ -103,8 +103,9 @@ namespace Cokee.ClassService
             DoubleAnimation doubleAnimation = new DoubleAnimation();
             doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(2));
             doubleAnimation.EasingFunction = new CircleEase();
-            doubleAnimation.From = 0;
-            doubleAnimation.To = 360;
+            //doubleAnimation.From = 0;
+           // doubleAnimation.To = 360;
+            doubleAnimation.By = 180;
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
             else cardPopup.IsOpen = false;

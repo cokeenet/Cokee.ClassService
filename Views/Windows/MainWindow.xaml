@@ -59,7 +59,7 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
-            <ui:Badge Grid.Row="1" Margin="5" Appearance="Secondary" FontSize="14" HorizontalContentAlignment="Center">
+            <ui:Badge Grid.Row="1" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" FontFamily="Microsoft YaHei UI" d:Text="11:11"/>
             </ui:Badge>
         </Grid>
