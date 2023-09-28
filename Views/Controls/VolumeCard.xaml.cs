@@ -33,14 +33,14 @@ namespace Cokee.ClassService.Views.Controls
             CancelTheMute();
             speakDevice = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).ToArray().FirstOrDefault();
             spk.Text = speakDevice.DeviceFriendlyName;
-            vol.Text= $"{speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f}%";
+            vol.Text= $"{(speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f).ToString("0")}%";
             slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f;
         }
 
         private void SliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)(e.NewValue / 100.0f);
-            vol.Text = $"{speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f}%";
+            vol.Text = $"{(speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f).ToString("0")}%";
         }
 
         public void CancelTheMute()

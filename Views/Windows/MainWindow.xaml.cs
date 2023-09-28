@@ -5,21 +5,18 @@ using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-
 using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
-
 using CokeeClass.Views.Controls;
-
 using NAudio.CoreAudioApi;
-
 using Newtonsoft.Json;
-
 using Point = System.Windows.Point;
-
+using Microsoft.Office.Core;
+using Microsoft.Office.Interop.PowerPoint;
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -31,9 +28,9 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
-        /* MSOffice.Application pptApp = new MSOffice.Application();
-         SlideShowView pptView;
-         List<StrokeCollection> strokes = new List<StrokeCollection>();*/
+        MSOffice.Application pptApp = new MSOffice.Application();
+        SlideShowView pptView;
+        List<StrokeCollection> inkPages = new List<StrokeCollection>();
         public MainWindow()
         {
             InitializeComponent();
