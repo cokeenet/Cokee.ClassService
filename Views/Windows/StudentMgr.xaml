@@ -7,46 +7,47 @@
              Title="StudentMgr" Width="995" Topmost="True"
     Height="595" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
-    <Grid>
+    <ui:Snackbar
+            x:Name="snackbar" Width="370" Height="68" Margin="0,492,0,0"
+            HorizontalAlignment="Center" VerticalAlignment="Top" >
+        <Grid Height="580" Width="995">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <ui:TitleBar
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ui:TitleBar
             Title="CokeeClass | 学生管理" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True" 
             ShowMaximize="True" ShowMinimize="True" UseSnapLayout="True" />
-        <Grid Grid.Row="1" Margin="3,3,3,3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="1" Margin="3,3,3,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <ui:NavigationStore
+                <ui:NavigationStore
                Grid.Column="0" Margin="6,0,6,0"
                 SelectedPageIndex="0">
-                <ui:NavigationStore.Items>
-                    <ui:NavigationItem
+                    <ui:NavigationStore.Items>
+                        <ui:NavigationItem
                         Content="班级设置" Icon="Settings32" Click="NavigationItem_Click_2"/>
-                    <ui:NavigationSeparator />
-                    <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random"/>
-                    <ui:NavigationItem Content="添加学生" Icon="Add48" Click="AddStu"/>
-                </ui:NavigationStore.Items>
-                <ui:NavigationStore.Footer>
-                    <ui:NavigationItem
+                        <ui:NavigationSeparator />
+                        <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random"/>
+                        <ui:NavigationItem Content="添加学生" Icon="Add48" Click="AddStu"/>
+                    </ui:NavigationStore.Items>
+                    <ui:NavigationStore.Footer>
+                        <ui:NavigationItem
                         Content="关于" Icon="Info24"/>
-                </ui:NavigationStore.Footer>
-            </ui:NavigationStore>
-            <ui:Dialog x:Name="dialog" Grid.Column="1" ButtonRightName="取消" ButtonLeftName="抽取"/>
-            <Border
+                    </ui:NavigationStore.Footer>
+                </ui:NavigationStore>
+                <ui:Dialog x:Name="dialog" Grid.Column="1" ButtonRightName="取消" ButtonLeftName="抽取"/>
+                <Border
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
-                <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />
+                    <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />
 
-            </Border>
+                </Border>
+            </Grid>
+
         </Grid>
-
-        <ui:Snackbar
-            x:Name="snackbar" Grid.Row="1" Width="370" Height="68" Margin="0,0,0,20"
-            HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-    </Grid>
+    </ui:Snackbar>
 </ui:UiWindow>

@@ -100,11 +100,16 @@ namespace CokeeDP.Views.Controls
 
         private void Atu_sc(object sender, RoutedEventArgs e)
         {
+            if (!Directory.Exists(@$"{INK_DIR}\backup")) Directory.CreateDirectory(@$"{INK_DIR}\backup");
             AutoSuggestBox atu=sender as AutoSuggestBox;
             atu.Text=atu.Text.Trim();
             stud=atu.Text.Trim();
             if (File.Exists(@$"{INK_DIR}\{stud}.ink"))
             {
+                FileStream fs = new FileStream(@$"{INK_DIR}\{stud}.ink", FileMode.Open);
+                ink.Strokes = new StrokeCollection(fs);
+                fs.Close();
+                
                 if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", MessageBoxButton.OKCancel) != MessageBoxResult.OK) 
                 { 
                     atu.Text = "";

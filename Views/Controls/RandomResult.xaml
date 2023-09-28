@@ -5,8 +5,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+               xmlns:Pages="clr-namespace:Cokee.ClassService.Views.Pages"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="500">
+             Height="400" Width="500">
+    <UserControl.Resources>
+        <Pages:VisibilityConverter x:Key="VisibilityConverter"/>
+        <Pages:LevelConverter x:Key="LevelConverter"/>
+    </UserControl.Resources>
     <ui:Card VerticalAlignment="Stretch">
         <Grid Margin="0,10,0,0">
             <Grid.RowDefinitions>
@@ -37,6 +42,7 @@
                                         </Image.Clip>
                                     </Image>
                                     <Label Grid.Row="1" Content="{Binding Name}" FontSize="12" Margin="5" HorizontalAlignment="Center"/>
+                                    <ui:Badge Grid.Row="1" Content="小语种" FontSize="11" HorizontalAlignment="Left" Appearance="Info" Visibility="{Binding IsMinorLang, Converter={StaticResource VisibilityConverter}}" Margin="7,27,0,2" Grid.RowSpan="2"/>
                                 </Grid>
                             </ui:Card>
                         </DataTemplate>
@@ -44,7 +50,7 @@
                 </ItemsControl>
             </ScrollViewer>
             <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2"/>
-                
+
         </Grid>
     </ui:Card>
 </UserControl>

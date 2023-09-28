@@ -69,7 +69,7 @@ namespace Cokee.ClassService.Views.Pages
         public int Sex { get; set; }//0 girl 1 boy
         public string Name { get; set; }
         public int Score { get; set; }
-        public DateTime BirthDay { get; set; }
+        public DateTime? BirthDay { get; set; }//can be delete
         public string? RoleStr { get; set; }
         public int Role { get; set; } //0-3
         public string? Desc { get; set; }
