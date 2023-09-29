@@ -2,21 +2,31 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
-using CokeeClass.Views.Controls;
-using NAudio.CoreAudioApi;
+
 using Newtonsoft.Json;
+
+using Serilog;
+using Serilog.Sink.AppCenter;
+
+using Wpf.Ui.Mvvm.Services;
+
+using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
-using Microsoft.Office.Core;
-using Microsoft.Office.Interop.PowerPoint;
+
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -28,12 +38,19 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
-        MSOffice.Application pptApp = new MSOffice.Application();
-        SlideShowView pptView;
+        MSO.Application pptApp;
+        MSO.SlideShowView pptView;
         List<StrokeCollection> inkPages = new List<StrokeCollection>();
+        public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
         {
             InitializeComponent();
+            Log.Logger = new LoggerConfiguration()
+               .WriteTo.File("log.txt",
+              outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+               .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Information, AppCenterTarget.ExceptionsAsCrashes)
+               .WriteTo.RichTextBox(richTextBox)
+               .CreateLogger();
             /*pptApp.SlideShowBegin += PptApp_SlideShowBegin;
             pptApp.SlideShowOnNext += PptApp_SlideShowOnNext;
             pptApp.SlideShowOnPrevious += PptApp_SlideShowOnPrevious;
@@ -44,8 +61,9 @@ namespace Cokee.ClassService
             this.Left = SystemParameters.WorkArea.Left;
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
+            snackbarService.SetSnackbarControl(snackbar);
         }
-        /*private void PptUp(object sender, RoutedEventArgs e)
+        private void PptUp(object sender, RoutedEventArgs e)
         {
             if (isPPT)
             {
@@ -60,31 +78,35 @@ namespace Cokee.ClassService
                 pptView.Next();
             }
         }
-        private void PptApp_SlideShowEnd(Presentation Pres)
+        private void PptApp_SlideShowEnd(MSO.Presentation Pres)
         {
             pptControls.Visibility = Visibility.Collapsed;
             pptView = null;
             isPPT = false;
         }
 
-        private void PptApp_SlideShowOnPrevious(SlideShowWindow Wn)
+        private void PptApp_SlideShowOnPrevious(MSO.SlideShowWindow Wn)
         {
-            pptPage.Content = $"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
+            pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
         }
 
-        private void PptApp_SlideShowOnNext(SlideShowWindow Wn)
+        private void PptApp_SlideShowOnNext(MSO.SlideShowWindow Wn)
         {
-            pptPage.Content = $"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
+            pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
         }
 
-        private void PptApp_SlideShowBegin(SlideShowWindow Wn)
+        private void PptApp_SlideShowBegin(MSO.SlideShowWindow Wn)
         {
-            isPPT = true;
-            pptControls.Visibility = Visibility.Visible;
-            StartInk(null, null);
-            pptView = Wn.View;
-            pptPage.Content=$"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
-        }*/
+            snackbarService.Show($"{pptApp.SlideShowWindows.Count} {pptApp.Presentations.Count}");
+            if (pptApp.SlideShowWindows.Count > 0 && pptApp.Presentations.Count > 0)
+            {
+                isPPT = true;
+                pptControls.Visibility = Visibility.Visible;
+                StartInk(null, null);
+                pptView = Wn.View;
+                pptPage.Content = $"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
+            }
+        }
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
@@ -92,16 +114,37 @@ namespace Cokee.ClassService
             {
                 time.Text = DateTime.Now.ToString("HH:mm");
             }));
+            if (ProcessHelper.HasPowerPointProcess())
+            {
+                if (pptApp != null)
+                {
+                    pptApp = new MSO.Application();
+                    Log.Information($"{pptApp.SlideShowWindows.Count} {pptApp.Presentations.Count}");
+                    pptApp.SlideShowBegin += PptApp_SlideShowBegin;
+                    pptApp.SlideShowOnNext += PptApp_SlideShowOnNext;
+                    pptApp.SlideShowOnPrevious += PptApp_SlideShowOnPrevious;
+                    pptApp.SlideShowEnd += PptApp_SlideShowEnd;
+                }
+            }
+            else if (pptApp != null)
+            {
+                pptApp = null;
+                pptApp.SlideShowBegin-= PptApp_SlideShowBegin;
+                pptApp.SlideShowOnNext -= PptApp_SlideShowOnNext;
+                pptApp.SlideShowOnPrevious -= PptApp_SlideShowOnPrevious;
+                pptApp.SlideShowEnd -= PptApp_SlideShowEnd;
+            }
         }
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
+            courseCard.Show("语文", "英语");
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
             DoubleAnimation doubleAnimation = new DoubleAnimation();
             doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(2));
             doubleAnimation.EasingFunction = new CircleEase();
             //doubleAnimation.From = 0;
-           // doubleAnimation.To = 360;
+            // doubleAnimation.To = 360;
             doubleAnimation.By = 180;
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
@@ -120,9 +163,9 @@ namespace Cokee.ClassService
             {
                 var c = sender as Control;
                 var pos = e.GetPosition(this);
+                snackbarService.Show($"{pos.ToString()}");
                 var dp = pos - startPoint;
-                //var transform = c.RenderTransform as TranslateTransform;
-                //if (_mouseDownControlPosition.X + dp.X <= 0 || _mouseDownControlPosition.Y + dp.Y <= 0) MouseUp(null,null);
+                if (pos.X >= SystemParameters.WorkArea.Width - 10 || pos.Y >= SystemParameters.WorkArea.Height - 10) { MouseUp(null, null); transT.X = -10; transT.Y = -100; }
                 transT.X = _mouseDownControlPosition.X + dp.X;
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
@@ -133,10 +176,10 @@ namespace Cokee.ClassService
         }
         private void StuMgr(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault() == null) new StudentMgr().Show();
+            if (Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault() == null) new StudentMgr().Show();
         }
 
-        
+
 
         private void StartInk(object sender, RoutedEventArgs e)
         {
@@ -233,7 +276,27 @@ namespace Cokee.ClassService
             ranres.ItemsSource = randoms;
             ranres.Visibility = Visibility.Visible;
         }
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hwnd, int index);
 
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            int WS_EX_TOOLWINDOW = 0x80;
+            // 获取窗口句柄
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+
+            // 获取当前窗口样式
+            int currentStyle = GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
+
+            // 设置窗口样式，去掉 WS_EX_APPWINDOW，添加 WS_EX_TOOLWINDOW
+            int newStyle = (currentStyle & ~0x00000040) | WS_EX_TOOLWINDOW;
+
+            // 更新窗口样式
+            SetWindowLong(hwnd, -20, newStyle);
+        }
 
     }
 }

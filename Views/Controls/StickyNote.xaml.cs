@@ -23,7 +23,7 @@ using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using MessageBox = System.Windows.MessageBox;
 
-namespace CokeeClass.Views.Controls
+namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
     /// PostNote.xaml 的交互逻辑

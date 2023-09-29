@@ -30,7 +30,7 @@ namespace Cokee.ClassService
             AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
                   typeof(Analytics), typeof(Crashes));
             base.OnStartup(e);
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException; ;
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

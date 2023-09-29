@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using CokeeClass.Views.Controls;
+using Cokee.ClassService.Views.Controls;
 
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;

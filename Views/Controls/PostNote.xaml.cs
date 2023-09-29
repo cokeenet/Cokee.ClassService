@@ -22,7 +22,7 @@ using Button = Wpf.Ui.Controls.Button;
 using Clipboard = Wpf.Ui.Common.Clipboard;
 using MessageBox = System.Windows.MessageBox;
 
-namespace CokeeDP.Views.Controls
+namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
     /// PostNote.xaml 的交互逻辑
