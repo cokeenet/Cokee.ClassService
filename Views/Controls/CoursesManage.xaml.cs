@@ -13,16 +13,12 @@ using Newtonsoft.Json;
 
 namespace Cokee.ClassService.Views.Controls
 {
-    /// <summary>
-    /// NewStudent.xaml 的交互逻辑
-    /// </summary>
-    public partial class NewStudent : UserControl
+
+    public partial class CoursesManage : UserControl
     {
-        public const string DATA_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
-        public NewStudent()
+        public CoursesManage()
         {
             InitializeComponent();
-            Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) => this.Visibility = Visibility.Visible;
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
@@ -40,7 +36,7 @@ namespace Cokee.ClassService.Views.Controls
                 values[2] = values[2].Insert(7, "-");
                 DateTime.TryParse(values[2], out dt);
                 students.Add(new Student(name, sex, dt));
-                File.WriteAllText(DATA_FILE, JsonConvert.SerializeObject(students));
+                Student.SaveToFile(students);
             }
             this.Visibility = Visibility.Collapsed;
         }

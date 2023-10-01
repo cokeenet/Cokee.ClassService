@@ -170,18 +170,21 @@ namespace Cokee.ClassService
         }
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
-
+            StartAnimation();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
+            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
+            else cardPopup.IsOpen = false;
+        }
+        private void StartAnimation(int time=2,int angle=180)
+        {
             DoubleAnimation doubleAnimation = new DoubleAnimation();
-            doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(2));
+            doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
             doubleAnimation.EasingFunction = new CircleEase();
             //doubleAnimation.From = 0;
             // doubleAnimation.To = 360;
-            doubleAnimation.By = 180;
+            doubleAnimation.By = angle;
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
-            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
-            else cardPopup.IsOpen = false;
         }
         private void mouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -198,7 +201,7 @@ namespace Cokee.ClassService
                 var pos = e.GetPosition(this);
                 snackbarService.Show($"{pos.ToString()}");
                 var dp = pos - startPoint;
-                if (pos.X >= SystemParameters.WorkArea.Width - 10 || pos.Y >= SystemParameters.WorkArea.Height - 10) { MouseUp(null, null); transT.X = -10; transT.Y = -100; }
+                if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 || pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10) { isDragging = false; floatGrid.ReleaseMouseCapture(); transT.X = -10; transT.Y = -100;return; }
                 transT.X = _mouseDownControlPosition.X + dp.X;
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
@@ -211,9 +214,6 @@ namespace Cokee.ClassService
         {
             if (Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault() == null) new StudentMgr().Show();
         }
-
-
-
         private void StartInk(object sender, RoutedEventArgs e)
         {
             if (inkcanvas.IsEnabled == false)
@@ -258,14 +258,12 @@ namespace Cokee.ClassService
             List<StickyItem> list = new List<StickyItem>();
             if (Sclview.Visibility == Visibility.Collapsed)
             {
-                string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink";
-                var dir = new DirectoryInfo(DATA_DIR);
+                var dir = new DirectoryInfo(Catalog.INK_DIR);
                 foreach (FileInfo item in dir.GetFiles("*.ink"))
                 {
                     list.Add(new StickyItem(item.Name.Replace(".ink", "")));
                 }
                 Sclview.Visibility = Visibility.Visible;
-                //MessageBox.Show(list[50].Name);
                 Stickys.ItemsSource = list;
             }
             else Sclview.Visibility = Visibility.Collapsed;
@@ -287,26 +285,9 @@ namespace Cokee.ClassService
 
         private void RandomControl_StartRandom(object sender, string e)
         {
-            const string DATA_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
             List<Student> students = new List<Student>();
-            if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
-            else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3];
-            List<Student> randoms = new List<Student>();
-            int i = 1;
-            while (i <= Convert.ToInt32(Num))
-            {
-                var a = students[new Random().Next(students.Count)];
-                if (randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
-                if (AllowMLang == "0" && a.IsMinorLang) continue;
-                else if (AllowGirl == "0" && a.Sex == 0) continue;
-                else
-                {
-                    randoms.Add(a);
-                    i++;
-                }
-            }
-            ranres.ItemsSource = randoms;
+            Student.LoadFromFile(Catalog.STU_FILE);
+            ranres.ItemsSource = Student.Random(e, students);
             ranres.Visibility = Visibility.Visible;
         }
         [DllImport("user32.dll")]

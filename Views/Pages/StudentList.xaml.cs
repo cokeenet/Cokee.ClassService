@@ -1,4 +1,5 @@
-﻿using Cokee.ClassService.Views.Windows;
+﻿using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,82 +18,12 @@ using Path = System.IO.Path;
 
 namespace Cokee.ClassService.Views.Pages
 {
-    public class VisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            string rolestr = value as string;
-
-            if (!string.IsNullOrEmpty(rolestr))
-            {
-                return Visibility.Visible;
-            }
-            else
-            {
-                return Visibility.Collapsed;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-    public class LevelConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            int role = (int)value;
-
-            switch (role)
-            {
-                case 0:
-                    return ControlAppearance.Transparent;
-                case 1:
-                    return ControlAppearance.Secondary;
-                case 2:
-                    return ControlAppearance.Success;
-                case 3:
-                    return ControlAppearance.Danger;
-                default: return ControlAppearance.Info;
-            }
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class Student
-    {
-        public int ID { get; set; }
-        public int Sex { get; set; }//0 girl 1 boy
-        public string Name { get; set; }
-        public int Score { get; set; }
-        public DateTime? BirthDay { get; set; }//can be delete
-        public string? RoleStr { get; set; }
-        public int Role { get; set; } //0-3
-        public string? Desc { get; set; }
-        public string? QQ { get; set; }
-        public bool IsMinorLang { get; set; }
-        public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
-        public Student(string name, int sex, DateTime birth, bool isMinorLang = false)
-        {
-            ID = new Random().Next(9000000);
-            Sex = sex;
-            Name = name;
-            BirthDay = birth;
-            IsMinorLang = isMinorLang;
-
-        }
-    }
+    
     /// <summary>
     /// StudentList.xaml 的交互逻辑
     /// </summary>
     public partial class StudentList : UiPage
     {
-        public const string DATA_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
-        public const string DATA_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass";
         List<Student> students = new List<Student>();
         public StudentList()
         {
@@ -101,8 +32,7 @@ namespace Cokee.ClassService.Views.Pages
                 InitializeComponent();
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
                 studentInfo.EditStudent += StudentInfo_EditStudent;
-                if (File.Exists(DATA_FILE)) students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
-                else { Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILE)); File.Create(DATA_FILE); }
+                students = Student.LoadFromFile(Catalog.STU_FILE);
                 students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
                 Students.ItemsSource = students;
 
@@ -127,7 +57,7 @@ namespace Cokee.ClassService.Views.Pages
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
             }
             string json = JsonConvert.SerializeObject(students);
-            File.WriteAllText(DATA_FILE, json);
+            File.WriteAllText(Catalog.STU_FILE, json);
             MessageBox.Show("数据已保存.");
         }
         private void RandomStart(object sender, string e)

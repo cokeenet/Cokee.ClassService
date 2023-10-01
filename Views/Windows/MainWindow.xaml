@@ -108,7 +108,7 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" FontFamily="Microsoft YaHei UI" d:Text="11:11" />
             </ui:Badge>
         </Grid>
-        <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right">
+        <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top">
         <RichTextBox x:Name="richTextBox" /></ScrollViewer>
         <local:UsbCard x:Name="usbCard" Width="350" Height="145" Margin="1560,695,10,240" d:LayoutOverrides="Width, Height"/>
     </Grid>

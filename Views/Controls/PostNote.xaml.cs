@@ -1,4 +1,5 @@
-﻿using Cokee.ClassService.Views.Pages;
+﻿using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Pages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,6 @@ namespace Cokee.ClassService.Views.Controls
     public partial class PostNote : UserControl
     {
         public bool IsEraser=false;
-        public const string INK_DIR = @"D:\Program Files (x86)\CokeeTech\CokeeClass\ink";
         public Student stu=null;
         public string stud = "";
         List<Student> students = new List<Student>();
@@ -69,9 +69,9 @@ namespace Cokee.ClassService.Views.Controls
             //  if (stu == null) return;
             try
             {
-                if (!Directory.Exists(INK_DIR)) Directory.CreateDirectory(INK_DIR);
+                if (!Directory.Exists(Catalog.INK_DIR)) Directory.CreateDirectory(Catalog.INK_DIR);
                 if (string.IsNullOrEmpty(stud)) MessageBox.Show("未填写姓名。");
-                FileStream fs = new FileStream(@$"{INK_DIR}\{stud}.ink", FileMode.OpenOrCreate);
+                FileStream fs = new FileStream(@$"{Catalog.INK_DIR}\{stud}.ink", FileMode.OpenOrCreate);
                 ink.Strokes.Save(fs);
                 fs.Close();
                 MessageBox.Show("已保存。");
@@ -100,13 +100,13 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Atu_sc(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists(@$"{INK_DIR}\backup")) Directory.CreateDirectory(@$"{INK_DIR}\backup");
+            if (!Directory.Exists(@$"{Catalog.INK_DIR}\backup")) Directory.CreateDirectory(@$"{Catalog.INK_DIR}\backup");
             AutoSuggestBox atu=sender as AutoSuggestBox;
             atu.Text=atu.Text.Trim();
             stud=atu.Text.Trim();
-            if (File.Exists(@$"{INK_DIR}\{stud}.ink"))
+            if (File.Exists(@$"{Catalog.INK_DIR}\{stud}.ink"))
             {
-                FileStream fs = new FileStream(@$"{INK_DIR}\{stud}.ink", FileMode.Open);
+                FileStream fs = new FileStream(@$"{Catalog.INK_DIR}\{stud}.ink", FileMode.Open);
                 ink.Strokes = new StrokeCollection(fs);
                 fs.Close();
                 
@@ -115,7 +115,7 @@ namespace Cokee.ClassService.Views.Controls
                     atu.Text = "";
                     stud = "";
                 }
-                else File.Move(@$"{INK_DIR}\{stud}.ink", @$"{INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
+                else File.Move(@$"{Catalog.INK_DIR}\{stud}.ink", @$"{Catalog.INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
             }
            /* foreach (Student item in students)
             {

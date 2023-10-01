@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.0.208.23274</AssemblyVersion>
-    <FileVersion>1.0.208.23274</FileVersion>
+    <AssemblyVersion>1.0.211.23274</AssemblyVersion>
+    <FileVersion>1.0.211.23274</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -71,6 +71,12 @@
 
   <ItemGroup>
     <Resource Include="Resources\head.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Controls\CoursesManage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
