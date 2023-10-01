@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.0.200.23272</AssemblyVersion>
-    <FileVersion>1.0.200.23272</FileVersion>
+    <AssemblyVersion>1.0.208.23274</AssemblyVersion>
+    <FileVersion>1.0.208.23274</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -47,7 +47,26 @@
     <PackageReference Include="Serilog.Sink.AppCenter" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="WPF-UI" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IACore">
+      <HintPath>Dlls\IACore.dll</HintPath>
+    </Reference>
+    <Reference Include="IALoader">
+      <HintPath>Dlls\IALoader.dll</HintPath>
+    </Reference>
+    <Reference Include="IAWinFX">
+      <HintPath>Dlls\IAWinFX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Ink">
+      <HintPath>Dlls\Microsoft.Ink.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Ink.Analysis">
+      <HintPath>Dlls\Microsoft.Ink.Analysis.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

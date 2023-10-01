@@ -16,7 +16,7 @@
             
                 <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Content="请选择人数" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
+        <Label Content="请选择人数" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" MouseRightButtonDown="EasterEgg"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

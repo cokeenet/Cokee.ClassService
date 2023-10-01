@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,10 +19,7 @@ namespace Cokee.ClassService.Views.Controls
         public string disk;
         public UsbCard()
         {
-            InitializeComponent();
-            if(Designer)
-            HwndSource hwndSource = PresentationSource.FromVisual(Application.Current.MainWindow as MainWindow) as HwndSource;
-            hwndSource.AddHook(new HwndSourceHook(WndProc));//挂钩
+            InitializeComponent();        
             DriveInfo[] s = DriveInfo.GetDrives();
             s.Any(t =>
             {
@@ -60,7 +58,7 @@ namespace Cokee.ClassService.Views.Controls
         {
 
         }
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == WM_DEVICECHANGE)
             {

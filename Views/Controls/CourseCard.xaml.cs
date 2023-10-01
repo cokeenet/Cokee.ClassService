@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Cokee.ClassService.Helper;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -26,11 +28,34 @@ namespace Cokee.ClassService.Views.Controls
         {
             InitializeComponent();
         }
-        public void Show(string courseName,string nextCourseName)
+        public void Show(CourseNowStatus nowStatus,Course? course,Course? nextCourse)
         {
             this.Visibility = Visibility.Visible;
-            title.Content = $"{DateTime.Now.ToString("hh:mm")} 下一节:{nextCourseName}";
-            subtitle.Content = $"本节课程: {courseName} 结束";
+            
+            switch(nowStatus)
+            {
+                case CourseNowStatus.EndOfLesson:
+                    title.Content = $"{DateTime.Now.ToString("hh:mm")} 下课辣";
+                    subtitle.Content = $"下一节: {nextCourse.Name}";
+                    break;
+                case CourseNowStatus.Upcoming:
+                    title.Content = $"{DateTime.Now.ToString("hh:mm")} {course.Name} 上课辣";
+                    subtitle.Content = $"下课时间 {course.EndTime.ToString("hh:mm")}";
+                    break;
+                case CourseNowStatus.OnBreak:
+                    title.Content = $"{DateTime.Now.ToString("hh:mm")}";
+                    subtitle.Content = $"课间休息 下一节: {course.Name}";
+                    break;
+                case CourseNowStatus.InProgress:
+                    title.Content = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{course.Name}";
+                    subtitle.Content = $"pupupu";
+                    break;
+                case CourseNowStatus.NoCoursesScheduled:
+                    title.Content = $"{DateTime.Now.ToString("hh:mm")}";
+                    subtitle.Content = $"今天没有课了嗷";
+                    break;
+            }
+            
             DoubleAnimation doubleAnimation = new DoubleAnimation(330,0,TimeSpan.FromSeconds(1));
             doubleAnimation.EasingFunction = new CircleEase();
             doubleAnimation.Completed += async (a, b) => 

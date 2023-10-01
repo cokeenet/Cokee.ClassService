@@ -21,7 +21,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class RandomControl : UserControl
     {
-        public int Number=1,AllowMLang=1,AllowGirl=1,AllowExist=0;
+        public int Number=1,AllowMLang=1,AllowGirl=1,AllowExist=0,Easter=0;
         public event EventHandler<string> StartRandom;
         public RandomControl()
         {
@@ -60,6 +60,11 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 1;
+
+        private void EasterEgg(object sender, MouseButtonEventArgs e)
+        {
+
+        }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => AllowExist = 0;
 

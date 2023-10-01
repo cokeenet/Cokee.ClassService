@@ -10,7 +10,7 @@
          mc:Ignorable="d"
         Title="CokeeClassService"
         Width="1920" Height="1080"
-        Left="0" Top="0"
+        Left="0" Top="0" Loaded="Window_Loaded"
         WindowStartupLocation="Manual"  ShowInTaskbar="False"
         Closing="Window_Closing" Closed="Window_Closed"
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True" Focusable="False"
@@ -110,6 +110,6 @@
         </Grid>
         <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right">
         <RichTextBox x:Name="richTextBox" /></ScrollViewer>
-        <local:UsbCard Width="350" Height="145" Margin="1560,695,10,240" d:LayoutOverrides="Width, Height"/>
+        <local:UsbCard x:Name="usbCard" Width="350" Height="145" Margin="1560,695,10,240" d:LayoutOverrides="Width, Height"/>
     </Grid>
 </Window>

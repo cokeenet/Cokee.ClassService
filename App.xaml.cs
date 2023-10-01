@@ -12,6 +12,7 @@ using Serilog;
 using System.Windows.Threading;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using System.IO;
 
 namespace Cokee.ClassService
 {
@@ -31,6 +32,10 @@ namespace Cokee.ClassService
                   typeof(Analytics), typeof(Crashes));
             base.OnStartup(e);
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            if (!Directory.Exists(Catalog.CONFIG_DIR))
+            {
+                Directory.CreateDirectory(Catalog.CONFIG_DIR);
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

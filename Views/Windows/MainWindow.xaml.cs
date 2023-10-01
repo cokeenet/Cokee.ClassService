@@ -38,9 +38,13 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
-        MSO.Application pptApp;
-        MSO.SlideShowView pptView;
+        public static MSO.Application pptApplication = null;
+        public static MSO.Presentation presentation = null;
+        public static MSO.Slides slides = null;
+        private int slidescount;
+        public static MSO.Slide slide = null;
         List<StrokeCollection> inkPages = new List<StrokeCollection>();
+        Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
         public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
         {
@@ -51,10 +55,6 @@ namespace Cokee.ClassService
                .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Information, AppCenterTarget.ExceptionsAsCrashes)
                .WriteTo.RichTextBox(richTextBox)
                .CreateLogger();
-            /*pptApp.SlideShowBegin += PptApp_SlideShowBegin;
-            pptApp.SlideShowOnNext += PptApp_SlideShowOnNext;
-            pptApp.SlideShowOnPrevious += PptApp_SlideShowOnPrevious;
-            pptApp.SlideShowEnd += PptApp_SlideShowEnd;*/
             this.Width = SystemParameters.WorkArea.Width;
             this.Height = SystemParameters.WorkArea.Height;
             this.Top = SystemParameters.WorkArea.Top;
@@ -67,46 +67,63 @@ namespace Cokee.ClassService
         {
             if (isPPT)
             {
-                pptView.Previous();
+
             }
         }
-
         private void PptDown(object sender, RoutedEventArgs e)
         {
             if (isPPT)
             {
-                pptView.Next();
+
             }
         }
-        private void PptApp_SlideShowEnd(MSO.Presentation Pres)
-        {
-            pptControls.Visibility = Visibility.Collapsed;
-            pptView = null;
-            isPPT = false;
-        }
+        /*  private void PptApp_SlideShowEnd(MSO.Presentation Pres)
+          {
+              pptControls.Visibility = Visibility.Collapsed;
+              pptView = null;
+              isPPT = false;
+          }
 
-        private void PptApp_SlideShowOnPrevious(MSO.SlideShowWindow Wn)
-        {
-            pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-        }
+          private void PptApp_SlideShowOnPrevious(MSO.SlideShowWindow Wn)
+          {
+              pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+          }
 
-        private void PptApp_SlideShowOnNext(MSO.SlideShowWindow Wn)
-        {
-            pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-        }
+          private void PptApp_SlideShowOnNext(MSO.SlideShowWindow Wn)
+          {
+              pptPage.Content = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+          }
 
-        private void PptApp_SlideShowBegin(MSO.SlideShowWindow Wn)
-        {
-            snackbarService.Show($"{pptApp.SlideShowWindows.Count} {pptApp.Presentations.Count}");
-            if (pptApp.SlideShowWindows.Count > 0 && pptApp.Presentations.Count > 0)
-            {
-                isPPT = true;
-                pptControls.Visibility = Visibility.Visible;
-                StartInk(null, null);
-                pptView = Wn.View;
-                pptPage.Content = $"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
-            }
-        }
+          private void PptApp_SlideShowBegin(MSO.SlideShowWindow Wn)
+          {
+              snackbarService.Show($"{pptApp.SlideShowWindows.Count} {pptApp.Presentations.Count}");
+              if (pptApp.SlideShowWindows.Count > 0 && pptApp.Presentations.Count > 0)
+              {
+                  isPPT = true;
+                  pptControls.Visibility = Visibility.Visible;
+                  StartInk(null, null);
+                  pptView = Wn.View;
+                  pptPage.Content = $"{Wn.View.CurrentShowPosition.ToString()}/{Wn.Presentation.Slides.Count}";
+              }
+          }*/
+        /* private void PptApplication_SlideShowNextSlide(MSO.SlideShowWindow Wn)
+         {
+             throw new NotImplementedException();
+         }
+
+         private void PptApplication_PresentationClose(MSO.Presentation Pres)
+         {
+             pptApplication.PresentationClose -= PptApplication_PresentationClose;
+             pptApplication.SlideShowBegin -= PptApp_SlideShowBegin;
+             pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
+             pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
+             pptApplication = null;
+             Application.Current.Dispatcher.Invoke(() =>
+             {
+                 BtnPPTSlideShow.Visibility = Visibility.Collapsed;
+                 BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
+             });
+         }*/
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
@@ -114,30 +131,46 @@ namespace Cokee.ClassService
             {
                 time.Text = DateTime.Now.ToString("HH:mm");
             }));
-            if (ProcessHelper.HasPowerPointProcess())
+            Course a, b;
+            var status = Schedule.GetNowCourse(schedule,out a,out b);
+            if (status != CourseNowStatus.InProgress || status != CourseNowStatus.OnBreak || status != CourseNowStatus.NoCoursesScheduled) courseCard.Show(status, a, b);
+            /*if (ProcessHelper.HasPowerPointProcess())
             {
-                if (pptApp != null)
+                Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
+                pptApplication = (MSO.Application)Activator.CreateInstance(comType);
+
+                if (pptApplication != null)
                 {
-                    pptApp = new MSO.Application();
-                    Log.Information($"{pptApp.SlideShowWindows.Count} {pptApp.Presentations.Count}");
-                    pptApp.SlideShowBegin += PptApp_SlideShowBegin;
-                    pptApp.SlideShowOnNext += PptApp_SlideShowOnNext;
-                    pptApp.SlideShowOnPrevious += PptApp_SlideShowOnPrevious;
-                    pptApp.SlideShowEnd += PptApp_SlideShowEnd;
+                    //获得演示文稿对象
+                    presentation = pptApplication.ActivePresentation;
+                    pptApplication.PresentationClose += PptApplication_PresentationClose;
+                    pptApplication.SlideShowBegin += PptApp_SlideShowBegin;
+                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                    pptApplication.SlideShowEnd += PptApp_SlideShowEnd;
+                    // 获得幻灯片对象集合
+                    slides = presentation.Slides;
+                    // 获得幻灯片的数量
+                    slidescount = slides.Count;
+                    // 获得当前选中的幻灯片
+                    try
+                    {
+                        // 在普通视图下这种方式可以获得当前选中的幻灯片对象
+                        // 然而在阅读模式下，这种方式会出现异常
+                        slide = slides[pptApplication.ActiveWindow.Selection.SlideRange.SlideNumber];
+                    }
+                    catch
+                    {
+                        // 在阅读模式下出现异常时，通过下面的方式来获得当前选中的幻灯片对象
+                        slide = pptApplication.SlideShowWindows[1].View.Slide;
+                    }
                 }
-            }
-            else if (pptApp != null)
-            {
-                pptApp = null;
-                pptApp.SlideShowBegin-= PptApp_SlideShowBegin;
-                pptApp.SlideShowOnNext -= PptApp_SlideShowOnNext;
-                pptApp.SlideShowOnPrevious -= PptApp_SlideShowOnPrevious;
-                pptApp.SlideShowEnd -= PptApp_SlideShowEnd;
-            }
+
+                if (pptApplication == null) return;
+            }*/
         }
         private void MouseUp(object sender, MouseButtonEventArgs e)
         {
-            courseCard.Show("语文", "英语");
+
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
             DoubleAnimation doubleAnimation = new DoubleAnimation();
@@ -278,6 +311,12 @@ namespace Cokee.ClassService
         }
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hwnd, int index);
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
+        }
 
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
