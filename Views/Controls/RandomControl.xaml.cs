@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -62,6 +63,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void EasterEgg(object sender=null, MouseButtonEventArgs e=null)
         {
+            //if (File.Exists(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}")) { Easter = 0; return; }
             Easter++;
             if (Easter == 1)
             {
@@ -87,6 +89,7 @@ namespace Cokee.ClassService.Views.Controls
             if (Number <= 0) { Number = 0; numbox.Text = "0"; }
             Catalog.ToggleControlVisible(this);
             StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{AllowGirl}|{AllowExist}|{Easter}");
+            //if (Easter != 0) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
         }
 
         private void MLang_UC(object sender, RoutedEventArgs e) => AllowMLang = 1;

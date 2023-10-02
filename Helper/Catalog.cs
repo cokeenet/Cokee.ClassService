@@ -18,15 +18,15 @@ namespace Cokee.ClassService
         public const string STU_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
         public static int WindowStyle = 0;
         public static SnackbarService GlobalSnackbarService { get; set; }=((MainWindow)Application.Current.MainWindow).snackbarService;
-        public static void ShowWarn(Exception ex,string str="")
+        public static void HandleException(Exception ex,string str="")
         {
-            GlobalSnackbarService.Show($"{str}发生错误", ex.ToString(), SymbolRegular.Warning32);
+            GlobalSnackbarService.Show($"{str}发生错误", ex.ToString().Substring(30)+"...", SymbolRegular.Warning32);
         }
         public static void ShowInfo(string title = "",string content="")
         {
             GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
         }
-        public static void DeleteObjFromWindow(UIElement element)
+        public static void RemoveObjFromWindow(UIElement element)
         {
             if (element == null) return;
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
@@ -41,8 +41,8 @@ namespace Cokee.ClassService
             {
                 mainWindow.Width = SystemParameters.FullPrimaryScreenWidth;
                 mainWindow.Height = SystemParameters.FullPrimaryScreenHeight;
-                mainWindow.Top = 0;
-                mainWindow.Left = 0;
+                mainWindow.Top = SystemParameters.WorkArea.Top;
+                mainWindow.Left = SystemParameters.WorkArea.Left;
             }
             else
             {

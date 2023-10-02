@@ -42,7 +42,7 @@ namespace Cokee.ClassService.Views.Controls
 
             if(inkCanvas!=null)
             {
-                inkCanvas.EraserShape = new RectangleStylusShape(1000, 1000);
+                inkCanvas.EraserShape = new RectangleStylusShape(500, 1000);
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -12,14 +12,16 @@ namespace Cokee.ClassService.Views.Windows
 
     public partial class CourseMgr : UiWindow
     {
+        bool isClosing = false;
         public CourseMgr()
         {
             InitializeComponent();
+            this.Closing+=(a,b)=>isClosing=true; 
         }
 
         private void CoursesManage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool)e.NewValue == false) Close();
+            if ((bool)e.NewValue == false&&!isClosing) Close();
         }
     }
 }

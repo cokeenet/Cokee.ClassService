@@ -33,24 +33,25 @@ namespace Cokee.ClassService.Helper
     }
     public class Course
     {
-        public string Name { get; set; }
-        public int DayOfWeek { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string Name { get; set; } = "";
+        public int DayOfWeek { get; set; } = 0;//0-6
+        public TimeSpan StartTime { get; set; }  = TimeSpan.Zero;
+        public TimeSpan EndTime { get; set; } = TimeSpan.Zero;
         [JsonIgnore]
         public bool IsChecked { get; set; } = false;
-        public Course(string name="")
+        public Course(string name="",int dayOfWeek=0)
         {
             Name = name;
+            DayOfWeek = dayOfWeek;
         }   
     }
 
     public class Schedule
     {
         public List<Course> Courses { get; set; }
-        public void SaveToJson(string filePath)
+        public static void SaveToJson(Schedule schedule, string filePath)
         {
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(schedule, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
@@ -64,8 +65,8 @@ namespace Cokee.ClassService.Helper
         // 获取指定星期几的课程列表
         public static List<Course> GetCourses(Schedule schedule,int dayOfWeek)
         {
-            if (schedule == null) return null;
             var courses = new List<Course>();
+            if (schedule == null) return courses;
             foreach (var course in schedule.Courses)
             {
                 if ((int)course.DayOfWeek == dayOfWeek)
@@ -74,6 +75,18 @@ namespace Cokee.ClassService.Helper
                 }
             }
             return courses;
+        }
+        public static void SetCourses(Schedule schedule, int dayOfWeek, List<Course> courses)
+        {
+            var course = new List<Course>();
+            if (schedule == null) return;
+            foreach (var cours in schedule.Courses)
+            {
+                if ((int)cours.DayOfWeek == dayOfWeek)
+                {
+                    course.Add(cours);
+                }
+            }
         }
         public static CourseNowStatus GetNowCourse(Schedule schedule, out Course course,out Course nextCourse)
         {

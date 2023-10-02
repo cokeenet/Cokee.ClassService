@@ -11,14 +11,14 @@ namespace Cokee.ClassService.Views.Controls
     public partial class CoursesManage : UserControl
     {
         Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
-        List<Course> courses = new List<Course>();
+        List<Course> dayCourses = new List<Course>();
         public CoursesManage()
         {
             InitializeComponent();
             this.Loaded += (a, b) =>
             {
-                courses = Schedule.GetCourses(schedule, 0);
-                courseControl.ItemsSource = courses;
+                dayCourses = Schedule.GetCourses(schedule, 0);
+                courseControl.ItemsSource = dayCourses;
             };
         }
 
@@ -32,50 +32,54 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            courses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
-            if(courseControl!=null) courseControl.ItemsSource = courses;
+            dayCourses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
+            if(courseControl!=null) courseControl.ItemsSource = dayCourses;
         }
 
         private void AddCourse(object sender, RoutedEventArgs e)
         {
-            courses.Add(new Course(""));
+            dayCourses.Add(new Course("语文", comboBox.SelectedIndex));
+            courseControl.ItemsSource = dayCourses;
         }
 
         private void MoveUp(object sender, RoutedEventArgs e)
         {
-            int c = courses.FindIndex(t => t.IsChecked == true);
+            int c = dayCourses.FindIndex(t => t.IsChecked == true);
             if (c != -1)
             {
                 Course a, b;
-                a = courses[c];
-                b = courses[c - 1];
-                courses[c - 1] = a;
-                courses[c] = b;
+                a = dayCourses[c];
+                b = dayCourses[c - 1];
+                dayCourses[c - 1] = a;
+                dayCourses[c] = b;
             }
+            courseControl.ItemsSource = dayCourses;
         }
 
         private void MoveDown(object sender, RoutedEventArgs e)
         {
-            int c = courses.FindIndex(t => t.IsChecked == true);
+            int c = dayCourses.FindIndex(t => t.IsChecked == true);
             if (c != -1)
             {
                 Course a, b;
-                a = courses[c];
-                b = courses[c + 1];
-                courses[c + 1] = a;
-                courses[c] = b;
+                a = dayCourses[c];
+                b = dayCourses[c + 1];
+                dayCourses[c + 1] = a;
+                dayCourses[c] = b;
             }
+            courseControl.ItemsSource = dayCourses;
         }
 
         private void Delete(object sender, RoutedEventArgs e)
         {
-            var c = courses.Find(t => t.IsChecked == true);
-            if(c!=null)courses.Remove(c);
+            var c = dayCourses.Find(t => t.IsChecked == true);
+            if(c!=null) dayCourses.Remove(c);
+            courseControl.ItemsSource = dayCourses;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            var a = courses.FindAll(t => t.IsChecked == true);
+            var a = dayCourses.FindAll(t => t.IsChecked == true);
             if (a.Count > 1)
             {
                 foreach (var item in a.Skip(1))
@@ -83,7 +87,7 @@ namespace Cokee.ClassService.Views.Controls
                     item.IsChecked = false;
                 }
             }
-                
+            courseControl.ItemsSource = dayCourses;
         }
     }
 }

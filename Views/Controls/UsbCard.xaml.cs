@@ -35,7 +35,7 @@ namespace Cokee.ClassService.Views.Controls
         {
 
             DoubleAnimation anim1 = new DoubleAnimation(0, TimeSpan.FromSeconds(1));
-            DoubleAnimation anim2 = new DoubleAnimation(300, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim2 = new DoubleAnimation(368, TimeSpan.FromSeconds(1));
             anim1.EasingFunction = new CircleEase();
             anim1.Completed += async (a, b) => { await Task.Delay(10000); ShowUsbCard(true); };
             anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);

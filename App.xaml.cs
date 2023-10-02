@@ -26,7 +26,7 @@ namespace Cokee.ClassService
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Information, AppCenterTarget.ExceptionsAsCrashes, "3f56f1de-dc29-4a8f-9350-81820e32da71")
+                .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Warning, AppCenterTarget.ExceptionsAsCrashesAndEvents, "3f56f1de-dc29-4a8f-9350-81820e32da71")
                 .CreateLogger();
             AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
                   typeof(Analytics), typeof(Crashes));
@@ -42,7 +42,7 @@ namespace Cokee.ClassService
         {
             Log.Error(e.Exception,"发生错误");
             Crashes.TrackError(e.Exception);
-            Catalog.ShowInfo(e.Exception.ToString(), "Bug Tracked! 发生错误");
+            Catalog.HandleException(e.Exception, "Bug Tracked! ");
             e.Handled = true;
         }
     }

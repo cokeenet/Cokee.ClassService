@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,20 +15,15 @@ using System.Windows.Media.Animation;
 
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
-
-using Newtonsoft.Json;
-
-using Serilog;
-using Serilog.Sink.AppCenter;
 
 using Wpf.Ui.Mvvm.Services;
 
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
+using Timer = System.Timers.Timer;
 
 namespace Cokee.ClassService
 {
@@ -36,27 +32,17 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isDragging = false, isPPT = false;
+        private bool isDragging = false, isPPT = false, createdPPT = false;
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
         public static MSO.Application pptApplication = null;
-        public static MSO.Presentation presentation = null;
-        public static MSO.Slides slides = null;
-        private int slidescount;
-        public static MSO.Slide slide = null;
         List<StrokeCollection> inkPages = new List<StrokeCollection>();
         Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
         public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
         {
             InitializeComponent();
-            Log.Logger = new LoggerConfiguration()
-               .WriteTo.File("log.txt",
-              outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-               .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Information, AppCenterTarget.ExceptionsAsCrashes)
-               .WriteTo.RichTextBox(richTextBox)
-               .CreateLogger();
             Catalog.SetWindowStyle(this, 0);
             SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(this, Catalog.WindowStyle); transT.X = -10; transT.Y = -100; };
             secondTimer.Elapsed += SecondTimer_Elapsed;
@@ -65,16 +51,32 @@ namespace Cokee.ClassService
         }
         private void PptUp(object sender, RoutedEventArgs e)
         {
-            if (isPPT)
+            try
             {
-
+                new Thread(new ThreadStart(() =>
+                {
+                    pptApplication.SlideShowWindows[1].Activate();
+                    pptApplication.SlideShowWindows[1].View.Previous();
+                })).Start();
+            }
+            catch
+            {
+                pptControls.Visibility = Visibility.Collapsed;
             }
         }
         private void PptDown(object sender, RoutedEventArgs e)
         {
-            if (isPPT)
+            try
             {
-
+                new Thread(new ThreadStart(() =>
+                {
+                    pptApplication.SlideShowWindows[1].Activate();
+                    pptApplication.SlideShowWindows[1].View.Next();
+                })).Start();
+            }
+            catch
+            {
+                pptControls.Visibility = Visibility.Collapsed;
             }
         }
         /*  private void PptApp_SlideShowEnd(MSO.Presentation Pres)
@@ -134,41 +136,41 @@ namespace Cokee.ClassService
             Course a, b;
             var status = Schedule.GetNowCourse(schedule, out a, out b);
             if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-            /*if (ProcessHelper.HasPowerPointProcess())
+            if (ProcessHelper.HasPowerPointProcess() && !createdPPT)
             {
                 Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
                 pptApplication = (MSO.Application)Activator.CreateInstance(comType);
 
                 if (pptApplication != null)
                 {
-                    //获得演示文稿对象
-                    presentation = pptApplication.ActivePresentation;
-                    pptApplication.PresentationClose += PptApplication_PresentationClose;
-                    pptApplication.SlideShowBegin += PptApp_SlideShowBegin;
-                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                    pptApplication.SlideShowEnd += PptApp_SlideShowEnd;
-                    // 获得幻灯片对象集合
-                    slides = presentation.Slides;
-                    // 获得幻灯片的数量
-                    slidescount = slides.Count;
-                    // 获得当前选中的幻灯片
-                    try
+                    createdPPT = true;
+                    pptApplication.PresentationClose += (a) =>
                     {
-                        // 在普通视图下这种方式可以获得当前选中的幻灯片对象
-                        // 然而在阅读模式下，这种方式会出现异常
-                        slide = slides[pptApplication.ActiveWindow.Selection.SlideRange.SlideNumber];
-                    }
-                    catch
+                        pptControls.Visibility = Visibility.Collapsed;
+                        pptApplication = null;
+                        createdPPT = false;
+                    };
+                    pptApplication.SlideShowBegin += (Wn) =>
                     {
-                        // 在阅读模式下出现异常时，通过下面的方式来获得当前选中的幻灯片对象
-                        slide = pptApplication.SlideShowWindows[1].View.Slide;
-                    }
+                        pptControls.Visibility = Visibility.Visible;
+                        pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                    };
+                    pptApplication.SlideShowNextSlide += (Wn) =>
+                    {
+                        pptPage.Text=$"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                    };
+                    pptApplication.SlideShowEnd += (a) =>
+                    {
+                        pptControls.Visibility = Visibility.Collapsed;
+                        pptApplication = null;
+                        createdPPT = false;
+                    };
                 }
 
                 if (pptApplication == null) return;
-            }*/
+            }
         }
-        private void MouseUp(object sender, MouseButtonEventArgs e)
+        private void mouseUp(object sender, MouseButtonEventArgs e)
         {
             StartAnimation();
             isDragging = false;
@@ -216,14 +218,14 @@ namespace Cokee.ClassService
             {
                 Catalog.SetWindowStyle(this, 0);
                 inkcanvas.IsEnabled = true;
-                inkTool.Visibility = Visibility.Visible;
+                Catalog.ToggleControlVisible(inkTool);
                 inkBg.Opacity = 0.01;
             }
             else
             {
                 Catalog.SetWindowStyle(this, 1);
                 inkcanvas.IsEnabled = false;
-                inkTool.Visibility = Visibility.Collapsed;
+                Catalog.ToggleControlVisible(inkTool);
                 inkBg.Opacity = 0;
             }
         }
@@ -232,7 +234,7 @@ namespace Cokee.ClassService
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = true;
 
-        private void Window_Closed(object sender, EventArgs e){}
+        private void Window_Closed(object sender, EventArgs e) { }
         private void ShowStickys(object sender, RoutedEventArgs e)
         {
             List<StickyItem> list = new List<StickyItem>();

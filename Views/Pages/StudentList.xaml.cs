@@ -38,17 +38,13 @@ namespace Cokee.ClassService.Views.Pages
             }
             catch (Exception ex)
             {
-                Catalog.ShowWarn(ex);
+                Catalog.HandleException(ex);
             }
         }
-
-       
-
-        private void StudentList_RandomEvent(object? sender, bool e) => randomcontrol.Visibility = Visibility.Visible;
+        private void StudentList_RandomEvent(object? sender, bool e) => Catalog.ToggleControlVisible(randomcontrol);
 
         public void SaveData()
         {
-            
             Student.SaveToFile(students);
             Catalog.ShowInfo("数据已保存.");
         }

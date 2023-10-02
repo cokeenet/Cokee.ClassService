@@ -41,7 +41,7 @@ namespace Cokee.ClassService.Views.Controls
             moveBtn.MouseRightButtonDown += (a, b) =>
             {
                 clkc++;
-                if (clkc == 2) Catalog.DeleteObjFromWindow(this);
+                if (clkc == 2) Catalog.RemoveObjFromWindow(this);
                 else Catalog.ShowInfo("再按一次删除");
             };
             infBtn.Click += (a, b) =>
