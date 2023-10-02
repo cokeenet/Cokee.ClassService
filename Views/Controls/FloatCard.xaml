@@ -5,19 +5,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
-             mc:Ignorable="d"
-             Height="300" Width="400">
+             mc:Ignorable="d" Background="#F2333333"
+             Height="380" Width="400">
     <UserControl.RenderTransform>
         <TranslateTransform x:Name="transT"/>
     </UserControl.RenderTransform>
     <ui:Card VerticalAlignment="Stretch">
-        <Grid>
+        <Grid VerticalAlignment="Top">
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="0.5*" MaxHeight="60"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*" MinHeight="220"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ui:Button x:Name="infBtn" Icon="FontIncrease24" Content="增加字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"/>
+            <ui:Button x:Name="defBtn" Grid.Column="1" Icon="FontDecrease24" Content="减小字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"/>
+            <ui:Card x:Name="moveBtn" Grid.Column="2" Content="拖动" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" HorizontalContentAlignment="Center"/>
+            <ui:TextBox Grid.Row="1" x:Name="title" Text="" AcceptsReturn="False" FontSize="22" Grid.ColumnSpan="3" Margin="5,0,5,0"/>
+            <ui:TextBox x:Name="content" Text="" Grid.Row="2" Margin="0,5,0,0" AcceptsReturn="True" FontSize="28" Grid.ColumnSpan="3"/>
         </Grid>
+        
     </ui:Card>
 </UserControl>

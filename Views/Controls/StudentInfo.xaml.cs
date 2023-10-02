@@ -39,12 +39,11 @@ namespace Cokee.ClassService.Views.Controls
         }
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            
-            this.Visibility = Visibility.Collapsed;
+            Catalog.ToggleControlVisible(this);
             if(DataContext!=null) EditStudent.Invoke(this, DataContext as Student);
         }
 
-        private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {

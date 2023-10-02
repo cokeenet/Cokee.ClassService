@@ -1,17 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
+using System.Windows.Data;
+
 using Newtonsoft.Json;
 namespace Cokee.ClassService.Helper
 {
+    public class TimeSpanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is TimeSpan timeSpan)
+            {
+                return timeSpan.ToString(@"hh\:mm");
+            }
+            return string.Empty;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string strValue)
+            {
+                if (TimeSpan.TryParse(strValue, out TimeSpan timeSpan))
+                {
+                    return timeSpan;
+                }
+            }
+            return TimeSpan.Zero;
+        }
+    }
     public class Course
     {
-        public string Name { get; set; } = "";
+        public string Name { get; set; }
         public int DayOfWeek { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
+        [JsonIgnore]
+        public bool IsChecked { get; set; } = false;
+        public Course(string name="")
+        {
+            Name = name;
+        }   
     }
 
     public class Schedule
@@ -31,10 +62,11 @@ namespace Cokee.ClassService.Helper
             return JsonConvert.DeserializeObject<Schedule>(json);
         }
         // 获取指定星期几的课程列表
-        public List<Course> GetCourses(int dayOfWeek)
+        public static List<Course> GetCourses(Schedule schedule,int dayOfWeek)
         {
+            if (schedule == null) return null;
             var courses = new List<Course>();
-            foreach (var course in Courses)
+            foreach (var course in schedule.Courses)
             {
                 if ((int)course.DayOfWeek == dayOfWeek)
                 {
@@ -45,10 +77,11 @@ namespace Cokee.ClassService.Helper
         }
         public static CourseNowStatus GetNowCourse(Schedule schedule, out Course course,out Course nextCourse)
         {
-            DateTime now = DateTime.Now;
-            var coursesToday = schedule.GetCourses((int)now.DayOfWeek);
             course = null; // 初始化 course
             nextCourse = null;
+            if (schedule == null) return CourseNowStatus.NoCoursesScheduled;
+            DateTime now = DateTime.Now;
+            var coursesToday = Schedule.GetCourses(schedule,(int)now.DayOfWeek);
             // 遍历课程列表，查找当前时间所在的课程
             foreach (var c in coursesToday)
             {

@@ -47,7 +47,7 @@ namespace Cokee.ClassService.Views.Controls
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             string stu = e.NewValue.ToString();
-            //MessageBox.Show();
+            //Catalog.ShowInfo();
             name.Content = stu;
             string INK_FILE=@$"D:\Program Files (x86)\CokeeTech\CokeeClass\ink\{stu}.ink";
             if (File.Exists(INK_FILE))

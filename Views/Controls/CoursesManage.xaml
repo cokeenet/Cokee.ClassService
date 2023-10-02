@@ -4,9 +4,12 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+             xmlns:local="clr-namespace:Cokee.ClassService.Helper"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="500">
+             Height="600" Width="500">
+    <UserControl.Resources>
+        <local:TimeSpanConverter x:Key="TimeSpanConverter"/>
+    </UserControl.Resources>
     <ui:Card VerticalAlignment="Stretch">
         <Grid Margin="0,10,0,0">
             <Grid.RowDefinitions>
@@ -15,10 +18,57 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="添加学生" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
-            <Label Content="说明:直接复制Excel列表 第一列姓名 第二列性别 第三列生日" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1"/>
+            <Label Content="课程管理" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
+            <ComboBox x:Name="comboBox" HorizontalAlignment="Right" Margin="5" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="星期一"/>
+                <ComboBoxItem Content="星期二"/>
+                <ComboBoxItem Content="星期三"/>
+                <ComboBoxItem Content="星期四"/>
+                <ComboBoxItem Content="星期五"/>
+                <ComboBoxItem Content="星期六"/>
+                <ComboBoxItem Content="星期天"/>
+            </ComboBox>
+            <Grid Grid.Row="1" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ui:Button Content="添加" Icon="Add48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="AddCourse"/>
+                <ui:Button Grid.Column="1" Icon="ArrowUp48"  Content="上移" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="MoveUp"/>
+                <ui:Button Grid.Column="2" Icon="ArrowDown48"  Content="下移" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="MoveDown"/>
+                <ui:Button Grid.Column="3" Icon="Dismiss48" Appearance="Danger" Content="删除" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Delete"/>
+            </Grid>
             <ScrollViewer Grid.Row="2">
-                <TextBox x:Name="stutb" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"/>
+                <ItemsControl d:ItemsSource="{d:SampleData ItemCount=10}" x:Name="courseControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ui:Card Margin="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox IsChecked="{Binding IsChecked}" Click="CheckBox_Click"/>
+                                    <ui:TextBox Text="{Binding Name}" Grid.Column="1"/>
+                                    <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ui:TextBox Grid.Column="0" Margin="5" Text="{Binding StartTime, Converter={StaticResource TimeSpanConverter}}"/>
+                                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding EndTime, Converter={StaticResource TimeSpanConverter}}"/>
+                                    </Grid>
+                                </Grid>
+                            </ui:Card>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </ScrollViewer>
             <Grid Grid.Row="3" Margin="5">
                 <Grid.ColumnDefinitions>

@@ -4,10 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" Height="145" Width="350">
+             mc:Ignorable="d">
     <ui:Card
-              x:Name="usb" Grid.Column="1" Canvas.Left="1553" Canvas.Top="807" Width="349"
-              HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2FFFFFF" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
+              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="#B2FFFFFF" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
               RenderTransformOrigin="0.5,0.5">
         <ui:Card.RenderTransform>
             <TransformGroup>
@@ -15,35 +14,29 @@
             </TransformGroup>
         </ui:Card.RenderTransform>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <ui:SymbolIcon
-                                Width="72" Height="72" Margin="-9,14,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                FontSize="72" Symbol="UsbStick20" Foreground="Black" />
-            <ui:Button
-                                x:Name="open" Width="97" Height="40" Margin="220,9,0,0" HorizontalAlignment="Left"
-                                VerticalAlignment="Top" Background="#CCFFFFFF" BorderBrush="#6CBCEA" BorderThickness="1" Click="Open"
-                                Content="打开" FontSize="16" Icon="HardDrive20" Tag="" Foreground="Black" />
-            <ui:Button
-                                x:Name="remove" Width="97" Height="44" Margin="219,64,0,0" HorizontalAlignment="Left"
-                                VerticalAlignment="Top" Background="#FFFFFEFE" BorderBrush="#6CBCEA" BorderThickness="1"
-                                Click="ExitUsbDrive" Content="弹出" FontSize="16" Icon="UsbPlug20" Foreground="Black" />
-            <Label
-                                x:Name="diskName" Margin="68,21,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left"
-                                Background="{x:Null}"
-                                Content="U盘(?:\)" FontFamily="Microsoft YaHei UI Light" FontSize="20" FontWeight="Normal" Foreground="Black"
-                                SnapsToDevicePixels="True">
-                <Label.Effect>
-                    <DropShadowEffect Opacity="0.4" />
-                </Label.Effect>
-            </Label>
-            <Label
-                                x:Name="diskInfo" Height="22" Margin="68,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                HorizontalContentAlignment="Left"
-                                Background="{x:Null}"
-                                Content="---GB/---GB" FontFamily="Microsoft YaHei UI Light" FontSize="18" FontWeight="Normal" Foreground="Black">
-                <Label.Effect>
-                    <DropShadowEffect Opacity="0.4" />
-                </Label.Effect>
-            </Label>
+                                Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                FontSize="40" Symbol="UsbStick20" Foreground="Black" Grid.RowSpan="2" />
+            <ui:Button x:Name="open" HorizontalAlignment="Right"
+                  VerticalAlignment="Top" Background="#CCFFFFFF" BorderBrush="#6CBCEA" BorderThickness="1" Click="Open"
+                  Content="打开" Icon="HardDrive20" Tag="" Foreground="Black" Grid.Column="2" Margin="5"/>
+            <ui:Button x:Name="remove" HorizontalAlignment="Right"
+                 VerticalAlignment="Top" Background="#FFFFFEFE" BorderBrush="#6CBCEA" BorderThickness="1"
+                 Click="ExitUsbDrive" Content="弹出" Icon="UsbPlug20" Foreground="Black" Grid.Row="1" Grid.Column="2" Margin="5"/>
+            <Label x:Name="diskName"  Content="U盘(?:\)" Foreground="Black" Grid.Column="1" Margin="5" FontSize="16"/>
+
+
+            <Label x:Name="diskInfo" Content="---GB/---GB" Foreground="Black" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
         </Grid>
     </ui:Card>
 </UserControl>

@@ -119,7 +119,7 @@ namespace Cokee.ClassService.Helper
     //    {
     //        if (strokeCollection == null)
     //        {
-    //            //MessageBox.Show("dddddd");
+    //            //Catalog.ShowInfo("dddddd");
     //            return null;
     //        }
 

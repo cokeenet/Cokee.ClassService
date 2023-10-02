@@ -42,9 +42,9 @@ namespace Cokee.ClassService.Views.Controls
                 students.Add(new Student(name, sex, dt));
                 File.WriteAllText(DATA_FILE, JsonConvert.SerializeObject(students));
             }
-            this.Visibility = Visibility.Collapsed;
+            Catalog.ToggleControlVisible(this);
         }
 
-        private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
     }
 }

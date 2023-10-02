@@ -76,7 +76,7 @@ namespace Cokee.ClassService.Views.Controls
                 case "Exit":
                     inkCanvas.IsEnabled = false;
                     inkCanvas.Background.Opacity = 0;
-                    this.Visibility = Visibility.Collapsed;
+                    Catalog.ToggleControlVisible(this);
                     break;
             }
         }

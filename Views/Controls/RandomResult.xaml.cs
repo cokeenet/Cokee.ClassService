@@ -34,6 +34,6 @@ namespace Cokee.ClassService.Views.Controls
         {
             InitializeComponent();
         }
-        private void Confirm(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void Confirm(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
     }
 }

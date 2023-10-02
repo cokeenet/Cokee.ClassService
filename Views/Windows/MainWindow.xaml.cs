@@ -17,6 +17,8 @@ using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
 
+using Microsoft.Win32;
+
 using Newtonsoft.Json;
 
 using Serilog;
@@ -55,10 +57,8 @@ namespace Cokee.ClassService
                .WriteTo.AppCenterSink(null, Serilog.Events.LogEventLevel.Information, AppCenterTarget.ExceptionsAsCrashes)
                .WriteTo.RichTextBox(richTextBox)
                .CreateLogger();
-            this.Width = SystemParameters.WorkArea.Width;
-            this.Height = SystemParameters.WorkArea.Height;
-            this.Top = SystemParameters.WorkArea.Top;
-            this.Left = SystemParameters.WorkArea.Left;
+            Catalog.SetWindowStyle(this, 0);
+            SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(this, Catalog.WindowStyle); transT.X = -10; transT.Y = -100; };
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             snackbarService.SetSnackbarControl(snackbar);
@@ -132,8 +132,8 @@ namespace Cokee.ClassService
                 time.Text = DateTime.Now.ToString("HH:mm");
             }));
             Course a, b;
-            var status = Schedule.GetNowCourse(schedule,out a,out b);
-            if (status != CourseNowStatus.InProgress || status != CourseNowStatus.OnBreak || status != CourseNowStatus.NoCoursesScheduled) courseCard.Show(status, a, b);
+            var status = Schedule.GetNowCourse(schedule, out a, out b);
+            if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
             /*if (ProcessHelper.HasPowerPointProcess())
             {
                 Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
@@ -173,10 +173,10 @@ namespace Cokee.ClassService
             StartAnimation();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
-            if (!cardPopup.IsOpen) cardPopup.IsOpen = true;
-            else cardPopup.IsOpen = false;
+            if (cardPopup.IsOpen) cardPopup.IsOpen = false;
+            else cardPopup.IsOpen = true;
         }
-        private void StartAnimation(int time=2,int angle=180)
+        private void StartAnimation(int time = 2, int angle = 180)
         {
             DoubleAnimation doubleAnimation = new DoubleAnimation();
             doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
@@ -199,16 +199,12 @@ namespace Cokee.ClassService
             {
                 var c = sender as Control;
                 var pos = e.GetPosition(this);
-                snackbarService.Show($"{pos.ToString()}");
+                //snackbarService.Show($"{pos.ToString()}");
                 var dp = pos - startPoint;
-                if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 || pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10) { isDragging = false; floatGrid.ReleaseMouseCapture(); transT.X = -10; transT.Y = -100;return; }
+                if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 || pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10) { isDragging = false; floatGrid.ReleaseMouseCapture(); transT.X = -10; transT.Y = -100; return; }
                 transT.X = _mouseDownControlPosition.X + dp.X;
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
-        }
-        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
         }
         private void StuMgr(object sender, RoutedEventArgs e)
         {
@@ -218,41 +214,25 @@ namespace Cokee.ClassService
         {
             if (inkcanvas.IsEnabled == false)
             {
-                this.Width = SystemParameters.FullPrimaryScreenWidth;
-                this.Height = SystemParameters.FullPrimaryScreenHeight;
-                this.Top = 0;
-                this.Left = 0;
+                Catalog.SetWindowStyle(this, 0);
                 inkcanvas.IsEnabled = true;
                 inkTool.Visibility = Visibility.Visible;
                 inkBg.Opacity = 0.01;
             }
             else
             {
-                this.Width = SystemParameters.WorkArea.Width;
-                this.Height = SystemParameters.WorkArea.Height;
-                this.Top = SystemParameters.WorkArea.Top;
-                this.Left = SystemParameters.WorkArea.Left;
+                Catalog.SetWindowStyle(this, 1);
                 inkcanvas.IsEnabled = false;
                 inkTool.Visibility = Visibility.Collapsed;
                 inkBg.Opacity = 0;
             }
         }
 
-        private void ShowTime(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
-        }
+        private void ShowTime(object sender, RoutedEventArgs e) => Environment.Exit(0);
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = true;
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-
-        }
-
+        private void Window_Closed(object sender, EventArgs e){}
         private void ShowStickys(object sender, RoutedEventArgs e)
         {
             List<StickyItem> list = new List<StickyItem>();
@@ -271,24 +251,20 @@ namespace Cokee.ClassService
 
         private void PostNote(object sender, RoutedEventArgs e)
         {
-            if (postNote.Visibility == Visibility.Collapsed) postNote.Visibility = Visibility.Visible;
-            else postNote.Visibility = Visibility.Collapsed;
+            Catalog.ToggleControlVisible(postNote);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (volcd.Visibility == Visibility.Collapsed) volcd.Visibility = Visibility.Visible;
-            else volcd.Visibility = Visibility.Collapsed;
+            Catalog.ToggleControlVisible(volcd);
         }
 
-        private void ShowRandom(object sender, RoutedEventArgs e) => rancor.Visibility = Visibility.Visible;
+        private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
 
         private void RandomControl_StartRandom(object sender, string e)
         {
-            List<Student> students = new List<Student>();
-            Student.LoadFromFile(Catalog.STU_FILE);
-            ranres.ItemsSource = Student.Random(e, students);
-            ranres.Visibility = Visibility.Visible;
+            ranres.ItemsSource = Student.Random(e);
+            Catalog.ToggleControlVisible(ranres);
         }
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -297,6 +273,16 @@ namespace Cokee.ClassService
         {
             HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
             hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
+        }
+
+        private void CourseMgr(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<CourseMgr>().FirstOrDefault() == null) new CourseMgr().Show();
+        }
+
+        private void AddFloatCard(object sender, RoutedEventArgs e)
+        {
+            MainGrid.Children.Add(new FloatCard());
         }
 
         [DllImport("user32.dll")]

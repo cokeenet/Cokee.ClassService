@@ -1,11 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -19,7 +19,7 @@ namespace Cokee.ClassService.Views.Controls
         public string disk;
         public UsbCard()
         {
-            InitializeComponent();        
+            InitializeComponent();
             DriveInfo[] s = DriveInfo.GetDrives();
             s.Any(t =>
             {
@@ -33,30 +33,31 @@ namespace Cokee.ClassService.Views.Controls
         }
         private void ShowUsbCard(bool isUnplug, DriveInfo t = null)
         {
-            lock (locker1)
+
+            DoubleAnimation anim1 = new DoubleAnimation(0, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim2 = new DoubleAnimation(300, TimeSpan.FromSeconds(1));
+            anim1.EasingFunction = new CircleEase();
+            anim1.Completed += async (a, b) => { await Task.Delay(10000); ShowUsbCard(true); };
+            anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
+            anim2.EasingFunction = new CircleEase();
+            if (!isUnplug)
             {
-                DoubleAnimation anim1 = new DoubleAnimation(0, TimeSpan.FromSeconds(1));
-                DoubleAnimation anim2 = new DoubleAnimation(368, TimeSpan.FromSeconds(1));
-                anim1.EasingFunction = new CircleEase();
-                anim2.Completed += (a, b) => this.Visibility = Visibility.Collapsed;
-                anim2.EasingFunction = new CircleEase();
-                if (!isUnplug)
-                {
-                    this.Visibility = Visibility.Visible;
-                    tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
-                    disk = t.Name;
-                    diskName.Content = t.VolumeLabel + "(" + t.Name + ")";
-                    diskInfo.Content = (t.TotalFreeSpace / 1024 / 1024 / 1000) + "GB/" + (t.TotalSize / 1024 / 1024 / 1000) + "GB";//TODO:改进算法，这个结果是错的
-                }
-                else if (isUnplug)
-                {
-                    tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
-                }
+                this.Visibility = Visibility.Visible;
+                tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
+                disk = t.Name;
+                diskName.Content = t.VolumeLabel + "(" + t.Name + ")";
+                diskInfo.Content = (t.TotalFreeSpace / 1024 / 1024 / 1000) + "GB/" + (t.TotalSize / 1024 / 1024 / 1000) + "GB";//TODO:改进算法，这个结果是错的
             }
+            else if (isUnplug)
+            {
+                tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
+            }
+
         }
         private void Open(object sender, RoutedEventArgs e)
         {
-
+            Process.Start("explorer.exe", disk);
+            ShowUsbCard(true);
         }
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -96,7 +97,6 @@ namespace Cokee.ClassService.Views.Controls
         public const int GENERIC_WRITE = 0x40000000;
         public const int IOCTL_STORAGE_EJECT_MEDIA = 0x2d4808;
         public const int WM_DEVICECHANGE = 0x219;
-        private object locker1;
 
         private void ExitUsbDrive(object sender, RoutedEventArgs e)
         {
@@ -108,9 +108,8 @@ namespace Cokee.ClassService.Views.Controls
             // 向目标设备发送设备控制码。IOCTL_STORAGE_EJECT_MEDIA-弹出U盘
             uint byteReturned;
             bool result = DeviceIoControl(handle, IOCTL_STORAGE_EJECT_MEDIA, IntPtr.Zero, 0, IntPtr.Zero, 0, out byteReturned, IntPtr.Zero);
-            //if (!result) snackbarService.ShowAsync("U盘退出失败", "请检查程序占用，关闭已打开的文件夹，PPT，WORD等。", SymbolRegular.Warning24, ControlAppearance.Danger);
-            /*else*/
-            ShowUsbCard(true);
+            if (!result) Catalog.ShowInfo("U盘退出失败", "请检查程序占用，关闭已打开的文件夹.");
+            else ShowUsbCard(true);
 
 
         }

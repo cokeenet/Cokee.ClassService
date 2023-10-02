@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cokee.ClassService", "Cokee.ClassService.csproj", "{001ECFC4-6561-40A8-999F-1822AA387B6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cokee.ClassService.Server", "..\Cokee.ClassService.Server\Cokee.ClassService.Server.csproj", "{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{001ECFC4-6561-40A8-999F-1822AA387B6B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{001ECFC4-6561-40A8-999F-1822AA387B6B}.Release|x64.ActiveCfg = Release|x64
 		{001ECFC4-6561-40A8-999F-1822AA387B6B}.Release|x64.Build.0 = Release|x64
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F1196DC-BB1F-4991-BAAF-DED12CFB3A77}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

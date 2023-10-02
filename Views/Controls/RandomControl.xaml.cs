@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -21,11 +10,15 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class RandomControl : UserControl
     {
-        public int Number=1,AllowMLang=1,AllowGirl=1,AllowExist=0,Easter=0;
+        public int Number = 1, AllowMLang = 1, AllowGirl = 1, AllowExist = 0, Easter = 0,tmc=0;
         public event EventHandler<string> StartRandom;
         public RandomControl()
         {
             InitializeComponent();
+            this.IsVisibleChanged += (a, b) => { 
+                Easter = 0; title.FontSize = 18;tmc =0;
+                title.FontWeight = FontWeights.Normal;
+            };
         }
 
         private void AddBtn(object sender, RoutedEventArgs e)
@@ -46,12 +39,12 @@ namespace Cokee.ClassService.Views.Controls
         private void Boy_C(object sender, RoutedEventArgs e) => AllowGirl = 0;
 
         private void Boy_UC(object sender, RoutedEventArgs e) => AllowGirl = 1;
-        private void CancelBtn(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void numbox_TC(object sender, TextChangedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
-            if (textBox != null) 
+            if (textBox != null)
             {
                 var a = Convert.ToInt32(textBox.Text);
                 if (a >= 0) Number = a;
@@ -61,20 +54,41 @@ namespace Cokee.ClassService.Views.Controls
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 1;
 
-        private void EasterEgg(object sender, MouseButtonEventArgs e)
+        private void tm(object sender, TouchEventArgs e)
         {
-
+            tmc++;
+            if (tmc == 3) { tmc = 0;EasterEgg(); }
         }
 
+        private void EasterEgg(object sender=null, MouseButtonEventArgs e=null)
+        {
+            Easter++;
+            if (Easter == 1)
+            {
+                title.FontWeight = FontWeights.Light;
+            }
+            else if (Easter == 2)
+            {
+                title.FontSize = 19;
+            }
+            else
+            {
+                title.FontSize = 18;
+                title.FontWeight = FontWeights.Normal;
+                Easter = 0;
+            }
+
+        }
+        
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => AllowExist = 0;
 
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
-            if (Number <= 0) { Number = 0;numbox.Text = "0"; }
-            this.Visibility = Visibility.Collapsed;
-            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{AllowGirl}|{AllowExist}");
+            if (Number <= 0) { Number = 0; numbox.Text = "0"; }
+            Catalog.ToggleControlVisible(this);
+            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{AllowGirl}|{AllowExist}|{Easter}");
         }
 
-        private void MLang_UC(object sender, RoutedEventArgs e) =>AllowMLang=1;
+        private void MLang_UC(object sender, RoutedEventArgs e) => AllowMLang = 1;
     }
 }

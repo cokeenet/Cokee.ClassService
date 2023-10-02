@@ -88,18 +88,36 @@ namespace Cokee.ClassService.Helper
         }
         public static void SaveToFile(List<Student> students)
         {
-            if(!Directory.Exists(Catalog.CONFIG_DIR))Directory.CreateDirectory(Catalog.CONFIG_DIR);
+            students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+            foreach (var item in students)
+            {
+                if (item.QQ != null && item.QQ.Length >= 6)
+                    item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
+                else item.HeadPicUrl="/Resources/head.jpg";
+            }
+            if (!Directory.Exists(Catalog.CONFIG_DIR))Directory.CreateDirectory(Catalog.CONFIG_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonConvert.SerializeObject(students));
         }
-        public static List<Student> Random(string e,List<Student> students)
+        public static List<Student> Random(string e,List<Student>? students=null)
         {
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3];
+            if (students == null) students=Student.LoadFromFile(Catalog.STU_FILE);
+            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3],Easter= e.Split("|")[4];
             List<Student> randoms = new List<Student>();
             int i = 1;
-            while (i <= Convert.ToInt32(Num))
+            try
+            {
+                if (Easter == "1") 
+                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("6Zer5a6d5oCh"))));
+                else if (Easter == "2") 
+                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS"))));
+            }
+            catch (Exception)
+            {
+            }
+            while (randoms.Count<Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
-                if (randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
+                if (randoms.Count>0&&randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
                 if (AllowMLang == "0" && a.IsMinorLang) continue;
                 else if (AllowGirl == "0" && a.Sex == 0) continue;
                 else
@@ -108,6 +126,7 @@ namespace Cokee.ClassService.Helper
                     i++;
                 }
             }
+            randoms=Catalog.RandomizeList(randoms);
             return randoms;
         }
     }

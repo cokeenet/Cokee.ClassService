@@ -1,46 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Pages;
-using Cokee.ClassService.Views.Windows;
-
-using Newtonsoft.Json;
 
 namespace Cokee.ClassService.Views.Controls
 {
 
     public partial class CoursesManage : UserControl
     {
+        Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
+        List<Course> courses = new List<Course>();
         public CoursesManage()
         {
             InitializeComponent();
+            this.Loaded += (a, b) =>
+            {
+                courses = Schedule.GetCourses(schedule, 0);
+                courseControl.ItemsSource = courses;
+            };
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            string[] lines = stutb.Text.Split("\r");
-            List<Student> students = new List<Student>();
-            foreach (string line in lines)
-            {
-                string[] values = line.Split(' ');
-                string name = values[0];
-                int sex = 0;
-                if (values[1] == "男") sex = 1;
-                DateTime dt = new DateTime();
-                values[2] = values[2].Insert(4, "-");
-                values[2] = values[2].Insert(7, "-");
-                DateTime.TryParse(values[2], out dt);
-                students.Add(new Student(name, sex, dt));
-                Student.SaveToFile(students);
-            }
-            this.Visibility = Visibility.Collapsed;
+
+            Catalog.ToggleControlVisible(this);
         }
 
-        private void Cancel(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            courses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
+            if(courseControl!=null) courseControl.ItemsSource = courses;
+        }
+
+        private void AddCourse(object sender, RoutedEventArgs e)
+        {
+            courses.Add(new Course(""));
+        }
+
+        private void MoveUp(object sender, RoutedEventArgs e)
+        {
+            int c = courses.FindIndex(t => t.IsChecked == true);
+            if (c != -1)
+            {
+                Course a, b;
+                a = courses[c];
+                b = courses[c - 1];
+                courses[c - 1] = a;
+                courses[c] = b;
+            }
+        }
+
+        private void MoveDown(object sender, RoutedEventArgs e)
+        {
+            int c = courses.FindIndex(t => t.IsChecked == true);
+            if (c != -1)
+            {
+                Course a, b;
+                a = courses[c];
+                b = courses[c + 1];
+                courses[c + 1] = a;
+                courses[c] = b;
+            }
+        }
+
+        private void Delete(object sender, RoutedEventArgs e)
+        {
+            var c = courses.Find(t => t.IsChecked == true);
+            if(c!=null)courses.Remove(c);
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            var a = courses.FindAll(t => t.IsChecked == true);
+            if (a.Count > 1)
+            {
+                foreach (var item in a.Skip(1))
+                {
+                    item.IsChecked = false;
+                }
+            }
+                
+        }
     }
 }

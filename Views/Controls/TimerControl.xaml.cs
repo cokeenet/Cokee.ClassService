@@ -29,7 +29,7 @@ namespace Cokee.ClassService.Views.Controls
         }
 
 
-        private void CancelBtn(object sender, RoutedEventArgs e) => this.Visibility = Visibility.Collapsed;
+        private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
