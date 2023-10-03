@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>1.0.280.23275</AssemblyVersion>
-    <FileVersion>1.0.280.23275</FileVersion>
+    <AssemblyVersion>1.0.302.23276</AssemblyVersion>
+    <FileVersion>1.0.302.23276</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -49,9 +49,13 @@
     <PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="WPF-UI" Version="2.1.0" />
+    <PackageReference Include="WPFMediaKit" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="DirectShowLib-2005">
+      <HintPath>..\CokeeAgent\CokeeAgent\packages\WPFMediaKit.2.2.0\build\DirectShowLib-2005.dll</HintPath>
+    </Reference>
     <Reference Include="IACore">
       <HintPath>Dlls\IACore.dll</HintPath>
     </Reference>
@@ -66,6 +70,9 @@
     </Reference>
     <Reference Include="Microsoft.Ink.Analysis">
       <HintPath>Dlls\Microsoft.Ink.Analysis.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFMediaKit">
+      <HintPath>Dlls\WPFMediaKit.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -26,7 +26,7 @@
                 </InkCanvas.Background>
             </InkCanvas>
             <Controls:InkToolBar x:Name="inkTool" Background="#CC333333" VerticalAlignment="Bottom" Margin="0,0,0,20" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" />
-            <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed">
+            <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
             <ui:Card HorizontalAlignment="Left" Background="#CC333333">
                 <Grid Width="60">
                     <Grid.RowDefinitions>
@@ -40,14 +40,14 @@
                 </Grid>
                 </ui:Card>
                 <ui:Card HorizontalAlignment="Right" Background="#CC333333">
-                    <Grid Width="60">
-                        <d:Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </d:Grid.RowDefinitions>
+                    <Grid MinWidth="60">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <ui:Button Icon="ArrowUp48" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptUp" />
-                        <TextBlock x:Name="pptPage1" Text="{Binding Text, ElementName=pptPage, Mode=OneWay}" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
+                        <TextBlock x:Name="pptPage1" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
                         <ui:Button Icon="ArrowDown48" Grid.Row="2" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptDown" />
                     </Grid>
                 </ui:Card>
@@ -126,6 +126,6 @@
         </Grid>
         <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
         <RichTextBox x:Name="richTextBox" /></ScrollViewer>
-        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" />
+        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" />
     </Grid>
 </Window>

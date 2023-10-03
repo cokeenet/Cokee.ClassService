@@ -7,7 +7,6 @@ using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -20,6 +19,8 @@ using Cokee.ClassService.Views.Windows;
 using Microsoft.Win32;
 
 using Wpf.Ui.Mvvm.Services;
+
+using WPFMediaKit.DirectShow.Controls;
 
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
@@ -37,7 +38,8 @@ namespace Cokee.ClassService
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
         public static MSO.Application pptApplication = null;
-        List<StrokeCollection> inkPages = new List<StrokeCollection>();
+        MemoryStream[] memoryStreams = new MemoryStream[50];
+        public int page = 0;
         Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
         public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
@@ -48,7 +50,19 @@ namespace Cokee.ClassService
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             snackbarService.SetSnackbarControl(snackbar);
+            inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
+            var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备	 
+            string videoName = videoDevices[0];// 选择第一个
         }
+
+        private void Inkcanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                //inkcanvas.Strokes.Save(memoryStreams[page]);
+            }));
+        }
+
         private void PptUp(object sender, RoutedEventArgs e)
         {
             try
@@ -138,38 +152,74 @@ namespace Cokee.ClassService
             if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
             if (ProcessHelper.HasPowerPointProcess() && !createdPPT)
             {
-                Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
-                pptApplication = (MSO.Application)Activator.CreateInstance(comType);
-
+                /*Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
+                pptApplication = (MSO.Application)Activator.CreateInstance(comType);*/
+                pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)
                 {
                     createdPPT = true;
+
                     pptApplication.PresentationClose += (a) =>
                     {
-                        pptControls.Visibility = Visibility.Collapsed;
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            inkcanvas.Strokes.Clear();
+                            pptControls.Visibility = Visibility.Collapsed;
+                        }));
+                        Marshal.ReleaseComObject(pptApplication);
                         pptApplication = null;
+                        inkTool.isPPT = false;
+                        inkTool.pptApplication = null;
                         createdPPT = false;
+                        isPPT = false;
+
                     };
-                    pptApplication.SlideShowBegin += (Wn) =>
-                    {
-                        pptControls.Visibility = Visibility.Visible;
-                        pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                    };
+                    pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                     pptApplication.SlideShowNextSlide += (Wn) =>
                     {
-                        pptPage.Text=$"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            //if(inkcanvas.Strokes.Count>0)inkcanvas.Strokes.Save(memoryStreams[page]);
+                            page = Wn.View.CurrentShowPosition;
+                            inkcanvas.Strokes.Clear();
+                            pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                            pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                            //if(memoryStreams[page].Length > 0)inkcanvas.Strokes = new StrokeCollection(memoryStreams[page]);
+                        }));
                     };
                     pptApplication.SlideShowEnd += (a) =>
                     {
-                        pptControls.Visibility = Visibility.Collapsed;
-                        pptApplication = null;
-                        createdPPT = false;
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            inkcanvas.Strokes.Clear();
+                            pptControls.Visibility = Visibility.Collapsed;
+                        }));
+                        isPPT = false;
+                        StartInk(null, null);
+                        inkTool.isPPT = false;
+                        inkTool.pptApplication = null;
                     };
+                    if (pptApplication.SlideShowWindows.Count > 0 && pptApplication.Presentations.Count > 0) PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[0]);
                 }
 
                 if (pptApplication == null) return;
             }
         }
+
+        private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
+        {
+            isPPT = true;
+            inkTool.isPPT = true;
+            inkTool.pptApplication = pptApplication;
+            //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                StartInk("cursor", null);
+                pptControls.Visibility = Visibility.Visible;
+                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+            }));
+        }
+
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
             StartAnimation();
@@ -214,20 +264,30 @@ namespace Cokee.ClassService
         }
         private void StartInk(object sender, RoutedEventArgs e)
         {
-            if (inkcanvas.IsEnabled == false)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Catalog.SetWindowStyle(this, 0);
-                inkcanvas.IsEnabled = true;
-                Catalog.ToggleControlVisible(inkTool);
-                inkBg.Opacity = 0.01;
-            }
-            else
-            {
-                Catalog.SetWindowStyle(this, 1);
-                inkcanvas.IsEnabled = false;
-                Catalog.ToggleControlVisible(inkTool);
-                inkBg.Opacity = 0;
-            }
+
+                if (inkTool.Visibility == Visibility.Collapsed)
+                {
+                    if (isPPT)
+                    {
+                        inkTool.isPPT = true;
+                        inkTool.pptApplication = pptApplication;
+                        inkTool.SetCursorMode(0);
+                    }
+                    Catalog.SetWindowStyle(this, 0);
+                    inkcanvas.IsEnabled = true;
+                    Catalog.ToggleControlVisible(inkTool);
+                    inkBg.Opacity = 0.01;
+                }
+                else
+                {
+                    Catalog.SetWindowStyle(this, 1);
+                    inkcanvas.IsEnabled = false;
+                    Catalog.ToggleControlVisible(inkTool);
+                    inkBg.Opacity = 0;
+                }
+            }));
         }
 
         private void ShowTime(object sender, RoutedEventArgs e) => Environment.Exit(0);
