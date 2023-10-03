@@ -150,7 +150,7 @@ namespace Cokee.ClassService
             Course a, b;
             var status = Schedule.GetNowCourse(schedule, out a, out b);
             if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-            if (ProcessHelper.HasPowerPointProcess() && !createdPPT)
+            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
             {
                 /*Type comType = Type.GetTypeFromProgID("PowerPoint.Application");
                 pptApplication = (MSO.Application)Activator.CreateInstance(comType);*/
@@ -194,14 +194,15 @@ namespace Cokee.ClassService
                         {
                             inkcanvas.Strokes.Clear();
                             pptControls.Visibility = Visibility.Collapsed;
+                            isPPT = false;
+                            Catalog.SetWindowStyle(this, 1);
+                            inkcanvas.IsEnabled = false;
+                            Catalog.ToggleControlVisible(inkTool);
+                            inkBg.Opacity = 0;
+                            inkTool.isPPT = false;
+                            inkTool.pptApplication = null;
                         }));
-                        isPPT = false;
-                        Catalog.SetWindowStyle(this, 1);
-                        inkcanvas.IsEnabled = false;
-                        Catalog.ToggleControlVisible(inkTool);
-                        inkBg.Opacity = 0;
-                        inkTool.isPPT = false;
-                        inkTool.pptApplication = null;
+                        
                     };
                     if (pptApplication.SlideShowWindows.Count > 0 && pptApplication.Presentations.Count > 0) PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[0]);
                 }
@@ -220,6 +221,7 @@ namespace Cokee.ClassService
             {
                 StartInk("cursor", null);
                 inkTool.SetCursorMode(0);
+                inkBg.Opacity = 0;
                 pptControls.Visibility = Visibility.Visible;
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
             }));
@@ -279,10 +281,10 @@ namespace Cokee.ClassService
                         inkTool.pptApplication = pptApplication;
                         inkTool.SetCursorMode(0);
                     }
+                    else inkBg.Opacity = 0.01;
                     Catalog.SetWindowStyle(this, 0);
                     inkcanvas.IsEnabled = true;
                     Catalog.ToggleControlVisible(inkTool);
-                    inkBg.Opacity = 0.01;
                 }
                 else
                 {

@@ -18,11 +18,17 @@ namespace Cokee.ClassService
         public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
         public static void HandleException(Exception ex, string str = "")
         {
-            GlobalSnackbarService.Show($"{str}发生错误", ex.ToString().Substring(30) + "...", SymbolRegular.Warning32);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                GlobalSnackbarService.Show($"{str}发生错误", ex.ToString().Substring(30) + "...", SymbolRegular.Warning32);
+            });
         }
         public static void ShowInfo(string title = "", string content = "")
         {
-            GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
+            });
         }
         public static void RemoveObjFromWindow(UIElement element)
         {

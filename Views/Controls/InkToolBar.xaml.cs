@@ -41,13 +41,13 @@ namespace Cokee.ClassService.Views.Controls
         public InkToolBar()
         {
             InitializeComponent();
-            if (isPPT) SetCursorMode(0);
+            
             if(inkCanvas!=null)
             {
                 inkCanvas.EraserShape = new RectangleStylusShape(500, 1000);
             }
             this.IsVisibleChanged += (a,b) => {
-                if((bool)b.NewValue)SetCursorMode(1); 
+                if((bool)b.NewValue&&!isPPT)SetCursorMode(1); 
                 else SetCursorMode(0);
             };
         }
