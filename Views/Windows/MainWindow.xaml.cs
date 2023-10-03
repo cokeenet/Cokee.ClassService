@@ -39,7 +39,7 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool> RandomEvent;
         private Timer secondTimer = new Timer(1000);
-        private Timer picTimer= new Timer(10000);
+        private Timer picTimer= new Timer(120000);
         public static MSO.Application pptApplication = null;
         MemoryStream[] memoryStreams = new MemoryStream[50];
         public int page = 0;
