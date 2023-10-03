@@ -157,6 +157,7 @@ namespace Cokee.ClassService
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)
                 {
+                    Catalog.ShowInfo("成功捕获PPT Object!");
                     createdPPT = true;
 
                     pptApplication.PresentationClose += (a) =>
@@ -195,7 +196,10 @@ namespace Cokee.ClassService
                             pptControls.Visibility = Visibility.Collapsed;
                         }));
                         isPPT = false;
-                        StartInk(null, null);
+                        Catalog.SetWindowStyle(this, 1);
+                        inkcanvas.IsEnabled = false;
+                        Catalog.ToggleControlVisible(inkTool);
+                        inkBg.Opacity = 0;
                         inkTool.isPPT = false;
                         inkTool.pptApplication = null;
                     };
@@ -215,6 +219,7 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 StartInk("cursor", null);
+                inkTool.SetCursorMode(0);
                 pptControls.Visibility = Visibility.Visible;
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
             }));
@@ -266,7 +271,6 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-
                 if (inkTool.Visibility == Visibility.Collapsed)
                 {
                     if (isPPT)
