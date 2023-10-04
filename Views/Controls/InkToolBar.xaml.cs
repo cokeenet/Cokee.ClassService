@@ -21,6 +21,7 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 using Button = Wpf.Ui.Controls.Button;
+using System.Windows.Threading;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -41,13 +42,13 @@ namespace Cokee.ClassService.Views.Controls
         public InkToolBar()
         {
             InitializeComponent();
-            if (isPPT) SetCursorMode(0);
+            
             if(inkCanvas!=null)
             {
                 inkCanvas.EraserShape = new RectangleStylusShape(500, 1000);
             }
             this.IsVisibleChanged += (a,b) => {
-                if((bool)b.NewValue)SetCursorMode(1); 
+                if((bool)b.NewValue&&!isPPT)SetCursorMode(1); 
                 else SetCursorMode(0);
             };
         }
@@ -67,7 +68,7 @@ namespace Cokee.ClassService.Views.Controls
                     SetBtnState(penBtn);
                     inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 }
-            });
+            }, DispatcherPriority.Normal);
             
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -95,7 +96,7 @@ namespace Cokee.ClassService.Views.Controls
                     inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                     break;
                 case "Back":
-                    inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count-1);
+                    if(inkCanvas.Strokes.Count>1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count-1);
                     break;
                 case "More":
                     break;
@@ -103,11 +104,11 @@ namespace Cokee.ClassService.Views.Controls
                     inkCanvas.IsEnabled = false;
                     inkCanvas.Strokes.Clear();
                     inkCanvas.Background.Opacity = 0;
-                    Catalog.ToggleControlVisible(this);
+                    Visibility = Visibility.Collapsed;
                     if (isPPT && pptApplication != null&& pptApplication.SlideShowWindows[1]!=null) pptApplication.SlideShowWindows[1].View.Exit();
                    break;
             }
-            });
+            },DispatcherPriority.Normal);
         }
         private void SetBtnState(Button btn)
         {
@@ -117,7 +118,7 @@ namespace Cokee.ClassService.Views.Controls
                 button.Appearance = ControlAppearance.Secondary;
             }
             btn.Appearance = ControlAppearance.Primary;
-            });
+            }, DispatcherPriority.Normal);
         }
 
         private void ListView_Selected(object sender, RoutedEventArgs e)
