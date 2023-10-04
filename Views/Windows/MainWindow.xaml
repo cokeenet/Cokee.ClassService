@@ -25,7 +25,7 @@
                     <SolidColorBrush x:Name="inkBg" Color="White" Opacity="0.00" />
                 </InkCanvas.Background>
             </InkCanvas>
-            <Controls:InkToolBar x:Name="inkTool" Background="#CC333333" VerticalAlignment="Bottom" Margin="0,0,0,20" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" />
+            <Controls:InkToolBar x:Name="inkTool" Background="#CC333333" Margin="0,0,0,10" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" />
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
             <ui:Card HorizontalAlignment="Left" Background="#CC333333">
                 <Grid Width="60">
