@@ -22,6 +22,8 @@ using Wpf.Ui.Controls;
 
 using Button = Wpf.Ui.Controls.Button;
 using System.Windows.Threading;
+using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -48,9 +50,9 @@ namespace Cokee.ClassService.Views.Controls
                 inkCanvas.EraserShape = new RectangleStylusShape(500, 1000);
             }
             this.IsVisibleChanged += (a,b) => {
-                if((bool)b.NewValue&&!isPPT)SetCursorMode(1); 
-                else SetCursorMode(0);
-            };
+                if ((bool)b.NewValue && !isPPT) { SetCursorMode(1); Theme.Apply(ThemeType.Light); }
+                else { SetCursorMode(0); Theme.Apply(ThemeType.Dark); }
+                };
         }
         public void SetCursorMode(int mode)
         {
