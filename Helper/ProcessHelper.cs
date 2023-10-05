@@ -11,14 +11,14 @@ namespace Cokee.ClassService.Helper
     {
         public static bool HasPowerPointProcess()
         {
-            Process[] processes = Process.GetProcesses();
+            /*Process[] processes = Process.GetProcesses();
             //Log.Information(processes.Length.ToString());
             foreach (var item in processes)
             {
                 //Log.Information(item.ProcessName);
                 if (item.ProcessName.Contains("powerpnt") || item.ProcessName.Contains("wpp") || item.ProcessName.Contains("POWERPNT"))
                 return true;
-            }
+            }*/
             return false;
             /*bool result = false;
             IntPtr intPtr = IntPtr.Zero;

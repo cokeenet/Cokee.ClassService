@@ -25,9 +25,9 @@
                     <SolidColorBrush x:Name="inkBg" Color="White" Opacity="0.00" />
                 </InkCanvas.Background>
             </InkCanvas>
-            <Controls:InkToolBar x:Name="inkTool" Background="#CC333333" Margin="0,0,0,10" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" />
+            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Margin="0,0,0,1" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" />
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
-            <ui:Card HorizontalAlignment="Left" Background="#CC333333">
+                <ui:Card HorizontalAlignment="Left" Background="#4C484848">
                 <Grid Width="60">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -35,11 +35,11 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ui:Button Icon="ArrowUp48" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptUp" />
-                    <TextBlock x:Name="pptPage" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
+                    <TextBlock x:Name="pptPage" Foreground="White" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
                     <ui:Button Icon="ArrowDown48" Grid.Row="2" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptDown" />
                 </Grid>
                 </ui:Card>
-                <ui:Card HorizontalAlignment="Right" Background="#CC333333">
+                <ui:Card HorizontalAlignment="Right" Background="#4C484848">
                     <Grid MinWidth="60">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -47,7 +47,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <ui:Button Icon="ArrowUp48" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptUp" />
-                        <TextBlock x:Name="pptPage1" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
+                        <TextBlock x:Name="pptPage1" Foreground="White" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
                         <ui:Button Icon="ArrowDown48" Grid.Row="2" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptDown" />
                     </Grid>
                 </ui:Card>
