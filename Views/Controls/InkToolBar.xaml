@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" 
-             Height="100" Width="600">
-    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="18" Background="#01FFFFFF">
-        <Grid x:Name="mainGrid" Margin="5" Height="60">
+             Height="55" Width="425">
+    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="16" Background="#01FFFFFF">
+        <Grid x:Name="mainGrid" Margin="-10">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>

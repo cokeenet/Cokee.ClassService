@@ -28,7 +28,7 @@
             <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Margin="0,0,0,1" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" />
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
                 <ui:Card HorizontalAlignment="Left" Background="#4C484848">
-                <Grid Width="60">
+                <Grid Width="60" Margin="-10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -40,7 +40,7 @@
                 </Grid>
                 </ui:Card>
                 <ui:Card HorizontalAlignment="Right" Background="#4C484848">
-                    <Grid MinWidth="60">
+                    <Grid MinWidth="60" Margin="-10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -72,7 +72,7 @@
                     <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Center" Grid.Row="1" />
                     <ui:Button Content="快速批注" Icon="Pen48" Grid.Row="2" Margin="5" Click="StartInk" HorizontalAlignment="Center" />
                     <ui:Button Content="音量调节" Icon="Speaker228" Grid.Row="3" Margin="5" HorizontalAlignment="Center" Click="Button_Click" MouseRightButtonDown="ShowTime" />
-                    <ui:Button Content="显示大学梦" Icon="Note48" Grid.Row="4" Margin="5" Click="ShowStickys" HorizontalAlignment="Center" MouseRightButtonDown="PostNote"/>
+                    <ui:Button Content="显示便利贴" Icon="Note48" Grid.Row="4" Margin="5" Click="ShowStickys" HorizontalAlignment="Center" MouseRightButtonDown="PostNote"/>
                     <ui:Button Content="课程管理" Icon="List28" Grid.Row="5" Margin="5" Click="CourseMgr" HorizontalAlignment="Center" />
                     <ui:Button Content="添加悬浮便签" Icon="NoteAdd28" Grid.Row="6" Margin="5" Click="AddFloatCard" HorizontalAlignment="Center" />
 
