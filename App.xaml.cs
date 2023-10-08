@@ -13,7 +13,8 @@ using System.Windows.Threading;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.IO;
-
+using Wpf.Ui.Appearance;
+using Cokee.ClassService.Helper;
 namespace Cokee.ClassService
 {
     /// <summary>
@@ -36,6 +37,7 @@ namespace Cokee.ClassService
             {
                 Directory.CreateDirectory(Catalog.CONFIG_DIR);
             }
+            
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

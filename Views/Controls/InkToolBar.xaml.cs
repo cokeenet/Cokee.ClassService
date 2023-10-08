@@ -1,29 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
-using Cokee.ClassService.Views.Controls;
-using MSO = Microsoft.Office.Interop.PowerPoint;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
 
 using Button = Wpf.Ui.Controls.Button;
-using System.Windows.Threading;
-using Wpf.Ui.Mvvm.Services;
-using Wpf.Ui.Appearance;
+using MSO = Microsoft.Office.Interop.PowerPoint;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -40,23 +26,31 @@ namespace Cokee.ClassService.Views.Controls
             get { return (InkCanvas)GetValue(InkCanvasProperty); }
             set { SetValue(InkCanvasProperty, value); }
         }
-        public bool isPPT=false;
+        public bool isPPT = false;
         public InkToolBar()
         {
             InitializeComponent();
-            
-            if(inkCanvas!=null)
+            /*if (inkCanvas != null)
             {
-                inkCanvas.EraserShape = new RectangleStylusShape(500, 1000);
+                
             }
-            this.IsVisibleChanged += (a,b) => {
-                if ((bool)b.NewValue && !isPPT) { SetCursorMode(1); Theme.Apply(ThemeType.Light); }
-                else { SetCursorMode(0); Theme.Apply(ThemeType.Dark); }
-                };
+            this.IsVisibleChanged += (a, b) =>
+            {
+                if ((bool)b.NewValue && !isPPT)
+                {
+                    SetCursorMode(1);
+                }
+                else
+                {
+                    SetCursorMode(0);
+                }
+            };*/
         }
         public void SetCursorMode(int mode)
         {
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (inkCanvas == null) return;
                 if (mode == 0)
                 {
                     SetBtnState(curBtn);
@@ -71,55 +65,57 @@ namespace Cokee.ClassService.Views.Controls
                     inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 }
             }, DispatcherPriority.Normal);
-            
+
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                var btn = (Button)sender;
-            switch (btn.Tag.ToString())
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                case "Cursor":
-                    SetBtnState(curBtn);
-                    inkCanvas.IsEnabled = false;
-                    inkCanvas.Background.Opacity = 0;
-                    break;
-                case "Pen":
-                    inkCanvas.IsEnabled = true;
-                    inkCanvas.Background.Opacity = 0.01;
-                    //if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
-                    SetBtnState(penBtn);
-                    inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
-                    break;
-                case "Eraser":
-                    SetBtnState(eraserBtn);
-                    inkCanvas.IsEnabled = true;
-                    inkCanvas.Background.Opacity = 0.01;
-                    inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
-                    break;
-                case "Back":
-                    if(inkCanvas.Strokes.Count>1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count-1);
-                    break;
-                case "More":
-                    break;
-                case "Exit":
-                    inkCanvas.IsEnabled = false;
-                    inkCanvas.Strokes.Clear();
-                    inkCanvas.Background.Opacity = 0;
-                    Visibility = Visibility.Collapsed;
-                    if (isPPT && pptApplication != null&& pptApplication.SlideShowWindows[1]!=null) pptApplication.SlideShowWindows[1].View.Exit();
-                   break;
-            }
-            },DispatcherPriority.Normal);
+                var btn = (Button)sender;
+                switch (btn.Tag.ToString())
+                {
+                    case "Cursor":
+                        SetBtnState(curBtn);
+                        inkCanvas.IsEnabled = false;
+                        inkCanvas.Background.Opacity = 0;
+                        break;
+                    case "Pen":
+                        inkCanvas.IsEnabled = true;
+                        inkCanvas.Background.Opacity = 0.01;
+                        //if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
+                        SetBtnState(penBtn);
+                        inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                        break;
+                    case "Eraser":
+                        SetBtnState(eraserBtn);
+                        inkCanvas.IsEnabled = true;
+                        inkCanvas.Background.Opacity = 0.01;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        break;
+                    case "Back":
+                        if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
+                        break;
+                    case "More":
+                        break;
+                    case "Exit":
+                        inkCanvas.IsEnabled = false;
+                        inkCanvas.Strokes.Clear();
+                        inkCanvas.Background.Opacity = 0;
+                        Visibility = Visibility.Collapsed;
+                        if (isPPT && pptApplication != null && pptApplication.SlideShowWindows[1] != null) pptApplication.SlideShowWindows[1].View.Exit();
+                        break;
+                }
+            }, DispatcherPriority.Normal);
         }
         private void SetBtnState(Button btn)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                foreach (Button button in mainGrid.Children.OfType<Button>())
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                button.Appearance = ControlAppearance.Secondary;
-            }
-            btn.Appearance = ControlAppearance.Primary;
+                foreach (Button button in mainGrid.Children.OfType<Button>())
+                {
+                    button.Appearance = ControlAppearance.Secondary;
+                }
+                btn.Appearance = ControlAppearance.Primary;
             }, DispatcherPriority.Normal);
         }
 

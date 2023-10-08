@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Cokee.ClassService.Helper;
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>

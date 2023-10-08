@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using Cokee.ClassService.Helper;
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>

@@ -7,7 +7,7 @@
     xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
     xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
     x:Class="Cokee.ClassService.MainWindow"
-         mc:Ignorable="d"
+         mc:Ignorable="d" FontFamily="Cairo-Regular"
         Title="CokeeClassService"
         Width="1920" Height="1080"
         Left="0" Top="0" Loaded="Window_Loaded"
@@ -22,25 +22,38 @@
                     <DrawingAttributes Color="Red" Height="4" Width="4" />
                 </InkCanvas.DefaultDrawingAttributes>
                 <InkCanvas.Background>
-                    <SolidColorBrush x:Name="inkBg" Color="White" Opacity="0.00" />
+                    <SolidColorBrush Color="White" Opacity="0.00" />
                 </InkCanvas.Background>
             </InkCanvas>
-            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Margin="0,0,0,1" inkCanvas="{Binding ElementName=inkcanvas}" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" />
-            <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
-                <ui:Card HorizontalAlignment="Left" Background="#4C484848">
-                <Grid Width="60" Margin="-10">
+            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0,0,0,20" d:Visibility="Visible"/>
+            <ui:Card Background="#4C484848" Margin="0,0,0,20" VerticalAlignment="Bottom" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <ui:Button Icon="ArrowUp48" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptUp" />
-                    <TextBlock x:Name="pptPage" Foreground="White" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
-                    <ui:Button Icon="ArrowDown48" Grid.Row="2" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptDown" />
+                    <Label Content="色板"/>
+                    <StackPanel Grid.Row="1">
+                        <Button Background="Red"/>
+                    </StackPanel>
                 </Grid>
+            </ui:Card>
+            <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">
+                <ui:Card HorizontalAlignment="Left" Background="#4C484848" >
+                    <Grid Width="60" Margin="-10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ui:Button Icon="ArrowUp48" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptUp" />
+                        <TextBlock x:Name="pptPage" Foreground="White" d:Text="11/11" Grid.Row="1" Margin="5" FontSize="17" HorizontalAlignment="Stretch" TextAlignment="Center" />
+                        <ui:Button Icon="ArrowDown48" Grid.Row="2" Margin="5" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="PptDown" />
+                    </Grid>
                 </ui:Card>
                 <ui:Card HorizontalAlignment="Right" Background="#4C484848">
-                    <Grid MinWidth="60" Margin="-10">
+                    <Grid Width="60" Margin="-10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -71,11 +84,10 @@
                     <ui:Button Content="随机抽取" Icon="ArrowShuffle48" Margin="5" Click="ShowRandom" HorizontalAlignment="Center" />
                     <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Center" Grid.Row="1" />
                     <ui:Button Content="快速批注" Icon="Pen48" Grid.Row="2" Margin="5" Click="StartInk" HorizontalAlignment="Center" />
-                    <ui:Button Content="音量调节" Icon="Speaker228" Grid.Row="3" Margin="5" HorizontalAlignment="Center" Click="Button_Click" MouseRightButtonDown="ShowTime" />
-                    <ui:Button Content="显示便利贴" Icon="Note48" Grid.Row="4" Margin="5" Click="ShowStickys" HorizontalAlignment="Center" MouseRightButtonDown="PostNote"/>
+                    <ui:Button Content="音量调节" Icon="Speaker228" Grid.Row="3" Margin="5" HorizontalAlignment="Center" Click="VolumeCard" MouseRightButtonDown="ShowTime" />
+                    <ui:Button Content="显示便利贴" Icon="Note48" Grid.Row="4" Margin="5" Click="ShowStickys" HorizontalAlignment="Center" MouseRightButtonDown="PostNote" />
                     <ui:Button Content="课程管理" Icon="List28" Grid.Row="5" Margin="5" Click="CourseMgr" HorizontalAlignment="Center" />
                     <ui:Button Content="添加悬浮便签" Icon="NoteAdd28" Grid.Row="6" Margin="5" Click="AddFloatCard" HorizontalAlignment="Center" />
-
                 </Grid>
             </ui:Card>
         </Popup>
@@ -94,12 +106,11 @@
             </ItemsControl>
         </ScrollViewer>
         <Controls:PostNote x:Name="postNote" Visibility="Collapsed" Background="#F2333333" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Info" />
         <ui:InfoBar x:Name="infobar" VerticalAlignment="Top" HorizontalAlignment="Center" Message="当前焦点在CokeeClass上!" IsClosable="False" />
         <Controls:RandomControl x:Name="rancor" Background="#F2333333" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300" StartRandom="RandomControl_StartRandom" Visibility="Collapsed" />
         <Controls:RandomResult x:Name="ranres" Background="#F2333333" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="500" Visibility="Collapsed" />
         <Controls:VolumeCard x:Name="volcd" Background="#F2333333" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" />
-        <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible"/>
+        <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" />
         <Grid x:Name="floatGrid" MouseLeftButtonDown="mouseDown" MouseLeftButtonUp="mouseUp" MouseMove="mouseMove" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -121,11 +132,13 @@
                 </Image.Clip>
             </Image>
             <ui:Badge Grid.Row="1" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
-                <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" FontFamily="Microsoft YaHei UI" d:Text="11:11" />
+                <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
             </ui:Badge>
         </Grid>
         <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
-        <RichTextBox x:Name="richTextBox" /></ScrollViewer>
+            <RichTextBox x:Name="richTextBox" />
+        </ScrollViewer>
         <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" />
+        <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Info" Margin="24,24,24,80" />
     </Grid>
 </Window>

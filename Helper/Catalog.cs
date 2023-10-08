@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
-namespace Cokee.ClassService
+using Wpf.Ui.Animations;
+namespace Cokee.ClassService.Helper
 {
     public class Catalog
     {
@@ -14,7 +15,7 @@ namespace Cokee.ClassService
         public const string INK_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink";
         public const string SCHEDULE_FILE = @"D:\Program Files (x86)\CokeeTech\CokeeClass\schedule.json";
         public const string STU_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
-        public static int WindowStyle = 0;
+        public static int WindowType = 0;
         public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
         public static void HandleException(Exception ex, string str = "")
         {
@@ -43,21 +44,21 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                WindowStyle = type;
+                Catalog.WindowType = type;
                 if (mainWindow == null) return;
                 if (type == 0)
                 {
-                    mainWindow.Width = SystemParameters.FullPrimaryScreenWidth;
-                    mainWindow.Height = SystemParameters.FullPrimaryScreenHeight;
-                    mainWindow.Top = SystemParameters.WorkArea.Top;
-                    mainWindow.Left = SystemParameters.WorkArea.Left;
+                    mainWindow.Width = SystemParameters.PrimaryScreenWidth;
+                    mainWindow.Height = SystemParameters.PrimaryScreenHeight;
+                    mainWindow.Top = 0;
+                    mainWindow.Left = 0;
                 }
                 else
                 {
                     mainWindow.Width = SystemParameters.WorkArea.Width;
                     mainWindow.Height = SystemParameters.WorkArea.Height;
-                    mainWindow.Top = SystemParameters.WorkArea.Top;
-                    mainWindow.Left = SystemParameters.WorkArea.Left;
+                    mainWindow.Top = 0;
+                    mainWindow.Left = 0;
                 }
             });
         }
@@ -68,22 +69,7 @@ namespace Cokee.ClassService
                 if (uIElement.Visibility == Visibility.Collapsed)
                 {
                     uIElement.Visibility = Visibility.Visible;
-                    // 创建一个淡入动画
-                    DoubleAnimation fadeInAnimation = new DoubleAnimation();
-                    fadeInAnimation.From = 0.0;
-                    fadeInAnimation.To = 1.0;
-                    fadeInAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.2)); // 设置动画持续时间
-
-                    // 创建一个淡入故事板，并将动画应用于控件的透明度属性
-                    Storyboard fadeInStoryboard = new Storyboard();
-                    fadeInStoryboard.Children.Add(fadeInAnimation);
-                    Storyboard.SetTarget(fadeInAnimation, uIElement);
-                    Storyboard.SetTargetProperty(fadeInAnimation, new PropertyPath(UIElement.OpacityProperty));
-
-                    // 淡入动画完成时将控件设置为可见
-
-                    // 启动淡入动画
-                    fadeInStoryboard.Begin();
+                    Transitions.ApplyTransition(uIElement, TransitionType.FadeInWithSlide, 200);
                 }
                 else
                 {

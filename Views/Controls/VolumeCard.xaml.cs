@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using Microsoft.Office.Interop.PowerPoint;
 
 using NAudio.CoreAudioApi;
-
+using Cokee.ClassService.Helper;
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
+
+using Newtonsoft.Json;
 
 using Wpf.Ui.Common;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace Cokee.ClassService.Helper
 {
@@ -93,31 +92,32 @@ namespace Cokee.ClassService.Helper
             {
                 if (item.QQ != null && item.QQ.Length >= 6)
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
-                else item.HeadPicUrl="/Resources/head.jpg";
+                else item.HeadPicUrl = "/Resources/head.jpg";
             }
-            if (!Directory.Exists(Catalog.CONFIG_DIR))Directory.CreateDirectory(Catalog.CONFIG_DIR);
+            if (!Directory.Exists(Catalog.CONFIG_DIR)) Directory.CreateDirectory(Catalog.CONFIG_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonConvert.SerializeObject(students));
         }
-        public static List<Student> Random(string e,List<Student>? students=null)
+        public static List<Student> Random(string e, List<Student>? students = null)
         {
-            if (students == null) students=Student.LoadFromFile(Catalog.STU_FILE);
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3],Easter= e.Split("|")[4];
+            if (students == null) students = Student.LoadFromFile(Catalog.STU_FILE);
+            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4];
             List<Student> randoms = new List<Student>();
             int i = 1;
             try
             {
-                if (Easter == "1") 
+                if (Easter == "1")
                     randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("6Zer5a6d5oCh"))));
-                else if (Easter == "2") 
+                else if (Easter == "2")
                     randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS"))));
             }
             catch (Exception)
             {
             }
-            while (randoms.Count<Convert.ToInt32(Num))
+        ranStart:
+            while (randoms.Count < Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
-                if (randoms.Count>0&&randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
+                if (randoms.Count > 0 && randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
                 if (AllowMLang == "0" && a.IsMinorLang) continue;
                 else if (AllowGirl == "0" && a.Sex == 0) continue;
                 else
@@ -126,7 +126,12 @@ namespace Cokee.ClassService.Helper
                     i++;
                 }
             }
-            randoms=Catalog.RandomizeList(randoms);
+            if (Easter == "1")
+            {
+                    randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
+                    goto ranStart;
+            }
+            randoms = Catalog.RandomizeList(randoms);
             return randoms;
         }
     }
