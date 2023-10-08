@@ -37,7 +37,7 @@ namespace Cokee.ClassService
             {
                 Directory.CreateDirectory(Catalog.CONFIG_DIR);
             }
-            
+            Accent.ApplySystemAccent();
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
