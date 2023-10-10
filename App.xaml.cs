@@ -33,11 +33,22 @@ namespace Cokee.ClassService
                   typeof(Analytics), typeof(Crashes));
             base.OnStartup(e);
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             if (!Directory.Exists(Catalog.CONFIG_DIR))
             {
                 Directory.CreateDirectory(Catalog.CONFIG_DIR);
             }
             Accent.ApplySystemAccent();
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex =e.ExceptionObject as Exception;
+            if (ex == null) ex = new Exception("Null异常。");
+            Log.Error(ex, "发生错误");
+            Crashes.TrackError(ex);
+            Catalog.HandleException(ex, "Bug Tracked! ");
+           
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

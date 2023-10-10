@@ -25,7 +25,7 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Mvvm.Services;
 
 using WPFMediaKit.DirectShow.Controls;
-
+using ZetaIpc.Runtime.Helper;
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -72,8 +72,6 @@ namespace Cokee.ClassService
                 head.Source = new BitmapImage(new Uri(url));
                 StartAnimation(3, 3600);
             }));
-            
-
         }
 
         private void Inkcanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
@@ -133,7 +131,7 @@ namespace Cokee.ClassService
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)
                 {
-                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name+"/"+pptApplication.Version);
+                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name+"/版本"+pptApplication.Version+"/PC"+pptApplication.ProductCode);
                     
                     pptApplication.PresentationClose += (a) =>
                     {
