@@ -12,7 +12,7 @@
         Width="1920" Height="1080"
         Left="0" Top="0" Loaded="Window_Loaded"
         WindowStartupLocation="Manual"  ShowInTaskbar="False"
-        Closing="Window_Closing" Closed="Window_Closed"
+        Closing="Window_Closing" Closed="Window_Closed" KeyDown="MainWindow_OnKeyDown"
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True" Focusable="False"
         ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
     <Grid x:Name="MainGrid" Focusable="False">
@@ -26,17 +26,29 @@
                 </InkCanvas.Background>
             </InkCanvas>
             <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0,0,0,20" d:Visibility="Visible"/>
-            <ui:Card Background="#4C484848" Margin="0,0,0,20" VerticalAlignment="Bottom" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center">
+            <ui:Card Background="#4C484848" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Label Content="色板"/>
-                    <StackPanel Grid.Row="1">
-                        <Button Background="Red"/>
-                    </StackPanel>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.ColumnSpan="2"  Content="色板" Margin="5"/>
+                        <Button Grid.Row="1" Background="Red" Margin="5"/>
+                        <Button Grid.Row="2" Background="Red" Margin="5"/>
+                        <Button Grid.Row="3" Background="Red" Margin="5"/>
+                    <Button Grid.Row="1" Grid.Column="1" Background="Red" Margin="5"/>
+                    <Button Grid.Row="2" Grid.Column="1" Background="Red" Margin="5"/>
+                    <Button Grid.Row="3" Grid.Column="1" Background="Red" Margin="5"/>
+                        <Button Grid.Row="1" Grid.Column="2" Background="Red" Margin="5"/>
+                    <Button Grid.Row="2" Grid.Column="2" Background="Red" Margin="5"/>
+                    <Button Grid.Row="3" Grid.Column="2" Background="Red" Margin="5"/>
                 </Grid>
             </ui:Card>
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible">

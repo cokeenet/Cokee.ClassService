@@ -43,7 +43,7 @@ namespace Cokee.ClassService
         private Timer secondTimer = new Timer(1000);
         private Timer picTimer= new Timer(120000);
         public static MSO.Application pptApplication = null;
-        StrokeCollection[] strokes=new StrokeCollection[101];
+        //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
         Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
         public SnackbarService snackbarService = new SnackbarService();
@@ -58,7 +58,7 @@ namespace Cokee.ClassService
             picTimer.Start();
             snackbarService.SetSnackbarControl(snackbar);
             inkTool.inkCanvas = inkcanvas;
-            inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
+            //inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
             //Theme.Apply(ThemeType.Light);
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备	 
             string videoName = videoDevices[0];// 选择第一个*/
@@ -78,14 +78,14 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (page >= 0 && page <= 101)
+                /*if (page >= 0 && page <= 101)
                 { 
                     strokes[page] = inkcanvas.Strokes;
-                }
+                }*/
             }));
         }
 
-        private void PptUp(object sender, RoutedEventArgs e)
+        private void PptUp(object sender=null, RoutedEventArgs e=null)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Cokee.ClassService
                 pptControls.Visibility = Visibility.Collapsed;
             }
         }
-        private void PptDown(object sender, RoutedEventArgs e)
+        private void PptDown(object sender=null, RoutedEventArgs e=null)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace Cokee.ClassService
                             inkcanvas.Strokes.Clear();
                             pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                             pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                            if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
+                            //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
                         }), DispatcherPriority.Normal);
                     };
                     pptApplication.SlideShowEnd += (a) =>
@@ -355,5 +355,13 @@ namespace Cokee.ClassService
             SetWindowLong(hwnd, -20, newStyle);
         }
 
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (isPPT)
+            {
+                if (e.Key == Key.PageDown||e.Key==Key.Down)PptDown();
+                else if(e.Key==Key.PageUp||e.Key==Key.Up)PptUp();
+            }
+        }
     }
 }
