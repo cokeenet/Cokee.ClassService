@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" FontFamily="Cairo-Regular"
-             Height="55" Width="425">
+             Height="43" Width="425">
     <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="16" Background="#01FFFFFF">
         <Grid x:Name="mainGrid" Margin="-15">
             <Grid.RowDefinitions>
@@ -25,18 +25,41 @@
             <ui:Button x:Name="backBtn" Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Grid.Column="3" Margin="5" Click="Button_Click" Tag="Back" IconFilled="True" Visibility="Collapsed"/>
             <ui:Button x:Name="moreBtn" Icon="MoreHorizontal48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More" IconFilled="True" />
             <ui:Button x:Name="exitBtn" Icon="ArrowExit20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit" IconFilled="True"/>
-            <!--<Popup x:Name="penMenu" IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="True" PopupAnimation="Scroll">
-                <ui:Card HorizontalAlignment="Left" VerticalAlignment="Stretch">
+            <Popup x:Name="penMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True">
+                <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Label Content="色板"/>
-            
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"  Text="色板" Margin="5" FontSize="16"/>
+                        <StackPanel x:Name="stkPn" Grid.RowSpan="3" Grid.Row="1">
+                            <Slider x:Name="penSlider" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" Value="3.5" Maximum="15" Minimum="1"/>
+                            <TextBlock Text="粗细" FontSize="12" Margin="5"/>
+                        </StackPanel>
+                        <ui:Button Grid.Row="1" Background="Red" Margin="5" Width="50" Height="30" Grid.Column="1" Icon="CheckmarkCircle48" FontSize="17"/>
+                        <ui:Button Grid.Row="2" Grid.Column="1" Background="CornflowerBlue" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="3" Grid.Column="1" Background="#FF306C00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="1" Grid.Column="2" Background="Black" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="2" Grid.Column="2" Background="#FF321EB5" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="3" Grid.Column="2" Background="#FF66D552" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="1" Grid.Column="3" Background="White" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="2" Grid.Column="3" Background="#FFFF8B00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="3" Grid.Column="3" Background="#FF4EA1B7" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                     </Grid>
                 </ui:Card>
-            </Popup>-->
+            </Popup>
+            <Popup x:Name="moreMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=moreBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True">
+               
+            </Popup>
 
         </Grid>
     </ui:Card>

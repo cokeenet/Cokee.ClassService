@@ -18,7 +18,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="课程管理" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
+            <TextBlock Text="课程管理" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
             <ComboBox x:Name="comboBox" HorizontalAlignment="Right" Margin="5" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBoxItem Content="星期一"/>
                 <ComboBoxItem Content="星期二"/>

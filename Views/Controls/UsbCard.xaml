@@ -4,13 +4,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d">
+             mc:Ignorable="d" FontFamily="Cairo-Regular" Visibility="Collapsed" d:Visibility="Visible">
     <ui:Card
               x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="#B2FFFFFF" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
               RenderTransformOrigin="0.5,0.5">
         <ui:Card.RenderTransform>
             <TransformGroup>
-                <TranslateTransform x:Name="tranUsb" X="368" />
+                <TranslateTransform x:Name="tranUsb" X="0" />
             </TransformGroup>
         </ui:Card.RenderTransform>
         <Grid>
@@ -32,10 +32,10 @@
             <ui:Button x:Name="remove" HorizontalAlignment="Right"
                  VerticalAlignment="Top" Background="#FFFFFEFE" BorderBrush="#6CBCEA" BorderThickness="1"
                  Click="ExitUsbDrive" Content="弹出" Icon="UsbPlug20" Foreground="Black" Grid.Row="1" Grid.Column="2" Margin="5"/>
-            <Label x:Name="diskName"  Content="U盘(?:\)" Foreground="Black" Grid.Column="1" Margin="5" FontSize="16"/>
+            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="16"/>
 
 
-            <Label x:Name="diskInfo" Content="---GB/---GB" Foreground="Black" Grid.Row="1" Grid.Column="1" Margin="5"/>
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5"/>
 
         </Grid>
     </ui:Card>

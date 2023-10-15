@@ -45,21 +45,24 @@ namespace Cokee.ClassService
         public static MSO.Application pptApplication = null;
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
-        Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
+        Schedule schedule = Schedule.LoadFromJson();
         public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
         {
             InitializeComponent();
-            Catalog.SetWindowStyle(this, 0);
-            SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(this, Catalog.WindowType); transT.X = -10; transT.Y = -100; };
+            Catalog.SetWindowStyle(1);
+            SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(Catalog.WindowType); transT.X = -10; transT.Y = -100; };
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             picTimer.Elapsed += PicTimer_Elapsed;
             picTimer.Start();
             snackbarService.SetSnackbarControl(snackbar);
+            snackbarService.Timeout = 4000;
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
-            //Theme.Apply(ThemeType.Light);
+            VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
+            /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
+            else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备	 
             string videoName = videoDevices[0];// 选择第一个*/
         }
@@ -170,7 +173,7 @@ namespace Cokee.ClassService
                             inkcanvas.Strokes.Clear();
                             pptControls.Visibility = Visibility.Collapsed;
                             isPPT = false;
-                            Catalog.SetWindowStyle(this, 1);
+                            Catalog.SetWindowStyle(1);
                             inkcanvas.IsEnabled = false;
                             inkTool.Visibility = Visibility.Collapsed;
                             inkcanvas.Background.Opacity = 0;
@@ -199,7 +202,7 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 Catalog.ShowInfo("放映已开始.");
-                StartInk("cursor", null);
+                StartInk(null, null) ;
                 inkTool.SetCursorMode(0);
                 inkcanvas.Background.Opacity = 0;
                 pptControls.Visibility = Visibility.Visible;
@@ -211,7 +214,8 @@ namespace Cokee.ClassService
 
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
-            StartAnimation();
+            //StartAnimation();
+            PicTimer_Elapsed();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
             if (cardPopup.IsOpen) cardPopup.IsOpen = false;
@@ -264,13 +268,13 @@ namespace Cokee.ClassService
                         inkTool.SetCursorMode(0);
                     }
                     else inkcanvas.Background.Opacity = 0.01;
-                    Catalog.SetWindowStyle(this, 0);
+                    Catalog.SetWindowStyle(0);
                     inkcanvas.IsEnabled = true;
                     inkTool.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    Catalog.SetWindowStyle(this, 1);
+                    Catalog.SetWindowStyle(1);
                     inkcanvas.IsEnabled = false;
                     inkTool.Visibility = Visibility.Collapsed;
                     inkcanvas.Background.Opacity = 0;
@@ -278,7 +282,6 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void ShowTime(object sender, RoutedEventArgs e) => Environment.Exit(0);
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = true;
 
@@ -331,16 +334,25 @@ namespace Cokee.ClassService
             if (Application.Current.Windows.OfType<CourseMgr>().FirstOrDefault() == null) new CourseMgr().Show();
         }
 
-        private void AddFloatCard(object sender, RoutedEventArgs e)
-        {
-            MainGrid.Children.Add(new FloatCard());
-        }
+        private void AddFloatCard(object sender, RoutedEventArgs e)=> MainGrid.Children.Add(new FloatCard());
 
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        private void Settings(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<Settings>().FirstOrDefault() == null) new Settings().Show();
+        }
+
+
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+            SetToolWindow();
+        }
+        public void SetToolWindow()
+        {
             int WS_EX_TOOLWINDOW = 0x80;
             // 获取窗口句柄
             IntPtr hwnd = new WindowInteropHelper(this).Handle;

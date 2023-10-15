@@ -13,7 +13,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label x:Name="name" Content="{Binding Name}" ContentStringFormat="From {0}" d:Content="111"/>
+            <TextBlock x:Name="name" Text="{Binding Name,StringFormat=From {0}}" d:Text="111" FontSize="18"/>
             <InkCanvas x:Name="ink" EditingMode="None" Background="Black" Grid.Row="1" Width="470" Height="300">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="White" Width="4.00314960629921" Height="4.00314960629921"/>

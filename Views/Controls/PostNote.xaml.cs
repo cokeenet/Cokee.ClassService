@@ -41,15 +41,15 @@ namespace Cokee.ClassService.Views.Controls
                     str.Add(item.Name);
                 }
                 atu.ItemsSource = str;
-                this.IsVisibleChanged += (a, b) => { 
-                    IsEraser = false;
-                    ink.Strokes = new StrokeCollection();
-                    atu.Text = null;
-                    atu.ItemsSource = str;
-                    pen.Appearance = ControlAppearance.Primary;
-                    era.Appearance = ControlAppearance.Secondary; 
-                };
+                
             }
+            this.IsVisibleChanged += (a, b) => {
+                IsEraser = false;
+                ink.Strokes.Clear();
+                atu.Text = null;
+                pen.Appearance = ControlAppearance.Primary;
+                era.Appearance = ControlAppearance.Secondary;
+            };
         }
 
         private void Pen(object sender, RoutedEventArgs e)
@@ -114,6 +114,7 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     atu.Text = "";
                     stud = "";
+                    ink.Strokes.Clear();
                 }
                 else File.Move(@$"{Catalog.INK_DIR}\{stud}.ink", @$"{Catalog.INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
             }

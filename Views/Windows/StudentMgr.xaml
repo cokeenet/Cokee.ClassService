@@ -37,7 +37,6 @@
                         Content="关于" Icon="Info24"/>
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
-            <ui:Dialog x:Name="dialog" Grid.Column="1" ButtonRightName="取消" ButtonLeftName="抽取"/>
             <Border
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
                 <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />

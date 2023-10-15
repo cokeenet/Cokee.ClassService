@@ -1,0 +1,44 @@
+﻿<ui:UiPage xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Pages"  
+           x:Class="Cokee.ClassService.Views.Pages.Settings"
+           xmlns:local="clr-namespace:Cokee.ClassService.Helper"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d" 
+       d:DesignHeight="620"
+       d:DesignWidth="511"
+      Title="Settings">
+    <ui:UiPage.Resources>
+        <local:VisibilityConverter x:Key="VisibilityConverter"/>
+        <local:LevelConverter x:Key="LevelConverter"/>
+    </ui:UiPage.Resources>
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+                <ui:InfoBar x:Name="micaInfo" Message="当前系统版本不支持Mica窗口背景效果。😓" d:IsOpen="True" Severity="Warning" Margin="5"/>
+                <ui:CardControl Margin="5" Icon="DarkTheme24">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                        FontSize="13" FontWeight="Medium" Text="深色模式" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable}"/>
+                </ui:CardControl>
+                <ui:CardControl Icon="PenOff48" Margin="5">
+                    <ui:CardControl.Header>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13" FontWeight="Medium" Text="画笔支持多点触控" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="禁用则只能一个人写咯" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable}"/>
+                </ui:CardControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</ui:UiPage>

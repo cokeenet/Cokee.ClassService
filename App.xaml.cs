@@ -39,6 +39,7 @@ namespace Cokee.ClassService
                 Directory.CreateDirectory(Catalog.CONFIG_DIR);
             }
             Accent.ApplySystemAccent();
+            
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -48,7 +49,7 @@ namespace Cokee.ClassService
             Log.Error(ex, "发生错误");
             Crashes.TrackError(ex);
             Catalog.HandleException(ex, "Bug Tracked! ");
-           
+            
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

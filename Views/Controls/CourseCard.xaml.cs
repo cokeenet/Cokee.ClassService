@@ -35,24 +35,24 @@ namespace Cokee.ClassService.Views.Controls
             switch(nowStatus)
             {
                 case CourseNowStatus.EndOfLesson:
-                    title.Content = $"{DateTime.Now.ToString("hh:mm")} 下课辣";
-                    subtitle.Content = $"下一节: {nextCourse.Name}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 下课辣";
+                    subtitle.Text = $"下一节: {nextCourse.Name}";
                     break;
                 case CourseNowStatus.Upcoming:
-                    title.Content = $"{DateTime.Now.ToString("hh:mm")} {course.Name} 上课辣";
-                    subtitle.Content = $"下课时间 {course.EndTime.ToString("hh:mm")}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} {course.Name} 上课辣";
+                    subtitle.Text = $"下课时间 {course.EndTime.ToString("hh:mm")}";
                     break;
                 case CourseNowStatus.OnBreak:
-                    title.Content = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Content = $"课间休息 下一节: {course.Name}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")}";
+                    subtitle.Text = $"课间休息 下一节: {course.Name}";
                     break;
                 case CourseNowStatus.InProgress:
-                    title.Content = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{course.Name}";
-                    subtitle.Content = $"pupupu";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{course.Name}";
+                    subtitle.Text = $"pupupu";
                     break;
                 case CourseNowStatus.NoCoursesScheduled:
-                    title.Content = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Content = $"今天没有课了嗷";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")}";
+                    subtitle.Text = $"今天没有课了嗷";
                     break;
             }
             

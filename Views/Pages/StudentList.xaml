@@ -35,7 +35,7 @@
                                         <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
                                     </Image.Clip>
                                 </Image>
-                                <Label Grid.Row="1" Content="{Binding Name}" FontSize="14" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="14" Margin="5" HorizontalAlignment="Center"/>
                                 <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}"/>
                             </Grid>
                         </ui:Card>
@@ -43,9 +43,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Controls:RandomControl x:Name="randomcontrol" Background="#F2333333" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
-        <Controls:RandomResult x:Name="randomres" Background="#F2333333" Width="500" Height="400" Visibility="Collapsed" />
-        <Controls:NewStudent Background="#F2333333" Width="500" Height="400" Visibility="Collapsed"/>
-        <Controls:StudentInfo x:Name="studentInfo" Background="#F2333333"  Width="500" Height="400" Visibility="Collapsed" DataContext=""/>
+        <Controls:RandomControl x:Name="randomcontrol" Background="{ui:ThemeResource}" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
+        <Controls:RandomResult x:Name="randomres" Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
+        <Controls:NewStudent Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed"/>
+        <Controls:StudentInfo x:Name="studentInfo" Background="{ui:ThemeResource}"  Width="500" Height="400" Visibility="Collapsed" DataContext=""/>
     </Grid>
 </ui:UiPage>

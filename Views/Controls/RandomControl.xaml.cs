@@ -58,7 +58,7 @@ namespace Cokee.ClassService.Views.Controls
         private void tm(object sender, TouchEventArgs e)
         {
             tmc++;
-            if (tmc == 3) { tmc = 0;EasterEgg(); }
+            if (tmc == 8) { tmc = 0;EasterEgg(); }
         }
 
         private void EasterEgg(object sender=null, MouseButtonEventArgs e=null)

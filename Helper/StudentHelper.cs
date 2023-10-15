@@ -128,8 +128,9 @@ namespace Cokee.ClassService.Helper
             }
             if (Easter == "1")
             {
-                    randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
-                    goto ranStart;
+                randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
+                Easter = "0";
+                goto ranStart;
             }
             randoms = Catalog.RandomizeList(randoms);
             return randoms;
