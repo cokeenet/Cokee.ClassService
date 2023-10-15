@@ -17,7 +17,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             this.Loaded += (a, b) =>
             {
-                dayCourses = Schedule.GetCourses(schedule, 0);
+                //dayCourses = Schedule.GetCourses(schedule, 0);
                 courseControl.ItemsSource = dayCourses;
             };
         }
@@ -32,13 +32,13 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            dayCourses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
+          //  dayCourses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
             if(courseControl!=null) courseControl.ItemsSource = dayCourses;
         }
 
         private void AddCourse(object sender, RoutedEventArgs e)
         {
-            dayCourses.Add(new Course("语文", comboBox.SelectedIndex));
+        //    dayCourses.Add(new Course("语文", comboBox.SelectedIndex));
             courseControl.ItemsSource = dayCourses;
         }
 

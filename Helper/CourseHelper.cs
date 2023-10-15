@@ -48,7 +48,7 @@ namespace Cokee.ClassService.Helper
 
     public class Schedule
     {
-        public List<Course> Courses { get; set; }
+        public List<Course>[] Courses { get; set; } = new List<Course>[7];
         public static void SaveToJson(Schedule schedule, string filePath)
         {
             var json = JsonConvert.SerializeObject(schedule, Formatting.Indented);
@@ -63,7 +63,7 @@ namespace Cokee.ClassService.Helper
             return JsonConvert.DeserializeObject<Schedule>(json);
         }
         // 获取指定星期几的课程列表
-        public static List<Course> GetCourses(Schedule schedule,int dayOfWeek)
+      /*  public static List<Course> GetCourses(Schedule schedule,int dayOfWeek)
         {
             var courses = new List<Course>();
             if (schedule == null) return courses;
@@ -123,7 +123,7 @@ namespace Cokee.ClassService.Helper
             // 如果没有当前课程，则返回没有课程了
             return CourseNowStatus.NoCoursesScheduled;
         }
-
+      */
     }
     public enum CourseNowStatus
     {

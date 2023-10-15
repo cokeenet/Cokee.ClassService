@@ -124,8 +124,8 @@ namespace Cokee.ClassService
                 //PicTimer_Elapsed();
             }));
             Course a, b;
-           var status = Schedule.GetNowCourse(schedule, out a, out b);
-           if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
+          // var status = Schedule.GetNowCourse(schedule, out a, out b);
+         //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
            if (ProcessHelper.HasPowerPointProcess()&&pptApplication == null)
             {
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
