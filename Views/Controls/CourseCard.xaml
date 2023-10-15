@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,20,0"
-             Height="120" Width="300">
+             Height="120" Width="300" FontFamily="Cairo">
     <UserControl.RenderTransform>
         <TranslateTransform x:Name="transT" X="330"/>
     </UserControl.RenderTransform>
@@ -19,8 +19,8 @@
 
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label x:Name="title" d:Content="22:00 下一节:没课了" HorizontalAlignment="Left" FontSize="24" VerticalAlignment="Center" FontFamily="Cairo"/>
-            <Label x:Name="subtitle" Grid.Row="1" d:Content="本节课程:语文课 结束"/>
+            <TextBlock x:Name="title" d:Text="22:00 下一节:没课了" HorizontalAlignment="Left" FontSize="24" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="subtitle" Grid.Row="1" d:Text="本节课程:语文课 结束" Margin="5" FontSize="18" HorizontalAlignment="Left" />
         </Grid>
     </ui:Card>
 </UserControl>

@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Cokee.ClassService.Helper;
+
+using Wpf.Ui.Animations;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -31,22 +34,26 @@ namespace Cokee.ClassService.Views.Controls
                 return false;
             });
         }
-        private void ShowUsbCard(bool isUnplug, DriveInfo t = null)
+        private async void ShowUsbCard(bool isUnplug, DriveInfo t = null)
         {
-
-            DoubleAnimation anim1 = new DoubleAnimation(0, TimeSpan.FromSeconds(1));
-            DoubleAnimation anim2 = new DoubleAnimation(368, TimeSpan.FromSeconds(1));
-            anim1.EasingFunction = new CircleEase();
-            anim1.Completed += async (a, b) => { await Task.Delay(10000); ShowUsbCard(true); };
+            
+            DoubleAnimation anim2 = new DoubleAnimation(0,368, TimeSpan.FromSeconds(1));
             anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
             anim2.EasingFunction = new CircleEase();
             if (!isUnplug)
             {
+                tranUsb.X = 0;
                 this.Visibility = Visibility.Visible;
-                tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
+                Transitions.ApplyTransition(this, TransitionType.SlideRight, 1000);
+                string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
+                if (string.IsNullOrEmpty(volumeLabel))volumeLabel = "U盘";
                 disk = t.Name;
-                diskName.Content = t.VolumeLabel + "(" + t.Name + ")";
-                diskInfo.Content = (t.TotalFreeSpace / 1024 / 1024 / 1000) + "GB/" + (t.TotalSize / 1024 / 1024 / 1000) + "GB";//TODO:改进算法，这个结果是错的
+                diskName.Text = volumeLabel + "(" + t.Name + ")";
+                double totalFreeSpaceGB = t.TotalFreeSpace / 1024.0 / 1024 / 1024;
+                double totalSizeGB = t.TotalSize / 1024.0 / 1024 / 1024;
+                diskInfo.Text = $"{totalFreeSpaceGB:F2}GB/{totalSizeGB:F2}GB ({volumeLabel})"; 
+                await Task.Delay(10000);
+                ShowUsbCard(true);
             }
             else if (isUnplug)
             {

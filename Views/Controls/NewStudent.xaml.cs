@@ -11,6 +11,8 @@ using Cokee.ClassService.Views.Windows;
 
 using Newtonsoft.Json;
 
+using Wpf.Ui.Common;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -21,7 +23,7 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
-            Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
+            if(!DesignerHelper.IsInDesignMode) Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
         }
 
         private void Confirm(object sender, RoutedEventArgs e)

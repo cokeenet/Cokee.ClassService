@@ -48,7 +48,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             string stu = e.NewValue.ToString();
             //Catalog.ShowInfo();
-            name.Content = stu;
+            name.Text = stu;
             string INK_FILE=@$"D:\Program Files (x86)\CokeeTech\CokeeClass\ink\{stu}.ink";
             if (File.Exists(INK_FILE))
             {

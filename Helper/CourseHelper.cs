@@ -49,52 +49,30 @@ namespace Cokee.ClassService.Helper
     public class Schedule
     {
         public List<Course>[] Courses { get; set; } = new List<Course>[7];
-        public static void SaveToJson(Schedule schedule, string filePath)
+        public static void SaveToJson(Schedule schedule)
         {
             var json = JsonConvert.SerializeObject(schedule, Formatting.Indented);
-            File.WriteAllText(filePath, json);
+            File.WriteAllText(Catalog.SCHEDULE_FILE, json);
         }
 
         // 从 JSON 文件加载 Schedule 对象
-        public static Schedule LoadFromJson(string filePath)
+        public static Schedule LoadFromJson()
         {
-            if (!File.Exists(filePath)) return null;
-            var json = File.ReadAllText(filePath);
+            if (!File.Exists(Catalog.SCHEDULE_FILE)) return new Schedule();
+            var json = File.ReadAllText(Catalog.SCHEDULE_FILE);
             return JsonConvert.DeserializeObject<Schedule>(json);
         }
         // 获取指定星期几的课程列表
-      /*  public static List<Course> GetCourses(Schedule schedule,int dayOfWeek)
-        {
-            var courses = new List<Course>();
-            if (schedule == null) return courses;
-            foreach (var course in schedule.Courses)
-            {
-                if ((int)course.DayOfWeek == dayOfWeek)
-                {
-                    courses.Add(course);
-                }
-            }
-            return courses;
-        }
-        public static void SetCourses(Schedule schedule, int dayOfWeek, List<Course> courses)
-        {
-            var course = new List<Course>();
-            if (schedule == null) return;
-            foreach (var cours in schedule.Courses)
-            {
-                if ((int)cours.DayOfWeek == dayOfWeek)
-                {
-                    course.Add(cours);
-                }
-            }
-        }
+        
+        
         public static CourseNowStatus GetNowCourse(Schedule schedule, out Course course,out Course nextCourse)
         {
             course = null; // 初始化 course
             nextCourse = null;
             if (schedule == null) return CourseNowStatus.NoCoursesScheduled;
             DateTime now = DateTime.Now;
-            var coursesToday = Schedule.GetCourses(schedule,(int)now.DayOfWeek);
+            var coursesToday = schedule.Courses[(int)now.DayOfWeek];
+            if(coursesToday!=null)
             // 遍历课程列表，查找当前时间所在的课程
             foreach (var c in coursesToday)
             {

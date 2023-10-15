@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Ink;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
-using Wpf.Ui.Appearance;
+using Cokee.ClassService.Helper;
+
 using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 using Button = Wpf.Ui.Controls.Button;
 using MSO = Microsoft.Office.Interop.PowerPoint;
@@ -30,21 +32,27 @@ namespace Cokee.ClassService.Views.Controls
         public InkToolBar()
         {
             InitializeComponent();
-            /*if (inkCanvas != null)
+            if (!DesignerHelper.IsInDesignMode)
             {
-                
+                if (inkCanvas != null)
+                {
+                    inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
+                    {
+                        penSlider.Value = b.NewDrawingAttributes.Width;
+                    };
+                }
+                this.IsVisibleChanged += (a, b) =>
+                {
+                    if ((bool)b.NewValue && !isPPT)
+                    {
+                        SetCursorMode(1);
+                    }
+                    else
+                    {
+                        SetCursorMode(0);
+                    }
+                };
             }
-            this.IsVisibleChanged += (a, b) =>
-            {
-                if ((bool)b.NewValue && !isPPT)
-                {
-                    SetCursorMode(1);
-                }
-                else
-                {
-                    SetCursorMode(0);
-                }
-            };*/
         }
         public void SetCursorMode(int mode)
         {
@@ -67,6 +75,16 @@ namespace Cokee.ClassService.Views.Controls
             }, DispatcherPriority.Normal);
 
         }
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (inkCanvas != null)
+            {
+                inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
+                inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
+                Catalog.ShowInfo(e.NewValue.ToString());
+            }
+
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -80,9 +98,10 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.Background.Opacity = 0;
                         break;
                     case "Pen":
+                        if (penMenu.IsOpen) penMenu.IsOpen = false;
+                        else if (inkCanvas.IsEnabled) penMenu.IsOpen = true;
                         inkCanvas.IsEnabled = true;
                         inkCanvas.Background.Opacity = 0.01;
-                        //if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
                         SetBtnState(penBtn);
                         inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
@@ -96,6 +115,8 @@ namespace Cokee.ClassService.Views.Controls
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
                         break;
                     case "More":
+                        if (moreMenu.IsOpen) moreMenu.IsOpen = false;
+                        else moreMenu.IsOpen = true;
                         break;
                     case "Exit":
                         inkCanvas.IsEnabled = false;
@@ -103,6 +124,7 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.Background.Opacity = 0;
                         Visibility = Visibility.Collapsed;
                         if (isPPT && pptApplication != null && pptApplication.SlideShowWindows[1] != null) pptApplication.SlideShowWindows[1].View.Exit();
+                        Catalog.SetWindowStyle(1);
                         break;
                 }
             }, DispatcherPriority.Normal);
@@ -125,5 +147,32 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void ClearScr(object sender, MouseButtonEventArgs e) => inkCanvas.Strokes.Clear();
+
+        private void ColorBtn(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && sender is Button)
+            {
+                inkCanvas.DefaultDrawingAttributes.Color = (button.Background as SolidColorBrush).Color;
+                foreach (var item in colorGrid.Children)
+                {
+                    if (item is Button)
+                    {
+                        Button a = (Button)item;
+                        a.Icon = SymbolRegular.Empty;
+                    }
+                }
+                button.Icon = SymbolRegular.CheckmarkCircle48;
+            }
+        }
+
+        private void OnToggleSwitch(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggle = sender as ToggleSwitch;
+            if(toggle != null)
+            {
+                //if(toggle.IsChecked)
+            }
+        }
     }
 }

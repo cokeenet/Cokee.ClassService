@@ -15,8 +15,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="添加学生" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
-            <Label Content="说明:直接复制Excel列表 第一列姓名 第二列性别 第三列生日" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1"/>
+            <TextBlock Text="添加学生" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Text="说明:直接复制Excel列表 第一列姓名 第二列性别 第三列生日" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" Margin="5"/>
             <ScrollViewer Grid.Row="2">
                 <TextBox x:Name="stutb" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"/>
             </ScrollViewer>

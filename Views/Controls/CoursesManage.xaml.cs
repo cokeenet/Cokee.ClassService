@@ -5,26 +5,28 @@ using System.Windows.Controls;
 
 using Cokee.ClassService.Helper;
 
+using Wpf.Ui.Common;
+
 namespace Cokee.ClassService.Views.Controls
 {
 
     public partial class CoursesManage : UserControl
     {
-        Schedule schedule = Schedule.LoadFromJson(Catalog.SCHEDULE_FILE);
+        Schedule schedule = Schedule.LoadFromJson();
         List<Course> dayCourses = new List<Course>();
         public CoursesManage()
         {
             InitializeComponent();
-            this.Loaded += (a, b) =>
+            if(!DesignerHelper.IsInDesignMode)this.Loaded += (a, b) =>
             {
-                //dayCourses = Schedule.GetCourses(schedule, 0);
+                dayCourses = schedule.Courses[0];
                 courseControl.ItemsSource = dayCourses;
             };
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-
+            Schedule.SaveToJson(schedule);
             Catalog.ToggleControlVisible(this);
         }
 
@@ -32,7 +34,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-          //  dayCourses = Schedule.GetCourses(schedule, comboBox.SelectedIndex);
+            dayCourses = schedule.Courses[comboBox.SelectedIndex];
             if(courseControl!=null) courseControl.ItemsSource = dayCourses;
         }
 

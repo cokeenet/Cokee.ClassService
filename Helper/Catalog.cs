@@ -11,24 +11,31 @@ namespace Cokee.ClassService.Helper
 {
     public class Catalog
     {
-        public const string CONFIG_DIR = @"D:\Program Files (x86)\CokeeTech\CokeeClass\";
-        public const string INK_DIR = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\ink";
-        public const string SCHEDULE_FILE = @"D:\Program Files (x86)\CokeeTech\CokeeClass\schedule.json";
-        public const string STU_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
+        public const string CONFIG_DISK = @$"D:\";
+        public const string CONFIG_DIR = @$"{CONFIG_DISK}Program Files (x86)\CokeeTech\CokeeClass";
+        public const string INK_DIR = @$"{CONFIG_DISK}{CONFIG_DIR}\ink";
+        public const string SCHEDULE_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\schedule.json";
+        public const string STU_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\students.json";
+        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DISK}{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
+       // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
+        public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
         public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
         public static void HandleException(Exception ex, string str = "")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                GlobalSnackbarService.Show($"{str}发生错误", ex.ToString().Substring(30) + "...", SymbolRegular.Warning32);
+                if(GlobalSnackbarService!=null)if(GlobalSnackbarService.GetSnackbarControl() != null)
+                GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
+                MessageBox.Show(ex.ToString());
             });
         }
         public static void ShowInfo(string title = "", string content = "")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
+                if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
+                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
             });
         }
         public static void RemoveObjFromWindow(UIElement element)
@@ -40,10 +47,11 @@ namespace Cokee.ClassService.Helper
                 mainWindow.MainGrid.Children.Remove(element);
             });
         }
-        public static void SetWindowStyle(Window mainWindow, int type = 0)
+        public static void SetWindowStyle(int type = 0)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
                 Catalog.WindowType = type;
                 if (mainWindow == null) return;
                 if (type == 0)
@@ -73,6 +81,7 @@ namespace Cokee.ClassService.Helper
                 }
                 else
                 {
+
                     // 创建一个淡出动画
                     DoubleAnimation fadeOutAnimation = new DoubleAnimation();
                     fadeOutAnimation.From = 1.0;
