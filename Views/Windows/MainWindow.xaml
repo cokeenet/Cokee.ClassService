@@ -78,7 +78,7 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" Grid.RowSpan="2" AllowsTransparency="False" StaysOpen="False">
+        <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ui:ThemeResource}" LostFocus="Card_LostFocus">
 
             <ui:Card VerticalAlignment="Top" HorizontalAlignment="Center">
                 <Grid HorizontalAlignment="Center">
