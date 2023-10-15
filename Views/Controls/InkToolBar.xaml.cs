@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -116,6 +115,8 @@ namespace Cokee.ClassService.Views.Controls
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
                         break;
                     case "More":
+                        if (moreMenu.IsOpen) moreMenu.IsOpen = false;
+                        else moreMenu.IsOpen = true;
                         break;
                     case "Exit":
                         inkCanvas.IsEnabled = false;
@@ -150,14 +151,27 @@ namespace Cokee.ClassService.Views.Controls
         private void ColorBtn(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            if (button != null&&sender is Button)
+            if (button != null && sender is Button)
             {
                 inkCanvas.DefaultDrawingAttributes.Color = (button.Background as SolidColorBrush).Color;
-                foreach (Button item in stkPn.Children)
+                foreach (var item in colorGrid.Children)
                 {
-                    item.Icon = SymbolRegular.Empty;
+                    if (item is Button)
+                    {
+                        Button a = (Button)item;
+                        a.Icon = SymbolRegular.Empty;
+                    }
                 }
-                button.Icon= SymbolRegular.CheckmarkCircle48;
+                button.Icon = SymbolRegular.CheckmarkCircle48;
+            }
+        }
+
+        private void OnToggleSwitch(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggle = sender as ToggleSwitch;
+            if(toggle != null)
+            {
+                //if(toggle.IsChecked)
             }
         }
     }

@@ -27,7 +27,7 @@
             <ui:Button x:Name="exitBtn" Icon="ArrowExit20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit" IconFilled="True"/>
             <Popup x:Name="penMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True">
                 <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
-                    <Grid>
+                    <Grid x:Name="colorGrid">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -41,7 +41,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2"  Text="色板" Margin="5" FontSize="16"/>
-                        <StackPanel x:Name="stkPn" Grid.RowSpan="3" Grid.Row="1">
+                        <StackPanel Grid.RowSpan="3" Grid.Row="1">
                             <Slider x:Name="penSlider" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" Value="3.5" Maximum="15" Minimum="1"/>
                             <TextBlock Text="粗细" FontSize="12" Margin="5"/>
                         </StackPanel>
@@ -51,14 +51,25 @@
                         <ui:Button Grid.Row="1" Grid.Column="2" Background="Black" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                         <ui:Button Grid.Row="2" Grid.Column="2" Background="#FF321EB5" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                         <ui:Button Grid.Row="3" Grid.Column="2" Background="#FF66D552" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
-                        <ui:Button Grid.Row="1" Grid.Column="3" Background="White" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
+                        <ui:Button Grid.Row="1" Grid.Column="3" Background="White" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" Foreground="Black"/>
                         <ui:Button Grid.Row="2" Grid.Column="3" Background="#FFFF8B00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                         <ui:Button Grid.Row="3" Grid.Column="3" Background="#FF4EA1B7" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                     </Grid>
                 </ui:Card>
             </Popup>
             <Popup x:Name="moreMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=moreBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True">
-               
+                <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="菜单" Margin="5" FontSize="16"/>
+                        <StackPanel>
+                            <ui:ToggleSwitch Click="OnToggleSwitch"/>
+                        </StackPanel>
+                        </Grid>
+                </ui:Card>
             </Popup>
 
         </Grid>

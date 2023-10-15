@@ -19,6 +19,7 @@
         <SolidColorBrush x:Key="x" x:Name="TranBackgroundBrush" Color="Cornsilk"/>
     </Window.Resources>
     <Grid x:Name="MainGrid" Focusable="False">
+        
         <Grid x:Name="inkGrid">
             <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False">
                 <InkCanvas.DefaultDrawingAttributes>
