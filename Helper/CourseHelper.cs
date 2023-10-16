@@ -101,7 +101,7 @@ namespace Cokee.ClassService.Helper
             // 如果没有当前课程，则返回没有课程了
             return CourseNowStatus.NoCoursesScheduled;
         }
-      */
+      
     }
     public enum CourseNowStatus
     {

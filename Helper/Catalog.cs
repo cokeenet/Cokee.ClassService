@@ -13,10 +13,10 @@ namespace Cokee.ClassService.Helper
     {
         public const string CONFIG_DISK = @$"D:\";
         public const string CONFIG_DIR = @$"{CONFIG_DISK}Program Files (x86)\CokeeTech\CokeeClass";
-        public const string INK_DIR = @$"{CONFIG_DISK}{CONFIG_DIR}\ink";
-        public const string SCHEDULE_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\schedule.json";
-        public const string STU_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\students.json";
-        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DISK}{CONFIG_DIR}\config.json";
+        public const string INK_DIR = @$"{CONFIG_DIR}\ink";
+        public const string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
+        public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
+        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
        // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
