@@ -60,7 +60,10 @@ namespace Cokee.ClassService.Helper
         {
             if (!File.Exists(Catalog.SCHEDULE_FILE)) return new Schedule();
             var json = File.ReadAllText(Catalog.SCHEDULE_FILE);
-            return JsonConvert.DeserializeObject<Schedule>(json);
+            var a=JsonConvert.DeserializeObject<Schedule>(json);
+            if (a != null) return a;
+            else return new Schedule();
+
         }
         // 获取指定星期几的课程列表
         

@@ -7,6 +7,8 @@ using System.Windows.Media.Animation;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 using Wpf.Ui.Animations;
+using System.Xml.Linq;
+
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -27,8 +29,17 @@ namespace Cokee.ClassService.Helper
             {
                 if(GlobalSnackbarService!=null)if(GlobalSnackbarService.GetSnackbarControl() != null)
                 GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
-                MessageBox.Show(ex.ToString());
+               // MessageBox.Show(ex.ToString());
             });
+        }
+        public static void ExitPPTShow()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+           { 
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+               if(mainWindow!=null)
+               if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+           });
         }
         public static void ShowInfo(string title = "", string content = "")
         {

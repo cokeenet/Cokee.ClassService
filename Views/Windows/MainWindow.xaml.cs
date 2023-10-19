@@ -37,12 +37,12 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isDragging = false, isPPT = false;
+        private bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
-        public event EventHandler<bool> RandomEvent;
+        public event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
         private Timer picTimer= new Timer(120000);
-        public static MSO.Application pptApplication = null;
+        public MSO.Application? pptApplication = null;
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
         Schedule schedule = Schedule.LoadFromJson();
@@ -147,7 +147,6 @@ namespace Cokee.ClassService
                             pptApplication = null;
                             inkTool.isPPT = false;
                             inkTool.pptApplication = null;
-                            isPPT = false;
                             Catalog.ShowInfo("尝试释放pptApplication对象");
                         }), DispatcherPriority.Normal);
                     };
@@ -156,7 +155,7 @@ namespace Cokee.ClassService
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            if (!isPPT) return;
+                            if (!inkTool.isPPT) return;
                             
                             page = Wn.View.CurrentShowPosition;
                             inkcanvas.Strokes.Clear();
@@ -172,7 +171,6 @@ namespace Cokee.ClassService
                             page = 0;
                             inkcanvas.Strokes.Clear();
                             pptControls.Visibility = Visibility.Collapsed;
-                            isPPT = false;
                             Catalog.SetWindowStyle(1);
                             inkcanvas.IsEnabled = false;
                             inkTool.Visibility = Visibility.Collapsed;
@@ -194,8 +192,7 @@ namespace Cokee.ClassService
         }
 
         private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
-        {
-            isPPT = true;
+        { 
             inkTool.isPPT = true;
             inkTool.pptApplication = pptApplication;
             //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
@@ -259,11 +256,11 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (inkTool.Visibility == Visibility.Collapsed||isPPT)
+                if (inkTool.Visibility == Visibility.Collapsed||inkTool.isPPT)
                 {
-                    if (isPPT)
+                    if (inkTool.isPPT)
                     {
-                        inkTool.isPPT = true;
+                        
                         inkTool.pptApplication = pptApplication;
                         inkTool.SetCursorMode(0);
                     }
@@ -369,7 +366,7 @@ namespace Cokee.ClassService
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (isPPT)
+            if (inkTool.isPPT)
             {
                 if (e.Key == Key.PageDown||e.Key==Key.Down)PptDown();
                 else if(e.Key==Key.PageUp||e.Key==Key.Up)PptUp();

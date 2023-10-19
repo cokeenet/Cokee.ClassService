@@ -81,7 +81,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
                 inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
-                Catalog.ShowInfo(e.NewValue.ToString());
+            //    Catalog.ShowInfo(e.NewValue.ToString());
             }
 
         }
@@ -109,7 +109,7 @@ namespace Cokee.ClassService.Views.Controls
                         SetBtnState(eraserBtn);
                         inkCanvas.IsEnabled = true;
                         inkCanvas.Background.Opacity = 0.01;
-                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                         break;
                     case "Back":
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
@@ -123,7 +123,7 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.Strokes.Clear();
                         inkCanvas.Background.Opacity = 0;
                         Visibility = Visibility.Collapsed;
-                        if (isPPT && pptApplication != null && pptApplication.SlideShowWindows[1] != null) pptApplication.SlideShowWindows[1].View.Exit();
+                        Catalog.ExitPPTShow();
                         Catalog.SetWindowStyle(1);
                         break;
                 }

@@ -64,9 +64,9 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="菜单" Margin="5" FontSize="16"/>
+                        <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16"/>
                         <StackPanel>
-                            <ui:ToggleSwitch Click="OnToggleSwitch"/>
+                            <ui:ToggleSwitch Grid.Row="1" Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard"/>
                         </StackPanel>
                         </Grid>
                 </ui:Card>
