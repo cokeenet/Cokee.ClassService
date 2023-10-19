@@ -171,7 +171,14 @@ namespace Cokee.ClassService.Views.Controls
             ToggleSwitch toggle = sender as ToggleSwitch;
             if(toggle != null)
             {
-                //if(toggle.IsChecked)
+                switch (toggle.Tag.ToString())
+                {
+                    case "WhiteBoard":
+                    //    inkCanvas.Background =
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
