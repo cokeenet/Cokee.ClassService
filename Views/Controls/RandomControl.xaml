@@ -33,8 +33,9 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <CheckBox Content="不抽小语种" HorizontalAlignment="Center" Checked="MLang_C" Unchecked="MLang_UC"/>
-                <CheckBox Grid.Column="1" Content="只抽男生" HorizontalAlignment="Center" Checked="Boy_C" Unchecked="Boy_UC"/>
+                <CheckBox Grid.Column="1" Content="只抽gengzhiao" HorizontalAlignment="Center" Checked="Boy_C" Unchecked="Boy_UC"/>
                 <CheckBox Grid.Column="2" Content="允许重复" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+            
             </Grid>
             <Grid Grid.Row="3" Margin="5">
                 <Grid.ColumnDefinitions>

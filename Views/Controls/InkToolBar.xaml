@@ -45,7 +45,7 @@
                             <Slider x:Name="penSlider" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" Value="3.5" Maximum="15" Minimum="1"/>
                             <TextBlock Text="粗细" FontSize="12" Margin="5"/>
                         </StackPanel>
-                        <ui:Button Grid.Row="1" Background="Red" Margin="5" Width="50" Height="30" Grid.Column="1" Icon="CheckmarkCircle48" FontSize="17"/>
+                        <ui:Button Grid.Row="1" Background="Red" Margin="5" Width="50" Height="30" Grid.Column="1" Icon="CheckmarkCircle48" Click="ColorBtn"  FontSize="17"/>
                         <ui:Button Grid.Row="2" Grid.Column="1" Background="CornflowerBlue" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                         <ui:Button Grid.Row="3" Grid.Column="1" Background="#FF306C00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
                         <ui:Button Grid.Row="1" Grid.Column="2" Background="Black" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17"/>
@@ -61,12 +61,15 @@
                 <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16"/>
-                        <StackPanel>
-                            <ui:ToggleSwitch Grid.Row="1" Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard"/>
+                        <StackPanel Grid.Row="1">
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard"/>
                         </StackPanel>
                         </Grid>
                 </ui:Card>

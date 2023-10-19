@@ -34,6 +34,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode)
             {
+                
                 if (inkCanvas != null)
                 {
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
@@ -99,9 +100,9 @@ namespace Cokee.ClassService.Views.Controls
                         break;
                     case "Pen":
                         if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        else if (inkCanvas.IsEnabled) penMenu.IsOpen = true;
-                        inkCanvas.IsEnabled = true;
-                        inkCanvas.Background.Opacity = 0.01;
+                        else if (penBtn.Appearance==ControlAppearance.Primary) penMenu.IsOpen = true;
+                      //  inkCanvas.IsEnabled = true;
+                        //inkCanvas.Background.Opacity = 0.01;
                         SetBtnState(penBtn);
                         inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
@@ -174,7 +175,7 @@ namespace Cokee.ClassService.Views.Controls
                 switch (toggle.Tag.ToString())
                 {
                     case "WhiteBoard":
-                    //    inkCanvas.Background =
+                      // inkCanvas.Background =
                         break;
                     default:
                         break;
