@@ -129,7 +129,7 @@ namespace Cokee.ClassService
             Course a, b;
           // var status = Schedule.GetNowCourse(schedule, out a, out b);
          //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-           if (ProcessHelper.HasPowerPointProcess()&&pptApplication == null)
+           if (ProcessHelper.HasPowerPointProcess()&&pptApplication == null&&Catalog.appSettings.PPTFunctionEnable)
             {
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)

@@ -175,7 +175,7 @@ namespace Cokee.ClassService.Views.Controls
                 switch (toggle.Tag.ToString())
                 {
                     case "WhiteBoard":
-                      // inkCanvas.Background =
+                      inkCanvas.Background =
                         break;
                     default:
                         break;
