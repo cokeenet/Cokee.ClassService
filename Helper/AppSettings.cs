@@ -12,6 +12,8 @@ namespace Cokee.ClassService.Helper
     {
         public bool MultiTouchEnable { get; set; } = true;
         public bool PPTFunctionEnable { get; set; } = true;
+
+        public bool EraseByShapeEnable { get; set; } = false;
         private bool _darkModeEnable = true;
         public bool DarkModeEnable
         {

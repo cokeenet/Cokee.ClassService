@@ -37,8 +37,11 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
            { 
                 MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-               if(mainWindow!=null)
-               if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+               if (mainWindow != null)
+               {
+                   if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                   mainWindow.IconAnimation(true);
+               }
            });
         }
         public static void ShowInfo(string title = "", string content = "")

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
@@ -100,7 +99,7 @@ namespace Cokee.ClassService.Helper
         public static List<Student> Random(string e, List<Student>? students = null)
         {
             if (students == null) students = Student.LoadFromFile(Catalog.STU_FILE);
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4];
+            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4];
             List<Student> randoms = new List<Student>();
             int i = 1;
             /*try
@@ -118,7 +117,8 @@ namespace Cokee.ClassService.Helper
                 var a = students[new Random().Next(students.Count)];
                 if (randoms.Count > 0 && randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
                 if (AllowMLang == "0" && a.IsMinorLang) continue;
-                else if (AllowGirl == "0" && a.Sex == 0) continue;
+                else if (LimitSex == "1" && a.Sex == 0) continue;
+                else if (LimitSex == "2" && a.Sex == 1) continue;
                 else
                 {
                     randoms.Add(a);

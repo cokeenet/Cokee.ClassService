@@ -27,6 +27,15 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable}"/>
                 </ui:CardControl>
+                <ui:CardControl Icon="Eraser24" Margin="5">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable}"/>
+                </ui:CardControl>
                 <ui:CardControl Icon="PenOff48" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">

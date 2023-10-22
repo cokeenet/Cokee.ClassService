@@ -11,7 +11,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class RandomControl : UserControl
     {
-        public int Number = 1, AllowMLang = 1, AllowGirl = 1, AllowExist = 0, Easter = 0,tmc=0;
+        public int Number = 1, AllowMLang = 1, SexLimit = 1, AllowExist = 0, Easter = 0,tmc=0;
         public event EventHandler<string> StartRandom;
         public RandomControl()
         {
@@ -36,10 +36,6 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void MLang_C(object sender, RoutedEventArgs e) => AllowMLang = 0;
-
-        private void Boy_C(object sender, RoutedEventArgs e) => AllowGirl = 0;
-
-        private void Boy_UC(object sender, RoutedEventArgs e) => AllowGirl = 1;
         private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void numbox_TC(object sender, TextChangedEventArgs e)
@@ -55,7 +51,13 @@ namespace Cokee.ClassService.Views.Controls
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 1;
 
-        private void tm(object sender, TouchEventArgs e)
+
+        private void ComboBox_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            var a = (ComboBox)sender;
+            if (a.SelectedIndex != -1) SexLimit = a.SelectedIndex;
+        }
+            private void tm(object sender, TouchEventArgs e)
         {
             tmc++;
             if (tmc == 8) { tmc = 0;EasterEgg(); }
@@ -88,7 +90,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (Number <= 0) { Number = 0; numbox.Text = "0"; }
             Catalog.ToggleControlVisible(this);
-            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{AllowGirl}|{AllowExist}|{Easter}");
+            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{SexLimit}|{AllowExist}|{Easter}");
             //if (Easter != 0) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
         }
 

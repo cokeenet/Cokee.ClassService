@@ -135,14 +135,13 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
-
-            <Ellipse Stroke="Black" Width="25" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Fill="White">
-                <Ellipse.RenderTransform>
-                    <ScaleTransform/>
-                </Ellipse.RenderTransform>
-            </Ellipse>
-            <ui:SymbolIcon Width="15" Height="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="Black" Margin="0,0,5,5" FontSize="15" Symbol="Info12"/>
-
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="25" Height="25" >
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="iconTrans" ScaleX="0" ScaleY="0" CenterX="15" CenterY="15"/>
+                </Grid.RenderTransform>
+                <Ellipse Fill="White"/>
+                <ui:SymbolIcon x:Name="icon" Width="15" Height="15" Foreground="Black" Margin="5" FontSize="15" Symbol="Info12"/>
+            </Grid>
             <ui:Badge Grid.Row="1" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
             </ui:Badge>
