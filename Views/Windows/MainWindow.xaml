@@ -110,7 +110,7 @@
         <ui:InfoBar x:Name="infobar" VerticalAlignment="Top" HorizontalAlignment="Center" Message="当前焦点在CokeeClass上!" />
         <Controls:RandomControl x:Name="rancor" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300" StartRandom="RandomControl_StartRandom" Visibility="Collapsed" />
         <Controls:RandomResult x:Name="ranres" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="500" Visibility="Collapsed" />
-        <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" />
+        <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" d:Visibility="Visible"/>
         <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" />
         <Grid x:Name="floatGrid" MouseLeftButtonDown="mouseDown" MouseLeftButtonUp="mouseUp" MouseMove="mouseMove" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Focusable="False">
             <Grid.RowDefinitions>

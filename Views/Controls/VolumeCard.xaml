@@ -7,19 +7,25 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Cokee.ClassService.Views.Controls.VolumeCard"
     Height="140" Width="290"
              mc:Ignorable="d">
-    <ui:Card x:Name="audioCard" VerticalAlignment="Stretch">
-        <Grid>
+    <ui:Card x:Name="audioCard">
+        <Grid Margin="-5">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ui:SymbolIcon Symbol="Speaker248" Margin="5"/>
-            <TextBlock x:Name="spk" Text="扬声器" Grid.Column="1" Margin="5" MaxWidth="200"/>
+            <ComboBox x:Name="spk" Grid.Column="1" Margin="5" MaxWidth="220" VerticalAlignment="Stretch" Text="扬声器" SelectionChanged="spk_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FriendlyName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <TextBlock x:Name="vol" Text="--%" Margin="5" Grid.Row="1" MaxWidth="40"/>
             <Slider x:Name="slider" Grid.Row="1" Margin="5" Maximum="100" ValueChanged="SliderChanged" Grid.Column="1" MinWidth="200"/>
             <ui:Button Grid.Row="2" Icon="Dismiss48" HorizontalAlignment="Right" Grid.Column="1" Margin="5" Click="Button_Click"/>
