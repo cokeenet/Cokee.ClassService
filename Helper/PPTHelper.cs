@@ -11,7 +11,7 @@ namespace Cokee.ClassService.Helper
         internal const String OLEAUT32 = "oleaut32.dll";
         internal const String OLE32 = "ole32.dll";
 
-        [System.Security.SecurityCritical]  // auto-generated_required
+        [SecurityCritical]  // auto-generated_required
         public static Object GetActiveObject(String progID)
         {
             Object obj = null;

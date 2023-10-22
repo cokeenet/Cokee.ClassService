@@ -101,6 +101,7 @@ namespace Cokee.ClassService
             catch
             {
                 pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
             }
         }
         private void PptDown(object sender=null, RoutedEventArgs e=null)
@@ -116,6 +117,7 @@ namespace Cokee.ClassService
             catch
             {
                 pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
             }
         }
 
@@ -126,7 +128,7 @@ namespace Cokee.ClassService
                 time.Text = DateTime.Now.ToString("HH:mm");
                 //PicTimer_Elapsed();
             }));
-            Course a, b;
+            //Course a, b;
           // var status = Schedule.GetNowCourse(schedule, out a, out b);
          //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
            if (ProcessHelper.HasPowerPointProcess()&&pptApplication == null&&Catalog.appSettings.PPTFunctionEnable)
@@ -134,7 +136,7 @@ namespace Cokee.ClassService
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)
                 {
-                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name+"/版本"+pptApplication.Version+"/PC"+pptApplication.ProductCode);
+                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name+"/版本:"+pptApplication.Version+"/PC:"+pptApplication.ProductCode);
                     
                     pptApplication.PresentationClose += (a) =>
                     {
@@ -156,7 +158,6 @@ namespace Cokee.ClassService
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             if (!inkTool.isPPT) return;
-                            
                             page = Wn.View.CurrentShowPosition;
                             inkcanvas.Strokes.Clear();
                             pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
@@ -299,10 +300,7 @@ namespace Cokee.ClassService
             else Sclview.Visibility = Visibility.Collapsed;
         }
 
-        private void PostNote(object sender, RoutedEventArgs e)
-        {
-            Catalog.ToggleControlVisible(postNote);
-        }
+        private void PostNote(object sender, RoutedEventArgs e)=> Catalog.ToggleControlVisible(postNote);
 
         private void VolumeCard(object sender, RoutedEventArgs e)
         {

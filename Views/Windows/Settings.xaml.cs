@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows;
+
+using Cokee.ClassService.Helper;
+
 using Newtonsoft.Json;
 using Wpf.Ui.Controls;
 
@@ -15,7 +18,10 @@ namespace Cokee.ClassService.Views.Windows
         public Settings()
         {
             InitializeComponent();
-            this.Closing+=(a,b)=> { }; 
+            this.Closing+=(a,b)=> 
+            { 
+                AppSettingsExtensions.SaveSettings(Catalog.appSettings);
+            }; 
         }
 
 

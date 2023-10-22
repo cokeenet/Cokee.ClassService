@@ -44,7 +44,7 @@ namespace Cokee.ClassService.Helper
                 case 0:
                     return ControlAppearance.Transparent;
                 case 1:
-                    return ControlAppearance.Secondary;
+                    return ControlAppearance.Info;
                 case 2:
                     return ControlAppearance.Success;
                 case 3:
@@ -103,7 +103,7 @@ namespace Cokee.ClassService.Helper
             string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], AllowGirl = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4];
             List<Student> randoms = new List<Student>();
             int i = 1;
-            try
+            /*try
             {
                 if (Easter == "1")
                     randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("6Zer5a6d5oCh"))));
@@ -112,8 +112,7 @@ namespace Cokee.ClassService.Helper
             }
             catch (Exception)
             {
-            }
-        ranStart:
+            }*/
             while (randoms.Count < Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
@@ -126,12 +125,12 @@ namespace Cokee.ClassService.Helper
                     i++;
                 }
             }
-            if (Easter == "1")
+            /*if (Easter == "1")
             {
                 randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
                 Easter = "0";
                 goto ranStart;
-            }
+            }*/
             randoms = Catalog.RandomizeList(randoms);
             return randoms;
         }

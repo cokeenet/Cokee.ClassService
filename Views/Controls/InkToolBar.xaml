@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" FontFamily="Cairo-Regular"
              Height="43" Width="425">
+    <UserControl.Resources>
+        <SolidColorBrush x:Name="Wbbg" x:Key="WbBg" Color="DarkOliveGreen"/>
+    </UserControl.Resources>
     <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="16" Background="#01FFFFFF">
         <Grid x:Name="mainGrid" Margin="-15">
             <Grid.RowDefinitions>

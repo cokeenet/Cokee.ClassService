@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -41,6 +42,7 @@ namespace Cokee.ClassService.Views.Controls
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
+                    inkCanvas.EraserShape = new RectangleStylusShape(50, 100);
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {
@@ -82,7 +84,6 @@ namespace Cokee.ClassService.Views.Controls
             {
                 inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
                 inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
-            //    Catalog.ShowInfo(e.NewValue.ToString());
             }
 
         }
@@ -101,8 +102,8 @@ namespace Cokee.ClassService.Views.Controls
                     case "Pen":
                         if (penMenu.IsOpen) penMenu.IsOpen = false;
                         else if (penBtn.Appearance==ControlAppearance.Primary) penMenu.IsOpen = true;
-                      //  inkCanvas.IsEnabled = true;
-                        //inkCanvas.Background.Opacity = 0.01;
+                        inkCanvas.IsEnabled = true;
+                        inkCanvas.Background.Opacity = 0.01;
                         SetBtnState(penBtn);
                         inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
@@ -110,7 +111,7 @@ namespace Cokee.ClassService.Views.Controls
                         SetBtnState(eraserBtn);
                         inkCanvas.IsEnabled = true;
                         inkCanvas.Background.Opacity = 0.01;
-                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                         break;
                     case "Back":
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
@@ -170,12 +171,18 @@ namespace Cokee.ClassService.Views.Controls
         private void OnToggleSwitch(object sender, RoutedEventArgs e)
         {
             ToggleSwitch toggle = sender as ToggleSwitch;
+            bool En = (bool)toggle.IsChecked;
             if(toggle != null)
             {
                 switch (toggle.Tag.ToString())
                 {
                     case "WhiteBoard":
-                      inkCanvas.Background =
+                        SolidColorBrush s1 = new SolidColorBrush(Colors.DarkOliveGreen);
+                        SolidColorBrush s2 = new SolidColorBrush(Colors.White);
+                        s1.Opacity = 1;
+                        s2.Opacity = 0.01;
+                        if (En) inkCanvas.Background = s1;
+                        else inkCanvas.Background = s2;
                         break;
                     default:
                         break;

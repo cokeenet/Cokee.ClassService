@@ -81,11 +81,11 @@ namespace Cokee.ClassService.Helper
                 }
             });
         }
-        public static void ToggleControlVisible(UIElement uIElement)
+        public static void ToggleControlVisible(UIElement uIElement,bool IsHide=false)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (uIElement.Visibility == Visibility.Collapsed)
+                if (uIElement.Visibility == Visibility.Collapsed&&!IsHide)
                 {
                     uIElement.Visibility = Visibility.Visible;
                     Transitions.ApplyTransition(uIElement, TransitionType.FadeInWithSlide, 200);
