@@ -21,7 +21,7 @@ namespace Cokee.ClassService.Views.Controls
     public partial class InkToolBar : UserControl
     {
         public static readonly DependencyProperty InkCanvasProperty =
-     DependencyProperty.Register("inkCanvas", typeof(InkCanvas), typeof(InkToolBar), new PropertyMetadata(null));
+        DependencyProperty.Register("inkCanvas", typeof(InkCanvas), typeof(InkToolBar), new PropertyMetadata(null));
         public MSO.Application pptApplication = null;
         public InkCanvas inkCanvas
         {
