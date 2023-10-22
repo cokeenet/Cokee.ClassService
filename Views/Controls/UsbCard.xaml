@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" FontFamily="Cairo-Regular" Visibility="Collapsed" d:Visibility="Visible">
     <ui:Card
-              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="#B2FFFFFF" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
+              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
               RenderTransformOrigin="0.5,0.5">
         <ui:Card.RenderTransform>
             <TransformGroup>
@@ -25,17 +25,17 @@
             </Grid.ColumnDefinitions>
             <ui:SymbolIcon
                                 Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                FontSize="40" Symbol="UsbStick20" Foreground="Black" Grid.RowSpan="2" />
+                                FontSize="40" Symbol="UsbStick20" Grid.RowSpan="2" />
             <ui:Button x:Name="open" HorizontalAlignment="Right"
                   VerticalAlignment="Top" Background="#CCFFFFFF" BorderBrush="#6CBCEA" BorderThickness="1" Click="Open"
                   Content="打开" Icon="HardDrive20" Tag="" Foreground="Black" Grid.Column="2" Margin="5"/>
             <ui:Button x:Name="remove" HorizontalAlignment="Right"
                  VerticalAlignment="Top" Background="#FFFFFEFE" BorderBrush="#6CBCEA" BorderThickness="1"
                  Click="ExitUsbDrive" Content="弹出" Icon="UsbPlug20" Foreground="Black" Grid.Row="1" Grid.Column="2" Margin="5"/>
-            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="16"/>
+            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="14" MaxWidth="75"/>
 
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5"/>
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5" FontSize="12" MaxWidth="75"/>
 
         </Grid>
     </ui:Card>

@@ -7,16 +7,18 @@ using System.Windows.Media.Animation;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 using Wpf.Ui.Animations;
+using System.Xml.Linq;
+
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
     {
         public const string CONFIG_DISK = @$"D:\";
         public const string CONFIG_DIR = @$"{CONFIG_DISK}Program Files (x86)\CokeeTech\CokeeClass";
-        public const string INK_DIR = @$"{CONFIG_DISK}{CONFIG_DIR}\ink";
-        public const string SCHEDULE_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\schedule.json";
-        public const string STU_FILE = @$"{CONFIG_DISK}{CONFIG_DIR}\students.json";
-        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DISK}{CONFIG_DIR}\config.json";
+        public const string INK_DIR = @$"{CONFIG_DIR}\ink";
+        public const string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
+        public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
+        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
        // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
@@ -27,8 +29,17 @@ namespace Cokee.ClassService.Helper
             {
                 if(GlobalSnackbarService!=null)if(GlobalSnackbarService.GetSnackbarControl() != null)
                 GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
-                MessageBox.Show(ex.ToString());
+               // MessageBox.Show(ex.ToString());
             });
+        }
+        public static void ExitPPTShow()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+           { 
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+               if(mainWindow!=null)
+               if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+           });
         }
         public static void ShowInfo(string title = "", string content = "")
         {

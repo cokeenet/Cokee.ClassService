@@ -40,7 +40,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void AddCourse(object sender, RoutedEventArgs e)
         {
-            dayCourses.Add(new Course("语文", comboBox.SelectedIndex));
+        //    dayCourses.Add(new Course("语文", comboBox.SelectedIndex));
             courseControl.ItemsSource = dayCourses;
         }
 

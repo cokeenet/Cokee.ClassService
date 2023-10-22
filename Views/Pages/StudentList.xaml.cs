@@ -1,24 +1,14 @@
 ﻿using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
-
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-
-using Clipboard = Wpf.Ui.Common.Clipboard;
-using MessageBox = System.Windows.MessageBox;
-using Path = System.IO.Path;
 
 namespace Cokee.ClassService.Views.Pages
 {
-    
+
     /// <summary>
     /// StudentList.xaml 的交互逻辑
     /// </summary>
@@ -33,8 +23,12 @@ namespace Cokee.ClassService.Views.Pages
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
                 studentInfo.EditStudent += StudentInfo_EditStudent;
                 students = Student.LoadFromFile(Catalog.STU_FILE);
-                students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
-                Students.ItemsSource = students;
+                if (students != null)
+                {
+                    students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+                    Students.ItemsSource = students;
+                }
+
             }
             catch (Exception ex)
             {
@@ -50,7 +44,7 @@ namespace Cokee.ClassService.Views.Pages
         }
         private void RandomStart(object sender, string e)
         {
-            randomres.ItemsSource = Student.Random(e,students);
+            randomres.ItemsSource = Student.Random(e, students);
             Catalog.ToggleControlVisible(randomres);
         }
 
@@ -68,7 +62,7 @@ namespace Cokee.ClassService.Views.Pages
             Student stu1 = null;
             //Catalog.ShowInfo(e.RoleStr.ToString());
             int index = students.FindIndex(f => f.ID == e.ID);
-            if (index!=-1)
+            if (index != -1)
             {
                 students[index] = e;
                 SaveData();

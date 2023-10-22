@@ -13,10 +13,11 @@
         Left="0" Top="0" Loaded="Window_Loaded"
         WindowStartupLocation="Manual"  ShowInTaskbar="False"
         Closing="Window_Closing" Closed="Window_Closed" KeyDown="MainWindow_OnKeyDown"
+    
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True" Focusable="False"
         ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
     <Window.Resources>
-        <SolidColorBrush x:Key="x" x:Name="TranBackgroundBrush" Color="Cornsilk"/>
+
     </Window.Resources>
     <Grid x:Name="MainGrid" Focusable="False">
         
@@ -122,6 +123,9 @@
                 </TransformGroup>
             </Grid.RenderTransform>
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill">
+                <Image.Effect>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </Image.Effect>
                 <Image.RenderTransform>
                     <TransformGroup>
                         <RotateTransform x:Name="rotateT" Angle="0" />
@@ -131,6 +135,9 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
+            <Ellipse Stroke="Black" Width="20" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Fill="White">
+           
+            </Ellipse>
             <ui:Badge Grid.Row="1" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
             </ui:Badge>

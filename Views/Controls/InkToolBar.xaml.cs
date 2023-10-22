@@ -34,6 +34,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode)
             {
+                
                 if (inkCanvas != null)
                 {
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
@@ -81,7 +82,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
                 inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
-                Catalog.ShowInfo(e.NewValue.ToString());
+            //    Catalog.ShowInfo(e.NewValue.ToString());
             }
 
         }
@@ -99,9 +100,9 @@ namespace Cokee.ClassService.Views.Controls
                         break;
                     case "Pen":
                         if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        else if (inkCanvas.IsEnabled) penMenu.IsOpen = true;
-                        inkCanvas.IsEnabled = true;
-                        inkCanvas.Background.Opacity = 0.01;
+                        else if (penBtn.Appearance==ControlAppearance.Primary) penMenu.IsOpen = true;
+                      //  inkCanvas.IsEnabled = true;
+                        //inkCanvas.Background.Opacity = 0.01;
                         SetBtnState(penBtn);
                         inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
@@ -109,7 +110,7 @@ namespace Cokee.ClassService.Views.Controls
                         SetBtnState(eraserBtn);
                         inkCanvas.IsEnabled = true;
                         inkCanvas.Background.Opacity = 0.01;
-                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                         break;
                     case "Back":
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
@@ -123,7 +124,7 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.Strokes.Clear();
                         inkCanvas.Background.Opacity = 0;
                         Visibility = Visibility.Collapsed;
-                        if (isPPT && pptApplication != null && pptApplication.SlideShowWindows[1] != null) pptApplication.SlideShowWindows[1].View.Exit();
+                        Catalog.ExitPPTShow();
                         Catalog.SetWindowStyle(1);
                         break;
                 }
@@ -171,7 +172,14 @@ namespace Cokee.ClassService.Views.Controls
             ToggleSwitch toggle = sender as ToggleSwitch;
             if(toggle != null)
             {
-                //if(toggle.IsChecked)
+                switch (toggle.Tag.ToString())
+                {
+                    case "WhiteBoard":
+                      inkCanvas.Background =
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

@@ -68,6 +68,7 @@ namespace Cokee.ClassService.Views.Controls
         }
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            try{
             if (msg == WM_DEVICECHANGE)
             {
                 switch (wParam.ToInt32())
@@ -93,7 +94,8 @@ namespace Cokee.ClassService.Views.Controls
                         break;
                 }
             }
-            return IntPtr.Zero;
+            return IntPtr.Zero;}
+            catch(Exception ex){ Catalog.HandleException(ex); return IntPtr.Zero; }
         }
 
         public const int DBT_DEVICEARRIVAL = 0x8000;  //设备可用
