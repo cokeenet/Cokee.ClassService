@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
 
+using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-using Wpf.Ui.Animations;
-using System.Xml.Linq;
 
 namespace Cokee.ClassService.Helper
 {
@@ -20,25 +19,28 @@ namespace Cokee.ClassService.Helper
         public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
-       // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
+        // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
         public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
         public static void HandleException(Exception ex, string str = "")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if(GlobalSnackbarService!=null)if(GlobalSnackbarService.GetSnackbarControl() != null)
-                GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
-               // MessageBox.Show(ex.ToString());
+                if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
+                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
+                // MessageBox.Show(ex.ToString());
             });
         }
         public static void ExitPPTShow()
         {
             Application.Current.Dispatcher.Invoke(() =>
-           { 
-                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-               if(mainWindow!=null)
-               if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+           {
+               MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+               if (mainWindow != null)
+               {
+                   if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                   mainWindow.IconAnimation(true);
+               }
            });
         }
         public static void ShowInfo(string title = "", string content = "")
@@ -47,6 +49,14 @@ namespace Cokee.ClassService.Helper
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                         GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
+            });
+        }
+        public static void CreateWindow(Type windowType)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // 创建新窗口实例
+                //if(Application.Windows.OfType<Window>() != null) { }
             });
         }
         public static void RemoveObjFromWindow(UIElement element)
@@ -81,11 +91,11 @@ namespace Cokee.ClassService.Helper
                 }
             });
         }
-        public static void ToggleControlVisible(UIElement uIElement)
+        public static void ToggleControlVisible(UIElement uIElement, bool IsHide = false)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (uIElement.Visibility == Visibility.Collapsed)
+                if (uIElement.Visibility == Visibility.Collapsed && !IsHide)
                 {
                     uIElement.Visibility = Visibility.Visible;
                     Transitions.ApplyTransition(uIElement, TransitionType.FadeInWithSlide, 200);

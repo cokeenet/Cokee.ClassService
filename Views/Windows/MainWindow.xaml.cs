@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -21,11 +21,9 @@ using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
 
-using Wpf.Ui.Appearance;
+using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
-using WPFMediaKit.DirectShow.Controls;
-using ZetaIpc.Runtime.Helper;
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -41,7 +39,7 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
         public event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
-        private Timer picTimer= new Timer(120000);
+        private Timer picTimer = new Timer(120000);
         public MSO.Application? pptApplication = null;
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
@@ -67,7 +65,7 @@ namespace Cokee.ClassService
             string videoName = videoDevices[0];// 选择第一个*/
         }
 
-        private void PicTimer_Elapsed(object? sender=null, ElapsedEventArgs e=null)
+        private void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -88,7 +86,7 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void PptUp(object sender=null, RoutedEventArgs e=null)
+        private void PptUp(object sender = null, RoutedEventArgs e = null)
         {
             try
             {
@@ -101,9 +99,10 @@ namespace Cokee.ClassService
             catch
             {
                 pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
             }
         }
-        private void PptDown(object sender=null, RoutedEventArgs e=null)
+        private void PptDown(object sender = null, RoutedEventArgs e = null)
         {
             try
             {
@@ -116,6 +115,7 @@ namespace Cokee.ClassService
             catch
             {
                 pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
             }
         }
 
@@ -126,16 +126,16 @@ namespace Cokee.ClassService
                 time.Text = DateTime.Now.ToString("HH:mm");
                 //PicTimer_Elapsed();
             }));
-            Course a, b;
-          // var status = Schedule.GetNowCourse(schedule, out a, out b);
-         //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-           if (ProcessHelper.HasPowerPointProcess()&&pptApplication == null&&Catalog.appSettings.PPTFunctionEnable)
+            //Course a, b;
+            // var status = Schedule.GetNowCourse(schedule, out a, out b);
+            //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
+            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
             {
                 pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
                 if (pptApplication != null)
                 {
-                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name+"/版本"+pptApplication.Version+"/PC"+pptApplication.ProductCode);
-                    
+                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+
                     pptApplication.PresentationClose += (a) =>
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -146,8 +146,8 @@ namespace Cokee.ClassService
                             Marshal.ReleaseComObject(pptApplication);
                             pptApplication = null;
                             inkTool.isPPT = false;
-                            inkTool.pptApplication = null;
                             Catalog.ShowInfo("尝试释放pptApplication对象");
+                            IconAnimation(false, SymbolRegular.Presenter24);
                         }), DispatcherPriority.Normal);
                     };
                     pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
@@ -156,7 +156,6 @@ namespace Cokee.ClassService
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             if (!inkTool.isPPT) return;
-                            
                             page = Wn.View.CurrentShowPosition;
                             inkcanvas.Strokes.Clear();
                             pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
@@ -176,10 +175,10 @@ namespace Cokee.ClassService
                             inkTool.Visibility = Visibility.Collapsed;
                             inkcanvas.Background.Opacity = 0;
                             inkTool.isPPT = false;
-                            inkTool.pptApplication = null;
                             Catalog.ShowInfo("放映结束.");
+                            IconAnimation(true, SymbolRegular.Presenter24);
                         }), DispatcherPriority.Normal);
-                        
+
                     };
                     if (pptApplication.SlideShowWindows.Count >= 1)
                     {
@@ -192,14 +191,13 @@ namespace Cokee.ClassService
         }
 
         private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
-        { 
+        {
             inkTool.isPPT = true;
-            inkTool.pptApplication = pptApplication;
             //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 Catalog.ShowInfo("放映已开始.");
-                StartInk(null, null) ;
+                StartInk(null, null);
                 inkTool.SetCursorMode(0);
                 inkcanvas.Background.Opacity = 0;
                 pptControls.Visibility = Visibility.Visible;
@@ -212,6 +210,7 @@ namespace Cokee.ClassService
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
             //StartAnimation();
+            IconAnimation(true);
             PicTimer_Elapsed();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
@@ -228,12 +227,45 @@ namespace Cokee.ClassService
             doubleAnimation.By = angle;
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
         }
+        public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Info12, int autoHideTime = 0)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            {
+                DoubleAnimation doubleAnimation = new DoubleAnimation();
+                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+                doubleAnimation.EasingFunction = new CircleEase();
+                icon.Symbol = symbol;
+                if (!isHide)
+                {
+                    doubleAnimation.From = 0;
+                    doubleAnimation.To = 1;
+                }
+                else
+                {
+                    doubleAnimation.From = 1;
+                    doubleAnimation.To = 0;
+                }
+                iconTrans.BeginAnimation(ScaleTransform.ScaleXProperty, doubleAnimation);
+                iconTrans.BeginAnimation(ScaleTransform.ScaleYProperty, doubleAnimation);
+                if (autoHideTime != 0)
+                {
+                    await Task.Delay(autoHideTime).ContinueWith(t =>
+                    {
+                        doubleAnimation.From = 1;
+                        doubleAnimation.To = 0;
+                        iconTrans.BeginAnimation(ScaleTransform.ScaleXProperty, doubleAnimation);
+                        iconTrans.BeginAnimation(ScaleTransform.ScaleYProperty, doubleAnimation);
+                    });
+                }
+            }));
+        }
         private void mouseDown(object sender, MouseButtonEventArgs e)
         {
             isDragging = true;
             startPoint = e.GetPosition(this);
             _mouseDownControlPosition = new Point(transT.X, transT.Y);
             floatGrid.CaptureMouse();
+            IconAnimation(false, SymbolRegular.ArrowMove24);
         }
         private void mouseMove(object sender, MouseEventArgs e)
         {
@@ -256,18 +288,14 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (inkTool.Visibility == Visibility.Collapsed||inkTool.isPPT)
+                if (inkTool.Visibility == Visibility.Collapsed || inkTool.isPPT)
                 {
-                    if (inkTool.isPPT)
-                    {
-                        
-                        inkTool.pptApplication = pptApplication;
-                        inkTool.SetCursorMode(0);
-                    }
-                    else inkcanvas.Background.Opacity = 0.01;
+                    if (inkTool.isPPT) inkTool.SetCursorMode(0);
+                    else inkTool.SetCursorMode(1);
                     Catalog.SetWindowStyle(0);
                     inkcanvas.IsEnabled = true;
                     inkTool.Visibility = Visibility.Visible;
+                    IconAnimation(false, SymbolRegular.Pen32);
                 }
                 else
                 {
@@ -275,6 +303,7 @@ namespace Cokee.ClassService
                     inkcanvas.IsEnabled = false;
                     inkTool.Visibility = Visibility.Collapsed;
                     inkcanvas.Background.Opacity = 0;
+                    IconAnimation(true, SymbolRegular.Pen32);
                 }
             }));
         }
@@ -299,10 +328,7 @@ namespace Cokee.ClassService
             else Sclview.Visibility = Visibility.Collapsed;
         }
 
-        private void PostNote(object sender, RoutedEventArgs e)
-        {
-            Catalog.ToggleControlVisible(postNote);
-        }
+        private void PostNote(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(postNote);
 
         private void VolumeCard(object sender, RoutedEventArgs e)
         {
@@ -331,12 +357,12 @@ namespace Cokee.ClassService
             if (Application.Current.Windows.OfType<CourseMgr>().FirstOrDefault() == null) new CourseMgr().Show();
         }
 
-        private void AddFloatCard(object sender, RoutedEventArgs e)=> MainGrid.Children.Add(new FloatCard());
+        private void AddFloatCard(object sender, RoutedEventArgs e) => MainGrid.Children.Add(new FloatCard());
 
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
-        private void Settings(object sender, RoutedEventArgs e)
+        private void OpenSettings(object sender, RoutedEventArgs e)
         {
             if (Application.Current.Windows.OfType<Settings>().FirstOrDefault() == null) new Settings().Show();
         }
@@ -364,12 +390,35 @@ namespace Cokee.ClassService
             SetWindowLong(hwnd, -20, newStyle);
         }
 
+        private void inkcanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (inkTool.isEraser) eraser.Visibility = Visibility.Collapsed;
+        }
+
+        private void inkcanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (inkTool.isEraser)
+            {
+                Point mousePosition = e.GetPosition(this);
+                TranslateTransform translate = (TranslateTransform)eraser.RenderTransform;
+                eraserTrans.X = mousePosition.X - eraser.ActualWidth / 2;
+                eraserTrans.Y = mousePosition.Y - eraser.ActualHeight / 2;
+            }
+        }
+
+        private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (inkTool.isEraser&&Catalog.appSettings.EraseByPointEnable)
+                eraser.Visibility = Visibility.Visible;
+
+        }
+
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (inkTool.isPPT)
             {
-                if (e.Key == Key.PageDown||e.Key==Key.Down)PptDown();
-                else if(e.Key==Key.PageUp||e.Key==Key.Up)PptUp();
+                if (e.Key == Key.PageDown || e.Key == Key.Down) PptDown();
+                else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
             }
         }
     }

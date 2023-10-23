@@ -44,7 +44,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 tranUsb.X = 0;
                 this.Visibility = Visibility.Visible;
-                Transitions.ApplyTransition(this, TransitionType.SlideRight, 1000);
+                Transitions.ApplyTransition(this, TransitionType.SlideRight, 800);
                 string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
                 if (string.IsNullOrEmpty(volumeLabel))volumeLabel = "U盘";
                 disk = t.Name;
@@ -58,6 +58,8 @@ namespace Cokee.ClassService.Views.Controls
             else if (isUnplug)
             {
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
+                await Task.Delay(1000);
+                this.Visibility = Visibility.Collapsed;
             }
 
         }
@@ -95,7 +97,7 @@ namespace Cokee.ClassService.Views.Controls
                 }
             }
             return IntPtr.Zero;}
-            catch(Exception ex){ Catalog.HandleException(ex); return IntPtr.Zero; }
+            catch(Exception ex){ Catalog.HandleException(ex,"U盘检测"); return IntPtr.Zero; }
         }
 
         public const int DBT_DEVICEARRIVAL = 0x8000;  //设备可用

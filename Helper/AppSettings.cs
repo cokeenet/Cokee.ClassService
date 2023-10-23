@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-
+using System.Windows.Media.Animation;
 using Serilog;
-
 using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService.Helper
@@ -12,6 +11,7 @@ namespace Cokee.ClassService.Helper
     {
         public bool MultiTouchEnable { get; set; } = true;
         public bool PPTFunctionEnable { get; set; } = true;
+        public bool EraseByPointEnable { get; set; } = false;
         private bool _darkModeEnable = true;
         public bool DarkModeEnable
         {

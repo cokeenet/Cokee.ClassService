@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>2.0.406.23288</AssemblyVersion>
-    <FileVersion>2.0.406.23288</FileVersion>
+    <AssemblyVersion>2.1.434.23296</AssemblyVersion>
+    <FileVersion>2.1.434.23296</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -14,6 +14,10 @@
     <Authors>Cokee</Authors>
     <Title>Cokee.ClassService</Title>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Eraser.png" />
+  </ItemGroup>
 
 
   <ItemGroup>
@@ -83,6 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Eraser.png" />
     <Resource Include="Resources\head.jpg" />
     <Resource Include="Resources\HeadPics\0.jpg" />
     <Resource Include="Resources\HeadPics\1.jpg" />

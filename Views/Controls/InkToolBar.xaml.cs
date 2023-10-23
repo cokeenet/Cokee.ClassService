@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -11,7 +12,6 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 using Button = Wpf.Ui.Controls.Button;
-using MSO = Microsoft.Office.Interop.PowerPoint;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -20,27 +20,20 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class InkToolBar : UserControl
     {
-        public static readonly DependencyProperty InkCanvasProperty =
-     DependencyProperty.Register("inkCanvas", typeof(InkCanvas), typeof(InkToolBar), new PropertyMetadata(null));
-        public MSO.Application pptApplication = null;
-        public InkCanvas inkCanvas
-        {
-            get { return (InkCanvas)GetValue(InkCanvasProperty); }
-            set { SetValue(InkCanvasProperty, value); }
-        }
-        public bool isPPT = false;
+        public InkCanvas? inkCanvas;
+        public bool isPPT = false, isWhiteBoard = false,isEraser=false;
         public InkToolBar()
         {
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode)
             {
-                
                 if (inkCanvas != null)
                 {
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
+                    inkCanvas.EraserShape = new RectangleStylusShape(1000, 5000);
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {
@@ -82,7 +75,6 @@ namespace Cokee.ClassService.Views.Controls
             {
                 inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
                 inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
-            //    Catalog.ShowInfo(e.NewValue.ToString());
             }
 
         }
@@ -95,22 +87,31 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     case "Cursor":
                         SetBtnState(curBtn);
-                        inkCanvas.IsEnabled = false;
-                        inkCanvas.Background.Opacity = 0;
+                        isEraser = false;
+                        if (!isWhiteBoard)
+                        {
+                            inkCanvas.Background.Opacity = 0;
+                            inkCanvas.IsEnabled = false;
+                        }
+                        else inkCanvas.EditingMode = InkCanvasEditingMode.Select;
                         break;
                     case "Pen":
                         if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        else if (penBtn.Appearance==ControlAppearance.Primary) penMenu.IsOpen = true;
-                      //  inkCanvas.IsEnabled = true;
-                        //inkCanvas.Background.Opacity = 0.01;
+                        else if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
+                        inkCanvas.IsEnabled = true;
+                        isEraser = false;
+                        if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
                         SetBtnState(penBtn);
                         inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
                     case "Eraser":
                         SetBtnState(eraserBtn);
                         inkCanvas.IsEnabled = true;
-                        inkCanvas.Background.Opacity = 0.01;
-                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                        isEraser = true;
+                        if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
+                        if (!Catalog.appSettings.EraseByPointEnable)
+                            inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        else inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                         break;
                     case "Back":
                         if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
@@ -119,8 +120,13 @@ namespace Cokee.ClassService.Views.Controls
                         if (moreMenu.IsOpen) moreMenu.IsOpen = false;
                         else moreMenu.IsOpen = true;
                         break;
+                    case "Select":
+                        SetBtnState(null);
+                        inkCanvas.EditingMode = InkCanvasEditingMode.Select;
+                        break;
                     case "Exit":
                         inkCanvas.IsEnabled = false;
+                        isEraser = false;
                         inkCanvas.Strokes.Clear();
                         inkCanvas.Background.Opacity = 0;
                         Visibility = Visibility.Collapsed;
@@ -130,7 +136,7 @@ namespace Cokee.ClassService.Views.Controls
                 }
             }, DispatcherPriority.Normal);
         }
-        private void SetBtnState(Button btn)
+        private void SetBtnState(Button? btn)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -138,7 +144,7 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     button.Appearance = ControlAppearance.Secondary;
                 }
-                btn.Appearance = ControlAppearance.Primary;
+                if (btn != null) btn.Appearance = ControlAppearance.Primary;
             }, DispatcherPriority.Normal);
         }
 
@@ -170,12 +176,30 @@ namespace Cokee.ClassService.Views.Controls
         private void OnToggleSwitch(object sender, RoutedEventArgs e)
         {
             ToggleSwitch toggle = sender as ToggleSwitch;
-            if(toggle != null)
+            bool En = (bool)toggle.IsChecked;
+            if (toggle != null)
             {
                 switch (toggle.Tag.ToString())
                 {
                     case "WhiteBoard":
-                      inkCanvas.Background =
+                        SolidColorBrush s1 = new SolidColorBrush(Color.FromRgb(0x0E, 0x25, 0x1D));
+                        SolidColorBrush s2 = new SolidColorBrush(Colors.White);
+                        s1.Opacity = 1;
+                        s2.Opacity = 0.01;
+                        if (En) inkCanvas.Background = s1;
+                        else inkCanvas.Background = s2;
+                        break;
+                    case "EraseByShape":
+                        if (En)
+                        {
+                            Catalog.appSettings.EraseByPointEnable = true;
+                            Catalog.appSettings.SaveSettings();
+                        }
+                        else
+                        {
+                            Catalog.appSettings.EraseByPointEnable = false;
+                            Catalog.appSettings.SaveSettings();
+                        }
                         break;
                     default:
                         break;

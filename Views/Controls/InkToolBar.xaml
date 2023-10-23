@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" FontFamily="Cairo-Regular"
              Height="43" Width="425">
+    <UserControl.Resources>
+        <SolidColorBrush x:Name="Wbbg" x:Key="WbBg" Color="#FF0E251D"/>
+    </UserControl.Resources>
     <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="16" Background="#01FFFFFF">
         <Grid x:Name="mainGrid" Margin="-15">
             <Grid.RowDefinitions>
@@ -66,10 +69,11 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16"/>
                         <StackPanel Grid.Row="1">
+                            <ui:Button Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Margin="5" Click="Button_Click" Tag="Back"/>
+                            <ui:Button Icon="SelectObject24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select"/>
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" Visibility="Collapsed"/>
                         </StackPanel>
                         </Grid>
                 </ui:Card>

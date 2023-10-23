@@ -5,7 +5,7 @@
              xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Title="Settings" Width="525" Topmost="True"
+             Title="Settings" Width="525" Topmost="True" FontFamily="Cairo-Regular"
     Height="705" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
     <Grid>
