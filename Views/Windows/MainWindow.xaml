@@ -135,9 +135,9 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
-            <Ellipse Stroke="Black" Width="20" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Fill="White">
-           
-            </Ellipse>
+            <Ellipse Stroke="Gray" Width="20" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Fill="White"/>
+
+
             <ui:Badge Grid.Row="1" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
             </ui:Badge>
