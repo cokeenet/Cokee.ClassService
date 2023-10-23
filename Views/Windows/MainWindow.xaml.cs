@@ -362,7 +362,7 @@ namespace Cokee.ClassService
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
-        private void Settings(object sender, RoutedEventArgs e)
+        private void OpenSettings(object sender, RoutedEventArgs e)
         {
             if (Application.Current.Windows.OfType<Settings>().FirstOrDefault() == null) new Settings().Show();
         }
@@ -388,6 +388,29 @@ namespace Cokee.ClassService
 
             // 更新窗口样式
             SetWindowLong(hwnd, -20, newStyle);
+        }
+
+        private void inkcanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (inkTool.isEraser) eraser.Visibility = Visibility.Collapsed;
+        }
+
+        private void inkcanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (inkTool.isEraser)
+            {
+                Point mousePosition = e.GetPosition(this);
+                TranslateTransform translate = (TranslateTransform)eraser.RenderTransform;
+                eraserTrans.X = mousePosition.X - eraser.ActualWidth / 2;
+                eraserTrans.Y = mousePosition.Y - eraser.ActualHeight / 2;
+            }
+        }
+
+        private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (inkTool.isEraser&&Catalog.appSettings.EraseByPointEnable)
+                eraser.Visibility = Visibility.Visible;
+
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)

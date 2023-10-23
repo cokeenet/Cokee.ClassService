@@ -20,7 +20,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Margin="5" x:Name="title" Text="抽取结果"  HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
-            <ScrollViewer Grid.Row="1">
+            <local:TouchableScrollViewer Grid.Row="1">
                 <ItemsControl x:Name="Students" d:ItemsSource="{d:SampleData ItemCount=56}" ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -48,7 +48,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>
+                </local:TouchableScrollViewer>
             <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2"/>
 
         </Grid>

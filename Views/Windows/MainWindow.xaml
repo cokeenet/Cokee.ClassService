@@ -13,16 +13,15 @@
         Left="0" Top="0" Loaded="Window_Loaded"
         WindowStartupLocation="Manual"  ShowInTaskbar="False"
         Closing="Window_Closing" Closed="Window_Closed" KeyDown="MainWindow_OnKeyDown"
-    
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True" Focusable="False"
         ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
     <Window.Resources>
 
     </Window.Resources>
     <Grid x:Name="MainGrid" Focusable="False">
-        
+
         <Grid x:Name="inkGrid">
-            <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False">
+            <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False" MouseMove="inkcanvas_MouseMove" MouseDown="inkcanvas_MouseDown" MouseUp="inkcanvas_MouseUp">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="Red" Height="3.5" Width="3.5" />
                 </InkCanvas.DefaultDrawingAttributes>
@@ -30,8 +29,15 @@
                     <SolidColorBrush Color="White" Opacity="0.00" />
                 </InkCanvas.Background>
             </InkCanvas>
-            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0,0,0,20" d:Visibility="Visible" />
-
+            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" d:Visibility="Visible"/>
+            <Border x:Name="eraser" Height="59" Width="40" d:Visibility="Visible" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Border.Background>
+                    <ImageBrush ImageSource="/Resources/Eraser.png"/>
+                </Border.Background>
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="eraserTrans"/>
+                </Border.RenderTransform>
+            </Border>
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible" Focusable="False">
                 <ui:Card HorizontalAlignment="Left" Background="#4C484848" Focusable="False">
                     <Grid Width="60" Margin="-10" Focusable="False">
@@ -59,7 +65,7 @@
                 </ui:Card>
             </Grid>
         </Grid>
-       
+
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True">
             <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ui:ThemeResource}">
                 <Grid VerticalAlignment="Bottom">
@@ -86,7 +92,7 @@
                     <ui:Button Content="便利贴" Icon="Note48" Grid.Row="1" Grid.Column="1" Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" MouseRightButtonDown="PostNote" VerticalAlignment="Stretch" />
                     <ui:Button Content="课程管理" Icon="List28" Grid.Row="3" Margin="5" Click="CourseMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     <ui:Button Content="桌面便签" Icon="NoteAdd28" Grid.Row="2" Grid.Column="1" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <ui:Button Content="设置" Icon="Settings32" Grid.Row="3" Grid.Column="1"  Margin="5"  Click="Settings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <ui:Button Content="设置" Icon="Settings32" Grid.Row="3" Grid.Column="1"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="6"  Margin="5" Grid.ColumnSpan="2"/>
                     <TextBlock Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18"/>
                 </Grid>
@@ -146,9 +152,9 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
             </ui:Badge>
         </Grid>
-        <ScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
+        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
             <RichTextBox x:Name="richTextBox" />
-        </ScrollViewer>
+        </Controls:TouchableScrollViewer>
         <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" />
         <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Info" Margin="24,24,24,80" d:IsHidden="True" MaxHeight="300"/>
     </Grid>
