@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <None Remove="Resources\Eraser.png" />
-    <None Remove="Views\Windows\Eraser.png" />
   </ItemGroup>
 
 
@@ -99,7 +98,6 @@
     <Resource Include="Resources\HeadPics\6.jpg" />
     <Resource Include="Resources\HeadPics\7.jpg" />
     <Resource Include="Resources\HeadPics\8.jpg" />
-    <Resource Include="Views\Windows\Eraser.png" />
   </ItemGroup>
 
   <ItemGroup>
