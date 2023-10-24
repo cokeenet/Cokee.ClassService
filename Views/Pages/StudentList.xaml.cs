@@ -25,6 +25,7 @@ namespace Cokee.ClassService.Views.Pages
                 students = Student.LoadFromFile(Catalog.STU_FILE);
                 if (students != null)
                 {
+                    students.Sort((s1,s2)=>s2.Name.CompareTo(s1.Name));
                     students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
                     Students.ItemsSource = students;
                 }
