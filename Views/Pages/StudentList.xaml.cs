@@ -1,9 +1,12 @@
-﻿using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Windows;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Pages
@@ -14,7 +17,7 @@ namespace Cokee.ClassService.Views.Pages
     /// </summary>
     public partial class StudentList : UiPage
     {
-        List<Student> students = new List<Student>();
+        ObservableCollection<Student> students = new ObservableCollection<Student>();
         public StudentList()
         {
             try
@@ -22,10 +25,10 @@ namespace Cokee.ClassService.Views.Pages
                 InitializeComponent();
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent += StudentList_RandomEvent;
                 studentInfo.EditStudent += StudentInfo_EditStudent;
-                students = Student.LoadFromFile(Catalog.STU_FILE);
+                students = new ObservableCollection<Student>(Student.LoadFromFile(Catalog.STU_FILE));
                 if (students != null)
                 {
-                    students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+                    
                     Students.ItemsSource = students;
                 }
 
@@ -39,12 +42,12 @@ namespace Cokee.ClassService.Views.Pages
 
         public void SaveData()
         {
-            Student.SaveToFile(students);
+            students = new ObservableCollection<Student>(Student.SaveToFile(students.ToList()));
             Catalog.ShowInfo("数据已保存.");
         }
         private void RandomStart(object sender, string e)
         {
-            randomres.ItemsSource = Student.Random(e, students);
+            randomres.ItemsSource = Student.Random(e, students.ToList());
             Catalog.ToggleControlVisible(randomres);
         }
 
@@ -61,7 +64,7 @@ namespace Cokee.ClassService.Views.Pages
         {
             Student stu1 = null;
             //Catalog.ShowInfo(e.RoleStr.ToString());
-            int index = students.FindIndex(f => f.ID == e.ID);
+            int index = students.ToList().FindIndex(f => f.ID == e.ID);
             if (index != -1)
             {
                 students[index] = e;

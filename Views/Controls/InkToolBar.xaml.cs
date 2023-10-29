@@ -33,7 +33,7 @@ namespace Cokee.ClassService.Views.Controls
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
-                    inkCanvas.EraserShape = new RectangleStylusShape(1000, 5000);
+                    inkCanvas.EraserShape = new EllipseStylusShape(50, 50);
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {

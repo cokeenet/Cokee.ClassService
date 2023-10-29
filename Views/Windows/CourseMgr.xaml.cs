@@ -10,10 +10,10 @@ namespace Cokee.ClassService.Views.Windows
     /// </summary>
 
 
-    public partial class CourseMgr : UiWindow
+    public partial class QuickFix : UiWindow
     {
         bool isClosing = false;
-        public CourseMgr()
+        public QuickFix()
         {
             InitializeComponent();
             this.Closing+=(a,b)=>isClosing=true; 

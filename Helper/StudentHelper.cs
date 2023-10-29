@@ -81,10 +81,16 @@ namespace Cokee.ClassService.Helper
         }
         public static List<Student> LoadFromFile(string path)
         {
-            if (!File.Exists(path)) return null;
-            return JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(path));
+            if (!File.Exists(path)) return new List<Student>();
+            var a = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(path));
+            if (a != null)
+            {
+                a.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+                return a;
+            }
+            else return new List<Student>();
         }
-        public static void SaveToFile(List<Student> students)
+        public static List<Student> SaveToFile(List<Student> students)
         {
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
             foreach (var item in students)
@@ -95,6 +101,7 @@ namespace Cokee.ClassService.Helper
             }
             if (!Directory.Exists(Catalog.CONFIG_DIR)) Directory.CreateDirectory(Catalog.CONFIG_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonConvert.SerializeObject(students));
+            return students;
         }
         public static List<Student> Random(string e, List<Student>? students = null)
         {

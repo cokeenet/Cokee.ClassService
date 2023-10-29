@@ -15,7 +15,7 @@
         <local:LevelConverter x:Key="LevelConverter"/>
     </ui:UiPage.Resources>
     <Grid>
-        <ScrollViewer>
+        <Controls:TouchableScrollViewer>
             <ItemsControl x:Name="Students" d:ItemsSource="{d:SampleData ItemCount=56}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -43,7 +43,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </ScrollViewer>
+        </Controls:TouchableScrollViewer>
         <Controls:RandomControl x:Name="randomcontrol" Background="{ui:ThemeResource}" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
         <Controls:RandomResult x:Name="randomres" Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:NewStudent Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed"/>

@@ -15,6 +15,7 @@ namespace Cokee.ClassService.Helper
         public const string CONFIG_DISK = @$"D:\";
         public const string CONFIG_DIR = @$"{CONFIG_DISK}Program Files (x86)\CokeeTech\CokeeClass";
         public const string INK_DIR = @$"{CONFIG_DIR}\ink";
+        public const string SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
         public const string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
         public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
@@ -27,7 +28,7 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(15), "..."), SymbolRegular.Warning32);
+                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(10), "..."), SymbolRegular.Warning32);
                 // MessageBox.Show(ex.ToString());
             });
         }

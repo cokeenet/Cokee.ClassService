@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -22,6 +23,7 @@ using Cokee.ClassService.Views.Windows;
 using Microsoft.Win32;
 
 using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 using Wpf.Ui.Mvvm.Services;
 
 using MSO = Microsoft.Office.Interop.PowerPoint;
@@ -37,13 +39,13 @@ namespace Cokee.ClassService
     {
         private bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
-        public event EventHandler<bool>? RandomEvent;
+        private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
         private Timer picTimer = new Timer(120000);
         public MSO.Application? pptApplication = null;
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
-        Schedule schedule = Schedule.LoadFromJson();
+        private Schedule schedule = Schedule.LoadFromJson();
         public SnackbarService snackbarService = new SnackbarService();
         public MainWindow()
         {
@@ -123,7 +125,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.Invoke(new Action(() =>
             {
-                time.Text = DateTime.Now.ToString("HH:mm");
+                time.Text = Schedule.GetShortTimeStr(DateTime.Now);
                 //PicTimer_Elapsed();
             }));
             //Course a, b;
@@ -343,8 +345,7 @@ namespace Cokee.ClassService
             ranres.ItemsSource = Student.Random(e);
             Catalog.ToggleControlVisible(ranres);
         }
-        [DllImport("user32.dll")]
-        private static extern int GetWindowLong(IntPtr hwnd, int index);
+        
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -359,8 +360,7 @@ namespace Cokee.ClassService
 
         private void AddFloatCard(object sender, RoutedEventArgs e) => MainGrid.Children.Add(new FloatCard());
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
@@ -381,18 +381,18 @@ namespace Cokee.ClassService
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
             // 获取当前窗口样式
-            int currentStyle = GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
+            int currentStyle = Win32Func.GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
 
             // 设置窗口样式，去掉 WS_EX_APPWINDOW，添加 WS_EX_TOOLWINDOW
             int newStyle = (currentStyle & ~0x00000040) | WS_EX_TOOLWINDOW;
 
             // 更新窗口样式
-            SetWindowLong(hwnd, -20, newStyle);
+            Win32Func.SetWindowLong(hwnd, -20, newStyle);
         }
 
         private void inkcanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (inkTool.isEraser) eraser.Visibility = Visibility.Collapsed;
+            eraser.Visibility = Visibility.Collapsed;
         }
 
         private void inkcanvas_MouseMove(object sender, MouseEventArgs e)
@@ -404,13 +404,41 @@ namespace Cokee.ClassService
                 eraserTrans.X = mousePosition.X - eraser.ActualWidth / 2;
                 eraserTrans.Y = mousePosition.Y - eraser.ActualHeight / 2;
             }
+            else eraser.Visibility = Visibility.Collapsed;
         }
 
         private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (inkTool.isEraser&&Catalog.appSettings.EraseByPointEnable)
                 eraser.Visibility = Visibility.Visible;
+            else eraser.Visibility = Visibility.Collapsed;
+        }
 
+        private void ScreenShot(object sender, RoutedEventArgs e)
+        {
+            System.Drawing.Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
+            var bitmap = new System.Drawing.Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            using (System.Drawing.Graphics memoryGrahics = System.Drawing.Graphics.FromImage(bitmap))
+            {
+                memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, System.Drawing.CopyPixelOperation.SourceCopy);
+            }
+            var savePath =
+                $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now.Date:yyyyMMdd}\{DateTime.Now.ToString("HH-mm-ss")}.png";
+            if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            }
+
+            bitmap.Save(savePath, ImageFormat.Png);
+            Catalog.ShowInfo("成功保存截图", "路径:"+savePath);
+        }
+
+        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
+
+        private void QuickFix(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<QuickFix>().FirstOrDefault() == null) new QuickFix().Show();
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)

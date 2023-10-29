@@ -7,7 +7,57 @@ using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
-    internal static class ProcessHelper
+    public static class Win32Func
+    {
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hwnd, int index);
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(string className, string winName);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessageTimeout(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam, uint fuFlage, uint timeout, IntPtr result);
+
+        //查找窗口的委托 查找逻辑
+        public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
+        [DllImport("user32.dll")]
+        public static extern bool EnumWindows(EnumWindowsProc proc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string className, string winName);
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetParent(IntPtr hwnd, IntPtr parentHwnd);
+        public static void SendMsgToProgman()
+        {
+            // 桌面窗口句柄，在外部定义，用于后面将我们自己的窗口作为子窗口放入
+            IntPtr programHandle = Win32Func.FindWindow("Progman", null);
+
+            IntPtr result = IntPtr.Zero;
+            // 向 Program Manager 窗口发送消息 0x52c 的一个消息，超时设置为2秒
+            Win32Func.SendMessageTimeout(programHandle, 0x52c, IntPtr.Zero, IntPtr.Zero, 0, 2, result);
+
+            // 遍历顶级窗口
+            Win32Func.EnumWindows((hwnd, lParam) =>
+            {
+                // 找到第一个 WorkerW 窗口，此窗口中有子窗口 SHELLDLL_DefView，所以先找子窗口
+                if (Win32Func.FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null) != IntPtr.Zero)
+                {
+                    // 找到当前第一个 WorkerW 窗口的，后一个窗口，及第二个 WorkerW 窗口。
+                    IntPtr tempHwnd = Win32Func.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
+
+                    // 隐藏第二个 WorkerW 窗口
+                    Win32Func.ShowWindow(tempHwnd, 0);
+                }
+                return true;
+            }, IntPtr.Zero);
+        }
+    }
+    static class ProcessHelper
     {
         public static bool HasPowerPointProcess()
         {
