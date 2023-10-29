@@ -52,14 +52,14 @@ namespace Cokee.ClassService.Helper
                         GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
             });
         }
-        public static void CreateWindow(Type windowType)
+     /*   public static void CreateWindow(Type windowType)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 // 创建新窗口实例
                 //if(Application.Windows.OfType<Window>() != null) { }
             });
-        }
+        }*/
         public static void RemoveObjFromWindow(UIElement element)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -136,9 +136,7 @@ namespace Cokee.ClassService.Helper
             {
                 n--;
                 int k = random.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
+                (list[n], list[k]) = (list[k], list[n]);
             }
             return list;
         }
