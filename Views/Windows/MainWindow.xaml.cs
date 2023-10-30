@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
@@ -15,17 +19,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
 using Wpf.Ui.Mvvm.Services;
-
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -71,8 +66,15 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
-                head.Source = new BitmapImage(new Uri(url));
+                if (!Catalog.appSettings.UseMemberAvatar)
+                {
+                    string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
+                    head.Source = new BitmapImage(new Uri(url));
+                }
+                else
+                {
+
+                }
                 StartAnimation(3, 3600);
             }));
         }
@@ -345,7 +347,7 @@ namespace Cokee.ClassService
             ranres.ItemsSource = Student.Random(e);
             Catalog.ToggleControlVisible(ranres);
         }
-        
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -358,9 +360,12 @@ namespace Cokee.ClassService
             if (Application.Current.Windows.OfType<CourseMgr>().FirstOrDefault() == null) new CourseMgr().Show();
         }
 
-        private void AddFloatCard(object sender, RoutedEventArgs e) => MainGrid.Children.Add(new FloatCard());
+        private void AddFloatCard(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<FloatNote>().FirstOrDefault() == null) new FloatNote().Show();
+        }
 
-        
+
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
@@ -409,7 +414,7 @@ namespace Cokee.ClassService
 
         private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (inkTool.isEraser&&Catalog.appSettings.EraseByPointEnable)
+            if (inkTool.isEraser && Catalog.appSettings.EraseByPointEnable)
                 eraser.Visibility = Visibility.Visible;
             else eraser.Visibility = Visibility.Collapsed;
         }
@@ -431,7 +436,7 @@ namespace Cokee.ClassService
             }
 
             bitmap.Save(savePath, ImageFormat.Png);
-            Catalog.ShowInfo("成功保存截图", "路径:"+savePath);
+            Catalog.ShowInfo("成功保存截图", "路径:" + savePath);
         }
 
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);

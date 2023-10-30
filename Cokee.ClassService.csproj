@@ -108,6 +108,9 @@
     <Compile Update="Views\Pages\Settings.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Windows\FloatNote.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Windows\QuickFix.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

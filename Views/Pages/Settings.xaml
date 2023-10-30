@@ -25,7 +25,16 @@
                         FontSize="13" FontWeight="Medium" Text="深色模式" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable,Mode=TwoWay}"/>
+                </ui:CardControl>
+                <ui:CardControl Icon="Eraser24" Margin="5">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦UseMemberAvatar" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}"/>
                 </ui:CardControl>
                 <ui:CardControl Icon="Eraser24" Margin="5">
                     <ui:CardControl.Header>
@@ -34,18 +43,19 @@
                                 FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}"/>
                 </ui:CardControl>
-                <ui:CardControl Icon="PenOff48" Margin="5">
+
+                <ui:CardControl Icon="Image32" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="画笔支持多点触控" />
+                                FontSize="13" FontWeight="Medium" Text="使用用户头像" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="禁用则只能一个人写咯" />
+                                FontSize="12" Opacity="0.7" Text="hhh" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}"/>
                 </ui:CardControl>
             </StackPanel>
         </Controls:TouchableScrollViewer>
