@@ -73,7 +73,19 @@ namespace Cokee.ClassService
                 }
                 else
                 {
+                    new Thread(new ThreadStart(() =>
+                    {
 
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            var a = Student.LoadFromFile(Catalog.STU_FILE);
+                        var b = a[new Random().Next(a.Count)];
+                        if (b.HeadPicUrl.StartsWith("http"))
+                            head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
+                        else return;
+                        nameBadge.Content = $"{b.Name} 的头像";
+                        }));
+                    })).Start();
                 }
                 StartAnimation(3, 3600);
             }));

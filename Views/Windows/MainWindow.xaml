@@ -130,7 +130,7 @@
                     <TranslateTransform x:Name="transT" X="-10" Y="-100" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000"/>
+            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge"/>
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill" Grid.Row="1">
                 <Image.Effect>
                     <DropShadowEffect ShadowDepth="1"/>
