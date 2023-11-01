@@ -68,6 +68,7 @@ namespace Cokee.ClassService
             {
                 if (!Catalog.appSettings.UseMemberAvatar)
                 {
+                    nameBadge.Visibility = Visibility.Collapsed;
                     string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                     head.Source = new BitmapImage(new Uri(url));
                 }
@@ -79,11 +80,12 @@ namespace Cokee.ClassService
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             var a = Student.LoadFromFile(Catalog.STU_FILE);
-                        var b = a[new Random().Next(a.Count)];
-                        if (b.HeadPicUrl.StartsWith("http"))
-                            head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
-                        else return;
-                        nameBadge.Content = $"{b.Name} 的头像";
+                            var b = a[new Random().Next(a.Count)];
+                            if (b.HeadPicUrl.StartsWith("http"))
+                                head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
+                            else return;
+                            nameBadge.Visibility = Visibility.Visible;
+                            nameBadge.Content = $"{b.Name} 的头像";
                         }));
                     })).Start();
                 }
@@ -192,7 +194,7 @@ namespace Cokee.ClassService
                             inkcanvas.Background.Opacity = 0;
                             inkTool.isPPT = false;
                             Catalog.ShowInfo("放映结束.");
-                            IconAnimation(true, SymbolRegular.Presenter24);
+                            IconAnimation(true);
                         }), DispatcherPriority.Normal);
 
                     };

@@ -33,7 +33,12 @@ namespace Cokee.ClassService.Views.Controls
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
-                    inkCanvas.EraserShape = new EllipseStylusShape(50, 50);
+                    inkCanvas.EraserShape = new RectangleStylusShape(100, 150,90);
+                    inkCanvas.ActiveEditingModeChanged += (a, b) =>
+                    {
+                        if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
+                        else isEraser= false;
+                    };
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {
@@ -148,10 +153,7 @@ namespace Cokee.ClassService.Views.Controls
             }, DispatcherPriority.Normal);
         }
 
-        private void ListView_Selected(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void ClearScr(object sender, MouseButtonEventArgs e) => inkCanvas.Strokes.Clear();
 
@@ -186,8 +188,8 @@ namespace Cokee.ClassService.Views.Controls
                         SolidColorBrush s2 = new SolidColorBrush(Colors.White);
                         s1.Opacity = 1;
                         s2.Opacity = 0.01;
-                        if (En) inkCanvas.Background = s1;
-                        else inkCanvas.Background = s2;
+                        if (En) { inkCanvas.Background = s1; isWhiteBoard = true; }
+                        else { inkCanvas.Background = s2; isWhiteBoard = false; }
                         break;
                     case "EraseByShape":
                         if (En)

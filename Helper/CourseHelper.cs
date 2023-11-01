@@ -68,8 +68,8 @@ namespace Cokee.ClassService.Helper
         // 获取指定星期几的课程列表
         public static string GetShortTimeStr(DateTime t)
         {
-            if (t.Hour == 17 && (t.Minute >= 17 || t.Minute <= 23)) return "";
-            else return DateTime.Now.ToString("HH:mm");
+            if (t.Hour == 17)if(t.Minute>=18&&t.Minute<=22) return "";
+            return DateTime.Now.ToString("HH:mm");
         }
         
         public static CourseNowStatus GetNowCourse(Schedule schedule, out Course course,out Course nextCourse)

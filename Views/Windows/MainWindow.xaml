@@ -130,7 +130,7 @@
                     <TranslateTransform x:Name="transT" X="-10" Y="-100" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge"/>
+            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed"/>
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill" Grid.Row="1">
                 <Image.Effect>
                     <DropShadowEffect ShadowDepth="1"/>
@@ -144,9 +144,9 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
-            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="25" Height="25" >
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="25" Height="25" Grid.Row="1">
                 <Grid.RenderTransform>
-                    <ScaleTransform x:Name="iconTrans" ScaleX="0" ScaleY="0" CenterX="15" CenterY="15"/>
+                    <ScaleTransform x:Name="iconTrans" ScaleX="0" ScaleY="0" CenterX="15" CenterY="15" d:ScaleX="1" d:ScaleY="1"/>
                 </Grid.RenderTransform>
                 <Ellipse Fill="White"/>
                 <ui:SymbolIcon x:Name="icon" Width="15" Height="15" Foreground="Black" Margin="5" FontSize="15" Symbol="Info12"/>

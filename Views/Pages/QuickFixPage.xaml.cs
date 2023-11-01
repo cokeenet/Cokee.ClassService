@@ -48,8 +48,9 @@ namespace Cokee.ClassService.Views.Pages
             processes = Process.GetProcesses();
             foreach (Process process in processes)
             {
-                if(process.MainModule!=null)
-                processList.Add(new ProcessInfo(process));
+                try { if (process.MainModule != null) processList.Add(new ProcessInfo(process)); }
+                catch { continue; }
+
             }
 
             ProcessView.ItemsSource = processList;
@@ -71,6 +72,11 @@ namespace Cokee.ClassService.Views.Pages
             {
                 processes[ProcessView.SelectedIndex].Kill(true);
             }
+        }
+
+        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        {
+
         }
     }
 }
