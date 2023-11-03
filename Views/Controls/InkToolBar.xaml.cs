@@ -33,12 +33,13 @@ namespace Cokee.ClassService.Views.Controls
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
-                    inkCanvas.EraserShape = new RectangleStylusShape(100, 150,90);
+                    inkCanvas.EraserShape = new RectangleStylusShape(300, 550,90);
                     inkCanvas.ActiveEditingModeChanged += (a, b) =>
                     {
                         if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
                         else isEraser= false;
                     };
+                    moreMenu.DataContext = Catalog.appSettings;
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {

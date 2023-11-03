@@ -138,7 +138,7 @@ namespace Cokee.ClassService.Helper
                 Easter = "0";
                 goto ranStart;
             }*/
-            randoms = Catalog.RandomizeList(randoms);
+            //randoms = Catalog.RandomizeList(randoms);
             return randoms;
         }
     }

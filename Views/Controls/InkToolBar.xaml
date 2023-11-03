@@ -71,8 +71,8 @@
                         <StackPanel Grid.Row="1">
                             <ui:Button Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Margin="5" Click="Button_Click" Tag="Back"/>
                             <ui:Button Icon="SelectObject24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select"/>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5"/>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5"/>
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" />
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5" IsChecked="{Binding EraseByPointEnable}"/>
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" Visibility="Collapsed"/>
                         </StackPanel>
                         </Grid>
