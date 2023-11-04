@@ -95,7 +95,7 @@ namespace Cokee.ClassService.Helper
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
             foreach (var item in students)
             {
-                if (item.QQ != null && item.QQ.Length >= 6)
+                if (item.QQ != null && item.QQ.Length >= 5)
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
                 else item.HeadPicUrl = "/Resources/head.jpg";
             }
@@ -138,7 +138,7 @@ namespace Cokee.ClassService.Helper
                 Easter = "0";
                 goto ranStart;
             }*/
-            randoms = Catalog.RandomizeList(randoms);
+            //randoms = Catalog.RandomizeList(randoms);
             return randoms;
         }
     }

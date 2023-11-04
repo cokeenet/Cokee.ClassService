@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using Cokee.ClassService.Helper;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Timers;
-using System.Windows.Controls;
 
 using Wpf.Ui.Controls;
 
@@ -26,27 +26,19 @@ namespace Cokee.ClassService.Views.Pages
                 Status = "正常运行";
             else
                 Status = "未响应";
-            ResUsage =/* "CPU: " + process.TotalProcessorTime.ToString() +*/ " MEM: " + process.WorkingSet64.ToString();
-            try
-            {
-                Path=process.MainModule.FileName;
-                Icon = System.Drawing.Icon.ExtractAssociatedIcon(Path).ToBitmap();
-            }
-            catch 
-            {
-                Path = "null";
-                Icon = null;
-            }
+            ResUsage =/* "CPU: " + process.TotalProcessorTime.ToString() +*/ " MEM: " + FileSize.Format(process.WorkingSet64);
+            Path = process.MainModule.FileName;
+            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Path).ToBitmap();
 
             // 提取图标
-            
+
         }
     }
 
     public partial class QuickFixPage : UiPage
     {
         Timer timer = new Timer(1000);
-        ObservableCollection<ProcessInfo> processList = new ObservableCollection<ProcessInfo>();
+        List<ProcessInfo> processList = new List<ProcessInfo>();
         Process[] processes = Process.GetProcesses();
         public QuickFixPage()
         {
@@ -56,7 +48,9 @@ namespace Cokee.ClassService.Views.Pages
             processes = Process.GetProcesses();
             foreach (Process process in processes)
             {
-                processList.Add(new ProcessInfo(process));
+                try { if (process.MainModule != null) processList.Add(new ProcessInfo(process)); }
+                catch { continue; }
+
             }
 
             ProcessView.ItemsSource = processList;
@@ -74,10 +68,15 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if(ProcessView.SelectedItem is ProcessInfo)
+            if (ProcessView.SelectedItem is ProcessInfo)
             {
                 processes[ProcessView.SelectedIndex].Kill(true);
             }
+        }
+
+        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        {
+
         }
     }
 }

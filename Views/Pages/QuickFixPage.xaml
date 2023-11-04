@@ -18,10 +18,19 @@
                     <ColumnDefinition Width="311*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ListView x:Name="ProcessView" d:ItemsSource="{d:SampleData ItemCount=50}" Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBox/>
+                    <ui:Button Grid.Column="1" Icon="Search12" Content="Search" Click="Button_Click_1"/>
+                </Grid>
+                <ListView x:Name="ProcessView" d:ItemsSource="{d:SampleData ItemCount=50}" Grid.Row="1" Grid.ColumnSpan="2">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -34,7 +43,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
+                <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
                     <StatusBarItem>
                         <TextBlock d:Text="共 278 个进程"/>
                     </StatusBarItem>
