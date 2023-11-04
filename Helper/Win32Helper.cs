@@ -32,10 +32,11 @@ namespace Cokee.ClassService.Helper
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hwnd, IntPtr parentHwnd);
+        public static IntPtr programHandle = IntPtr.Zero;
         public static void SendMsgToProgman()
         {
             // 桌面窗口句柄，在外部定义，用于后面将我们自己的窗口作为子窗口放入
-            IntPtr programHandle = Win32Func.FindWindow("Progman", null);
+            programHandle = Win32Func.FindWindow("Progman", null);
 
             IntPtr result = IntPtr.Zero;
             // 向 Program Manager 窗口发送消息 0x52c 的一个消息，超时设置为2秒
