@@ -1,9 +1,6 @@
-﻿using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -13,14 +10,23 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Windows;
+
+using Microsoft.Win32;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -34,14 +40,19 @@ namespace Cokee.ClassService
     {
         private bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
+
         private event EventHandler<bool>? RandomEvent;
+
         private Timer secondTimer = new Timer(1000);
         private Timer picTimer = new Timer(120000);
         public MSO.Application? pptApplication = null;
+
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
+
         private Schedule schedule = Schedule.LoadFromJson();
         public SnackbarService snackbarService = new SnackbarService();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -56,11 +67,19 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-            
+
             Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
+            if (Catalog.appSettings.MultiTouchEnable)
+            {
+                inkcanvas.StylusDown += MainWindow_StylusDown;
+                inkcanvas.StylusMove += MainWindow_StylusMove;
+                inkcanvas.StylusUp += MainWindow_StylusUp;
+                inkcanvas.TouchDown += MainWindow_TouchDown;
+            }
+            inkcanvas.StrokeCollected += inkCanvas_StrokeCollected;
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
-            /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备	 
+            /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
             string videoName = videoDevices[0];// 选择第一个*/
         }
 
@@ -78,7 +97,6 @@ namespace Cokee.ClassService
                 {
                     new Thread(new ThreadStart(() =>
                     {
-
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             var a = Student.LoadFromFile(Catalog.STU_FILE);
@@ -100,13 +118,13 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 /*if (page >= 0 && page <= 101)
-                { 
+                {
                     strokes[page] = inkcanvas.Strokes;
                 }*/
             }));
         }
 
-        private void PptUp(object sender = null, RoutedEventArgs e = null)
+        public void PptUp(object sender = null, RoutedEventArgs e = null)
         {
             try
             {
@@ -122,7 +140,8 @@ namespace Cokee.ClassService
                 inkTool.isPPT = false;
             }
         }
-        private void PptDown(object sender = null, RoutedEventArgs e = null)
+
+        public void PptDown(object sender = null, RoutedEventArgs e = null)
         {
             try
             {
@@ -155,51 +174,11 @@ namespace Cokee.ClassService
                 if (pptApplication != null)
                 {
                     Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-
-                    pptApplication.PresentationClose += (a) =>
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            page = 0;
-                            inkcanvas.Strokes.Clear();
-                            pptControls.Visibility = Visibility.Collapsed;
-                            Marshal.ReleaseComObject(pptApplication);
-                            pptApplication = null;
-                            inkTool.isPPT = false;
-                            Catalog.ShowInfo("尝试释放pptApplication对象");
-                            IconAnimation(false, SymbolRegular.Presenter24);
-                        }), DispatcherPriority.Normal);
-                    };
+                    pptApplication.PresentationClose += PptApplication_PresentationClose;
                     pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                    pptApplication.SlideShowNextSlide += (Wn) =>
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            if (!inkTool.isPPT) return;
-                            page = Wn.View.CurrentShowPosition;
-                            inkcanvas.Strokes.Clear();
-                            pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                            pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                            //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
-                        }), DispatcherPriority.Normal);
-                    };
-                    pptApplication.SlideShowEnd += (a) =>
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            page = 0;
-                            inkcanvas.Strokes.Clear();
-                            pptControls.Visibility = Visibility.Collapsed;
-                            Catalog.SetWindowStyle(1);
-                            inkcanvas.IsEnabled = false;
-                            inkTool.Visibility = Visibility.Collapsed;
-                            inkcanvas.Background.Opacity = 0;
-                            inkTool.isPPT = false;
-                            Catalog.ShowInfo("放映结束.");
-                            IconAnimation(true);
-                        }), DispatcherPriority.Normal);
-
-                    };
+                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                    pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                    pptApplication.AfterPresentationOpen += PptApplication_AfterPresentationOpen;
                     if (pptApplication.SlideShowWindows.Count >= 1)
                     {
                         PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
@@ -208,6 +187,73 @@ namespace Cokee.ClassService
 
                 if (pptApplication == null) return;
             }
+        }
+
+        private void PptApplication_AfterPresentationOpen(MSO.Presentation Pres)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                page = 0;
+                inkcanvas.Strokes.Clear();
+                pptControls.Visibility = Visibility.Collapsed;
+                Catalog.SetWindowStyle(1);
+                inkcanvas.IsEnabled = false;
+                inkTool.Visibility = Visibility.Collapsed;
+                inkcanvas.Background.Opacity = 0;
+                inkTool.isPPT = false;
+                Catalog.ShowInfo("放映结束.");
+                IconAnimation(true);
+            }), DispatcherPriority.Normal);
+        }
+
+        private void PptApplication_SlideShowEnd(MSO.Presentation Pres)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                page = 0;
+                inkcanvas.Strokes.Clear();
+                pptControls.Visibility = Visibility.Collapsed;
+                Catalog.SetWindowStyle(1);
+                inkcanvas.IsEnabled = false;
+                inkTool.Visibility = Visibility.Collapsed;
+                inkcanvas.Background.Opacity = 0;
+                inkTool.isPPT = false;
+                Catalog.ShowInfo("放映结束.");
+                IconAnimation(true);
+            }), DispatcherPriority.Normal);
+        }
+
+        private void PptApplication_SlideShowNextSlide(MSO.SlideShowWindow Wn)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!inkTool.isPPT) return;
+                page = Wn.View.CurrentShowPosition;
+                inkcanvas.Strokes.Clear();
+                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
+            }), DispatcherPriority.Normal);
+        }
+
+        private void PptApplication_PresentationClose(MSO.Presentation Pres)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                page = 0;
+                inkcanvas.Strokes.Clear();
+                pptControls.Visibility = Visibility.Collapsed;
+                pptApplication.PresentationClose -= PptApplication_PresentationClose;
+                pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
+                pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
+                pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
+                pptApplication.AfterPresentationOpen -= PptApplication_AfterPresentationOpen;
+                Marshal.ReleaseComObject(pptApplication);
+                pptApplication = null;
+                inkTool.isPPT = false;
+                Catalog.ShowInfo("尝试释放pptApplication对象");
+                IconAnimation(false, SymbolRegular.Presenter24);
+            }), DispatcherPriority.Normal);
         }
 
         private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
@@ -237,6 +283,7 @@ namespace Cokee.ClassService
             if (cardPopup.IsOpen) cardPopup.IsOpen = false;
             else cardPopup.IsOpen = true;
         }
+
         private void StartAnimation(int time = 2, int angle = 180)
         {
             DoubleAnimation doubleAnimation = new DoubleAnimation();
@@ -247,6 +294,7 @@ namespace Cokee.ClassService
             doubleAnimation.By = angle;
             rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
         }
+
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Info12, int autoHideTime = 0)
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
@@ -279,6 +327,7 @@ namespace Cokee.ClassService
                 }
             }));
         }
+
         private void mouseDown(object sender, MouseButtonEventArgs e)
         {
             isDragging = true;
@@ -287,6 +336,7 @@ namespace Cokee.ClassService
             floatGrid.CaptureMouse();
             IconAnimation(false, SymbolRegular.ArrowMove24);
         }
+
         private void mouseMove(object sender, MouseEventArgs e)
         {
             if (isDragging)
@@ -300,10 +350,12 @@ namespace Cokee.ClassService
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
         }
+
         private void StuMgr(object sender, RoutedEventArgs e)
         {
             if (Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault() == null) new StudentMgr().Show();
         }
+
         private void StartInk(object sender, RoutedEventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -328,10 +380,12 @@ namespace Cokee.ClassService
             }));
         }
 
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = true;
 
-        private void Window_Closed(object sender, EventArgs e) { }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+        }
+
         private void ShowStickys(object sender, RoutedEventArgs e)
         {
             List<StickyItem> list = new List<StickyItem>();
@@ -364,7 +418,6 @@ namespace Cokee.ClassService
             Catalog.ToggleControlVisible(ranres);
         }
 
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
@@ -381,20 +434,17 @@ namespace Cokee.ClassService
             if (Application.Current.Windows.OfType<FloatNote>().FirstOrDefault() == null) new FloatNote().Show();
         }
 
-
-
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
             if (Application.Current.Windows.OfType<Settings>().FirstOrDefault() == null) new Settings().Show();
         }
-
-
 
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
             SetToolWindow();
         }
+
         public void SetToolWindow()
         {
             int WS_EX_TOOLWINDOW = 0x80;
@@ -437,12 +487,13 @@ namespace Cokee.ClassService
 
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
-            System.Drawing.Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
-            var bitmap = new System.Drawing.Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            cardPopup.IsOpen = false;
+            Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
+            var bitmap = new Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            using (System.Drawing.Graphics memoryGrahics = System.Drawing.Graphics.FromImage(bitmap))
+            using (Graphics memoryGrahics = Graphics.FromImage(bitmap))
             {
-                memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, System.Drawing.CopyPixelOperation.SourceCopy);
+                memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
             }
             var savePath =
                 $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now.Date:yyyyMMdd}\{DateTime.Now.ToString("HH-mm-ss")}.png";
@@ -470,5 +521,196 @@ namespace Cokee.ClassService
                 else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
             }
         }
+
+        #region Multi-Touch
+
+        private void MainWindow_TouchDown(object sender, TouchEventArgs e)
+        {
+            double boundWidth = e.GetTouchPoint(null).Bounds.Width;
+            if (boundWidth > 20)
+            {
+                inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
+                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.EraseByPoint;
+                inkcanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+            }
+            else
+            {
+                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.None;
+                inkcanvas.EditingMode = InkCanvasEditingMode.None;
+            }
+        }
+
+        private void MainWindow_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            TouchDownPointsList[e.StylusDevice.Id] = InkCanvasEditingMode.None;
+        }
+
+        private void inkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            try
+            {
+                // 检查是否是压感笔书写
+                foreach (StylusPoint stylusPoint in e.Stroke.StylusPoints)
+                {
+                    if (stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0)
+                    {
+                        return;
+                    }
+                }
+
+                double GetPointSpeed(Point point1, Point point2, Point point3)
+                {
+                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y))
+                        + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) + (point3.Y - point2.Y) * (point3.Y - point2.Y)))
+                        / 20;
+                }
+                try
+                {
+                    if (e.Stroke.StylusPoints.Count > 3)
+                    {
+                        Random random = new Random();
+                        double _speed = GetPointSpeed(e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    StylusPointCollection stylusPoints = new StylusPointCollection();
+                    int n = e.Stroke.StylusPoints.Count - 1;
+                    double pressure = 0.1;
+                    int x = 10;
+                    if (n == 1) return;
+                    if (n >= x)
+                    {
+                        for (int i = 0; i < n - x; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)0.5;
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                        for (int i = n - x; i <= n; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)((0.5 - pressure) * (n - i) / x + pressure);
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i <= n; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)(0.4 * (n - i) / n + pressure);
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                    }
+                    e.Stroke.StylusPoints = stylusPoints;
+                }
+                catch
+                {
+                }
+            }
+            catch { }
+        }
+
+        private void MainWindow_StylusUp(object sender, StylusEventArgs e)
+        {
+            try
+            {
+                inkcanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
+                inkcanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                inkCanvas_StrokeCollected(inkcanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
+            }
+            catch (Exception ex)
+            {
+            }
+            try
+            {
+                StrokeVisualList.Remove(e.StylusDevice.Id);
+                VisualCanvasList.Remove(e.StylusDevice.Id);
+                TouchDownPointsList.Remove(e.StylusDevice.Id);
+                if (StrokeVisualList.Count == 0 || VisualCanvasList.Count == 0 || TouchDownPointsList.Count == 0)
+                {
+                    inkcanvas.Children.Clear();
+                    StrokeVisualList.Clear();
+                    VisualCanvasList.Clear();
+                    TouchDownPointsList.Clear();
+                }
+            }
+            catch { }
+        }
+
+        private void MainWindow_StylusMove(object sender, StylusEventArgs e)
+        {
+            try
+            {
+                if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
+                try
+                {
+                    if (e.StylusDevice.StylusButtons[1].StylusButtonState == StylusButtonState.Down) return;
+                }
+                catch { }
+                var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
+                var stylusPointCollection = e.GetStylusPoints(this);
+                foreach (var stylusPoint in stylusPointCollection)
+                {
+                    strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
+                }
+
+                strokeVisual.Redraw();
+            }
+            catch { }
+        }
+
+        private StrokeVisual GetStrokeVisual(int id)
+        {
+            if (StrokeVisualList.TryGetValue(id, out var visual))
+            {
+                return visual;
+            }
+
+            var strokeVisual = new StrokeVisual(inkcanvas.DefaultDrawingAttributes.Clone());
+            StrokeVisualList[id] = strokeVisual;
+            StrokeVisualList[id] = strokeVisual;
+            var visualCanvas = new VisualCanvas(strokeVisual);
+            VisualCanvasList[id] = visualCanvas;
+            inkcanvas.Children.Add(visualCanvas);
+
+            return strokeVisual;
+        }
+
+        private VisualCanvas GetVisualCanvas(int id)
+        {
+            if (VisualCanvasList.TryGetValue(id, out var visualCanvas))
+            {
+                return visualCanvas;
+            }
+            return null;
+        }
+
+        private InkCanvasEditingMode GetTouchDownPointsList(int id)
+        {
+            if (TouchDownPointsList.TryGetValue(id, out var inkCanvasEditingMode))
+            {
+                return inkCanvasEditingMode;
+            }
+            return inkcanvas.EditingMode;
+        }
+
+        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } = new Dictionary<int, InkCanvasEditingMode>();
+        private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
+        private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
+
+        #endregion Multi-Touch
     }
 }

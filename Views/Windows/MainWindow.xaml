@@ -29,7 +29,7 @@
                     <SolidColorBrush Color="White" Opacity="0.00" />
                 </InkCanvas.Background>
             </InkCanvas>
-            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" d:Visibility="Visible" Margin="0,0,0,3"/>
+            <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" d:Visibility="Visible" HorizontalAlignment="Center"/>
             <Border x:Name="eraser" Height="59" Width="40" d:Visibility="Visible" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Border.Background>
                     <ImageBrush ImageSource="/Resources/Eraser.png"/>
@@ -68,6 +68,7 @@
 
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">
             <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ui:ThemeResource}">
+                <local:TouchableScrollViewer>
                 <Grid VerticalAlignment="Bottom">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -96,6 +97,7 @@
                     <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="6"  Margin="5" Grid.ColumnSpan="2"/>
                     <TextBlock Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji"/>
                 </Grid>
+                </local:TouchableScrollViewer>
             </ui:Card>
 
         </Popup>
