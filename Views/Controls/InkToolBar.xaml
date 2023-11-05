@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d" FontFamily="Cairo-Regular"
-             Height="43" Width="425">
+             Height="43" Width="Auto">
     <UserControl.Resources>
         <SolidColorBrush x:Name="Wbbg" x:Key="WbBg" Color="#FF0E251D"/>
     </UserControl.Resources>
@@ -16,10 +16,10 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="84"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ui:Button x:Name="curBtn" Icon="Cursor24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="指针" Margin="5" Click="Button_Click" Tag="Cursor" IconFilled="True"/>
@@ -68,8 +68,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16"/>
-                        <StackPanel Grid.Row="1" x:Name="stkpn">
-                            <ui:Button Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Margin="5" Click="Button_Click" Tag="Back"/>
+                        <StackPanel Grid.Row="1">
+                            <ui:Button x:Name="redoBtn" Icon="ArrowRedo48" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="重做" Margin="5" Click="Button_Click" Tag="Redo"/>
                             <ui:Button Icon="SelectObject24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select"/>
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" />
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5" IsChecked="{Binding EraseByPointEnable}"/>

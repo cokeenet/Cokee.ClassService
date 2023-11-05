@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>2.1.447.23302</AssemblyVersion>
-    <FileVersion>2.1.447.23302</FileVersion>
+    <AssemblyVersion>2.1.451.23309</AssemblyVersion>
+    <FileVersion>2.1.451.23309</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -14,10 +14,6 @@
     <Authors>Cokee</Authors>
     <Title>Cokee.ClassService</Title>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Eraser.png" />
-  </ItemGroup>
 
 
   <ItemGroup>
@@ -42,14 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="head.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Cairo-Regular.ttf" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.8.4" />
     <PackageReference Include="dotnetCampus.Ipc" Version="1.0.1" />
     <PackageReference Include="NAudio" Version="2.2.1" />
@@ -65,7 +53,7 @@
 
   <ItemGroup>
     <Reference Include="DirectShowLib-2005">
-      <HintPath>..\CokeeAgent\CokeeAgent\packages\WPFMediaKit.2.2.0\build\DirectShowLib-2005.dll</HintPath>
+      <HintPath>Dlls\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="IACore">
       <HintPath>Dlls\IACore.dll</HintPath>
@@ -88,6 +76,8 @@
   </ItemGroup>
 
   <ItemGroup>
+	<Content Include="head.ico" />
+	<EmbeddedResource Include="Resources\Cairo-Regular.ttf" />
     <Resource Include="Resources\Eraser.png" />
     <Resource Include="Resources\head.jpg" />
     <Resource Include="Resources\HeadPics\0.jpg" />

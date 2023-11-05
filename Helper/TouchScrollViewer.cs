@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -28,6 +30,13 @@ namespace Cokee.ClassService.Views.Controls
         }
         private void TouchableScrollViewer_TouchDown(object sender, TouchEventArgs e)
         {
+            TouchPoint point = e.GetTouchPoint(this);
+            HitTestResult hitTestResult = VisualTreeHelper.HitTest(this, point.Position);
+            MessageBox.Show(hitTestResult.VisualHit.ToString());
+            if (hitTestResult.VisualHit is ScrollBar)
+            {
+                return;
+            }
             //添加触摸移动监听
             TouchMove -= TouchableScrollViewer_TouchMove;
             TouchMove += TouchableScrollViewer_TouchMove;
@@ -37,7 +46,7 @@ namespace Cokee.ClassService.Views.Controls
             _startHorizontalOffset = HorizontalOffset;
 
             //获取相对于ScrollViewer的触摸点位置
-            TouchPoint point = e.GetTouchPoint(this);
+            
             _startPosition = point.Position;
         }
 

@@ -38,21 +38,19 @@ namespace Cokee.ClassService.Views.Controls
         {
             
             DoubleAnimation anim2 = new DoubleAnimation(0,368, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim1 = new DoubleAnimation(368,0, TimeSpan.FromSeconds(1));
             anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
             anim2.EasingFunction = new CircleEase();
             if (!isUnplug)
             {
-                tranUsb.X = 0;
                 this.Visibility = Visibility.Visible;
-                Transitions.ApplyTransition(this, TransitionType.SlideRight, 800);
+                tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
                 string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
                 if (string.IsNullOrEmpty(volumeLabel))volumeLabel = "U盘";
                 disk = t.Name;
                 diskName.Text = volumeLabel + "(" + t.Name + ")";
-                double totalFreeSpaceGB = t.TotalFreeSpace / 1024.0 / 1024 / 1024;
-                double totalSizeGB = t.TotalSize / 1024.0 / 1024 / 1024;
-                diskInfo.Text = $"{totalFreeSpaceGB:F2}GB/{totalSizeGB:F2}GB ({volumeLabel})"; 
-                await Task.Delay(10000);
+                diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace)}/{FileSize.Format(t.TotalSize)}"; 
+                await Task.Delay(15000);
                 ShowUsbCard(true);
             }
             else if (isUnplug)
