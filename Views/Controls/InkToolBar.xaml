@@ -68,7 +68,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16"/>
-                        <StackPanel Grid.Row="1">
+                        <StackPanel Grid.Row="1" x:Name="stkpn">
                             <ui:Button Icon="ArrowStepBack20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Margin="5" Click="Button_Click" Tag="Back"/>
                             <ui:Button Icon="SelectObject24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select"/>
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" />
