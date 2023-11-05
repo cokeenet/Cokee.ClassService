@@ -162,7 +162,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.Invoke(new Action(() =>
             {
-                time.Text = Schedule.GetShortTimeStr(DateTime.Now);
+                time.Text = DateTime.Now.ToString("HH:mm:ss");
                 //PicTimer_Elapsed();
             }));
             //Course a, b;

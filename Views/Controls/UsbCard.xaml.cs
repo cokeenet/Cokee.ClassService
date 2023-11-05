@@ -48,7 +48,7 @@ namespace Cokee.ClassService.Views.Controls
                 string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
                 if (string.IsNullOrEmpty(volumeLabel))volumeLabel = "U盘";
                 disk = t.Name;
-                diskName.Text = volumeLabel + "(" + t.Name + ")";
+                diskName.Text = volumeLabel;
                 diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace)}/{FileSize.Format(t.TotalSize)}"; 
                 await Task.Delay(15000);
                 ShowUsbCard(true);
