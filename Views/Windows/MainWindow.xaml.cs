@@ -69,14 +69,8 @@ namespace Cokee.ClassService
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
 
             Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
-            if (Catalog.appSettings.MultiTouchEnable)
-            {
-                inkcanvas.StylusDown += MainWindow_StylusDown;
-                inkcanvas.StylusMove += MainWindow_StylusMove;
-                inkcanvas.StylusUp += MainWindow_StylusUp;
-                inkcanvas.TouchDown += MainWindow_TouchDown;
-            }
-            inkcanvas.StrokeCollected += inkCanvas_StrokeCollected;
+
+
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
@@ -178,7 +172,7 @@ namespace Cokee.ClassService
                     pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                     pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                     pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-                    pptApplication.AfterPresentationOpen += PptApplication_AfterPresentationOpen;
+                    pptApplication.PresentationOpen += PptApplication_PresentationOpen;
                     if (pptApplication.SlideShowWindows.Count >= 1)
                     {
                         PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
@@ -189,20 +183,11 @@ namespace Cokee.ClassService
             }
         }
 
-        private void PptApplication_AfterPresentationOpen(MSO.Presentation Pres)
+        private void PptApplication_PresentationOpen(MSO.Presentation Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                page = 0;
-                inkcanvas.Strokes.Clear();
-                pptControls.Visibility = Visibility.Collapsed;
-                Catalog.SetWindowStyle(1);
-                inkcanvas.IsEnabled = false;
-                inkTool.Visibility = Visibility.Collapsed;
-                inkcanvas.Background.Opacity = 0;
-                inkTool.isPPT = false;
-                Catalog.ShowInfo("放映结束.");
-                IconAnimation(true);
+                MessageBox.Show(Pres.Path);
             }), DispatcherPriority.Normal);
         }
 
@@ -247,7 +232,7 @@ namespace Cokee.ClassService
                 pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
                 pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
                 pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
-                pptApplication.AfterPresentationOpen -= PptApplication_AfterPresentationOpen;
+                pptApplication.AfterPresentationOpen -= PptApplication_PresentationOpen;
                 Marshal.ReleaseComObject(pptApplication);
                 pptApplication = null;
                 inkTool.isPPT = false;
@@ -522,195 +507,6 @@ namespace Cokee.ClassService
             }
         }
 
-        #region Multi-Touch
 
-        private void MainWindow_TouchDown(object sender, TouchEventArgs e)
-        {
-            double boundWidth = e.GetTouchPoint(null).Bounds.Width;
-            if (boundWidth > 20)
-            {
-                inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
-                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.EraseByPoint;
-                inkcanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-            }
-            else
-            {
-                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.None;
-                inkcanvas.EditingMode = InkCanvasEditingMode.None;
-            }
-        }
-
-        private void MainWindow_StylusDown(object sender, StylusDownEventArgs e)
-        {
-            TouchDownPointsList[e.StylusDevice.Id] = InkCanvasEditingMode.None;
-        }
-
-        private void inkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
-        {
-            try
-            {
-                // 检查是否是压感笔书写
-                foreach (StylusPoint stylusPoint in e.Stroke.StylusPoints)
-                {
-                    if (stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0)
-                    {
-                        return;
-                    }
-                }
-
-                double GetPointSpeed(Point point1, Point point2, Point point3)
-                {
-                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y))
-                        + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) + (point3.Y - point2.Y) * (point3.Y - point2.Y)))
-                        / 20;
-                }
-                try
-                {
-                    if (e.Stroke.StylusPoints.Count > 3)
-                    {
-                        Random random = new Random();
-                        double _speed = GetPointSpeed(e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
-                    }
-                }
-                catch { }
-
-                try
-                {
-                    StylusPointCollection stylusPoints = new StylusPointCollection();
-                    int n = e.Stroke.StylusPoints.Count - 1;
-                    double pressure = 0.1;
-                    int x = 10;
-                    if (n == 1) return;
-                    if (n >= x)
-                    {
-                        for (int i = 0; i < n - x; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)0.5;
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-                        for (int i = n - x; i <= n; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)((0.5 - pressure) * (n - i) / x + pressure);
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i <= n; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)(0.4 * (n - i) / n + pressure);
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-                    }
-                    e.Stroke.StylusPoints = stylusPoints;
-                }
-                catch
-                {
-                }
-            }
-            catch { }
-        }
-
-        private void MainWindow_StylusUp(object sender, StylusEventArgs e)
-        {
-            try
-            {
-                inkcanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
-                inkcanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                inkCanvas_StrokeCollected(inkcanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
-            }
-            catch (Exception ex)
-            {
-            }
-            try
-            {
-                StrokeVisualList.Remove(e.StylusDevice.Id);
-                VisualCanvasList.Remove(e.StylusDevice.Id);
-                TouchDownPointsList.Remove(e.StylusDevice.Id);
-                if (StrokeVisualList.Count == 0 || VisualCanvasList.Count == 0 || TouchDownPointsList.Count == 0)
-                {
-                    inkcanvas.Children.Clear();
-                    StrokeVisualList.Clear();
-                    VisualCanvasList.Clear();
-                    TouchDownPointsList.Clear();
-                }
-            }
-            catch { }
-        }
-
-        private void MainWindow_StylusMove(object sender, StylusEventArgs e)
-        {
-            try
-            {
-                if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
-                try
-                {
-                    if (e.StylusDevice.StylusButtons[1].StylusButtonState == StylusButtonState.Down) return;
-                }
-                catch { }
-                var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
-                var stylusPointCollection = e.GetStylusPoints(this);
-                foreach (var stylusPoint in stylusPointCollection)
-                {
-                    strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
-                }
-
-                strokeVisual.Redraw();
-            }
-            catch { }
-        }
-
-        private StrokeVisual GetStrokeVisual(int id)
-        {
-            if (StrokeVisualList.TryGetValue(id, out var visual))
-            {
-                return visual;
-            }
-
-            var strokeVisual = new StrokeVisual(inkcanvas.DefaultDrawingAttributes.Clone());
-            StrokeVisualList[id] = strokeVisual;
-            StrokeVisualList[id] = strokeVisual;
-            var visualCanvas = new VisualCanvas(strokeVisual);
-            VisualCanvasList[id] = visualCanvas;
-            inkcanvas.Children.Add(visualCanvas);
-
-            return strokeVisual;
-        }
-
-        private VisualCanvas GetVisualCanvas(int id)
-        {
-            if (VisualCanvasList.TryGetValue(id, out var visualCanvas))
-            {
-                return visualCanvas;
-            }
-            return null;
-        }
-
-        private InkCanvasEditingMode GetTouchDownPointsList(int id)
-        {
-            if (TouchDownPointsList.TryGetValue(id, out var inkCanvasEditingMode))
-            {
-                return inkCanvasEditingMode;
-            }
-            return inkcanvas.EditingMode;
-        }
-
-        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } = new Dictionary<int, InkCanvasEditingMode>();
-        private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
-        private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
-
-        #endregion Multi-Touch
     }
 }
