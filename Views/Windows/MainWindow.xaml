@@ -82,15 +82,17 @@
                     </Grid.ColumnDefinitions>
                         <StackPanel>
                             <ui:Button Content="随机抽取" Icon="ArrowShuffle48" Margin="5" Click="ShowRandom" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" />
+                            <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="快速批注" Icon="Pen48"  Margin="5" Click="StartInk" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="截图" Icon="Screenshot24" Margin="5" Click="ScreenShot" MouseRightButtonDown="Button_MouseRightButtonDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="课程管理" Icon="List28"  Margin="5" Click="CourseMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                         <StackPanel Grid.Column="1">
-                            <ui:Button Content="音量调节" Icon="Speaker228" Grid.Column="1" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
-                            <ui:Button Content="快速修复" Icon="Toolbox28" Grid.Row="1" Grid.Column="1" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" MouseRightButtonDown="PostNote" VerticalAlignment="Stretch" />
-                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Grid.Row="2" Grid.Column="1" Margin="5" MouseRightButtonDown="ShowStickys" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            <ui:Button Content="设置" Icon="Settings32" Grid.Row="3" Grid.Column="1"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
+                            <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" MouseRightButtonDown="PostNote" VerticalAlignment="Stretch" />
+                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" MouseRightButtonDown="ShowStickys" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                            </StackPanel>
                     <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2"/>
                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji"/>

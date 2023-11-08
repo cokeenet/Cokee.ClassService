@@ -39,6 +39,7 @@ namespace Cokee.ClassService.Views.Controls
         }
         private void Confirm(object sender, RoutedEventArgs e)
         {
+            
             Catalog.ToggleControlVisible(this);
             if(DataContext!=null) EditStudent.Invoke(this, DataContext as Student);
         }

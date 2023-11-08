@@ -65,10 +65,10 @@ namespace Cokee.ClassService
             snackbarService.SetSnackbarControl(snackbar);
             snackbarService.Timeout = 4000;
             inkTool.inkCanvas = inkcanvas;
-            //inkcanvas.StrokeCollected += Inkcanvas_StrokeCollected;
+            //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
 
-            Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
+           // Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
 
 
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);

@@ -27,14 +27,14 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable,Mode=TwoWay}"/>
                 </ui:CardControl>
-                <ui:CardControl Icon="Eraser24" Margin="5">
+                <ui:CardControl Icon="People28" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦UseMemberAvatar" />
+                                FontSize="13" FontWeight="Medium" Text="多点触控" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable,Mode=TwoWay}"/>
                 </ui:CardControl>
                 <ui:CardControl Icon="Eraser24" Margin="5">
                     <ui:CardControl.Header>
@@ -52,7 +52,7 @@
                             <TextBlock
                                 FontSize="13" FontWeight="Medium" Text="使用用户头像" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="hhh" />
+                                FontSize="12" Opacity="0.7" Text="打开后责任自负" />
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}"/>

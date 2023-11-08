@@ -21,6 +21,7 @@ namespace Cokee.ClassService.Views.Controls
     /// <summary>
     /// RandomResult.xaml 的交互逻辑
     /// </summary>
+    
     public partial class RandomResult : UserControl
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(

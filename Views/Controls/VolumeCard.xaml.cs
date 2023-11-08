@@ -31,13 +31,18 @@ namespace Cokee.ClassService.Views.Controls
         {
             InitializeComponent();
             CancelTheMute();
-            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
-            devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).ToList();
+            UpdateSpkList();
+            this.IsVisibleChanged += (a,b) => { UpdateSpkList(); };
             spk.ItemsSource = devices; 
             speakDevice=devices.FirstOrDefault();
             spk.SelectedItem = speakDevice;
             vol.Text= $"{(speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f).ToString("0")}%";
             slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f;
+        }
+        public void UpdateSpkList()
+        {
+            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+            devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).ToList();
         }
         private void spk_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

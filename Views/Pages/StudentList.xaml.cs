@@ -66,10 +66,7 @@ namespace Cokee.ClassService.Views.Pages
             //Catalog.ShowInfo(e.RoleStr.ToString());
             int index = students.ToList().FindIndex(f => f.ID == e.ID);
             if (index != -1)
-            {
-                if (e.QQ != null && e.QQ.Length >= 5)
-                    e.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={e.QQ}&s=100";
-                else e.HeadPicUrl = "/Resources/head.jpg";
+            { 
                 students[index] = e;
                 SaveData();
                 //Catalog.ShowInfo("saved.");
