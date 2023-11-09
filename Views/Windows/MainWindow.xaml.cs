@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -10,23 +14,14 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -68,7 +63,7 @@ namespace Cokee.ClassService
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
 
-           // Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
+            // Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
 
 
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
@@ -173,6 +168,7 @@ namespace Cokee.ClassService
                     pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                     pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
                     pptApplication.PresentationOpen += PptApplication_PresentationOpen;
+
                     if (pptApplication.SlideShowWindows.Count >= 1)
                     {
                         PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
@@ -187,7 +183,7 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                MessageBox.Show(Pres.Path);
+                Catalog.ShowInfo();
             }), DispatcherPriority.Normal);
         }
 

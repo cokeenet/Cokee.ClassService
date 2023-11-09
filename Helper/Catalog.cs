@@ -28,7 +28,7 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(10), "..."), SymbolRegular.Warning32);
+                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().Take(30), "..."), SymbolRegular.Warning32);
                 // MessageBox.Show(ex.ToString());
             });
         }
@@ -49,7 +49,7 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info12);
+                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info32);
             });
         }
      /*   public static void CreateWindow(Type windowType)
