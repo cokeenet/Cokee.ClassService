@@ -6,6 +6,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <FontFamily x:Key="SegoeFluentIcons">/Cokee.ClassService;component/Resources/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />

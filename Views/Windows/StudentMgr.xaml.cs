@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
+
 using Newtonsoft.Json;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -8,13 +10,15 @@ namespace Cokee.ClassService.Views.Windows
     /// <summary>
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
-    
 
     public partial class StudentMgr : UiWindow
     {
-        public event EventHandler<bool> RandomEvent;
-        public event EventHandler<bool> AddMuitlStuEvent;
-        public event EventHandler<bool> AddStuEvent;
+        public event EventHandler<bool>? RandomEvent;
+
+        public event EventHandler<bool>? AddMuitlStuEvent;
+
+        public event EventHandler<bool>? AddStuEvent;
+
         public StudentMgr()
         {
             InitializeComponent();
@@ -32,7 +36,6 @@ namespace Cokee.ClassService.Views.Windows
 
         private void ClassSetting(object sender, RoutedEventArgs e)
         {
-    
         }
 
         private void AddStu(object sender, RoutedEventArgs e)

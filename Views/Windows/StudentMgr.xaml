@@ -14,7 +14,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <ui:TitleBar
-            Title="CokeeClass | 学生管理" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True" 
+            Title="CokeeClass | 学生管理" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True"
             ShowMaximize="True" ShowMinimize="True" UseSnapLayout="True" />
         <Grid Grid.Row="1" Margin="3,3,3,3">
             <Grid.ColumnDefinitions>
@@ -27,16 +27,15 @@
                 SelectedPageIndex="0">
                 <ui:NavigationStore.Items>
                     <ui:NavigationItem
-                        Content="班级设置" Icon="Settings32" Click="ClassSetting"/>
+                        Content="班级设置" Icon="Settings32" Click="ClassSetting" />
                     <ui:NavigationSeparator />
-                    <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random"/>
+                    <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random" />
                     <ui:NavigationItem Content="添加" Icon="Add48" Click="AddStu"></ui:NavigationItem>
-                    <ui:NavigationItem Content="批量添加" Icon="AddSquareMultiple24" Click="AddMuitlStu"/>
-                    
+                    <ui:NavigationItem Content="批量添加" Icon="AddSquare48" Click="AddMuitlStu" />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem
-                        Content="关于" Icon="Info24"/>
+                        Content="关于" Icon="Info24" />
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
             <Border
@@ -48,6 +47,5 @@
         <ui:Snackbar
             x:Name="snackbar" Width="370" Height="68" Margin="0,492,0,0"
             HorizontalAlignment="Center" VerticalAlignment="Top" Grid.RowSpan="3" />
-
     </Grid>
 </ui:UiWindow>

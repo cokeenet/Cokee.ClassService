@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+using IWshRuntimeLibrary;
+
 using Serilog;
 
 namespace Cokee.ClassService.Helper
@@ -11,8 +13,10 @@ namespace Cokee.ClassService.Helper
     {
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hwnd, int index);
+
         [DllImport("user32.dll")]
         public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string className, string winName);
 
@@ -21,6 +25,7 @@ namespace Cokee.ClassService.Helper
 
         //查找窗口的委托 查找逻辑
         public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
+
         [DllImport("user32.dll")]
         public static extern bool EnumWindows(EnumWindowsProc proc, IntPtr lParam);
 
@@ -32,10 +37,12 @@ namespace Cokee.ClassService.Helper
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hwnd, IntPtr parentHwnd);
+
         public static IntPtr programHandle = IntPtr.Zero;
+
         public static void SendMsgToProgman()
         {
-            // 桌面窗口句柄，在外部定义，用于后面将我们自己的窗口作为子窗口放入
+            // 桌面窗口句柄，在外部定义，用于将自己的窗口作为子窗口放入
             programHandle = FindWindow("Progman", null);
 
             IntPtr result = IntPtr.Zero;
@@ -57,7 +64,57 @@ namespace Cokee.ClassService.Helper
                 return true;
             }, IntPtr.Zero);
         }
+
+        #region 开机自启
+
+        /// <summary>
+        /// 开机自启创建
+        /// </summary>
+        /// <param name="exeName">程序名称</param>
+        /// <returns></returns>
+        public static bool StartAutomaticallyCreate(string exeName)
+        {
+            try
+            {
+                WshShell shell = new WshShell();
+                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
+                //设置快捷方式的目标所在的位置(源程序完整路径)
+                shortcut.TargetPath = System.Windows.Forms.Application.ExecutablePath;
+                //应用程序的工作目录
+                //当用户没有指定一个具体的目录时，快捷方式的目标应用程序将使用该属性所指定的目录来装载或保存文件。
+                shortcut.WorkingDirectory = System.Environment.CurrentDirectory;
+                //目标应用程序窗口类型(1.Normal window普通窗口,3.Maximized最大化窗口,7.Minimized最小化)
+                shortcut.WindowStyle = 1;
+                //快捷方式的描述
+                shortcut.Description = exeName + "_Ink";
+                //设置快捷键(如果有必要的话.)
+                shortcut.Hotkey = "CTRL+ALT+D";
+                shortcut.Save();
+                return true;
+            }
+            catch (Exception) { }
+            return false;
+        }
+
+        /// <summary>
+        /// 开机自启删除
+        /// </summary>
+        /// <param name="exeName">程序名称</param>
+        /// <returns></returns>
+        public static bool StartAutomaticallyDel(string exeName)
+        {
+            try
+            {
+                System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
+                return true;
+            }
+            catch (Exception) { }
+            return false;
+        }
     }
+
+    #endregion 开机自启
+
     public static class FileSize
     {
         public static string Format(long bytes, string formatString = "{0:0.00}")
@@ -95,7 +152,8 @@ namespace Cokee.ClassService.Helper
             return $"{string.Format(formatString, number)}{suffix}";
         }
     }
-    static class ProcessHelper
+
+    internal static class ProcessHelper
     {
         public static bool HasPowerPointProcess()
         {
@@ -105,7 +163,7 @@ namespace Cokee.ClassService.Helper
             {
                 //Log.Information(item.ProcessName);
                 if (item.ProcessName.Contains("powerpnt") || item.ProcessName.Contains("wpp") || item.ProcessName.Contains("POWERPNT"))
-                return true;
+                    return true;
             }
             return false;
             /*bool result = false;

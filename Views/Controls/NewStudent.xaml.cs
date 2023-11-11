@@ -23,7 +23,7 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
-            if(!DesignerHelper.IsInDesignMode)
+            if (!DesignerHelper.IsInDesignMode)
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
         }
 
@@ -42,7 +42,7 @@ namespace Cokee.ClassService.Views.Controls
                 values[2] = values[2].Insert(7, "-");
                 DateTime.TryParse(values[2], out dt);
                 students.Add(new Student(name, sex, dt));
-                Student.SaveToFile(students);
+                Student.Save(students);
             }
             Catalog.ToggleControlVisible(this);
         }

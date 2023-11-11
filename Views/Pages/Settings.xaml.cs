@@ -1,5 +1,6 @@
 ﻿using Cokee.ClassService.Helper;
 using System;
+using System.Windows;
 
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -19,8 +20,11 @@ namespace Cokee.ClassService.Views.Pages
                 InitializeComponent();
                 if (!Wpf.Ui.Appearance.Background.IsSupported(BackgroundType.Mica)) micaInfo.IsOpen = true;
                 else micaInfo.IsOpen = false;
-                this.DataContext = Catalog.appSettings;
-                this.IsVisibleChanged += (a, b) => { SaveData(); };
+                
+                this.IsVisibleChanged += (a, b) => {
+                    this.DataContext = Catalog.appSettings;
+                    if (!(bool)b.NewValue)SaveData();
+                };
             }
             catch (Exception ex)
             {

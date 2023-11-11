@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+
 using Cokee.ClassService.Helper;
 
 using Wpf.Ui.Animations;
@@ -20,6 +21,7 @@ namespace Cokee.ClassService.Views.Controls
     public partial class UsbCard : UserControl
     {
         public string disk;
+
         public UsbCard()
         {
             InitializeComponent();
@@ -34,11 +36,11 @@ namespace Cokee.ClassService.Views.Controls
                 return false;
             });
         }
+
         private async void ShowUsbCard(bool isUnplug, DriveInfo t = null)
         {
-            
-            DoubleAnimation anim2 = new DoubleAnimation(0,368, TimeSpan.FromSeconds(1));
-            DoubleAnimation anim1 = new DoubleAnimation(368,0, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim2 = new DoubleAnimation(0, 368, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim1 = new DoubleAnimation(368, 0, TimeSpan.FromSeconds(1));
             anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
             anim2.EasingFunction = new CircleEase();
             if (!isUnplug)
@@ -46,10 +48,10 @@ namespace Cokee.ClassService.Views.Controls
                 this.Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
                 string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
-                if (string.IsNullOrEmpty(volumeLabel))volumeLabel = "U盘";
+
                 disk = t.Name;
                 diskName.Text = volumeLabel;
-                diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace)}/{FileSize.Format(t.TotalSize)}"; 
+                diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
                 await Task.Delay(15000);
                 ShowUsbCard(true);
             }
@@ -59,43 +61,46 @@ namespace Cokee.ClassService.Views.Controls
                 await Task.Delay(1000);
                 this.Visibility = Visibility.Collapsed;
             }
-
         }
+
         private void Open(object sender, RoutedEventArgs e)
         {
             Process.Start("explorer.exe", disk);
             ShowUsbCard(true);
         }
+
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            try{
-            if (msg == WM_DEVICECHANGE)
+            try
             {
-                switch (wParam.ToInt32())
+                if (msg == WM_DEVICECHANGE)
                 {
-                    case DBT_DEVICEARRIVAL:
-                        DriveInfo[] s = DriveInfo.GetDrives();
-                        s.Any(t =>
-                        {
-                            if (t.DriveType == DriveType.Removable)
+                    switch (wParam.ToInt32())
+                    {
+                        case DBT_DEVICEARRIVAL:
+                            DriveInfo[] s = DriveInfo.GetDrives();
+                            s.Any(t =>
                             {
-                                ShowUsbCard(false, t);
-                                return true;
-                            }
-                            return false;
-                        });
-                        break;
+                                if (t.DriveType == DriveType.Removable)
+                                {
+                                    ShowUsbCard(false, t);
+                                    return true;
+                                }
+                                return false;
+                            });
+                            break;
 
-                    case DBT_DEVICEREMOVECOMPLETE:
-                        ShowUsbCard(true);
-                        break;
+                        case DBT_DEVICEREMOVECOMPLETE:
+                            ShowUsbCard(true);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
+                return IntPtr.Zero;
             }
-            return IntPtr.Zero;}
-            catch(Exception ex){ Catalog.HandleException(ex,"U盘检测"); return IntPtr.Zero; }
+            catch (Exception ex) { Catalog.HandleException(ex, "U盘检测功能 "); return IntPtr.Zero; }
         }
 
         public const int DBT_DEVICEARRIVAL = 0x8000;  //设备可用
@@ -109,8 +114,6 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ExitUsbDrive(object sender, RoutedEventArgs e)
         {
-
-
             string filename = @"\\.\" + disk.Remove(2);
             //打开设备，得到设备的句柄handle.
             IntPtr handle = CreateFile(filename, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, IntPtr.Zero, 0x3, 0, IntPtr.Zero);
@@ -119,9 +122,8 @@ namespace Cokee.ClassService.Views.Controls
             bool result = DeviceIoControl(handle, IOCTL_STORAGE_EJECT_MEDIA, IntPtr.Zero, 0, IntPtr.Zero, 0, out byteReturned, IntPtr.Zero);
             if (!result) Catalog.ShowInfo("U盘退出失败", "请检查程序占用，关闭已打开的文件夹.");
             else ShowUsbCard(true);
-
-
         }
+
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern IntPtr CreateFile(
          string lpFileName,

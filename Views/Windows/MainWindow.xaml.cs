@@ -1,8 +1,4 @@
-﻿using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -20,8 +16,16 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Controls;
+using Cokee.ClassService.Views.Windows;
+
+using Microsoft.Win32;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using MSO = Microsoft.Office.Interop.PowerPoint;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
@@ -62,10 +66,9 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-
-            // Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
-
-
+            Win32Func.SendMsgToProgman();
+            Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
+            //Theme.Apply(ThemeType.Light, BackgroundType.Mica, true, true);
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
@@ -88,7 +91,7 @@ namespace Cokee.ClassService
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            var a = Student.LoadFromFile(Catalog.STU_FILE);
+                            var a = Student.Load();
                             var b = a[new Random().Next(a.Count)];
                             if (b.HeadPicUrl.StartsWith("http"))
                                 head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
@@ -119,6 +122,7 @@ namespace Cokee.ClassService
             {
                 new Thread(new ThreadStart(() =>
                 {
+                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Previous();
                 })).Start();
@@ -136,6 +140,7 @@ namespace Cokee.ClassService
             {
                 new Thread(new ThreadStart(() =>
                 {
+                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Next();
                 })).Start();
@@ -153,37 +158,35 @@ namespace Cokee.ClassService
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 //PicTimer_Elapsed();
-            }));
-            //Course a, b;
-            // var status = Schedule.GetNowCourse(schedule, out a, out b);
-            //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
-            {
-                pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-                if (pptApplication != null)
+                //Course a, b;
+                // var status = Schedule.GetNowCourse(schedule, out a, out b);
+                //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
+                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
                 {
-                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-                    pptApplication.PresentationClose += PptApplication_PresentationClose;
-                    pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                    pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-                    pptApplication.PresentationOpen += PptApplication_PresentationOpen;
-
-                    if (pptApplication.SlideShowWindows.Count >= 1)
+                    pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+                    if (pptApplication != null)
                     {
-                        PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                        Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+                        pptApplication.PresentationClose += PptApplication_PresentationClose;
+                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                        pptApplication.PresentationOpen += PptApplication_PresentationOpen;
+                        if (pptApplication.SlideShowWindows.Count >= 1)
+                        {
+                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                        }
                     }
+                    if (pptApplication == null) return;
                 }
-
-                if (pptApplication == null) return;
-            }
+            }));
         }
 
         private void PptApplication_PresentationOpen(MSO.Presentation Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Catalog.ShowInfo();
+                Catalog.ShowInfo(Pres.FullName);
             }), DispatcherPriority.Normal);
         }
 
@@ -356,7 +359,7 @@ namespace Cokee.ClassService
                     inkcanvas.IsEnabled = false;
                     inkTool.Visibility = Visibility.Collapsed;
                     inkcanvas.Background.Opacity = 0;
-                    IconAnimation(true, SymbolRegular.Pen32);
+                    IconAnimation(true);
                 }
             }));
         }
@@ -502,7 +505,5 @@ namespace Cokee.ClassService
                 else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
             }
         }
-
-
     }
 }

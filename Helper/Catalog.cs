@@ -8,6 +8,8 @@ using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
+using Clipboard = Wpf.Ui.Common.Clipboard;
+
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -20,18 +22,23 @@ namespace Cokee.ClassService.Helper
         public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
+
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
+
         public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
+
         public static void HandleException(Exception ex, string str = "")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(20), "..."), SymbolRegular.Warning32);
+                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().Substring(15), "..."), SymbolRegular.Warning32, ControlAppearance.Danger);
+                Clipboard.SetText(ex.ToString());
                 // MessageBox.Show(ex.ToString());
             });
         }
+
         public static void ExitPPTShow()
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -44,22 +51,25 @@ namespace Cokee.ClassService.Helper
                }
            });
         }
+
         public static void ShowInfo(string title = "", string content = "")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info32);
+                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info28, ControlAppearance.Light);
             });
         }
-     /*   public static void CreateWindow(Type windowType)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                // 创建新窗口实例
-                //if(Application.Windows.OfType<Window>() != null) { }
-            });
-        }*/
+
+        /*   public static void CreateWindow(Type windowType)
+           {
+               Application.Current.Dispatcher.Invoke(() =>
+               {
+                   // 创建新窗口实例
+                   //if(Application.Windows.OfType<Window>() != null) { }
+               });
+           }*/
+
         public static void RemoveObjFromWindow(UIElement element)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -69,6 +79,7 @@ namespace Cokee.ClassService.Helper
                 mainWindow.MainGrid.Children.Remove(element);
             });
         }
+
         public static void SetWindowStyle(int type = 0)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -92,6 +103,7 @@ namespace Cokee.ClassService.Helper
                 }
             });
         }
+
         public static void ToggleControlVisible(UIElement uIElement, bool IsHide = false)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -103,7 +115,6 @@ namespace Cokee.ClassService.Helper
                 }
                 else
                 {
-
                     // 创建一个淡出动画
                     DoubleAnimation fadeOutAnimation = new DoubleAnimation();
                     fadeOutAnimation.From = 1.0;
@@ -127,6 +138,7 @@ namespace Cokee.ClassService.Helper
                 }
             });
         }
+
         public static List<T> RandomizeList<T>(List<T> list)
         {
             Random random = new Random();
