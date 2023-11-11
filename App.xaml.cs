@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using System.IO;
+using System.Windows.Media.Animation;
 using Wpf.Ui.Appearance;
 using Cokee.ClassService.Helper;
 namespace Cokee.ClassService
@@ -32,6 +33,10 @@ namespace Cokee.ClassService
             AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
                   typeof(Analytics), typeof(Crashes));
             base.OnStartup(e);
+            Timeline.DesiredFrameRateProperty.OverrideMetadata(
+                typeof(Timeline),
+                new FrameworkPropertyMetadata { DefaultValue = 120 }
+            );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             if (!Directory.Exists(Catalog.CONFIG_DIR))

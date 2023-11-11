@@ -27,10 +27,12 @@
                 SelectedPageIndex="0">
                 <ui:NavigationStore.Items>
                     <ui:NavigationItem
-                        Content="班级设置" Icon="Settings32" Click="NavigationItem_Click_2"/>
+                        Content="班级设置" Icon="Settings32" Click="ClassSetting"/>
                     <ui:NavigationSeparator />
                     <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random"/>
-                    <ui:NavigationItem Content="添加学生" Icon="Add48" Click="AddStu"/>
+                    <ui:NavigationItem Content="添加" Icon="Add48" Click="AddStu"></ui:NavigationItem>
+                    <ui:NavigationItem Content="批量添加" Icon="AddSquareMultiple24" Click="AddMuitlStu"/>
+                    
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem

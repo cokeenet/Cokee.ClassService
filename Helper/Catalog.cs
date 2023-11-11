@@ -28,7 +28,7 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().Take(30), "..."), SymbolRegular.Warning32);
+                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().AsSpan(20), "..."), SymbolRegular.Warning32);
                 // MessageBox.Show(ex.ToString());
             });
         }

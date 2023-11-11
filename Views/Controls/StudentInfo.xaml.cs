@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Pages;
-
+using Cokee.ClassService.Views.Windows;
 using Microsoft.Win32;
 
 using Newtonsoft.Json;
-
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 using TextBox = Wpf.Ui.Controls.TextBox;
@@ -36,6 +36,13 @@ namespace Cokee.ClassService.Views.Controls
         public StudentInfo()
         {
             InitializeComponent();
+            if (!DesignerHelper.IsInDesignMode)
+                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) =>
+                {
+                    DataContext = new Student("",0,DateTime.Today);
+                    Catalog.ToggleControlVisible(this);
+
+                };
         }
         private void Confirm(object sender, RoutedEventArgs e)
         {

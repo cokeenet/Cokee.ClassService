@@ -23,7 +23,8 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
-            if(!DesignerHelper.IsInDesignMode) Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
+            if(!DesignerHelper.IsInDesignMode)
+                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
