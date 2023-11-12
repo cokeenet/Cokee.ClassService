@@ -20,7 +20,7 @@ namespace Cokee.ClassService.Helper
         public const string SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
         public const string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
         public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
-        public const string SETTINGS_FILE_NAME = @$"{CONFIG_DIR}\config.json";
+        public const string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
@@ -30,10 +30,10 @@ namespace Cokee.ClassService.Helper
 
         public static void HandleException(Exception ex, string str = "")
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show($"{str}发生错误", string.Concat(ex.ToString().Substring(15), "..."), SymbolRegular.Warning32, ControlAppearance.Danger);
+                        await GlobalSnackbarService.ShowAsync($"{str}发生错误", string.Concat(ex.ToString().Substring(0, 200), "..."), SymbolRegular.Warning24, ControlAppearance.Danger);
                 Clipboard.SetText(ex.ToString());
                 // MessageBox.Show(ex.ToString());
             });
@@ -54,21 +54,28 @@ namespace Cokee.ClassService.Helper
 
         public static void ShowInfo(string title = "", string content = "")
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        GlobalSnackbarService.Show(title, content, SymbolRegular.Info28, ControlAppearance.Light);
+                    {
+                        await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
+                    }
             });
         }
 
-        /*   public static void CreateWindow(Type windowType)
-           {
-               Application.Current.Dispatcher.Invoke(() =>
-               {
-                   // 创建新窗口实例
-                   //if(Application.Windows.OfType<Window>() != null) { }
-               });
-           }*/
+        public static void CreateWindow<T>() where T : Window, new()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var win = Application.Current.Windows.OfType<T>().FirstOrDefault();
+                if (win == null)
+                {
+                    win = new T();
+                    win.Show();
+                }
+                else { win.Activate(); Catalog.ShowInfo("窗口在任务栏上!!", "就在底下"); }
+            });
+        }
 
         public static void RemoveObjFromWindow(UIElement element)
         {

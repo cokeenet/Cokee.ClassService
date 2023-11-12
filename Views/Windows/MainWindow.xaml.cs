@@ -17,6 +17,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Windows;
@@ -105,17 +107,6 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void Inkcanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                /*if (page >= 0 && page <= 101)
-                {
-                    strokes[page] = inkcanvas.Strokes;
-                }*/
-            }));
-        }
-
         public void PptUp(object sender = null, RoutedEventArgs e = null)
         {
             try
@@ -167,6 +158,7 @@ namespace Cokee.ClassService
                     if (pptApplication != null)
                     {
                         Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+                        if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
                         pptApplication.PresentationClose += PptApplication_PresentationClose;
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
@@ -204,7 +196,7 @@ namespace Cokee.ClassService
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("放映结束.");
                 IconAnimation(true);
-            }), DispatcherPriority.Normal);
+            }), DispatcherPriority.Background);
         }
 
         private void PptApplication_SlideShowNextSlide(MSO.SlideShowWindow Wn)
@@ -225,19 +217,25 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 page = 0;
-                inkcanvas.Strokes.Clear();
+
                 pptControls.Visibility = Visibility.Collapsed;
                 pptApplication.PresentationClose -= PptApplication_PresentationClose;
                 pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
                 pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
                 pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
-                pptApplication.AfterPresentationOpen -= PptApplication_PresentationOpen;
-                Marshal.ReleaseComObject(pptApplication);
-                pptApplication = null;
+                pptApplication.PresentationOpen -= PptApplication_PresentationOpen;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("尝试释放pptApplication对象");
-                IconAnimation(false, SymbolRegular.Presenter24);
-            }), DispatcherPriority.Normal);
+                IconAnimation(true);
+                try
+                {
+                    Marshal.ReleaseComObject(pptApplication);
+                }
+                catch
+                {
+                }
+                pptApplication = null;
+            }), DispatcherPriority.Background);
         }
 
         private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
@@ -337,7 +335,7 @@ namespace Cokee.ClassService
 
         private void StuMgr(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault() == null) new StudentMgr().Show();
+            Catalog.CreateWindow<StudentMgr>();
         }
 
         private void StartInk(object sender, RoutedEventArgs e)
@@ -406,21 +404,25 @@ namespace Cokee.ClassService
         {
             HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
             hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
+            AutoUpdater.ShowSkipButton = false;
+            AutoUpdater.ShowRemindLaterButton = true;
+            AutoUpdater.RunUpdateAsAdmin = false;
+            AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
         }
 
         private void CourseMgr(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<CourseMgr>().FirstOrDefault() == null) new CourseMgr().Show();
+            Catalog.CreateWindow<CourseMgr>();
         }
 
         private void AddFloatCard(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<FloatNote>().FirstOrDefault() == null) new FloatNote().Show();
+            Catalog.CreateWindow<FloatNote>();
         }
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<Settings>().FirstOrDefault() == null) new Settings().Show();
+            Catalog.CreateWindow<Settings>();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -494,7 +496,7 @@ namespace Cokee.ClassService
 
         private void QuickFix(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<QuickFix>().FirstOrDefault() == null) new QuickFix().Show();
+            Catalog.CreateWindow<QuickFix>();
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)

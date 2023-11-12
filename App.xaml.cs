@@ -53,14 +53,14 @@ namespace Cokee.ClassService
             Exception ex = e.ExceptionObject as Exception;
             if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "发生错误");
-            Crashes.TrackError(ex);
+            //Crashes.TrackError(ex);
             Catalog.HandleException(ex, "未预期的异常! ");
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception, "发生错误");
-            Crashes.TrackError(e.Exception);
+            //Crashes.TrackError(e.Exception);
             Catalog.HandleException(e.Exception, "未预期的异常! ");
             e.Handled = true;
         }

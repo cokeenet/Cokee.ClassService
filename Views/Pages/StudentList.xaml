@@ -44,6 +44,14 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Controls:TouchableScrollViewer>
+        <StatusBar VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
+            <StatusBarItem>
+                <TextBlock x:Name="className" d:Text="高一一班" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="stuCount" d:Text="共 56 名学生" />
+            </StatusBarItem>
+        </StatusBar>
         <Controls:RandomControl x:Name="randomcontrol" Background="{ui:ThemeResource}" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
         <Controls:RandomResult x:Name="randomres" Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:NewStudent Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />

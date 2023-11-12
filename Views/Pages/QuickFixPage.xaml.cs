@@ -1,4 +1,5 @@
 ﻿using Cokee.ClassService.Helper;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -28,18 +29,18 @@ namespace Cokee.ClassService.Views.Pages
                 Status = "未响应";
             ResUsage =/* "CPU: " + process.TotalProcessorTime.ToString() +*/ " MEM: " + FileSize.Format(process.WorkingSet64);
             Path = process.MainModule.FileName;
-            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Path).ToBitmap();
+            //Icon = System.Drawing.Icon.ExtractAssociatedIcon(Path).ToBitmap();
 
             // 提取图标
-
         }
     }
 
     public partial class QuickFixPage : UiPage
     {
-        Timer timer = new Timer(1000);
-        List<ProcessInfo> processList = new List<ProcessInfo>();
-        Process[] processes = Process.GetProcesses();
+        private Timer timer = new Timer(1000);
+        private List<ProcessInfo> processList = new List<ProcessInfo>();
+        private Process[] processes = Process.GetProcesses();
+
         public QuickFixPage()
         {
             InitializeComponent();
@@ -50,11 +51,11 @@ namespace Cokee.ClassService.Views.Pages
             {
                 try { if (process.MainModule != null) processList.Add(new ProcessInfo(process)); }
                 catch { continue; }
-
             }
 
             ProcessView.ItemsSource = processList;
         }
+
         private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             processes = Process.GetProcesses();
@@ -70,13 +71,13 @@ namespace Cokee.ClassService.Views.Pages
         {
             if (ProcessView.SelectedItem is ProcessInfo)
             {
-                processes[ProcessView.SelectedIndex].Kill(true);
+                processes[ProcessView.SelectedIndex].Kill();
+                processes[ProcessView.SelectedIndex].Dispose();
             }
         }
 
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-
         }
     }
 }

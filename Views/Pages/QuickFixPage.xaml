@@ -1,5 +1,5 @@
 ﻿<ui:UiPage x:Class="Cokee.ClassService.Views.Pages.QuickFixPage"
-           xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"  
+           xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,49 +11,54 @@
 
     <TabControl x:Name="tabControl">
 
+        <TabItem Header="Tool">
+            <Grid>
+                <StackPanel>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+
         <TabItem x:Name="tabItem" Header="进程管理">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="206*"/>
-                    <ColumnDefinition Width="311*"/>
+                    <ColumnDefinition Width="206*" />
+                    <ColumnDefinition Width="311*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ui:TextBox/>
-                    <ui:Button Grid.Column="1" Icon="Search12" Content="Search" Click="Button_Click_1"/>
+                    <ui:TextBox />
+                    <ui:Button Grid.Column="1" Icon="Search12" Content="Search" Click="Button_Click_1" />
                 </Grid>
                 <ListView x:Name="ProcessView" d:ItemsSource="{d:SampleData ItemCount=50}" Grid.Row="1" Grid.ColumnSpan="2">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{Binding Icon}" Width="32" Height="32" Margin="5" Stretch="Fill" />
-                                <TextBlock Text="{Binding Name}" d:Text="conhost.exe" Margin="5"/>
-                                <TextBlock Text="{Binding Status}" d:Text="正在运行" Margin="5"/>
-                                <TextBlock Text="{Binding ResUsage}" d:Text="CPU:10% MEM:20M" Margin="5"/>
-                                <TextBlock Text="{Binding Path}" d:Text="F:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE" Margin="5"/>
+                                <TextBlock Text="{Binding Name}" d:Text="conhost.exe" Margin="5" />
+                                <TextBlock Text="{Binding Status}" d:Text="正在运行" Margin="5" />
+                                <TextBlock Text="{Binding ResUsage}" d:Text="CPU:10% MEM:20M" Margin="5" />
+                                <TextBlock Text="{Binding Path}" d:Text="F:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE" Margin="5" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
                     <StatusBarItem>
-                        <TextBlock d:Text="共 278 个进程"/>
+                        <TextBlock d:Text="共 278 个进程" />
                     </StatusBarItem>
                     <StatusBarItem HorizontalAlignment="Right">
-                        <ui:Button Icon="Delete48" Appearance="Danger" Content="结束进程" Click="Button_Click"/>
+                        <ui:Button Icon="Delete48" Appearance="Danger" Content="结束进程" Click="Button_Click" />
                     </StatusBarItem>
                 </StatusBar>
             </Grid>
-        </TabItem>
-        <TabItem Header="Tool">
         </TabItem>
     </TabControl>
 </ui:UiPage>

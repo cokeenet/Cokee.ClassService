@@ -31,7 +31,7 @@
                     <ui:NavigationSeparator />
                     <ui:NavigationItem Content="随机抽取" Icon="ArrowShuffle48" Click="Random" />
                     <ui:NavigationItem Content="添加" Icon="Add48" Click="AddStu"></ui:NavigationItem>
-                    <ui:NavigationItem Content="批量添加" Icon="AddSquare48" Click="AddMuitlStu" />
+                    <ui:NavigationItem Content="批量添加" Icon="AddSquare28" Click="AddMuitlStu" />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem

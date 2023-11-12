@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 
 using Newtonsoft.Json;
@@ -66,17 +66,28 @@ namespace Cokee.ClassService.Helper
         }
     }
 
+    public class Class
+    {
+        public List<Student> students = new List<Student>();
+        public string Name { get; set; }
+        public int Score { get; set; }
+
+        public Class()
+        {
+        }
+    }
+
     public class Student
     {
         public int ID { get; set; }
         public int Sex { get; set; }//0 girl 1 boy
         public string Name { get; set; }
         public int Score { get; set; }
-        public DateTime? BirthDay { get; set; }//can be delete
+        public DateTime? BirthDay { get; set; }
         public string? RoleStr { get; set; }
         public int Role { get; set; } //0-3
         public string? Desc { get; set; }
-        public string? QQ { get; set; }
+        public long? QQ { get; set; }
         public bool IsMinorLang { get; set; }
         public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
 
@@ -104,9 +115,13 @@ namespace Cokee.ClassService.Helper
         public static List<Student> Save(List<Student> students)
         {
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+            foreach (var a in students.GroupBy(s => s.ID).Where(g => g.Count() > 1).SelectMany(g => g))
+            {
+                a.ID = new Random().Next(9000000, 9999999);
+            }
             foreach (var item in students)
             {
-                if (item.QQ != null && item.QQ.Length >= 5)
+                if (item.QQ != null && item.QQ.ToString().Length >= 5)
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
                 else item.HeadPicUrl = "/Resources/head.jpg";
             }
@@ -118,7 +133,7 @@ namespace Cokee.ClassService.Helper
         public static List<Student> Random(string e, List<Student>? students = null)
         {
             if (students == null) students = Student.Load();
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4];
+            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
             List<Student> randoms = new List<Student>();
             int i = 1;
             /*try
@@ -141,6 +156,7 @@ namespace Cokee.ClassService.Helper
                 else
                 {
                     randoms.Add(a);
+                    totalNames += a.Name + "|";
                     i++;
                 }
             }
@@ -151,7 +167,11 @@ namespace Cokee.ClassService.Helper
                 goto ranStart;
             }*/
             //randoms = Catalog.RandomizeList(randoms);
-            //Analytics.TrackEvent("RandomEvent", new Dictionary<string, string> { "", "" });
+            var eventProperties = new Dictionary<string, string>
+            {
+                  { "Arg",e},{"Result",totalNames}
+            };
+            Analytics.TrackEvent("RandomEvent", eventProperties);
             return randoms;
         }
     }

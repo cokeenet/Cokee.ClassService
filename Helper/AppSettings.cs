@@ -2,7 +2,9 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows.Media.Animation;
+
 using Serilog;
+
 using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService.Helper
@@ -14,6 +16,7 @@ namespace Cokee.ClassService.Helper
         public bool EraseByPointEnable { get; set; } = false;
         public bool UseMemberAvatar { get; set; } = false;
         private bool _darkModeEnable = true;
+
         public bool DarkModeEnable
         {
             get { return _darkModeEnable; }
@@ -22,7 +25,7 @@ namespace Cokee.ClassService.Helper
                 if (value != _darkModeEnable)
                 {
                     _darkModeEnable = value;
-                    if (value) 
+                    if (value)
                     {
                         Environment.Exit(0);
                         //Theme.Apply(ThemeType.Dark); this.SaveSettings();
@@ -34,20 +37,18 @@ namespace Cokee.ClassService.Helper
                 }
             }
         }
-
     }
+
     public static class AppSettingsExtensions
     {
-
-
         public static AppSettings LoadSettings()
         {
             try
             {
-                var dir = Catalog.SETTINGS_FILE_NAME.Split("config.json")[0];
+                var dir = Catalog.SETTINGS_FILE.Split("config.json")[0];
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                if (!File.Exists(Catalog.SETTINGS_FILE_NAME)) SaveSettings(new AppSettings());
-                var content = File.ReadAllText(Catalog.SETTINGS_FILE_NAME);
+                if (!File.Exists(Catalog.SETTINGS_FILE)) SaveSettings(new AppSettings());
+                var content = File.ReadAllText(Catalog.SETTINGS_FILE);
                 return JsonSerializer.Deserialize<AppSettings>(content);
             }
             catch (Exception e)
@@ -63,9 +64,8 @@ namespace Cokee.ClassService.Helper
 
             try
             {
-                var dir = Catalog.SETTINGS_FILE_NAME.Split("config.json")[0];
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                File.WriteAllText(Catalog.SETTINGS_FILE_NAME, content);
+                if (!Directory.Exists(Path.GetDirectoryName(Catalog.SETTINGS_FILE))) Directory.CreateDirectory(Path.GetDirectoryName(Catalog.SETTINGS_FILE));
+                File.WriteAllText(Catalog.SETTINGS_FILE, content);
             }
             catch (Exception e)
             {

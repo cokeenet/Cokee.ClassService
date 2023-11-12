@@ -35,6 +35,7 @@ namespace Cokee.ClassService.Views.Pages
                 if (students != null)
                 {
                     Students.ItemsSource = students;
+                    stuCount.Text = $"共 {students.Count} 名学生";
                 }
             }
             catch (Exception ex)
