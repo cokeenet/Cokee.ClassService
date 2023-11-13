@@ -266,6 +266,10 @@ namespace Cokee.ClassService
                     foreach (MSO.Presentation Pres in pptApplication.Presentations)
                     {
                         Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
+                        if (File.Exists(Pres.FullName) && Pres.IsFullyDownloaded)
+                        {
+                            File.Copy(Pres.FullName, Catalog.CONFIG_DIR + "\\PPTs\\" + Pres.Name, true);
+                        }
                     }
                 }
             }), DispatcherPriority.Normal);
