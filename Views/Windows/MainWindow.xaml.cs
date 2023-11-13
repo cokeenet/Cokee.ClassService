@@ -22,7 +22,6 @@ using AutoUpdaterDotNET;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Windows;
-
 using Microsoft.Win32;
 
 using Wpf.Ui.Common;
@@ -68,8 +67,8 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-            Win32Func.SendMsgToProgman();
-            Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
+            //Win32Func.SendMsgToProgman();
+            //Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
             //Theme.Apply(ThemeType.Light, BackgroundType.Mica, true, true);
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
@@ -163,10 +162,20 @@ namespace Cokee.ClassService
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                         pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-                        pptApplication.PresentationOpen += PptApplication_PresentationOpen;
                         if (pptApplication.SlideShowWindows.Count >= 1)
                         {
                             PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                        }
+                        if(pptApplication.Presentations.Count >= 1)
+                        {
+                            foreach (MSO.Presentation Pres in pptApplication.Presentations)
+                            {
+                                Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
+                                if(File.Exists(Pres.FullName)&&Pres.IsFullyDownloaded)
+                                {
+                                    File.Copy(Pres.FullName,Catalog.CONFIG_DIR+"\\PPTs\\"+Pres.Name, true );
+                                }
+                            }
                         }
                     }
                     if (pptApplication == null) return;
@@ -252,6 +261,13 @@ namespace Cokee.ClassService
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 page = Wn.View.CurrentShowPosition;
+                if (pptApplication.Presentations.Count >= 1)
+                {
+                    foreach (MSO.Presentation Pres in pptApplication.Presentations)
+                    {
+                        Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
+                    }
+                }
             }), DispatcherPriority.Normal);
         }
 
