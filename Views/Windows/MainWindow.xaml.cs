@@ -173,6 +173,7 @@ namespace Cokee.ClassService
                                 Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
                                 if(File.Exists(Pres.FullName)&&Pres.IsFullyDownloaded)
                                 {
+                                    if (!Directory.Exists(Catalog.CONFIG_DIR + "\\PPTs")) Directory.CreateDirectory(Catalog.CONFIG_DIR + "\\PPTs");
                                     File.Copy(Pres.FullName,Catalog.CONFIG_DIR+"\\PPTs\\"+Pres.Name, true );
                                 }
                             }
@@ -268,6 +269,7 @@ namespace Cokee.ClassService
                         Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
                         if (File.Exists(Pres.FullName) && Pres.IsFullyDownloaded)
                         {
+                            if (!Directory.Exists(Catalog.CONFIG_DIR + "\\PPTs")) Directory.CreateDirectory(Catalog.CONFIG_DIR + "\\PPTs");
                             File.Copy(Pres.FullName, Catalog.CONFIG_DIR + "\\PPTs\\" + Pres.Name, true);
                         }
                     }
