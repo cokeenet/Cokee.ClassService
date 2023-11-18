@@ -162,47 +162,36 @@ namespace Cokee.ClassService.Helper
             foreach (var item in processes)
             {
                 //Log.Information(item.ProcessName);
-                if (item.ProcessName.Contains("powerpnt") || item.ProcessName.Contains("wpp") || item.ProcessName.Contains("POWERPNT"))
+                if (item.ProcessName.Contains("powerpnt") || item.ProcessName=="wpp" || item.ProcessName.Contains("POWERPNT"))
                     return true;
             }
             return false;
-            /*bool result = false;
-            IntPtr intPtr = IntPtr.Zero;
-            try
+        }
+
+        public static bool HasWordProcess()
+        {
+            Process[] processes = Process.GetProcesses();
+            //Log.Information(processes.Length.ToString());
+            foreach (var item in processes)
             {
-                ProcessHelper.PROCESSENTRY32 processentry = new ProcessHelper.PROCESSENTRY32
-                {
-                    dwSize = (uint)Marshal.SizeOf(typeof(ProcessHelper.PROCESSENTRY32))
-                };
-                intPtr = ProcessHelper.CreateToolhelp32Snapshot(2U, 0U);
-                if (!ProcessHelper.Process32First(intPtr, ref processentry))
-                {
-                    throw new ApplicationException(string.Format("Failed with win32 error code {0}", Marshal.GetLastWin32Error()));
-                }
-                for (; ; )
-                {
-                    string a = processentry.szExeFile.ToLower();
-                    if (a == "POWERPNT.exe" || a == "powerpnt.exe" || a == "wpp.exe")
-                    {
-                        break;
-                    }
-                    if (!ProcessHelper.Process32Next(intPtr, ref processentry))
-                    {
-                        goto Block_5;
-                    }
-                }
-                result = true;
-            Block_5:;
+                //Log.Information(item.ProcessName);
+                if (item.ProcessName.Contains("WINWORD") || item.ProcessName=="wps" || item.ProcessName.Contains("winword"))
+                    return true;
             }
-            catch (Exception innerException)
+            return false;
+        }
+
+        public static bool HasExcelProcess()
+        {
+            Process[] processes = Process.GetProcesses();
+            //Log.Information(processes.Length.ToString());
+            foreach (var item in processes)
             {
-                throw new ApplicationException("Can't get the process.", innerException);
+                //Log.Information(item.ProcessName);
+                if (item.ProcessName.Contains("excel") || item.ProcessName=="et" || item.ProcessName.Contains("EXCEL"))
+                    return true;
             }
-            finally
-            {
-                ProcessHelper.CloseHandle(intPtr);
-            }
-            return result;*/
+            return false;
         }
 
         public static void TryKillWppProcess()

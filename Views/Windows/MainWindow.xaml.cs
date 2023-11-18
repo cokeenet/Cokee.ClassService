@@ -22,14 +22,17 @@ using AutoUpdaterDotNET;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
 
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
-using MSO = Microsoft.Office.Interop.PowerPoint;
+using MsPpt = Microsoft.Office.Interop.PowerPoint;
+using MsWord = Microsoft.Office.Interop.Word;
+using MsExcel = Microsoft.Office.Interop.Excel;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
+using System.Net;
 
 namespace Cokee.ClassService
 {
@@ -41,11 +44,14 @@ namespace Cokee.ClassService
         private bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
 
-        private event EventHandler<bool>? RandomEvent;
-
+        //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
+
         private Timer picTimer = new Timer(120000);
-        public MSO.Application? pptApplication = null;
+        public MsPpt.Application? pptApplication = null;
+        public MsWord.Application? wordApplication = null;
+        public MsExcel.Application? excelApplication = null;
+        public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.appSettings.FileWatcherFilter);
 
         //StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
@@ -56,8 +62,10 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
+            Catalog.GlobalSnackbarService = snackbarService;
             Catalog.SetWindowStyle(1);
-            SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(Catalog.WindowType); transT.X = -10; transT.Y = -100; };
+            SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
+            DpiChanged += new DpiChangedEventHandler(DisplaySettingsChanged);
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             picTimer.Elapsed += PicTimer_Elapsed;
@@ -67,13 +75,62 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-            //Win32Func.SendMsgToProgman();
-            //Win32Func.SetParent(new WindowInteropHelper(this).Handle, Win32Func.programHandle);
-            //Theme.Apply(ThemeType.Light, BackgroundType.Mica, true, true);
+
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
             string videoName = videoDevices[0];// 选择第一个*/
+        }
+
+        private void DisplaySettingsChanged(object? sender, EventArgs e)
+        {
+            Catalog.SetWindowStyle(Catalog.WindowType);
+            transT.X = -10;
+            transT.Y = -100;
+            this.UpdateLayout();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
+            AutoUpdater.ShowSkipButton = false;
+            AutoUpdater.RemindLaterAt = 5;
+            AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
+            AutoUpdater.ShowRemindLaterButton = true;
+            AutoUpdater.RunUpdateAsAdmin = false;
+            AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+            if (Catalog.appSettings.FileWatcherEnable)
+            {
+                IntiFileWatcher();
+            }
+        }
+
+        public void IntiFileWatcher()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Catalog.ShowInfo($"初始化FileWatcher");
+                desktopWatcher.NotifyFilter = NotifyFilters.LastWrite;
+                desktopWatcher.Changed += DesktopWatcher_Changed;
+                desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
+                desktopWatcher.Created += DesktopWatcher_Changed;
+                desktopWatcher.Renamed += DesktopWatcher_Changed;
+                desktopWatcher.Deleted += DesktopWatcher_Changed;
+                desktopWatcher.EnableRaisingEvents = true;
+            }), DispatcherPriority.Normal);
+        }
+
+        private void DesktopWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!e.Name.Contains(".lnk") && !e.Name.Contains(".tmp") && !e.Name.Contains("~$") && e.Name.Contains("."))
+                {
+                    Catalog.ShowInfo($"桌面文件变动 {e.ChangeType.ToString()}", e.FullPath);
+                    if (e.ChangeType != WatcherChangeTypes.Deleted) Catalog.BackupFile(e.FullPath, e.Name);
+                }
+            }), DispatcherPriority.Normal);
         }
 
         private void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
@@ -153,7 +210,8 @@ namespace Cokee.ClassService
                 //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
                 if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
                 {
-                    pptApplication = (MSO.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+
                     if (pptApplication != null)
                     {
                         Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
@@ -166,25 +224,72 @@ namespace Cokee.ClassService
                         {
                             PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
                         }
-                        if(pptApplication.Presentations.Count >= 1)
+                        if (pptApplication.Presentations.Count >= 1)
                         {
-                            foreach (MSO.Presentation Pres in pptApplication.Presentations)
+                            foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                             {
-                                Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
-                                if(File.Exists(Pres.FullName)&&Pres.IsFullyDownloaded)
-                                {
-                                    if (!Directory.Exists(Catalog.CONFIG_DIR + "\\PPTs")) Directory.CreateDirectory(Catalog.CONFIG_DIR + "\\PPTs");
-                                    File.Copy(Pres.FullName,Catalog.CONFIG_DIR+"\\PPTs\\"+Pres.Name, true );
-                                }
+                                Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                             }
                         }
                     }
-                    if (pptApplication == null) return;
+                    //if (pptApplication == null) return;
                 }
-            }));
+                if (ProcessHelper.HasWordProcess() && wordApplication == null)
+                {
+                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
+                    if (wordApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
+                        if (wordApplication.Documents.Count > 0)
+                        {
+                            foreach (MsWord.Document item in wordApplication.Documents)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
+                        }
+                        wordApplication.DocumentOpen += (Doc) =>
+                        {
+                            Catalog.BackupFile(Doc.FullName, Doc.Name);
+                        };
+                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                        {
+                            Catalog.ShowInfo("尝试释放Word对象");
+                            try { Marshal.ReleaseComObject(wordApplication); }
+                            catch { }
+                            wordApplication = null;
+                        };
+                    }
+                }
+                if (ProcessHelper.HasExcelProcess() && excelApplication == null)
+                {
+                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
+                    if (excelApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
+                        if (excelApplication.Workbooks.Count > 0)
+                        {
+                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
+                        }
+                        excelApplication.WorkbookOpen += (Workbook) =>
+                        {
+                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                        };
+                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                        {
+                            Catalog.ShowInfo("尝试释放Excel对象");
+                            try { Marshal.ReleaseComObject(excelApplication); }
+                            catch { }
+                            excelApplication = null;
+                        };
+                    }
+                }
+            }), DispatcherPriority.Normal);
         }
 
-        private void PptApplication_PresentationOpen(MSO.Presentation Pres)
+        private void PptApplication_PresentationOpen(MsPpt.Presentation Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -192,7 +297,7 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Normal);
         }
 
-        private void PptApplication_SlideShowEnd(MSO.Presentation Pres)
+        private void PptApplication_SlideShowEnd(MsPpt.Presentation Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -209,7 +314,7 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void PptApplication_SlideShowNextSlide(MSO.SlideShowWindow Wn)
+        private void PptApplication_SlideShowNextSlide(MsPpt.SlideShowWindow Wn)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -222,7 +327,7 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Normal);
         }
 
-        private void PptApplication_PresentationClose(MSO.Presentation Pres)
+        private void PptApplication_PresentationClose(MsPpt.Presentation Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -235,7 +340,7 @@ namespace Cokee.ClassService
                 pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
                 pptApplication.PresentationOpen -= PptApplication_PresentationOpen;
                 inkTool.isPPT = false;
-                Catalog.ShowInfo("尝试释放pptApplication对象");
+                Catalog.ShowInfo("尝试释放PowerPoint对象");
                 IconAnimation(true);
                 try
                 {
@@ -248,7 +353,7 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void PptApplication_SlideShowBegin(MSO.SlideShowWindow Wn)
+        private void PptApplication_SlideShowBegin(MsPpt.SlideShowWindow Wn)
         {
             inkTool.isPPT = true;
             //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
@@ -264,7 +369,7 @@ namespace Cokee.ClassService
                 page = Wn.View.CurrentShowPosition;
                 if (pptApplication.Presentations.Count >= 1)
                 {
-                    foreach (MSO.Presentation Pres in pptApplication.Presentations)
+                    foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                     {
                         Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
                         if (File.Exists(Pres.FullName) && Pres.IsFullyDownloaded)
@@ -422,30 +527,11 @@ namespace Cokee.ClassService
             Catalog.ToggleControlVisible(ranres);
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-            hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
-            AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.ShowRemindLaterButton = true;
-            AutoUpdater.RunUpdateAsAdmin = false;
-            AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-        }
+        private void CourseMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<CourseMgr>();
 
-        private void CourseMgr(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<CourseMgr>();
-        }
+        private void AddFloatCard(object sender, RoutedEventArgs e) => Catalog.CreateWindow<FloatNote>();
 
-        private void AddFloatCard(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<FloatNote>();
-        }
-
-        private void OpenSettings(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<Settings>();
-        }
+        private void OpenSettings(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Settings>();
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -516,10 +602,7 @@ namespace Cokee.ClassService
 
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
 
-        private void QuickFix(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<QuickFix>();
-        }
+        private void QuickFix(object sender, RoutedEventArgs e) => Catalog.CreateWindow<QuickFix>();
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {

@@ -1,4 +1,4 @@
-﻿<ui:UiPage xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"  
+﻿<ui:UiPage xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            x:Class="Cokee.ClassService.Views.Pages.Settings"
            xmlns:local="clr-namespace:Cokee.ClassService.Helper"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,20 +6,20 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           mc:Ignorable="d" 
+           mc:Ignorable="d"
        d:DesignHeight="620"
        d:DesignWidth="511"
       Title="Settings">
     <ui:UiPage.Resources>
-        <local:VisibilityConverter x:Key="VisibilityConverter"/>
-        <local:LevelConverter x:Key="LevelConverter"/>
+        <local:VisibilityConverter x:Key="VisibilityConverter" />
+        <local:LevelConverter x:Key="LevelConverter" />
     </ui:UiPage.Resources>
     <Grid>
         <Controls:TouchableScrollViewer>
             <StackPanel>
-                <ui:InfoBar x:Name="micaInfo" Message="当前系统版本不支持Mica窗口背景模糊效果。😓" d:IsOpen="True" Severity="Warning" Margin="5" IsOpen="False"/>
-                <TextBlock Text="书写" FontSize="16" Margin="5"/>
-               
+                <ui:InfoBar x:Name="micaInfo" Message="当前系统版本不支持Mica窗口背景模糊效果。😓" d:IsOpen="True" Severity="Warning" Margin="5" IsOpen="False" />
+                <TextBlock Text="书写" FontSize="16" Margin="5" />
+
                 <ui:CardControl Icon="People28" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
@@ -27,18 +27,18 @@
                                 FontSize="13" FontWeight="Medium" Text="多点触控" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable,Mode=TwoWay}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable,Mode=TwoWay}" />
                 </ui:CardControl>
                 <ui:CardControl Icon="Eraser24" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦"/>
+                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}" />
                 </ui:CardControl>
-                <TextBlock Text="界面" FontSize="16" Margin="5"/>
+                <TextBlock Text="界面" FontSize="16" Margin="5" />
                 <ui:CardControl Icon="Image32" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
@@ -48,7 +48,29 @@
                                 FontSize="12" Opacity="0.7" Text="打开后责任自负!" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}" />
+                </ui:CardControl>
+                <ui:CardControl Margin="5" Icon="Folder48">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                        FontSize="13" FontWeight="Medium" Text="桌面文件监测器" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="自动备份桌面文件" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding FileWatcherEnable, Mode=TwoWay}" />
+                </ui:CardControl>
+                <ui:CardControl Margin="5" Icon="TextAddSpaceAfter20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                        FontSize="13" FontWeight="Medium" Text="文件监测筛选器" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="只备份特定格式的文件。e.g. *.pdf" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox Text="{Binding FileWatcherFilter,Mode=TwoWay}" MinWidth="200" />
                 </ui:CardControl>
                 <ui:CardControl Margin="5" Icon="DarkTheme24">
                     <ui:CardControl.Header>
@@ -59,8 +81,20 @@
                                 FontSize="12" Opacity="0.7" Text="功能未完成" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable,Mode=TwoWay}"/>
+                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable, Mode=TwoWay}" />
                 </ui:CardControl>
+                <TextBlock Text="Debug 调试功能" FontSize="16" Margin="5" />
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button Icon="ArrowRedo48" Content="重启ClassService" Margin="5" Click="Restart" />
+                    <ui:Button Icon="ArrowDownload48" Content="检查更新" Margin="5" Click="CheckUpdate" />
+                    <ui:Button Icon="ArrowRedo48" Content="" Margin="5" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button Icon="Delete48" Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0" />
+                    <ui:Button Icon="Delete48" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
+                    <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
+                </StackPanel>
+                <RichTextBox x:Name="richTextBox" Margin="5" />
             </StackPanel>
         </Controls:TouchableScrollViewer>
     </Grid>
