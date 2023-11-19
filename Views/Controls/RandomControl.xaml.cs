@@ -14,7 +14,7 @@ namespace Cokee.ClassService.Views.Controls
     {
         public int Number = 1, AllowMLang = 1, SexLimit = 1, AllowExist = 0, Easter = 0, tmc = 0;
 
-        public event EventHandler<string> StartRandom;
+        public event EventHandler<string>? StartRandom;
 
         public RandomControl()
         {
