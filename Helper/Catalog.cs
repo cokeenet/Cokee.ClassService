@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
@@ -14,19 +16,20 @@ namespace Cokee.ClassService.Helper
 {
     public class Catalog
     {
-        public const string CONFIG_DISK = @$"D:\";
-        public const string CONFIG_DIR = @$"{CONFIG_DISK}Program Files (x86)\CokeeTech\CokeeClass";
-        public const string INK_DIR = @$"{CONFIG_DIR}\ink";
-        public const string SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
-        public const string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
-        public const string STU_FILE = @$"{CONFIG_DIR}\students.json";
-        public const string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
+        public static string CONFIG_DISK = @$"D:\";
+        public static string CONFIG_DIR = @$"{CONFIG_DISK}CokeeTech\CokeeClass";
+        public static string BACKUP_FILE_DIR = @$"{CONFIG_DIR}\Files";
+        public static string INK_DIR = @$"{CONFIG_DIR}\ink";
+        public static string SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
+        public static string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
+        public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
+        public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
 
-        public static SnackbarService GlobalSnackbarService { get; set; } = ((MainWindow)Application.Current.MainWindow).snackbarService;
+        public static SnackbarService? GlobalSnackbarService;
 
         public static void HandleException(Exception ex, string str = "")
         {
@@ -77,14 +80,27 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static void RemoveObjFromWindow(UIElement element)
+        public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (element == null) return;
-                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-                mainWindow.MainGrid.Children.Remove(element);
-            });
+                Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
+                if (File.Exists(filePath) && isFullyDownloaded)
+                {
+                    if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
+                    var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
+                    if (File.Exists(backupPath) && new FileInfo(backupPath).Length != new FileInfo(filePath).Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
+                    File.Copy(filePath, backupPath, true);
+                }
+                else Catalog.ShowInfo($"文件不存在或未下载。");
+            }, DispatcherPriority.Normal);
+        }
+
+        public static void LogOutputSink()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+            }, DispatcherPriority.Normal);
         }
 
         public static void SetWindowStyle(int type = 0)

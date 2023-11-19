@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Media.Animation;
+using System.Text.Json.Serialization;
 
 using Serilog;
-
-using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService.Helper
 {
@@ -15,29 +13,32 @@ namespace Cokee.ClassService.Helper
         public bool PPTFunctionEnable { get; set; } = true;
         public bool EraseByPointEnable { get; set; } = false;
         public bool UseMemberAvatar { get; set; } = false;
-        public bool CancelSessionEnd { get; set; }=false;
-        private bool _darkModeEnable = true;
 
-        public bool DarkModeEnable
+        [JsonIgnore]
+        private bool _FileWatcherEnable { get; set; } = true;
+
+        public bool FileWatcherEnable
         {
-            get { return _darkModeEnable; }
+            get { return _FileWatcherEnable; }
             set
             {
-                if (value != _darkModeEnable)
+                if (value != _FileWatcherEnable)
                 {
-                    _darkModeEnable = value;
+                    _FileWatcherEnable = value;
                     if (value)
                     {
-                        Environment.Exit(0);
-                        //Theme.Apply(ThemeType.Dark); this.SaveSettings();
+                        (App.Current.MainWindow as MainWindow).IntiFileWatcher();
                     }
                     else
                     {
-                        //Theme.Apply(ThemeType.Light); this.SaveSettings();
+                        (App.Current.MainWindow as MainWindow).desktopWatcher.EnableRaisingEvents = false;
                     }
                 }
             }
         }
+
+        public string FileWatcherFilter { get; set; } = "*.*";
+        public bool DarkModeEnable { get; set; } = true;
     }
 
     public static class AppSettingsExtensions

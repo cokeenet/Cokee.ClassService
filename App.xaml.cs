@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
+
+using Cokee.ClassService.Helper;
 
 using Microsoft.AppCenter;
-using Serilog.Sink.AppCenter;
-using Serilog;
-using System.Windows.Threading;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using System.IO;
-using System.Windows.Media.Animation;
-using Wpf.Ui.Appearance;
-using Cokee.ClassService.Helper;
+
+using Serilog;
 using Serilog.Events;
+using Serilog.Sink.AppCenter;
+
+using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService
 {
@@ -27,18 +25,20 @@ namespace Cokee.ClassService
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (!Directory.Exists("D:\\")) Catalog.CONFIG_DISK = "C:\\";
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes, "3f56f1de-dc29-4a8f-9350-81820e32da71")
-                .CreateLogger();
+               .CreateLogger();
             AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
                   typeof(Analytics), typeof(Crashes));
             base.OnStartup(e);
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
-                new FrameworkPropertyMetadata { DefaultValue = 500 }
+                new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
+
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             if (!Directory.Exists(Catalog.CONFIG_DIR))
