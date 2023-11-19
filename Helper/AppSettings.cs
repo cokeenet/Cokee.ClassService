@@ -15,6 +15,7 @@ namespace Cokee.ClassService.Helper
         public bool PPTFunctionEnable { get; set; } = true;
         public bool EraseByPointEnable { get; set; } = false;
         public bool UseMemberAvatar { get; set; } = false;
+        public bool CancelSessionEnd { get; set; }=false;
         private bool _darkModeEnable = true;
 
         public bool DarkModeEnable

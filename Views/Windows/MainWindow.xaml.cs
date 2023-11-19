@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -23,7 +24,7 @@ using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Windows;
 using Microsoft.Win32;
-
+using Serilog;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
@@ -47,7 +48,7 @@ namespace Cokee.ClassService
         private Timer picTimer = new Timer(120000);
         public MSO.Application? pptApplication = null;
 
-        //StrokeCollection[] strokes=new StrokeCollection[101];
+        StrokeCollection[] strokes=new StrokeCollection[101];
         public int page = 0;
 
         private Schedule schedule = Schedule.LoadFromJson();
@@ -58,6 +59,9 @@ namespace Cokee.ClassService
             InitializeComponent();
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += (a, b) => { Catalog.SetWindowStyle(Catalog.WindowType); transT.X = -10; transT.Y = -100; };
+            SystemEvents.SessionEnding += (a, b) => { Catalog.ShowInfo(b.Reason.ToString()); Log.Information($"Event:SessionEnding. Reason:{b.Reason.ToString()}");b.Cancel = Catalog.appSettings.CancelSessionEnd; };
+            SystemEvents.SessionSwitch += (a, b) => { Log.Information($"Event:SessionSwitch. Reason:{b.Reason.ToString()}");};
+            SystemEvents.SessionEnded += (a, b) => { Log.Information($"Event:SessionEnded. Reason:{b.Reason.ToString()}"); };
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             picTimer.Elapsed += PicTimer_Elapsed;
@@ -162,6 +166,7 @@ namespace Cokee.ClassService
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                         pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+   
                         if (pptApplication.SlideShowWindows.Count >= 1)
                         {
                             PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
@@ -388,6 +393,7 @@ namespace Cokee.ClassService
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            Log.Information($"");
         }
 
         private void ShowStickys(object sender, RoutedEventArgs e)
