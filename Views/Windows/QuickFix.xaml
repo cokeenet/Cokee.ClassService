@@ -5,7 +5,7 @@
              xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Title="CourseMgr" Width="525" Topmost="True" FontFamily="Cairo-Regular"
+             Title="QuickFix" Width="525" Topmost="True" FontFamily="Cairo-Regular"
     Height="505" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
     <Grid>
@@ -15,7 +15,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <ui:TitleBar
-            Title="CokeeClass | QuickFix" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True" 
+            Title="CokeeClass | QuickFix" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True"
             ShowMaximize="True" ShowMinimize="True" UseSnapLayout="True" />
         <Grid Grid.Row="1" Margin="3,3,3,3">
             <Grid.ColumnDefinitions>
@@ -24,9 +24,8 @@
             </Grid.ColumnDefinitions>
             <Border
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
-                <Frame Source="/Views/Pages/QuickFixPage.xaml"/>
+                <Frame Source="/Views/Pages/QuickFixPage.xaml" />
             </Border>
         </Grid>
-
     </Grid>
 </ui:UiWindow>

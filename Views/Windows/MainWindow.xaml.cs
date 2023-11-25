@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,12 +26,12 @@ using Microsoft.Win32;
 
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
+using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
-using MsExcel = Microsoft.Office.Interop.Excel;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
-using System.Net;
 
 namespace Cokee.ClassService
 {
@@ -116,7 +115,7 @@ namespace Cokee.ClassService
                 desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
                 desktopWatcher.Created += DesktopWatcher_Changed;
                 desktopWatcher.Renamed += DesktopWatcher_Changed;
-                desktopWatcher.Deleted += DesktopWatcher_Changed;
+                //desktopWatcher.Deleted += DesktopWatcher_Changed;
                 desktopWatcher.EnableRaisingEvents = true;
             }), DispatcherPriority.Normal);
         }
@@ -135,7 +134,7 @@ namespace Cokee.ClassService
 
         private void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (!Catalog.appSettings.UseMemberAvatar)
                 {

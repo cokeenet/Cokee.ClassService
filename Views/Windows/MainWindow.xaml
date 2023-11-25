@@ -158,7 +158,7 @@
         <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
             <RichTextBox x:Name="richTextBox" />
         </Controls:TouchableScrollViewer>
-        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" />
+        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" />
         <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Light" Margin="24,24,24,80" d:IsHidden="True" MaxHeight="300" Timeout="3000" CloseButtonEnabled="False" />
     </Grid>
 </Window>
