@@ -32,7 +32,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class StudentInfo : UserControl
     {
-        public event EventHandler<Student> EditStudent;
+        public event EventHandler<Student>? EditStudent;
         public StudentInfo()
         {
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace Cokee.ClassService.Views.Controls
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) =>
                 {
                     DataContext = new Student("",0,DateTime.Today);
-                    Catalog.ToggleControlVisible(this);
+                    Catalog.ToggleControlVisible(this,true);
 
                 };
         }
