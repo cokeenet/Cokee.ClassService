@@ -106,6 +106,7 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+
             }, DispatcherPriority.Normal);
         }
 

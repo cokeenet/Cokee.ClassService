@@ -1,0 +1,45 @@
+﻿<Popup x:Class="Cokee.ClassService.Views.Controls.MainPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+       PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">
+
+    <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ui:ThemeResource}">
+            <Grid VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <local:TouchableScrollViewer MaxHeight="165">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <ui:Button Content="随机抽取" Icon="ArrowShuffle48" Margin="5" Click="ShowRandom" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="快速批注" Icon="Pen48"  Margin="5" Click="StartInk" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="截图" Icon="Screenshot24" Margin="5" Click="ScreenShot" MouseRightButtonDown="Button_MouseRightButtonDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="课程管理" Icon="List28"  Margin="5" Click="CourseMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
+                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </StackPanel>
+                    </Grid>
+                </local:TouchableScrollViewer>
+                <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
+            </Grid>
+        </ui:Card>
+    
+</Popup>
