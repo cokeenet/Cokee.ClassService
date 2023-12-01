@@ -26,7 +26,7 @@ namespace Cokee.ClassService.Helper
         public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
-
+        public static bool isScrSave = false;
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
 
@@ -38,7 +38,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                         await GlobalSnackbarService.ShowAsync($"{str}发生错误", string.Concat(ex.ToString().Substring(0, 200), "..."), SymbolRegular.Warning24, ControlAppearance.Danger);
-                Clipboard.SetText(ex.ToString());
+                //Clipboard.SetText(ex.ToString());
                 // MessageBox.Show(ex.ToString());
             });
         }

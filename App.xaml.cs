@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -46,6 +47,15 @@ namespace Cokee.ClassService
                 Directory.CreateDirectory(Catalog.CONFIG_DIR);
             }
             Accent.ApplySystemAccent();
+            var args = Environment.GetCommandLineArgs();
+            if(args.Length > 0 )
+            {
+               /* foreach (var item in args)
+                {
+                    MessageBox.Show(item);
+                }*/
+                if (args.Contains("scrsave")) Catalog.isScrSave = true;
+            }
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

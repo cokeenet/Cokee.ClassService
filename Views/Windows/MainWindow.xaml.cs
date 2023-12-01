@@ -42,7 +42,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isDragging = false;
+        public bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
 
         //private event EventHandler<bool>? RandomEvent;
@@ -76,7 +76,7 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-
+            
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
@@ -101,9 +101,14 @@ namespace Cokee.ClassService
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
             AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-            if (Catalog.appSettings.FileWatcherEnable)
+            if (Catalog.appSettings.FileWatcherEnable&&!Catalog.isScrSave)
             {
                 IntiFileWatcher();
+            }
+            if (Catalog.isScrSave)
+            {
+                nameBadge.Visibility = Visibility.Visible;
+                nameBadge.Content = $"屏保模式";
             }
         }
 
@@ -140,7 +145,7 @@ namespace Cokee.ClassService
             {
                 if (!Catalog.appSettings.UseMemberAvatar)
                 {
-                    nameBadge.Visibility = Visibility.Collapsed;
+                    
                     string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                     head.Source = new BitmapImage(new Uri(url));
                 }
