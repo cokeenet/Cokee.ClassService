@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -25,7 +26,7 @@ namespace Cokee.ClassService.Helper
         public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
-
+        public static bool isScrSave = false;
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
 
@@ -37,7 +38,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                         await GlobalSnackbarService.ShowAsync($"{str}发生错误", string.Concat(ex.ToString().Substring(0, 200), "..."), SymbolRegular.Warning24, ControlAppearance.Danger);
-                Clipboard.SetText(ex.ToString());
+                //Clipboard.SetText(ex.ToString());
                 // MessageBox.Show(ex.ToString());
             });
         }
@@ -103,13 +104,18 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+
                 Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
                 if (File.Exists(filePath) && isFullyDownloaded)
                 {
                     if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
                     var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
                     if (File.Exists(backupPath) && new FileInfo(backupPath).Length != new FileInfo(filePath).Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
-                    File.Copy(filePath, backupPath, true);
+                    new Thread(new ThreadStart(() =>
+                    {
+                        File.Copy(filePath, backupPath, true);
+                    }
+                 )).Start();
                 }
                 else Catalog.ShowInfo($"文件不存在或未下载。");
             }, DispatcherPriority.Normal);

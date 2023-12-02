@@ -25,6 +25,8 @@ using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
 
+using Serilog;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
@@ -41,7 +43,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isDragging = false;
+        public bool isDragging = false;
         private Point startPoint, _mouseDownControlPosition;
 
         //private event EventHandler<bool>? RandomEvent;
@@ -53,7 +55,7 @@ namespace Cokee.ClassService
         public MsExcel.Application? excelApplication = null;
         public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.appSettings.FileWatcherFilter);
 
-        //StrokeCollection[] strokes=new StrokeCollection[101];
+        private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
 
         private Schedule schedule = Schedule.LoadFromJson();
@@ -100,9 +102,14 @@ namespace Cokee.ClassService
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
             AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-            if (Catalog.appSettings.FileWatcherEnable)
+            if (Catalog.appSettings.FileWatcherEnable && !Catalog.isScrSave)
             {
                 IntiFileWatcher();
+            }
+            if (Catalog.isScrSave)
+            {
+                nameBadge.Visibility = Visibility.Visible;
+                nameBadge.Content = $"屏保模式";
             }
             if (Catalog.appSettings.MultiTouchEnable)
             {
@@ -151,7 +158,6 @@ namespace Cokee.ClassService
             {
                 if (!Catalog.appSettings.UseMemberAvatar)
                 {
-                    nameBadge.Visibility = Visibility.Collapsed;
                     string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                     head.Source = new BitmapImage(new Uri(url));
                 }
@@ -232,6 +238,7 @@ namespace Cokee.ClassService
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                         pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+
                         if (pptApplication.SlideShowWindows.Count >= 1)
                         {
                             PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
@@ -471,10 +478,7 @@ namespace Cokee.ClassService
             }
         }
 
-        private void StuMgr(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<StudentMgr>();
-        }
+        private void StuMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<StudentMgr>();
 
         private void StartInk(object sender, RoutedEventArgs e)
         {
@@ -504,6 +508,7 @@ namespace Cokee.ClassService
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            Log.Information($"Program Closed");
         }
 
         private void ShowStickys(object sender, RoutedEventArgs e)

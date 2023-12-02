@@ -36,7 +36,7 @@ namespace Cokee.ClassService.Views.Controls
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
                     };
-                    inkCanvas.EraserShape = new RectangleStylusShape(300, 550, 90);
+                    inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
                     inkCanvas.ActiveEditingModeChanged += (a, b) =>
                     {
                         if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
