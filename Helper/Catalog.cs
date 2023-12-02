@@ -42,6 +42,25 @@ namespace Cokee.ClassService.Helper
             });
         }
 
+        public static void UpdatePath(string disk = "D:\\")
+        {
+            if (Directory.Exists(disk))
+            {
+                CONFIG_DISK = disk;
+                CONFIG_DIR = @$"{CONFIG_DISK}CokeeTech\CokeeClass";
+                BACKUP_FILE_DIR = @$"{CONFIG_DIR}\Files";
+                INK_DIR = @$"{CONFIG_DIR}\ink";
+                SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
+                SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
+                STU_FILE = @$"{CONFIG_DIR}\students.json";
+                SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
+                if (!Directory.Exists(Catalog.CONFIG_DIR))
+                {
+                    Directory.CreateDirectory(Catalog.CONFIG_DIR);
+                }
+            }
+        }
+
         public static void ExitPPTShow()
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -127,11 +146,11 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static void ToggleControlVisible(UIElement uIElement, bool IsHide = false)
+        public static void ToggleControlVisible(UIElement uIElement, bool IsForceShow = false)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (uIElement.Visibility == Visibility.Collapsed && !IsHide)
+                if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;
                     Transitions.ApplyTransition(uIElement, TransitionType.FadeInWithSlide, 200);

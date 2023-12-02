@@ -25,7 +25,18 @@ namespace Cokee.ClassService
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (!Directory.Exists("D:\\")) Catalog.CONFIG_DISK = "C:\\";
+            try
+            {
+                if (!Directory.Exists("D:\\")) Catalog.UpdatePath("C:\\");
+                if (!Directory.Exists(Catalog.CONFIG_DIR))
+                {
+                    Directory.CreateDirectory(Catalog.CONFIG_DIR);
+                }
+            }
+            catch (Exception ex)
+            {
+                Catalog.HandleException(ex);
+            }
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
@@ -41,10 +52,6 @@ namespace Cokee.ClassService
 
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            if (!Directory.Exists(Catalog.CONFIG_DIR))
-            {
-                Directory.CreateDirectory(Catalog.CONFIG_DIR);
-            }
             Accent.ApplySystemAccent();
         }
 

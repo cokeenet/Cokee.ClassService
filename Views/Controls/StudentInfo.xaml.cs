@@ -17,9 +17,11 @@ using System.Windows.Shapes;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
 
 using Newtonsoft.Json;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
@@ -33,22 +35,22 @@ namespace Cokee.ClassService.Views.Controls
     public partial class StudentInfo : UserControl
     {
         public event EventHandler<Student> EditStudent;
+
         public StudentInfo()
         {
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode)
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) =>
                 {
-                    DataContext = new Student("",0,DateTime.Today);
-                    Catalog.ToggleControlVisible(this);
-
+                    DataContext = new Student("", 0, DateTime.Today);
+                    Catalog.ToggleControlVisible(this, true);
                 };
         }
+
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            
             Catalog.ToggleControlVisible(this);
-            if(DataContext!=null) EditStudent.Invoke(this, DataContext as Student);
+            if (DataContext != null) EditStudent.Invoke(this, DataContext as Student);
         }
 
         private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
@@ -58,9 +60,9 @@ namespace Cokee.ClassService.Views.Controls
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "图像文件|*.jpg;*.jpeg;*.png";
             openFileDialog.Title = "选择头像";
-            openFileDialog.CheckFileExists = true; 
-            openFileDialog.CheckPathExists=true;
-            if((bool)openFileDialog.ShowDialog())
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+            if ((bool)openFileDialog.ShowDialog())
             {
                 //if(File.Exists(openFileDialog.FileName))
             }

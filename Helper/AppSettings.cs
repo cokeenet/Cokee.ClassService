@@ -2,8 +2,11 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows;
 
 using Serilog;
+
+using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService.Helper
 {
@@ -38,7 +41,28 @@ namespace Cokee.ClassService.Helper
         }
 
         public string FileWatcherFilter { get; set; } = "*.*";
-        public bool DarkModeEnable { get; set; } = true;
+
+        [JsonIgnore]
+        private bool _DarkModeEnable { get; set; } = true;
+
+        public bool DarkModeEnable
+        {
+            get { return _DarkModeEnable; }
+            set
+            {
+                if (value != _DarkModeEnable)
+                {
+                    _DarkModeEnable = value;
+                    if (value)
+                    {
+                        foreach (Window item in App.Current.Windows)
+                        {
+                            Theme.RemoveDarkThemeFromWindow(item);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static class AppSettingsExtensions

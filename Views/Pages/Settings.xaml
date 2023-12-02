@@ -87,7 +87,7 @@
                 <StackPanel Orientation="Horizontal">
                     <ui:Button Icon="ArrowRedo48" Content="重启ClassService" Margin="5" Click="Restart" />
                     <ui:Button Icon="ArrowDownload48" Content="检查更新" Margin="5" Click="CheckUpdate" />
-                    <ui:Button Icon="ArrowRedo48" Content="" Margin="5" />
+                    <ui:Button Icon="ArrowRedo48" Content="" Margin="5"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <ui:Button Icon="Delete48" Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0" />
