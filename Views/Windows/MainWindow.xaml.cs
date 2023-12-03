@@ -231,13 +231,13 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                var sw = Stopwatch.StartNew();
+                //var sw = Stopwatch.StartNew();
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 var status = Schedule.GetNowCourse(schedule);
                 if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
                 new Thread(new ThreadStart(CheckOffice)).Start();
-                sw.Stop();
-                Log.Information($"Timer:{sw.Elapsed.ToString("")}");
+                //  sw.Stop();
+                // Log.Information($"Timer:{sw.Elapsed.ToString("")}");
             }), DispatcherPriority.Background);
         }
 

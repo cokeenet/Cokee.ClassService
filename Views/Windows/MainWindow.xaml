@@ -64,7 +64,7 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed">
             <StackPanel>
                 <StackPanel VerticalAlignment="Top">
                     <TextBlock Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" />
@@ -151,7 +151,7 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11:11" />
             </ui:Badge>
         </Grid>
-        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Visible">
+        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
             <StackPanel Background="{ui:ThemeResource}">
                 <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
                 <RichTextBox x:Name="richTextBox" Margin="5" />
