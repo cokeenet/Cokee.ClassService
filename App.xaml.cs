@@ -50,11 +50,9 @@ namespace Cokee.ClassService
             var args = Environment.GetCommandLineArgs();
             if(args.Length > 0 )
             {
-               /* foreach (var item in args)
-                {
-                    MessageBox.Show(item);
-                }*/
-                if (args.Contains("scrsave")) Catalog.isScrSave = true;
+                
+                if (args.Contains("-scrsave")) Catalog.isScrSave = true;
+               // MessageBox.Show(Catalog.isScrSave.ToString());
             }
         }
 
