@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
@@ -77,15 +76,16 @@ namespace Cokee.ClassService.Helper
             return DateTime.Now.ToString("HH:mm");
         }
 
-        public static CourseNowStatus GetNowCourse(Schedule schedule, out Course course, out Course nextCourse)
+        public static CourseStatus GetNowCourse(Schedule schedule)
         {
-            course = null; // 初始化 course
-            nextCourse = null;
-            if (schedule == null) return CourseNowStatus.NoCoursesScheduled;
+            Course? course = null, nextCourse = null;
+            CourseNowStatus status = CourseNowStatus.NoCoursesScheduled;
+            if (schedule == null) return new CourseStatus(status);
             DateTime now = DateTime.Now;
             var coursesToday = schedule.Courses[(int)now.DayOfWeek];
             if (coursesToday != null)
-                // 遍历课程列表，查找当前时间所在的课程
+            // 遍历课程列表，查找当前时间所在的课程
+            {
                 foreach (var c in coursesToday)
                 {
                     if (now.TimeOfDay >= c.StartTime && now.TimeOfDay <= c.EndTime)
@@ -94,24 +94,40 @@ namespace Cokee.ClassService.Helper
                         nextCourse = coursesToday[coursesToday.IndexOf(c) + 1];
                         if (now.TimeOfDay == c.StartTime)
                         {
-                            return CourseNowStatus.Upcoming; // 上课时间点
+                            status = CourseNowStatus.Upcoming; // 上课时间点
                         }
                         else if (now.TimeOfDay == c.EndTime)
                         {
-                            return CourseNowStatus.EndOfLesson; // 下课时间点
+                            status = CourseNowStatus.EndOfLesson; // 下课时间点
                         }
                         else
                         {
-                            return CourseNowStatus.InProgress; // 正在上课
+                            status = CourseNowStatus.InProgress; // 正在上课
                         }
                     }
                     else if (now.TimeOfDay < c.StartTime)
                     {
-                        return CourseNowStatus.OnBreak; // 正在休息
+                        status = CourseNowStatus.OnBreak; // 正在休息
                     }
                 }
-            // 如果没有当前课程，则返回没有课程了
-            return CourseNowStatus.NoCoursesScheduled;
+                // 如果没有当前课程，则返回没有课程了
+                return new CourseStatus(status, course, nextCourse);
+            }
+            status = CourseNowStatus.NoCoursesScheduled;
+            return new CourseStatus(status);
+        }
+    }
+
+    public class CourseStatus
+    {
+        public CourseNowStatus nowStatus;
+        public Course? now, next;
+
+        public CourseStatus(CourseNowStatus nowStatus, Course? now = null, Course? next = null)
+        {
+            this.nowStatus = nowStatus;
+            this.now = now;
+            this.next = next;
         }
     }
 

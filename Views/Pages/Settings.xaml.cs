@@ -43,7 +43,6 @@ namespace Cokee.ClassService.Views.Pages
         public void SaveData()
         {
             Catalog.appSettings.SaveSettings();
-            Catalog.ShowInfo("数据已保存.");
         }
 
         private void CheckUpdate(object sender, RoutedEventArgs e)

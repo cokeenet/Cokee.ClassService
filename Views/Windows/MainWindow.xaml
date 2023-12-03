@@ -64,7 +64,16 @@
                 </ui:Card>
             </Grid>
         </Grid>
-
+        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed">
+            <StackPanel>
+                <StackPanel VerticalAlignment="Top">
+                    <TextBlock Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" />
+                    <TextBlock Text="--:--" d:Text="2023年6月15日 星期六" FontSize="20" FontFamily="Cairo-Regular" />
+                </StackPanel>
+                <StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ui:Card>
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">
             <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ui:ThemeResource}">
                 <Grid VerticalAlignment="Bottom">
@@ -99,25 +108,12 @@
                 </Grid>
             </ui:Card>
         </Popup>
-        <ScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Margin="0,100,0,100" Visibility="Collapsed" Background="{ui:ThemeResource}">
-            <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}" Background="{ui:ThemeResource}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="2" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:StickyNote DataContext="{Binding Name}" Margin="10" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+
         <Controls:PostNote x:Name="postNote" Visibility="Collapsed" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <ui:InfoBar x:Name="infobar" VerticalAlignment="Top" HorizontalAlignment="Center" Message="当前焦点在CokeeClass上!" />
         <Controls:RandomControl x:Name="rancor" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300" StartRandom="RandomControl_StartRandom" Visibility="Collapsed" />
         <Controls:RandomResult x:Name="ranres" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="500" Visibility="Collapsed" />
-        <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" d:Visibility="Visible" />
+        <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" d:Visibility="Collapsed" />
         <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" />
         <Grid x:Name="floatGrid" MouseLeftButtonDown="mouseDown" MouseLeftButtonUp="mouseUp" MouseMove="mouseMove" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Focusable="False">
             <Grid.RowDefinitions>
@@ -152,13 +148,16 @@
                 <ui:SymbolIcon x:Name="icon" Width="15" Height="15" Foreground="Black" Margin="5" FontSize="15" Symbol="Info12" />
             </Grid>
             <ui:Badge Grid.Row="2" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
-                <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11" />
+                <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11:11" />
             </ui:Badge>
         </Grid>
-        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Collapsed">
-            <RichTextBox x:Name="richTextBox" />
+        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
+            <StackPanel Background="{ui:ThemeResource}">
+                <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
+                <RichTextBox x:Name="richTextBox" Margin="5" />
+            </StackPanel>
         </Controls:TouchableScrollViewer>
-        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" />
+        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" d:IsHidden="True" />
         <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Light" Margin="24,24,24,80" d:IsHidden="True" MaxHeight="300" Timeout="3000" CloseButtonEnabled="False" />
     </Grid>
 </Window>

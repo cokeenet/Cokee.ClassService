@@ -18,32 +18,12 @@
         <Controls:TouchableScrollViewer>
             <StackPanel>
                 <ui:InfoBar x:Name="micaInfo" Message="当前系统版本不支持Mica窗口背景模糊效果。😓" d:IsOpen="True" Severity="Warning" Margin="5" IsOpen="False" />
-                <TextBlock Text="书写" FontSize="16" Margin="5" />
-
-                <ui:CardControl Icon="People28" Margin="5">
-                    <ui:CardControl.Header>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="多点触控" />
-                        </StackPanel>
-                    </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable,Mode=TwoWay}" />
-                </ui:CardControl>
-                <ui:CardControl Icon="Eraser24" Margin="5">
-                    <ui:CardControl.Header>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
-                        </StackPanel>
-                    </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable,Mode=TwoWay}" />
-                </ui:CardControl>
-                <TextBlock Text="界面" FontSize="16" Margin="5" />
+                <TextBlock Text="一般" FontSize="16" Margin="5" />
                 <ui:CardControl Icon="Image32" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="使用用户头像" />
+                                FontSize="13" FontWeight="Medium" Text="悬浮球使用随机用户头像" />
                             <TextBlock
                                 FontSize="12" Opacity="0.7" Text="打开后责任自负!" />
                         </StackPanel>
@@ -72,13 +52,36 @@
                     </ui:CardControl.Header>
                     <ui:TextBox Text="{Binding FileWatcherFilter,Mode=TwoWay}" MinWidth="200" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="DarkTheme24">
+                <TextBlock Text="书写" FontSize="16" Margin="5" />
+                <ui:CardControl Icon="People28" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
-                        FontSize="13" FontWeight="Medium" Text="深色模式" />
+                                FontSize="13" FontWeight="Medium" Text="多点触控" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="功能未完成" />
+                                FontSize="12" Opacity="0.7" Text="测试功能" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable, Mode=TwoWay}" />
+                </ui:CardControl>
+                <ui:CardControl Icon="Eraser24" Margin="5">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="模拟X沃白板橡皮擦" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable, Mode=TwoWay}" />
+                </ui:CardControl>
+                <ui:CardControl Margin="5" Icon="PenProhibited32">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                        FontSize="13" FontWeight="Medium" Text="平滑墨迹" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="使用贝塞尔曲线平滑法优化墨迹" />
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable, Mode=TwoWay}" />

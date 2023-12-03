@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,15 +25,20 @@ using Cokee.ClassService.Views.Controls;
 using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
+
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
+using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
-using MsExcel = Microsoft.Office.Interop.Excel;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
-using System.Net;
 
 namespace Cokee.ClassService
 {
@@ -54,7 +59,7 @@ namespace Cokee.ClassService
         public MsExcel.Application? excelApplication = null;
         public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.appSettings.FileWatcherFilter);
 
-        StrokeCollection[] strokes=new StrokeCollection[101];
+        private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
 
         private Schedule schedule = Schedule.LoadFromJson();
@@ -63,6 +68,12 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("log.txt",
+               outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes)
+                .WriteTo.RichTextBox(richTextBox)
+                .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
@@ -76,7 +87,7 @@ namespace Cokee.ClassService
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
             VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-            
+
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
             /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
@@ -101,7 +112,7 @@ namespace Cokee.ClassService
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
             AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-            if (Catalog.appSettings.FileWatcherEnable&&!Catalog.isScrSave)
+            if (Catalog.appSettings.FileWatcherEnable && !Catalog.isScrSave)
             {
                 IntiFileWatcher();
             }
@@ -110,6 +121,18 @@ namespace Cokee.ClassService
                 nameBadge.Visibility = Visibility.Visible;
                 nameBadge.Content = $"屏保模式";
             }
+            if (Catalog.appSettings.MultiTouchEnable)
+            {
+                inkcanvas.StylusDown += MainWindow_StylusDown;
+                inkcanvas.StylusMove += MainWindow_StylusMove;
+                inkcanvas.StylusUp += MainWindow_StylusUp;
+                inkcanvas.TouchDown += MainWindow_TouchDown;
+            }
+            inkcanvas.StrokeCollected += inkcanvas_StrokeCollected;
+
+            timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
+            timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
+            inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
         }
 
         public void IntiFileWatcher()
@@ -122,7 +145,7 @@ namespace Cokee.ClassService
                 desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
                 desktopWatcher.Created += DesktopWatcher_Changed;
                 desktopWatcher.Renamed += DesktopWatcher_Changed;
-                desktopWatcher.Deleted += DesktopWatcher_Changed;
+                //desktopWatcher.Deleted += DesktopWatcher_Changed;
                 desktopWatcher.EnableRaisingEvents = true;
             }), DispatcherPriority.Normal);
         }
@@ -141,11 +164,10 @@ namespace Cokee.ClassService
 
         private void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (!Catalog.appSettings.UseMemberAvatar)
                 {
-                    
                     string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                     head.Source = new BitmapImage(new Uri(url));
                 }
@@ -207,101 +229,99 @@ namespace Cokee.ClassService
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.Invoke(new Action(() =>
             {
+                //var sw = Stopwatch.StartNew();
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
-                //PicTimer_Elapsed();
-                //Course a, b;
-                // var status = Schedule.GetNowCourse(schedule, out a, out b);
-                //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
-                {
-                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-
-                    if (pptApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-                        if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
-                        pptApplication.PresentationClose += PptApplication_PresentationClose;
-                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-   
-                        if (pptApplication.SlideShowWindows.Count >= 1)
-                        {
-                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
-                        }
-                        if (pptApplication.Presentations.Count >= 1)
-                        {
-                            foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
-                            {
-                                Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
-                            }
-                        }
-                    }
-                    //if (pptApplication == null) return;
-                }
-                if (ProcessHelper.HasWordProcess() && wordApplication == null)
-                {
-                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
-                    if (wordApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
-                        if (wordApplication.Documents.Count > 0)
-                        {
-                            foreach (MsWord.Document item in wordApplication.Documents)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                        wordApplication.DocumentOpen += (Doc) =>
-                        {
-                            Catalog.BackupFile(Doc.FullName, Doc.Name);
-                        };
-                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo("尝试释放Word对象");
-                            try { Marshal.ReleaseComObject(wordApplication); }
-                            catch { }
-                            wordApplication = null;
-                        };
-                    }
-                }
-                if (ProcessHelper.HasExcelProcess() && excelApplication == null)
-                {
-                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
-                    if (excelApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
-                        if (excelApplication.Workbooks.Count > 0)
-                        {
-                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                        excelApplication.WorkbookOpen += (Workbook) =>
-                        {
-                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
-                        };
-                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo("尝试释放Excel对象");
-                            try { Marshal.ReleaseComObject(excelApplication); }
-                            catch { }
-                            excelApplication = null;
-                        };
-                    }
-                }
-            }), DispatcherPriority.Normal);
+                var status = Schedule.GetNowCourse(schedule);
+                if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
+                new Thread(new ThreadStart(CheckOffice)).Start();
+                //  sw.Stop();
+                // Log.Information($"Timer:{sw.Elapsed.ToString("")}");
+            }), DispatcherPriority.Background);
         }
 
-        private void PptApplication_PresentationOpen(MsPpt.Presentation Pres)
+        public void CheckOffice()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
             {
-                Catalog.ShowInfo(Pres.FullName);
-            }), DispatcherPriority.Normal);
+                pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+
+                if (pptApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+                    if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
+                    pptApplication.PresentationClose += PptApplication_PresentationClose;
+                    pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                    pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+
+                    if (pptApplication.SlideShowWindows.Count >= 1)
+                    {
+                        PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                    }
+                    if (pptApplication.Presentations.Count >= 1)
+                    {
+                        foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                        {
+                            Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                        }
+                    }
+                }
+                //if (pptApplication == null) return;
+            }
+            if (ProcessHelper.HasWordProcess() && wordApplication == null)
+            {
+                wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
+                if (wordApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
+                    if (wordApplication.Documents.Count > 0)
+                    {
+                        foreach (MsWord.Document item in wordApplication.Documents)
+                        {
+                            Catalog.BackupFile(item.FullName, item.Name);
+                        }
+                    }
+                    wordApplication.DocumentOpen += (Doc) =>
+                    {
+                        Catalog.BackupFile(Doc.FullName, Doc.Name);
+                    };
+                    wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                    {
+                        Catalog.ShowInfo("尝试释放Word对象");
+                        try { Marshal.ReleaseComObject(wordApplication); }
+                        catch { }
+                        wordApplication = null;
+                    };
+                }
+            }
+            if (ProcessHelper.HasExcelProcess() && excelApplication == null)
+            {
+                excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
+                if (excelApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
+                    if (excelApplication.Workbooks.Count > 0)
+                    {
+                        foreach (MsExcel.Workbook item in excelApplication.Workbooks)
+                        {
+                            Catalog.BackupFile(item.FullName, item.Name);
+                        }
+                    }
+                    excelApplication.WorkbookOpen += (Workbook) =>
+                    {
+                        Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                    };
+                    excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                    {
+                        Catalog.ShowInfo("尝试释放Excel对象");
+                        try { Marshal.ReleaseComObject(excelApplication); }
+                        catch { }
+                        excelApplication = null;
+                    };
+                }
+            }
         }
 
         private void PptApplication_SlideShowEnd(MsPpt.Presentation Pres)
@@ -345,7 +365,6 @@ namespace Cokee.ClassService
                 pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
                 pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
                 pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
-                pptApplication.PresentationOpen -= PptApplication_PresentationOpen;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("尝试释放PowerPoint对象");
                 IconAnimation(true);
@@ -500,23 +519,9 @@ namespace Cokee.ClassService
             Log.Information($"Program Closed");
         }
 
-        private void ShowStickys(object sender, RoutedEventArgs e)
-        {
-            List<StickyItem> list = new List<StickyItem>();
-            if (Sclview.Visibility == Visibility.Collapsed)
-            {
-                var dir = new DirectoryInfo(Catalog.INK_DIR);
-                foreach (FileInfo item in dir.GetFiles("*.ink"))
-                {
-                    list.Add(new StickyItem(item.Name.Replace(".ink", "")));
-                }
-                Sclview.Visibility = Visibility.Visible;
-                Stickys.ItemsSource = list;
-            }
-            else Sclview.Visibility = Visibility.Collapsed;
-        }
+        private void ShowStickys(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Sticky>();
 
-        private void PostNote(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(postNote);
+        public void PostNote(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(postNote);
 
         private void VolumeCard(object sender, RoutedEventArgs e)
         {
@@ -595,7 +600,7 @@ namespace Cokee.ClassService
                 memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
             }
             var savePath =
-                $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now.Date:yyyyMMdd}\{DateTime.Now.ToString("HH-mm-ss")}.png";
+                $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now:yyyy-MM-dd}\{DateTime.Now:HH-mm-ss)}.png";
             if (!Directory.Exists(Path.GetDirectoryName(savePath)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
@@ -607,7 +612,8 @@ namespace Cokee.ClassService
 
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
 
-        private void QuickFix(object sender, RoutedEventArgs e) => Catalog.CreateWindow<QuickFix>();
+        private void QuickFix(object sender, RoutedEventArgs e)
+        { return; }//Catalog.CreateWindow<QuickFix>();
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -617,5 +623,567 @@ namespace Cokee.ClassService
                 else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
             }
         }
+
+        #region Multi-Touch
+
+        private void MainWindow_TouchDown(object sender, TouchEventArgs e)
+        {
+            double boundWidth = e.GetTouchPoint(null).Bounds.Width;
+            if (boundWidth > 20)
+            {
+                inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
+                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.EraseByPoint;
+                inkcanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+            }
+            else
+            {
+                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.None;
+                inkcanvas.EditingMode = InkCanvasEditingMode.None;
+            }
+        }
+
+        private void MainWindow_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            TouchDownPointsList[e.StylusDevice.Id] = InkCanvasEditingMode.None;
+        }
+
+        private void inkcanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            try
+            {
+                // 检查是否是压感笔书写
+                foreach (StylusPoint stylusPoint in e.Stroke.StylusPoints)
+                {
+                    if (stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0)
+                    {
+                        return;
+                    }
+                }
+
+                double GetPointSpeed(Point point1, Point point2, Point point3)
+                {
+                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y))
+                        + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) + (point3.Y - point2.Y) * (point3.Y - point2.Y)))
+                        / 20;
+                }
+                try
+                {
+                    if (e.Stroke.StylusPoints.Count > 3)
+                    {
+                        Random random = new Random();
+                        double _speed = GetPointSpeed(e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    StylusPointCollection stylusPoints = new StylusPointCollection();
+                    int n = e.Stroke.StylusPoints.Count - 1;
+                    double pressure = 0.1;
+                    int x = 10;
+                    if (n == 1) return;
+                    if (n >= x)
+                    {
+                        for (int i = 0; i < n - x; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)0.5;
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                        for (int i = n - x; i <= n; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)((0.5 - pressure) * (n - i) / x + pressure);
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i <= n; i++)
+                        {
+                            StylusPoint point = new StylusPoint();
+
+                            point.PressureFactor = (float)(0.4 * (n - i) / n + pressure);
+                            point.X = e.Stroke.StylusPoints[i].X;
+                            point.Y = e.Stroke.StylusPoints[i].Y;
+                            stylusPoints.Add(point);
+                        }
+                    }
+                    e.Stroke.StylusPoints = stylusPoints;
+                }
+                catch
+                {
+                }
+            }
+            catch { }
+        }
+
+        private void MainWindow_StylusUp(object sender, StylusEventArgs e)
+        {
+            try
+            {
+                if (!inkTool.isEraser)
+                {
+                    inkcanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
+                    inkcanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
+                    inkcanvas_StrokeCollected(inkcanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            try
+            {
+                StrokeVisualList.Remove(e.StylusDevice.Id);
+                VisualCanvasList.Remove(e.StylusDevice.Id);
+                TouchDownPointsList.Remove(e.StylusDevice.Id);
+                if (StrokeVisualList.Count == 0 || VisualCanvasList.Count == 0 || TouchDownPointsList.Count == 0)
+                {
+                    inkcanvas.Children.Clear();
+                    StrokeVisualList.Clear();
+                    VisualCanvasList.Clear();
+                    TouchDownPointsList.Clear();
+                }
+            }
+            catch { }
+        }
+
+        private void MainWindow_StylusMove(object sender, StylusEventArgs e)
+        {
+            try
+            {
+                if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
+                try
+                {
+                    if (e.StylusDevice.StylusButtons[1].StylusButtonState == StylusButtonState.Down) return;
+                }
+                catch { }
+                var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
+                var stylusPointCollection = e.GetStylusPoints(this);
+                foreach (var stylusPoint in stylusPointCollection)
+                {
+                    strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
+                }
+
+                strokeVisual.Redraw();
+            }
+            catch { }
+        }
+
+        private StrokeVisual GetStrokeVisual(int id)
+        {
+            if (StrokeVisualList.TryGetValue(id, out var visual))
+            {
+                return visual;
+            }
+
+            var strokeVisual = new StrokeVisual(inkcanvas.DefaultDrawingAttributes.Clone());
+            StrokeVisualList[id] = strokeVisual;
+            StrokeVisualList[id] = strokeVisual;
+            var visualCanvas = new VisualCanvas(strokeVisual);
+            VisualCanvasList[id] = visualCanvas;
+            inkcanvas.Children.Add(visualCanvas);
+
+            return strokeVisual;
+        }
+
+        private VisualCanvas GetVisualCanvas(int id)
+        {
+            if (VisualCanvasList.TryGetValue(id, out var visualCanvas))
+            {
+                return visualCanvas;
+            }
+            return null;
+        }
+
+        private InkCanvasEditingMode GetTouchDownPointsList(int id)
+        {
+            if (TouchDownPointsList.TryGetValue(id, out var InkCanvasEditingMode))
+            {
+                return InkCanvasEditingMode;
+            }
+            return inkcanvas.EditingMode;
+        }
+
+        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } = new Dictionary<int, InkCanvasEditingMode>();
+        private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
+        private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
+
+        #endregion Multi-Touch
+
+        private StrokeCollection[] strokeCollections = new StrokeCollection[101];
+        private bool[] whiteboadLastModeIsRedo = new bool[101];
+        private StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
+
+        private int CurrentWhiteboardIndex = 1;
+        private int WhiteboardTotalCount = 1;
+        private TimeMachineHistory[][] TimeMachineHistories = new TimeMachineHistory[101][]; //最多99页，0用来存储非白板时的墨迹以便还原
+
+        private void SaveStrokes(bool isBackupMain = false)
+        {
+            if (isBackupMain)
+            {
+                var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
+                TimeMachineHistories[0] = timeMachineHistory;
+                timeMachine.ClearStrokeHistory();
+            }
+            else
+            {
+                var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
+                TimeMachineHistories[CurrentWhiteboardIndex] = timeMachineHistory;
+                timeMachine.ClearStrokeHistory();
+            }
+        }
+
+        private void ClearStrokes(bool isErasedByCode)
+        {
+            _currentCommitType = CommitReason.ClearingCanvas;
+            if (isErasedByCode) _currentCommitType = CommitReason.CodeInput;
+            inkcanvas.Strokes.Clear();
+            _currentCommitType = CommitReason.UserInput;
+        }
+
+        private void RestoreStrokes(bool isBackupMain = false)
+        {
+            try
+            {
+                if (TimeMachineHistories[CurrentWhiteboardIndex] == null) return; //防止白板打开后不居中
+                if (isBackupMain)
+                {
+                    _currentCommitType = CommitReason.CodeInput;
+                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[0]);
+                    foreach (var item in TimeMachineHistories[0])
+                    {
+                        if (item.CommitType == TimeMachineHistoryType.UserInput)
+                        {
+                            if (!item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.ShapeRecognition)
+                        {
+                            if (item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.Rotate)
+                        {
+                            if (item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.Clear)
+                        {
+                            if (!item.StrokeHasBeenCleared)
+                            {
+                                if (item.CurrentStroke != null)
+                                {
+                                    foreach (var currentStroke in item.CurrentStroke)
+                                    {
+                                        if (!inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Add(currentStroke);
+                                    }
+                                }
+                                if (item.ReplacedStroke != null)
+                                {
+                                    foreach (var replacedStroke in item.ReplacedStroke)
+                                    {
+                                        if (inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Remove(replacedStroke);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (item.ReplacedStroke != null)
+                                {
+                                    foreach (var replacedStroke in item.ReplacedStroke)
+                                    {
+                                        if (!inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Add(replacedStroke);
+                                    }
+                                }
+                                if (item.CurrentStroke != null)
+                                {
+                                    foreach (var currentStroke in item.CurrentStroke)
+                                    {
+                                        if (inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Remove(currentStroke);
+                                    }
+                                }
+                            }
+                        }
+                        _currentCommitType = CommitReason.UserInput;
+                    }
+                }
+                else
+                {
+                    _currentCommitType = CommitReason.CodeInput;
+                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[CurrentWhiteboardIndex]);
+                    foreach (var item in TimeMachineHistories[CurrentWhiteboardIndex])
+                    {
+                        if (item.CommitType == TimeMachineHistoryType.UserInput)
+                        {
+                            if (!item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.ShapeRecognition)
+                        {
+                            if (item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.Rotate)
+                        {
+                            if (item.StrokeHasBeenCleared)
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var strokes in item.CurrentStroke)
+                                {
+                                    if (!inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Add(strokes);
+                                }
+                                foreach (var strokes in item.ReplacedStroke)
+                                {
+                                    if (inkcanvas.Strokes.Contains(strokes))
+                                        inkcanvas.Strokes.Remove(strokes);
+                                }
+                            }
+                        }
+                        else if (item.CommitType == TimeMachineHistoryType.Clear)
+                        {
+                            if (!item.StrokeHasBeenCleared)
+                            {
+                                if (item.CurrentStroke != null)
+                                {
+                                    foreach (var currentStroke in item.CurrentStroke)
+                                    {
+                                        if (!inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Add(currentStroke);
+                                    }
+                                }
+                                if (item.ReplacedStroke != null)
+                                {
+                                    foreach (var replacedStroke in item.ReplacedStroke)
+                                    {
+                                        if (inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Remove(replacedStroke);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (item.ReplacedStroke != null)
+                                {
+                                    foreach (var replacedStroke in item.ReplacedStroke)
+                                    {
+                                        if (!inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Add(replacedStroke);
+                                    }
+                                }
+                                if (item.CurrentStroke != null)
+                                {
+                                    foreach (var currentStroke in item.CurrentStroke)
+                                    {
+                                        if (inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Remove(currentStroke);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    _currentCommitType = CommitReason.UserInput;
+                }
+            }
+            catch { }
+        }
+
+        #region TimeMachine
+
+        private enum CommitReason
+        {
+            UserInput,
+            CodeInput,
+            ShapeDrawing,
+            ShapeRecognition,
+            ClearingCanvas,
+            Rotate
+        }
+
+        private CommitReason _currentCommitType = CommitReason.UserInput;
+        private bool IsEraseByPoint => inkcanvas.EditingMode == InkCanvasEditingMode.EraseByPoint;
+        private StrokeCollection ReplacedStroke;
+        private StrokeCollection AddedStroke;
+        private StrokeCollection CuboidStrokeCollection;
+        private TimeMachine timeMachine = new TimeMachine();
+
+        private void TimeMachine_OnUndoStateChanged(bool status)
+        {
+            var result = status ? Visibility.Visible : Visibility.Collapsed;
+            inkTool.backBtn.Visibility = result;
+            inkTool.backBtn.IsEnabled = status;
+        }
+
+        private void TimeMachine_OnRedoStateChanged(bool status)
+        {
+            var result = status ? Visibility.Visible : Visibility.Collapsed;
+            inkTool.redoBtn.Visibility = result;
+            inkTool.redoBtn.IsEnabled = status;
+        }
+
+        private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
+        {
+            if (_currentCommitType == CommitReason.CodeInput || _currentCommitType == CommitReason.ShapeDrawing) return;
+            if (_currentCommitType == CommitReason.Rotate)
+            {
+                timeMachine.CommitStrokeRotateHistory(e.Removed, e.Added);
+                return;
+            }
+            if ((e.Added.Count != 0 || e.Removed.Count != 0) && IsEraseByPoint)
+            {
+                if (AddedStroke == null) AddedStroke = new StrokeCollection();
+                if (ReplacedStroke == null) ReplacedStroke = new StrokeCollection();
+                AddedStroke.Add(e.Added);
+                ReplacedStroke.Add(e.Removed);
+                return;
+            }
+            if (e.Added.Count != 0)
+            {
+                if (_currentCommitType == CommitReason.ShapeRecognition)
+                {
+                    timeMachine.CommitStrokeShapeHistory(ReplacedStroke, e.Added);
+                    ReplacedStroke = null;
+                    return;
+                }
+                else
+                {
+                    timeMachine.CommitStrokeUserInputHistory(e.Added);
+                    return;
+                }
+            }
+
+            if (e.Removed.Count != 0)
+            {
+                if (_currentCommitType == CommitReason.ShapeRecognition)
+                {
+                    ReplacedStroke = e.Removed;
+                    return;
+                }
+                else if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
+                {
+                    timeMachine.CommitStrokeEraseHistory(e.Removed);
+                    return;
+                }
+            }
+        }
+
+        #endregion TimeMachine
     }
 }

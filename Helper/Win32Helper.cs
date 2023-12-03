@@ -158,11 +158,9 @@ namespace Cokee.ClassService.Helper
         public static bool HasPowerPointProcess()
         {
             Process[] processes = Process.GetProcesses();
-            //Log.Information(processes.Length.ToString());
             foreach (var item in processes)
             {
-                //Log.Information(item.ProcessName);
-                if (item.ProcessName.Contains("powerpnt") || item.ProcessName=="wpp" || item.ProcessName.Contains("POWERPNT"))
+                if (item.ProcessName.Contains("powerpnt") || item.ProcessName == "wpp" || item.ProcessName.Contains("POWERPNT"))
                     return true;
             }
             return false;
@@ -171,11 +169,9 @@ namespace Cokee.ClassService.Helper
         public static bool HasWordProcess()
         {
             Process[] processes = Process.GetProcesses();
-            //Log.Information(processes.Length.ToString());
             foreach (var item in processes)
             {
-                //Log.Information(item.ProcessName);
-                if (item.ProcessName.Contains("WINWORD") || item.ProcessName=="wps" || item.ProcessName.Contains("winword"))
+                if (item.ProcessName.Contains("WINWORD") || item.ProcessName == "wps" || item.ProcessName.Contains("winword"))
                     return true;
             }
             return false;
@@ -184,11 +180,9 @@ namespace Cokee.ClassService.Helper
         public static bool HasExcelProcess()
         {
             Process[] processes = Process.GetProcesses();
-            //Log.Information(processes.Length.ToString());
             foreach (var item in processes)
             {
-                //Log.Information(item.ProcessName);
-                if (item.ProcessName.Contains("excel") || item.ProcessName=="et" || item.ProcessName.Contains("EXCEL"))
+                if (item.ProcessName.Contains("excel") || item.ProcessName == "et" || item.ProcessName.Contains("EXCEL"))
                     return true;
             }
             return false;
