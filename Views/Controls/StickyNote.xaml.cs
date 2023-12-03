@@ -54,7 +54,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             string stu = e.NewValue.ToString();
             name.Text = stu;
-            string INK_FILE = @$"{Catalog.INK_DIR}\{stu}.ink";
+            string INK_FILE = @$"{Catalog.INK_DIR}\{stu}";
             if (File.Exists(INK_FILE))
             {
                 FileStream fs = new FileStream(INK_FILE, FileMode.Open);

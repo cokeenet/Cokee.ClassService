@@ -92,6 +92,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (!Directory.Exists(Path.GetDirectoryName(Catalog.SETTINGS_FILE))) Directory.CreateDirectory(Path.GetDirectoryName(Catalog.SETTINGS_FILE));
                 File.WriteAllText(Catalog.SETTINGS_FILE, content);
+                Catalog.ShowInfo("数据已保存.");
             }
             catch (Exception e)
             {

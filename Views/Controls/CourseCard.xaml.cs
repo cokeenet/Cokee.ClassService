@@ -28,45 +28,52 @@ namespace Cokee.ClassService.Views.Controls
         {
             InitializeComponent();
         }
-        public void Show(CourseNowStatus nowStatus,Course? course,Course? nextCourse)
+
+        public void Show(CourseStatus status, bool needHide = true)
         {
             this.Visibility = Visibility.Visible;
-            
-            switch(nowStatus)
+
+            switch (status.nowStatus)
             {
                 case CourseNowStatus.EndOfLesson:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")} 下课辣";
-                    subtitle.Text = $"下一节: {nextCourse.Name}";
+                    subtitle.Text = $"下一节: {status.next.Name}";
                     break;
+
                 case CourseNowStatus.Upcoming:
-                    title.Text = $"{DateTime.Now.ToString("hh:mm")} {course.Name} 上课辣";
-                    subtitle.Text = $"下课时间 {course.EndTime.ToString("hh:mm")}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} {status.now.Name} 上课辣";
+                    subtitle.Text = $"下课时间 {status.now.EndTime.ToString("hh:mm")}";
                     break;
+
                 case CourseNowStatus.OnBreak:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Text = $"课间休息 下一节: {course.Name}";
+                    subtitle.Text = $"课间休息 下一节: {status.next.Name}";
                     break;
+
                 case CourseNowStatus.InProgress:
-                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{course.Name}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{status.now.Name}";
                     subtitle.Text = $"pupupu";
                     break;
+
                 case CourseNowStatus.NoCoursesScheduled:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")}";
                     subtitle.Text = $"今天没有课了嗷";
                     break;
             }
-            
-            DoubleAnimation doubleAnimation = new DoubleAnimation(330,0,TimeSpan.FromSeconds(1));
-            doubleAnimation.EasingFunction = new CircleEase();
-            doubleAnimation.Completed += async (a, b) => 
+            if (!needHide)
             {
-                await Task.Delay(TimeSpan.FromSeconds(10));
-                DoubleAnimation doubleAnimation = new DoubleAnimation(0, 330, TimeSpan.FromSeconds(1));
+                DoubleAnimation doubleAnimation = new DoubleAnimation(330, 0, TimeSpan.FromSeconds(1));
                 doubleAnimation.EasingFunction = new CircleEase();
-                doubleAnimation.Completed += (a, b) => this.Visibility=Visibility.Collapsed;
+                doubleAnimation.Completed += async (a, b) =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    DoubleAnimation doubleAnimation = new DoubleAnimation(0, 330, TimeSpan.FromSeconds(1));
+                    doubleAnimation.EasingFunction = new CircleEase();
+                    doubleAnimation.Completed += (a, b) => this.Visibility = Visibility.Collapsed;
+                    transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
+                };
                 transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
-            };
-            transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
+            }
         }
     }
 }

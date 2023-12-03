@@ -12,7 +12,7 @@ namespace Cokee.ClassService.Helper
         internal const String OLE32 = "ole32.dll";
 
         [SecurityCritical]  // auto-generated_required
-        public static Object GetActiveObject(String progID)
+        public static Object? GetActiveObject(String progID)
         {
             Object obj = null;
             Guid clsid;
@@ -28,8 +28,14 @@ namespace Cokee.ClassService.Helper
             {
                 CLSIDFromProgID(progID, out clsid);
             }
-
-            GetActiveObject(ref clsid, IntPtr.Zero, out obj);
+            try
+            {
+                GetActiveObject(ref clsid, IntPtr.Zero, out obj);
+            }
+            catch
+            {
+                return null;
+            }
             return obj;
         }
 
@@ -54,10 +60,12 @@ namespace Cokee.ClassService.Helper
         [System.Security.SecurityCritical]  // auto-generated
         private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out Object ppunk);
     }
-    class PPTHelper
+
+    internal class PPTHelper
     {
         [DllImport("ole32.dll")]
         public static extern int GetActiveObject(ref Guid rclsid, IntPtr pvReserved, out object ppunk);
+
         public static Microsoft.Office.Interop.PowerPoint.Application? GetObj()
         {
             Guid clsid = new Guid("91493441-5A91-11CF-8700-00AA0060263B");  // PowerPoint.Application 的 CLSID

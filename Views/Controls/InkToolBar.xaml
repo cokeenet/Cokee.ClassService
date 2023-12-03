@@ -61,7 +61,7 @@
                 </ui:Card>
             </Popup>
             <Popup x:Name="moreMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=moreBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True" DataContext="{Binding appSettings}">
-                <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
+                <ui:Card x:Name="moreCard" Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center" DataContext="{Binding AppSettings}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -73,7 +73,7 @@
                             <ui:Button Icon="SelectObject24" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select" />
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" />
                             <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5" IsChecked="{Binding EraseByPointEnable,Mode=TwoWay}" />
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" Visibility="Collapsed" />
+                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" IsChecked="{Binding EraseByPointEnable,Mode=TwoWay}" Visibility="Collapsed" />
                         </StackPanel>
                     </Grid>
                 </ui:Card>

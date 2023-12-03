@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -26,6 +27,9 @@ using Cokee.ClassService.Views.Windows;
 using Microsoft.Win32;
 
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
 
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
@@ -64,6 +68,12 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("log.txt",
+               outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes)
+                .WriteTo.RichTextBox(richTextBox)
+                .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
@@ -219,101 +229,99 @@ namespace Cokee.ClassService
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.Invoke(new Action(() =>
             {
+                var sw = Stopwatch.StartNew();
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
-                //PicTimer_Elapsed();
-                //Course a, b;
-                // var status = Schedule.GetNowCourse(schedule, out a, out b);
-                //  if (status == CourseNowStatus.EndOfLesson || status == CourseNowStatus.Upcoming) { courseCard.Show(status, a, b); StartAnimation(10, 3600); }
-                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
-                {
-                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-
-                    if (pptApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-                        if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
-                        pptApplication.PresentationClose += PptApplication_PresentationClose;
-                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-
-                        if (pptApplication.SlideShowWindows.Count >= 1)
-                        {
-                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
-                        }
-                        if (pptApplication.Presentations.Count >= 1)
-                        {
-                            foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
-                            {
-                                Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
-                            }
-                        }
-                    }
-                    //if (pptApplication == null) return;
-                }
-                if (ProcessHelper.HasWordProcess() && wordApplication == null)
-                {
-                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
-                    if (wordApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
-                        if (wordApplication.Documents.Count > 0)
-                        {
-                            foreach (MsWord.Document item in wordApplication.Documents)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                        wordApplication.DocumentOpen += (Doc) =>
-                        {
-                            Catalog.BackupFile(Doc.FullName, Doc.Name);
-                        };
-                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo("尝试释放Word对象");
-                            try { Marshal.ReleaseComObject(wordApplication); }
-                            catch { }
-                            wordApplication = null;
-                        };
-                    }
-                }
-                if (ProcessHelper.HasExcelProcess() && excelApplication == null)
-                {
-                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
-                    if (excelApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
-                        if (excelApplication.Workbooks.Count > 0)
-                        {
-                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                        excelApplication.WorkbookOpen += (Workbook) =>
-                        {
-                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
-                        };
-                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo("尝试释放Excel对象");
-                            try { Marshal.ReleaseComObject(excelApplication); }
-                            catch { }
-                            excelApplication = null;
-                        };
-                    }
-                }
-            }), DispatcherPriority.Normal);
+                var status = Schedule.GetNowCourse(schedule);
+                if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
+                new Thread(new ThreadStart(CheckOffice)).Start();
+                sw.Stop();
+                Log.Information($"Timer:{sw.Elapsed.ToString("")}");
+            }), DispatcherPriority.Background);
         }
 
-        private void PptApplication_PresentationOpen(MsPpt.Presentation Pres)
+        public void CheckOffice()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
             {
-                Catalog.ShowInfo(Pres.FullName);
-            }), DispatcherPriority.Normal);
+                pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+
+                if (pptApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+                    if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
+                    pptApplication.PresentationClose += PptApplication_PresentationClose;
+                    pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                    pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+
+                    if (pptApplication.SlideShowWindows.Count >= 1)
+                    {
+                        PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                    }
+                    if (pptApplication.Presentations.Count >= 1)
+                    {
+                        foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                        {
+                            Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                        }
+                    }
+                }
+                //if (pptApplication == null) return;
+            }
+            if (ProcessHelper.HasWordProcess() && wordApplication == null)
+            {
+                wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
+                if (wordApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
+                    if (wordApplication.Documents.Count > 0)
+                    {
+                        foreach (MsWord.Document item in wordApplication.Documents)
+                        {
+                            Catalog.BackupFile(item.FullName, item.Name);
+                        }
+                    }
+                    wordApplication.DocumentOpen += (Doc) =>
+                    {
+                        Catalog.BackupFile(Doc.FullName, Doc.Name);
+                    };
+                    wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                    {
+                        Catalog.ShowInfo("尝试释放Word对象");
+                        try { Marshal.ReleaseComObject(wordApplication); }
+                        catch { }
+                        wordApplication = null;
+                    };
+                }
+            }
+            if (ProcessHelper.HasExcelProcess() && excelApplication == null)
+            {
+                excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
+                if (excelApplication != null)
+                {
+                    Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
+                    if (excelApplication.Workbooks.Count > 0)
+                    {
+                        foreach (MsExcel.Workbook item in excelApplication.Workbooks)
+                        {
+                            Catalog.BackupFile(item.FullName, item.Name);
+                        }
+                    }
+                    excelApplication.WorkbookOpen += (Workbook) =>
+                    {
+                        Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                    };
+                    excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                    {
+                        Catalog.ShowInfo("尝试释放Excel对象");
+                        try { Marshal.ReleaseComObject(excelApplication); }
+                        catch { }
+                        excelApplication = null;
+                    };
+                }
+            }
         }
 
         private void PptApplication_SlideShowEnd(MsPpt.Presentation Pres)
@@ -511,23 +519,9 @@ namespace Cokee.ClassService
             Log.Information($"Program Closed");
         }
 
-        private void ShowStickys(object sender, RoutedEventArgs e)
-        {
-            List<StickyItem> list = new List<StickyItem>();
-            if (Sclview.Visibility == Visibility.Collapsed)
-            {
-                var dir = new DirectoryInfo(Catalog.INK_DIR);
-                foreach (FileInfo item in dir.GetFiles("*.ink"))
-                {
-                    list.Add(new StickyItem(item.Name.Replace(".ink", "")));
-                }
-                Sclview.Visibility = Visibility.Visible;
-                Stickys.ItemsSource = list;
-            }
-            else Sclview.Visibility = Visibility.Collapsed;
-        }
+        private void ShowStickys(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Sticky>();
 
-        private void PostNote(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(postNote);
+        public void PostNote(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(postNote);
 
         private void VolumeCard(object sender, RoutedEventArgs e)
         {
@@ -606,7 +600,7 @@ namespace Cokee.ClassService
                 memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
             }
             var savePath =
-                $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now.Date:yyyyMMdd}\{DateTime.Now.ToString("HH-mm-ss")}.png";
+                $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now:yyyy-MM-dd}\{DateTime.Now:HH-mm-ss)}.png";
             if (!Directory.Exists(Path.GetDirectoryName(savePath)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
@@ -618,7 +612,8 @@ namespace Cokee.ClassService
 
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
 
-        private void QuickFix(object sender, RoutedEventArgs e) => Catalog.CreateWindow<QuickFix>();
+        private void QuickFix(object sender, RoutedEventArgs e)
+        { return; }//Catalog.CreateWindow<QuickFix>();
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -656,7 +651,6 @@ namespace Cokee.ClassService
         {
             try
             {
-                Catalog.ShowInfo("1");
                 // 检查是否是压感笔书写
                 foreach (StylusPoint stylusPoint in e.Stroke.StylusPoints)
                 {

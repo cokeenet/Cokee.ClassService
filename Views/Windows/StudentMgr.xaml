@@ -43,9 +43,5 @@
                 <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />
             </Border>
         </Grid>
-
-        <ui:Snackbar
-            x:Name="snackbar" Width="370" Height="68" Margin="0,492,0,0"
-            HorizontalAlignment="Center" VerticalAlignment="Top" Grid.RowSpan="3" />
     </Grid>
 </ui:UiWindow>

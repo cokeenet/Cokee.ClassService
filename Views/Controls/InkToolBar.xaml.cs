@@ -42,7 +42,7 @@ namespace Cokee.ClassService.Views.Controls
                         if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
                         else isEraser = false;
                     };
-                    moreMenu.DataContext = Catalog.appSettings;
+                    moreCard.DataContext = Catalog.appSettings;
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {

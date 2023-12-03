@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -26,6 +27,7 @@ namespace Cokee.ClassService
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
             try
             {
                 if (!Directory.Exists("D:\\")) Catalog.UpdatePath("C:\\");
@@ -38,30 +40,23 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File("log.txt",
-               outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes, "3f56f1de-dc29-4a8f-9350-81820e32da71")
-               .CreateLogger();
             AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
                   typeof(Analytics), typeof(Crashes));
-            base.OnStartup(e);
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
-
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Accent.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
-            if(args.Length > 0 )
+            if (args.Length > 0)
             {
-               /* foreach (var item in args)
+                if (args.Contains("-scrsave")) Catalog.isScrSave = true;
+                else if (!args.Contains("-m"))
                 {
-                    MessageBox.Show(item);
-                }*/
-                if (args.Contains("scrsave")) Catalog.isScrSave = true;
+                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
+                }
             }
         }
 
@@ -70,14 +65,12 @@ namespace Cokee.ClassService
             Exception ex = e.ExceptionObject as Exception;
             if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "发生错误");
-            //Crashes.TrackError(ex);
             Catalog.HandleException(ex, "未预期的异常! ");
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception, "发生错误");
-            //Crashes.TrackError(e.Exception);
             Catalog.HandleException(e.Exception, "未预期的异常! ");
             e.Handled = true;
         }
