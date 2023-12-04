@@ -70,8 +70,7 @@
                     <TextBlock Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" />
                     <TextBlock Text="--:--" d:Text="2023年6月15日 星期六" FontSize="20" FontFamily="Cairo-Regular" />
                 </StackPanel>
-                <StackPanel>
-                </StackPanel>
+                <StackPanel/>
             </StackPanel>
         </ui:Card>
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">

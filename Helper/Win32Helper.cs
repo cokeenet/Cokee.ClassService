@@ -157,35 +157,27 @@ namespace Cokee.ClassService.Helper
     {
         public static bool HasPowerPointProcess()
         {
-            Process[] processes = Process.GetProcesses();
-            foreach (var item in processes)
-            {
-                if (item.ProcessName.Contains("powerpnt") || item.ProcessName == "wpp" || item.ProcessName.Contains("POWERPNT"))
+             var processes = Process.GetProcessesByName("powerpnt").Length+Process.GetProcessesByName("wpp").Length+Process.GetProcessesByName("POWERPNT").Length;
+             if (processes >= 0)
                     return true;
-            }
-            return false;
+             else return false;
         }
 
         public static bool HasWordProcess()
         {
-            Process[] processes = Process.GetProcesses();
-            foreach (var item in processes)
-            {
-                if (item.ProcessName.Contains("WINWORD") || item.ProcessName == "wps" || item.ProcessName.Contains("winword"))
-                    return true;
-            }
-            return false;
+            var processes = Process.GetProcessesByName("WINWORD").Length+Process.GetProcessesByName("wps").Length+Process.GetProcessesByName("winword").Length;
+            if (processes >= 0)
+                return true;
+            else return false;
         }
 
         public static bool HasExcelProcess()
         {
-            Process[] processes = Process.GetProcesses();
-            foreach (var item in processes)
-            {
-                if (item.ProcessName.Contains("excel") || item.ProcessName == "et" || item.ProcessName.Contains("EXCEL"))
-                    return true;
-            }
-            return false;
+            var processes = Process.GetProcessesByName("excel").Length+Process.GetProcessesByName("et").Length+Process.GetProcessesByName("EXCEL").Length;
+            if (processes >= 0)
+                return true;
+            else return false;
+            
         }
 
         public static void TryKillWppProcess()

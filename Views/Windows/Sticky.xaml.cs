@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 
@@ -18,6 +19,14 @@ namespace Cokee.ClassService.Views.Windows
         public Sticky()
         {
             InitializeComponent();
+            try
+            {
+                LoadSticky();
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
 
         public void LoadSticky()
