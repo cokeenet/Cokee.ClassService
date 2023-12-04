@@ -629,6 +629,7 @@ namespace Cokee.ClassService
         private void MainWindow_TouchDown(object sender, TouchEventArgs e)
         {
             double boundWidth = e.GetTouchPoint(null).Bounds.Width;
+            if (inkcanvas.EditingMode == InkCanvasEditingMode.EraseByStroke) return;
             if (boundWidth > 20)
             {
                 inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
@@ -759,6 +760,7 @@ namespace Cokee.ClassService
         {
             try
             {
+                if (inkcanvas.EditingMode == InkCanvasEditingMode.EraseByStroke) return;
                 if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
                 try
                 {
