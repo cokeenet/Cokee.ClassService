@@ -29,14 +29,6 @@
                 </InkCanvas.Background>
             </InkCanvas>
             <Controls:InkToolBar x:Name="inkTool" Background="#4C484848" Focusable="False" Visibility="Collapsed" VerticalAlignment="Bottom" d:Visibility="Visible" HorizontalAlignment="Center" />
-            <Border x:Name="eraser" Height="59" Width="40" d:Visibility="Visible" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Border.Background>
-                    <ImageBrush ImageSource="/Resources/Eraser.png" />
-                </Border.Background>
-                <Border.RenderTransform>
-                    <TranslateTransform x:Name="eraserTrans" />
-                </Border.RenderTransform>
-            </Border>
             <Grid x:Name="pptControls" VerticalAlignment="Center" Visibility="Collapsed" d:Visibility="Visible" Focusable="False">
                 <ui:Card HorizontalAlignment="Left" Background="#4C484848" Focusable="False">
                     <Grid Width="60" Margin="-10" Focusable="False">

@@ -127,11 +127,11 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Back":
-                        if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
+                        (App.Current.MainWindow as MainWindow).timeMachine.Undo();
                         break;
 
                     case "Redo":
-                        if (inkCanvas.Strokes.Count > 1) inkCanvas.Strokes.RemoveAt(inkCanvas.Strokes.Count - 1);
+                        (App.Current.MainWindow as MainWindow).timeMachine.Redo();
                         break;
 
                     case "More":

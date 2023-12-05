@@ -1124,7 +1124,7 @@ namespace Cokee.ClassService
         private StrokeCollection ReplacedStroke;
         private StrokeCollection AddedStroke;
         private StrokeCollection CuboidStrokeCollection;
-        private TimeMachine timeMachine = new TimeMachine();
+        public TimeMachine timeMachine = new TimeMachine();
 
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
