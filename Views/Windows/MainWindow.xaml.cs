@@ -565,29 +565,11 @@ namespace Cokee.ClassService
             Win32Func.SetWindowLong(hwnd, -20, newStyle);
         }
 
-        private void inkcanvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            eraser.Visibility = Visibility.Collapsed;
-        }
+        
 
-        private void inkcanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (inkTool.isEraser)
-            {
-                Point mousePosition = e.GetPosition(this);
-                TranslateTransform translate = (TranslateTransform)eraser.RenderTransform;
-                eraserTrans.X = mousePosition.X - eraser.ActualWidth / 2;
-                eraserTrans.Y = mousePosition.Y - eraser.ActualHeight / 2;
-            }
-            else eraser.Visibility = Visibility.Collapsed;
-        }
+    
 
-        private void inkcanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (inkTool.isEraser && Catalog.appSettings.EraseByPointEnable)
-                eraser.Visibility = Visibility.Visible;
-            else eraser.Visibility = Visibility.Collapsed;
-        }
+        
 
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
