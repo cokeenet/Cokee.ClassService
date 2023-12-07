@@ -20,7 +20,7 @@
     <Grid x:Name="MainGrid" Focusable="False">
 
         <Grid x:Name="inkGrid">
-            <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False" MouseMove="inkcanvas_MouseMove" MouseDown="inkcanvas_MouseDown" MouseUp="inkcanvas_MouseUp">
+            <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False">
                 <InkCanvas.DefaultDrawingAttributes>
                     <DrawingAttributes Color="Red" Height="3.5" Width="3.5" />
                 </InkCanvas.DefaultDrawingAttributes>

@@ -55,7 +55,7 @@ namespace Cokee.ClassService
                 if (args.Contains("-scrsave")) Catalog.isScrSave = true;
                 else if (!args.Contains("-m"))
                 {
-                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
+                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 3) Shutdown();
                 }
             }
         }

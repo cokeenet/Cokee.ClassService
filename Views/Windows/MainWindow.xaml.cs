@@ -492,6 +492,7 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
+                timeMachine.ClearStrokeHistory();
                 if (inkTool.Visibility == Visibility.Collapsed || inkTool.isPPT)
                 {
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
@@ -1091,7 +1092,7 @@ namespace Cokee.ClassService
 
         #region TimeMachine
 
-        private enum CommitReason
+        public enum CommitReason
         {
             UserInput,
             CodeInput,
@@ -1101,7 +1102,7 @@ namespace Cokee.ClassService
             Rotate
         }
 
-        private CommitReason _currentCommitType = CommitReason.UserInput;
+        public CommitReason _currentCommitType = CommitReason.UserInput;
         private bool IsEraseByPoint => inkcanvas.EditingMode == InkCanvasEditingMode.EraseByPoint;
         private StrokeCollection ReplacedStroke;
         private StrokeCollection AddedStroke;
