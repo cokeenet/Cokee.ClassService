@@ -1,6 +1,12 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -17,23 +23,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Controls;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
-using Serilog;
-using Serilog.Core;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -566,11 +557,11 @@ namespace Cokee.ClassService
             Win32Func.SetWindowLong(hwnd, -20, newStyle);
         }
 
-        
 
-    
 
-        
+
+
+
 
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
