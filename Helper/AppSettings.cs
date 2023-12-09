@@ -16,6 +16,7 @@ namespace Cokee.ClassService.Helper
         public bool PPTFunctionEnable { get; set; } = true;
         public bool EraseByPointEnable { get; set; } = true;
         public bool UseMemberAvatar { get; set; } = false;
+        public bool SideCardEnable { get; set; } = true;
 
         [JsonIgnore]
         private bool _FileWatcherEnable { get; set; } = true;

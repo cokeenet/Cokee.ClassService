@@ -98,6 +98,17 @@
                     <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
                 </StackPanel>
                 <RichTextBox x:Name="richTextBox" Margin="5" />
+                <ui:CardControl Icon="PenProhibited32" Height="100">
+                    <ui:CardControl.Header>
+                        <StackPanel d:Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="13" FontWeight="Medium" Text="平滑墨迹" />
+                            <TextBlock
+                                FontSize="12" Opacity="0.7" Text="使用贝塞尔曲线平滑法优化墨迹" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable, Mode=TwoWay}" />
+                </ui:CardControl>
             </StackPanel>
         </Controls:TouchableScrollViewer>
     </Grid>

@@ -56,13 +56,37 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Visible">
+            <ui:Card.RenderTransform>
+                <TranslateTransform x:Name="cardtran" X="300"/>
+            </ui:Card.RenderTransform>
             <StackPanel>
-                <StackPanel VerticalAlignment="Top">
-                    <TextBlock Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" />
-                    <TextBlock Text="--:--" d:Text="2023年6月15日 星期六" FontSize="20" FontFamily="Cairo-Regular" />
+                <StackPanel VerticalAlignment="Top" Margin="15">
+                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" Foreground="White"/>
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 星期六" FontSize="20" FontFamily="Cairo-Regular" Foreground="White"/>
                 </StackPanel>
-                <StackPanel/>
+                <StackPanel Margin="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <ui:Button Content="随机抽取" Icon="ArrowShuffle48" Margin="5" Click="ShowRandom" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="学生管理" Icon="PeopleCommunity20" Margin="5" Click="StuMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="快速批注" Icon="Pen48"  Margin="5" Click="StartInk" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="截图" Icon="Screenshot24" Margin="5" Click="ScreenShot" MouseRightButtonDown="Button_MouseRightButtonDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="课程管理" Icon="List28"  Margin="5" Click="CourseMgr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
+                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
             </StackPanel>
         </ui:Card>
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">
@@ -142,7 +166,7 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11:11" />
             </ui:Badge>
         </Grid>
-        <Controls:TouchableScrollViewer Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
+        <Controls:TouchableScrollViewer x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
             <StackPanel Background="{ui:ThemeResource}">
                 <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
                 <RichTextBox x:Name="richTextBox" Margin="5" />

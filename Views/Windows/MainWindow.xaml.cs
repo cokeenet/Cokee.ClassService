@@ -96,13 +96,11 @@ namespace Cokee.ClassService
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-            hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));//挂钩
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.RemindLaterAt = 5;
             AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
-            AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
             if (Catalog.appSettings.FileWatcherEnable && !Catalog.isScrSave)
             {
                 IntiFileWatcher();
@@ -111,6 +109,12 @@ namespace Cokee.ClassService
             {
                 nameBadge.Visibility = Visibility.Visible;
                 nameBadge.Content = $"屏保模式";
+            }
+            else
+            {
+                hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+
             }
             if (Catalog.appSettings.MultiTouchEnable)
             {
@@ -222,13 +226,12 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                //var sw = Stopwatch.StartNew();
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
+                time1.Text = DateTime.Now.ToString("HH:mm:ss");
+                longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd");
                 var status = Schedule.GetNowCourse(schedule);
                 if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
                 new Thread(new ThreadStart(CheckOffice)).Start();
-                //  sw.Stop();
-                // Log.Information($"Timer:{sw.Elapsed.ToString("")}");
             }), DispatcherPriority.Background);
         }
 
@@ -398,7 +401,24 @@ namespace Cokee.ClassService
                 }
             }), DispatcherPriority.Normal);
         }
-
+        public void ToggleCard(bool isForceHide = false)
+        {
+            DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
+            DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
+            anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
+            anim1.EasingFunction = new CircleEase();
+            anim2.EasingFunction = new CircleEase();
+            if (sideCard.Visibility == Visibility.Collapsed || !isForceHide)
+            {
+                sideCard.Visibility = Visibility.Visible;
+                cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
+            }
+            else
+            {
+                cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
+                sideCard.Visibility = Visibility.Collapsed;
+            }
+        }
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
             //StartAnimation();
@@ -406,8 +426,12 @@ namespace Cokee.ClassService
             PicTimer_Elapsed();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
-            if (cardPopup.IsOpen) cardPopup.IsOpen = false;
-            else cardPopup.IsOpen = true;
+            if (!Catalog.appSettings.SideCardEnable)
+            {
+                if (cardPopup.IsOpen) cardPopup.IsOpen = false;
+                else cardPopup.IsOpen = true;
+            }
+            else ToggleCard();
         }
 
         private void StartAnimation(int time = 2, int angle = 180)
@@ -818,7 +842,7 @@ namespace Cokee.ClassService
             }
         }
 
-        private void ClearStrokes(bool isErasedByCode)
+        public void ClearStrokes(bool isErasedByCode)
         {
             _currentCommitType = CommitReason.ClearingCanvas;
             if (isErasedByCode) _currentCommitType = CommitReason.CodeInput;
