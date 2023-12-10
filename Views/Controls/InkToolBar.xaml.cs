@@ -1,4 +1,5 @@
 ﻿using Cokee.ClassService.Helper;
+
 using System;
 using System.Linq;
 using System.Windows;
@@ -7,8 +8,10 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+
 using Button = Wpf.Ui.Controls.Button;
 
 namespace Cokee.ClassService.Views.Controls
@@ -128,8 +131,9 @@ namespace Cokee.ClassService.Views.Controls
                         {
                             inkCanvas.Strokes.Remove(th.CurrentStroke);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            Catalog.HandleException(ex);
                         }
                         break;
 
@@ -139,9 +143,9 @@ namespace Cokee.ClassService.Views.Controls
                         {
                             inkCanvas.Strokes.Add(th1.CurrentStroke);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-
+                            Catalog.HandleException(ex);
                         }
                         break;
 
@@ -163,15 +167,16 @@ namespace Cokee.ClassService.Views.Controls
                 }
             }, DispatcherPriority.Normal);
         }
+
         public void ReleaseInk()
         {
             inkCanvas.IsEnabled = false;
             isEraser = false;
-            inkCanvas.Strokes.Clear();
+            (App.Current.MainWindow as MainWindow).ClearStrokes(true);
             inkCanvas.Background.Opacity = 0;
             Visibility = Visibility.Collapsed;
-            (App.Current.MainWindow as MainWindow).timeMachine.ClearStrokeHistory();
         }
+
         private void SetBtnState(Button? btn)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -184,7 +189,7 @@ namespace Cokee.ClassService.Views.Controls
             }, DispatcherPriority.Normal);
         }
 
-        private void ClearScr(object sender, MouseButtonEventArgs e) => inkCanvas.Strokes.Clear();
+        private void ClearScr(object sender, MouseButtonEventArgs e) => (App.Current.MainWindow as MainWindow).ClearStrokes(true);
 
         private void ColorBtn(object sender, RoutedEventArgs e)
         {

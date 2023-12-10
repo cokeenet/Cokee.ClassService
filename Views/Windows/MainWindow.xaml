@@ -56,16 +56,16 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" Width="300" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Visible">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Visible">
             <ui:Card.RenderTransform>
-                <TranslateTransform x:Name="cardtran" X="300"/>
+                <TranslateTransform x:Name="cardtran" X="300" />
             </ui:Card.RenderTransform>
             <StackPanel>
-                <StackPanel VerticalAlignment="Top" Margin="15">
-                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03" FontSize="32" FontFamily="Cairo-Regular" Foreground="White"/>
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 星期六" FontSize="20" FontFamily="Cairo-Regular" Foreground="White"/>
+                <StackPanel VerticalAlignment="Top" Margin="5">
+                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Foreground="White" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 星期六" FontSize="18" FontFamily="Cairo-Regular" Foreground="White" />
                 </StackPanel>
-                <StackPanel Margin="10">
+                <StackPanel Margin="5">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -86,6 +86,8 @@
                             <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
+                    <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
+                    <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
                 </StackPanel>
             </StackPanel>
         </ui:Card>
@@ -118,8 +120,6 @@
                             </StackPanel>
                         </Grid>
                     </local:TouchableScrollViewer>
-                    <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
-                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
                 </Grid>
             </ui:Card>
         </Popup>
@@ -129,7 +129,7 @@
         <Controls:RandomControl x:Name="rancor" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300" StartRandom="RandomControl_StartRandom" Visibility="Collapsed" />
         <Controls:RandomResult x:Name="ranres" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="500" Visibility="Collapsed" />
         <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" d:Visibility="Collapsed" />
-        <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" />
+        <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" d:IsHidden="True" />
         <Grid x:Name="floatGrid" MouseLeftButtonDown="mouseDown" MouseLeftButtonUp="mouseUp" MouseMove="mouseMove" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Focusable="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -141,7 +141,7 @@
                     <TranslateTransform x:Name="transT" X="-10" Y="-100" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center"/>
+            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center" />
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill" Grid.Row="1">
                 <Image.Effect>
                     <DropShadowEffect ShadowDepth="1" />

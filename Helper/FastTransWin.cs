@@ -70,7 +70,7 @@ namespace Cokee.ClassService.Helper
         {
             if (this._dwmEnabled)
             {
-               // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | 32L)));
+                // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | 32L)));
                 return;
             }
             base.Background = Brushes.Transparent;
@@ -81,10 +81,10 @@ namespace Cokee.ClassService.Helper
         {
             if (this._dwmEnabled)
             {
-               // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & -33L)));
+                // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & -33L)));
                 return;
             }
-           // base.Background = BrushCreator.GetOrCreate("#0100000");
+            //base.Background = BrushCreator.GetOrCreate("#0100000");
         }
 
         // Token: 0x04000008 RID: 8

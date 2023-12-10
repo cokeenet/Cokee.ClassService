@@ -1,10 +1,14 @@
 ﻿using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,8 +27,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -69,6 +75,7 @@ namespace Cokee.ClassService
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
             DpiChanged += new DpiChangedEventHandler(DisplaySettingsChanged);
+            SizeChanged += new SizeChangedEventHandler(DisplaySettingsChanged);
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             picTimer.Elapsed += PicTimer_Elapsed;
@@ -114,7 +121,6 @@ namespace Cokee.ClassService
             {
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-
             }
             if (Catalog.appSettings.MultiTouchEnable)
             {
@@ -124,7 +130,6 @@ namespace Cokee.ClassService
                 inkcanvas.TouchDown += MainWindow_TouchDown;
             }
             inkcanvas.StrokeCollected += inkcanvas_StrokeCollected;
-
             timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
@@ -231,13 +236,13 @@ namespace Cokee.ClassService
                 longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd");
                 var status = Schedule.GetNowCourse(schedule);
                 if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
-                new Thread(new ThreadStart(CheckOffice)).Start();
+                if (Catalog.appSettings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
             }), DispatcherPriority.Background);
         }
 
         public void CheckOffice()
         {
-            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null && Catalog.appSettings.PPTFunctionEnable)
+            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
             {
                 pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
 
@@ -264,7 +269,7 @@ namespace Cokee.ClassService
                 }
                 //if (pptApplication == null) return;
             }
-            if (ProcessHelper.HasWordProcess() && wordApplication == null)
+            if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.appSettings.FileWatcherEnable)
             {
                 wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
                 if (wordApplication != null)
@@ -290,7 +295,7 @@ namespace Cokee.ClassService
                     };
                 }
             }
-            if (ProcessHelper.HasExcelProcess() && excelApplication == null)
+            if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.appSettings.FileWatcherEnable)
             {
                 excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
                 if (excelApplication != null)
@@ -323,7 +328,7 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 page = 0;
-                inkcanvas.Strokes.Clear();
+                (App.Current.MainWindow as MainWindow).ClearStrokes(true);
                 pptControls.Visibility = Visibility.Collapsed;
                 Catalog.SetWindowStyle(1);
                 inkcanvas.IsEnabled = false;
@@ -401,14 +406,15 @@ namespace Cokee.ClassService
                 }
             }), DispatcherPriority.Normal);
         }
-        public void ToggleCard(bool isForceHide = false)
+
+        public void ToggleCard(bool isForceShow = false)
         {
             DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
             DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
-            anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
-            anim1.EasingFunction = new CircleEase();
-            anim2.EasingFunction = new CircleEase();
-            if (sideCard.Visibility == Visibility.Collapsed || !isForceHide)
+            anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
+            anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+            anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+            if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
             {
                 sideCard.Visibility = Visibility.Visible;
                 cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
@@ -416,9 +422,9 @@ namespace Cokee.ClassService
             else
             {
                 cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-                sideCard.Visibility = Visibility.Collapsed;
             }
         }
+
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
             //StartAnimation();
@@ -581,12 +587,6 @@ namespace Cokee.ClassService
             Win32Func.SetWindowLong(hwnd, -20, newStyle);
         }
 
-
-
-
-
-
-
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
             cardPopup.IsOpen = false;
@@ -627,14 +627,13 @@ namespace Cokee.ClassService
         private void MainWindow_TouchDown(object sender, TouchEventArgs e)
         {
             double boundWidth = e.GetTouchPoint(null).Bounds.Width;
-            if (inkcanvas.EditingMode == InkCanvasEditingMode.EraseByStroke) return;
             if (boundWidth > 20)
             {
                 inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
                 TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.EraseByPoint;
                 inkcanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
             }
-            else
+            else if (!inkTool.isEraser)
             {
                 TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.None;
                 inkcanvas.EditingMode = InkCanvasEditingMode.None;
@@ -758,7 +757,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                if (inkcanvas.EditingMode == InkCanvasEditingMode.EraseByStroke) return;
+                if (inkTool.isEraser) return;
                 if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
                 try
                 {
