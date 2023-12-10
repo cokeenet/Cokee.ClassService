@@ -4,6 +4,7 @@ using System.Windows;
 using Cokee.ClassService.Helper;
 
 using Newtonsoft.Json;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -12,18 +13,15 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-
     public partial class Settings : UiWindow
     {
         public Settings()
         {
             InitializeComponent();
-            this.Closing+=(a,b)=> 
-            { 
-                AppSettingsExtensions.SaveSettings(Catalog.appSettings);
-            }; 
+            this.Closing += (a, b) =>
+            {
+                AppSettingsExtensions.SaveSettings(Catalog.settings);
+            };
         }
-
-
     }
 }

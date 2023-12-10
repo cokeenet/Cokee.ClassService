@@ -41,7 +41,7 @@ namespace Cokee.ClassService.Views.Controls
                         if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
                         else isEraser = false;
                     };
-                    moreCard.DataContext = Catalog.appSettings;
+                    moreCard.DataContext = Catalog.settings;
                 }
                 this.IsVisibleChanged += (a, b) =>
                 {
@@ -120,7 +120,7 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.IsEnabled = true;
                         isEraser = true;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
-                        if (!Catalog.appSettings.EraseByPointEnable)
+                        if (!Catalog.settings.EraseByPointEnable)
                             inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                         else inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                         break;
@@ -229,13 +229,13 @@ namespace Cokee.ClassService.Views.Controls
                     case "EraseByShape":
                         if (En)
                         {
-                            Catalog.appSettings.EraseByPointEnable = true;
-                            Catalog.appSettings.SaveSettings();
+                            Catalog.settings.EraseByPointEnable = true;
+                            Catalog.settings.SaveSettings();
                         }
                         else
                         {
-                            Catalog.appSettings.EraseByPointEnable = false;
-                            Catalog.appSettings.SaveSettings();
+                            Catalog.settings.EraseByPointEnable = false;
+                            Catalog.settings.SaveSettings();
                         }
                         break;
 

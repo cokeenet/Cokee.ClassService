@@ -5,16 +5,22 @@ using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
 
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -54,7 +60,7 @@ namespace Cokee.ClassService
         public MsPpt.Application? pptApplication = null;
         public MsWord.Application? wordApplication = null;
         public MsExcel.Application? excelApplication = null;
-        public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.appSettings.FileWatcherFilter);
+        public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
 
         private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
@@ -108,7 +114,7 @@ namespace Cokee.ClassService
             AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
-            if (Catalog.appSettings.FileWatcherEnable && !Catalog.isScrSave)
+            if (Catalog.settings.FileWatcherEnable && !Catalog.isScrSave)
             {
                 IntiFileWatcher();
             }
@@ -122,7 +128,7 @@ namespace Cokee.ClassService
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
             }
-            if (Catalog.appSettings.MultiTouchEnable)
+            if (Catalog.settings.MultiTouchEnable)
             {
                 inkcanvas.StylusDown += MainWindow_StylusDown;
                 inkcanvas.StylusMove += MainWindow_StylusMove;
@@ -133,6 +139,7 @@ namespace Cokee.ClassService
             timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
+            GetCalendarInfo();
         }
 
         public void IntiFileWatcher()
@@ -166,7 +173,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (!Catalog.appSettings.UseMemberAvatar)
+                if (!Catalog.settings.UseMemberAvatar)
                 {
                     string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                     head.Source = new BitmapImage(new Uri(url));
@@ -233,11 +240,29 @@ namespace Cokee.ClassService
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
-                longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd");
+                //longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
                 var status = Schedule.GetNowCourse(schedule);
                 if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
-                if (Catalog.appSettings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
+                if (Catalog.settings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
             }), DispatcherPriority.Background);
+        }
+
+        public async void GetCalendarInfo()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var client = new HttpClient();
+            var json = await client.GetStringAsync($"https://opendata.baidu.com/api.php?tn=wisetpl&format=json&resource_id=39043&query={DateTime.Now.Year}年{DateTime.Now.Month}月");
+            JObject dt = JsonConvert.DeserializeObject<JObject>(json);
+            string fes = "";
+            foreach (var item in dt["data"][0]["almanac"])
+            {
+                if (item["month"].ToString() == DateTime.Now.Month.ToString() && item["day"].ToString() == DateTime.Now.Day.ToString()) fes = item["term"].ToString();
+            }
+            longDate.Text = $"{DateTime.Now.ToString("yyyy年MM月dd日 ddd")} {fes}";
+            sw.Stop();
+            Log.Information($"获取节假日信息用时:{sw.Elapsed.TotalSeconds}s");
         }
 
         public void CheckOffice()
@@ -269,7 +294,7 @@ namespace Cokee.ClassService
                 }
                 //if (pptApplication == null) return;
             }
-            if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.appSettings.FileWatcherEnable)
+            if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
             {
                 wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
                 if (wordApplication != null)
@@ -295,7 +320,7 @@ namespace Cokee.ClassService
                     };
                 }
             }
-            if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.appSettings.FileWatcherEnable)
+            if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
             {
                 excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
                 if (excelApplication != null)
@@ -432,7 +457,7 @@ namespace Cokee.ClassService
             PicTimer_Elapsed();
             isDragging = false;
             floatGrid.ReleaseMouseCapture();
-            if (!Catalog.appSettings.SideCardEnable)
+            if (!Catalog.settings.SideCardEnable)
             {
                 if (cardPopup.IsOpen) cardPopup.IsOpen = false;
                 else cardPopup.IsOpen = true;
@@ -611,7 +636,9 @@ namespace Cokee.ClassService
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
 
         private void QuickFix(object sender, RoutedEventArgs e)
-        { return; }//Catalog.CreateWindow<QuickFix>();
+        {
+            Catalog.ToggleControlVisible(logview);
+        }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {

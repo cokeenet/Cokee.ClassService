@@ -29,7 +29,7 @@ namespace Cokee.ClassService.Views.Pages
                 else micaInfo.IsOpen = false;
                 this.IsVisibleChanged += (a, b) =>
                 {
-                    this.DataContext = Catalog.appSettings;
+                    this.DataContext = Catalog.settings;
 
                     if (!(bool)b.NewValue) SaveData();
                 };
@@ -42,7 +42,7 @@ namespace Cokee.ClassService.Views.Pages
 
         public void SaveData()
         {
-            Catalog.appSettings.SaveSettings();
+            Catalog.settings.SaveSettings();
         }
 
         private void CheckUpdate(object sender, RoutedEventArgs e)

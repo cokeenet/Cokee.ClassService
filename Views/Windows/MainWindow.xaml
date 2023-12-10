@@ -56,14 +56,14 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Center" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Visible">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible">
             <ui:Card.RenderTransform>
                 <TranslateTransform x:Name="cardtran" X="300" />
             </ui:Card.RenderTransform>
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
                     <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Foreground="White" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 星期六" FontSize="18" FontFamily="Cairo-Regular" Foreground="White" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="18" FontFamily="Cairo-Regular" Foreground="White" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>
@@ -86,8 +86,10 @@
                             <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
-                    <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
+                    <Grid>
+                        <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
+                        <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
+                    </Grid>
                 </StackPanel>
             </StackPanel>
         </ui:Card>

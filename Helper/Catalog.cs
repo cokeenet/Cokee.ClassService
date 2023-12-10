@@ -29,7 +29,7 @@ namespace Cokee.ClassService.Helper
         public static bool isScrSave = false;
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
-        public static AppSettings appSettings = AppSettingsExtensions.LoadSettings();
+        public static AppSettings settings = AppSettingsExtensions.LoadSettings();
 
         public static SnackbarService? GlobalSnackbarService;
 
