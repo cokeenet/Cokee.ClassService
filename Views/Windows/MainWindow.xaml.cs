@@ -1,17 +1,12 @@
 ﻿using AutoUpdaterDotNET;
-
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
-
 using Microsoft.Win32;
-
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,10 +28,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -421,59 +414,63 @@ namespace Cokee.ClassService
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                     {
-                        Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
-                        if (File.Exists(Pres.FullName) && Pres.IsFullyDownloaded)
-                        {
-                            if (!Directory.Exists(Catalog.CONFIG_DIR + "\\PPTs")) Directory.CreateDirectory(Catalog.CONFIG_DIR + "\\PPTs");
-                            File.Copy(Pres.FullName, Catalog.CONFIG_DIR + "\\PPTs\\" + Pres.Name, true);
-                        }
+                        Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                     }
                 }
-            }), DispatcherPriority.Normal);
+            }), DispatcherPriority.Background);
         }
 
         public void ToggleCard(bool isForceShow = false)
         {
-            DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
-            DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
-            anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
-            anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
-            anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
-            if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                sideCard.Visibility = Visibility.Visible;
-                cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
-            }
-            else
-            {
-                cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-            }
+                DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
+                DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
+                anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
+                anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
+                {
+                    sideCard.Visibility = Visibility.Visible;
+                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
+                }
+                else
+                {
+                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
+                }
+            }), DispatcherPriority.Background);
         }
 
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
-            //StartAnimation();
-            IconAnimation(true);
-            PicTimer_Elapsed();
-            isDragging = false;
-            floatGrid.ReleaseMouseCapture();
-            if (!Catalog.settings.SideCardEnable)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (cardPopup.IsOpen) cardPopup.IsOpen = false;
-                else cardPopup.IsOpen = true;
-            }
-            else ToggleCard();
+                //StartAnimation();
+                IconAnimation(true);
+                PicTimer_Elapsed();
+                isDragging = false;
+                floatGrid.ReleaseMouseCapture();
+                if (!Catalog.settings.SideCardEnable)
+                {
+                    if (cardPopup.IsOpen) cardPopup.IsOpen = false;
+                    else cardPopup.IsOpen = true;
+                }
+                else ToggleCard();
+            }), DispatcherPriority.Background);
         }
 
         private void StartAnimation(int time = 2, int angle = 180)
         {
-            DoubleAnimation doubleAnimation = new DoubleAnimation();
-            doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
-            doubleAnimation.EasingFunction = new CircleEase();
-            //doubleAnimation.From = 0;
-            // doubleAnimation.To = 360;
-            doubleAnimation.By = angle;
-            rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                DoubleAnimation doubleAnimation = new DoubleAnimation();
+                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
+                doubleAnimation.EasingFunction = new CircleEase();
+                //doubleAnimation.From = 0;
+                // doubleAnimation.To = 360;
+                doubleAnimation.By = angle;
+                rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
+            }), DispatcherPriority.Background);
         }
 
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Info12, int autoHideTime = 0)

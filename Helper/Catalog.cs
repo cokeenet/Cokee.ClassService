@@ -11,8 +11,6 @@ using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
-using Clipboard = Wpf.Ui.Common.Clipboard;
-
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -27,6 +25,7 @@ namespace Cokee.ClassService.Helper
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
         public static bool isScrSave = false;
+        public static IEasingFunction easingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
