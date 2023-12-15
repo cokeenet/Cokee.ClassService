@@ -81,7 +81,7 @@ namespace Cokee.ClassService.Helper
                     {
                         await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
                     }
-            });
+            }, DispatcherPriority.Background);
         }
 
         public static void CreateWindow<T>() where T : Window, new()
@@ -100,7 +100,7 @@ namespace Cokee.ClassService.Helper
 
         public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            new Thread(new ThreadStart(() =>
             {
                 Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
                 if (File.Exists(filePath) && isFullyDownloaded)
@@ -108,14 +108,13 @@ namespace Cokee.ClassService.Helper
                     if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
                     var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
                     if (File.Exists(backupPath) && new FileInfo(backupPath).Length != new FileInfo(filePath).Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
-                    new Thread(new ThreadStart(() =>
                     {
                         File.Copy(filePath, backupPath, true);
                     }
-                 )).Start();
+
                 }
                 else Catalog.ShowInfo($"文件不存在或未下载。");
-            }, DispatcherPriority.Normal);
+            })).Start();
         }
 
         public static void LogOutputSink()
