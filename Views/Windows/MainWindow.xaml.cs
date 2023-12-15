@@ -30,6 +30,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -430,7 +432,19 @@ namespace Cokee.ClassService
                 anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
                 anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
                 if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
-                {
+                { 
+                    Random random = new Random();
+
+                    // 获取 Colors 类中定义的颜色数量
+                    int colorCount = typeof(Colors).GetProperties().Length;
+
+                    // 生成随机索引
+                    int randomIndex = random.Next(colorCount);
+
+                    // 获取随机颜色
+                    Color randomColor = ((Color)ColorConverter.ConvertFromString(typeof(Colors).GetProperties()[randomIndex].Name));
+                    randomColor.A = (byte)(randomColor.A - 100);
+                    sideCard.Background=new SolidColorBrush(randomColor);
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
                 }
@@ -541,16 +555,13 @@ namespace Cokee.ClassService
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
                     else inkTool.SetCursorMode(1);
                     Catalog.SetWindowStyle(0);
-                    inkcanvas.IsEnabled = true;
                     inkTool.Visibility = Visibility.Visible;
                     IconAnimation(false, SymbolRegular.Pen32);
                 }
                 else
                 {
                     Catalog.SetWindowStyle(1);
-                    inkcanvas.IsEnabled = false;
                     inkTool.Visibility = Visibility.Collapsed;
-                    inkcanvas.Background.Opacity = 0;
                     IconAnimation(true);
                 }
             }));

@@ -75,16 +75,16 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="PenProhibited32">
+                <ui:CardControl Margin="5" Icon="CardUi24">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
-                        FontSize="13" FontWeight="Medium" Text="平滑墨迹" />
+                        FontSize="13" FontWeight="Medium" Text="侧边卡片样式" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="使用贝塞尔曲线平滑法优化墨迹" />
+                                FontSize="12" Opacity="0.7" Text="禁用则使用旧的Popup弹出窗" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding DarkModeEnable, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsChecked="{Binding SideCardEnable, Mode=TwoWay}" />
                 </ui:CardControl>
                 <TextBlock Text="Debug 调试功能" FontSize="16" Margin="5" />
                 <StackPanel Orientation="Horizontal">

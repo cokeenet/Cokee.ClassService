@@ -22,7 +22,7 @@
         <Grid x:Name="inkGrid">
             <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False">
                 <InkCanvas.DefaultDrawingAttributes>
-                    <DrawingAttributes Color="Red" Height="3.5" Width="3.5" />
+                    <DrawingAttributes Color="Red" Height="3.5" Width="3.5" FitToCurve="True" />
                 </InkCanvas.DefaultDrawingAttributes>
                 <InkCanvas.Background>
                     <SolidColorBrush Color="White" Opacity="0.00" />
@@ -56,7 +56,20 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Center" Background="{ui:ThemeResource}" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0">
+            <ui:Card.Background>
+                <RadialGradientBrush Center="5,5">
+                    <GradientStop Offset="1" Color="#FFE0BFBF" />
+                    <GradientStop Offset="10" Color="#FF7C7C7C" />
+
+                </RadialGradientBrush>
+            </ui:Card.Background>
+            <ui:Card.BorderBrush>
+                <RadialGradientBrush Center="5,5">
+                    <GradientStop Offset="1" Color="#FFE0BFBF" />
+                </RadialGradientBrush>
+            </ui:Card.BorderBrush>
+
             <ui:Card.RenderTransform>
                 <TranslateTransform x:Name="cardtran" X="300" />
             </ui:Card.RenderTransform>
