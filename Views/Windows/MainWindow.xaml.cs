@@ -291,8 +291,8 @@ namespace Cokee.ClassService
                             Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                         }
                     }
+                    else Catalog.ReleaseCOMObject(pptApplication);
                 }
-                //if (pptApplication == null) return;
             }
             if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
             {
@@ -300,6 +300,14 @@ namespace Cokee.ClassService
                 if (wordApplication != null)
                 {
                     Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
+                    wordApplication.DocumentOpen += (Doc) =>
+                    {
+                        Catalog.BackupFile(Doc.FullName, Doc.Name);
+                    };
+                    wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                    {
+                        Catalog.ReleaseCOMObject(wordApplication);
+                    };
                     if (wordApplication.Documents.Count > 0)
                     {
                         foreach (MsWord.Document item in wordApplication.Documents)
@@ -307,17 +315,7 @@ namespace Cokee.ClassService
                             Catalog.BackupFile(item.FullName, item.Name);
                         }
                     }
-                    wordApplication.DocumentOpen += (Doc) =>
-                    {
-                        Catalog.BackupFile(Doc.FullName, Doc.Name);
-                    };
-                    wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
-                    {
-                        Catalog.ShowInfo("尝试释放Word对象");
-                        try { Marshal.ReleaseComObject(wordApplication); }
-                        catch { }
-                        wordApplication = null;
-                    };
+                    else Catalog.ReleaseCOMObject(wordApplication);
                 }
             }
             if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
@@ -326,6 +324,14 @@ namespace Cokee.ClassService
                 if (excelApplication != null)
                 {
                     Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
+                    excelApplication.WorkbookOpen += (Workbook) =>
+                    {
+                        Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                    };
+                    excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                    {
+                        Catalog.ReleaseCOMObject(excelApplication);
+                    };
                     if (excelApplication.Workbooks.Count > 0)
                     {
                         foreach (MsExcel.Workbook item in excelApplication.Workbooks)
@@ -333,17 +339,7 @@ namespace Cokee.ClassService
                             Catalog.BackupFile(item.FullName, item.Name);
                         }
                     }
-                    excelApplication.WorkbookOpen += (Workbook) =>
-                    {
-                        Catalog.BackupFile(Workbook.FullName, Workbook.Name);
-                    };
-                    excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
-                    {
-                        Catalog.ShowInfo("尝试释放Excel对象");
-                        try { Marshal.ReleaseComObject(excelApplication); }
-                        catch { }
-                        excelApplication = null;
-                    };
+                    else Catalog.ReleaseCOMObject(excelApplication);
                 }
             }
         }
@@ -383,7 +379,6 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 page = 0;
-
                 pptControls.Visibility = Visibility.Collapsed;
                 pptApplication.PresentationClose -= PptApplication_PresentationClose;
                 pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
@@ -394,7 +389,7 @@ namespace Cokee.ClassService
                 IconAnimation(true);
                 try
                 {
-                    Marshal.ReleaseComObject(pptApplication);
+                    Marshal.FinalReleaseComObject(pptApplication);
                 }
                 catch
                 {

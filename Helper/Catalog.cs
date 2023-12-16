@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -106,12 +107,13 @@ namespace Cokee.ClassService.Helper
                 Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
                 if (File.Exists(filePath) && isFullyDownloaded)
                 {
+                    var a = new FileInfo(filePath);
                     if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
                     var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
-                    if (File.Exists(backupPath) && new FileInfo(backupPath).Length != new FileInfo(filePath).Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
+                    if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
                     new Thread(new ThreadStart(() =>
                     {
-                        File.Copy(filePath, backupPath, true);
+                        a.CopyTo(backupPath, true);
                     }
                  )).Start();
                 }
@@ -119,10 +121,14 @@ namespace Cokee.ClassService.Helper
             }, DispatcherPriority.Normal);
         }
 
-        public static void LogOutputSink()
+        public static void ReleaseCOMObject(object o)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                Catalog.ShowInfo($"尝试释放 {o.GetType().Name} 对象");
+                try { Marshal.FinalReleaseComObject(o); }
+                catch { }
+                o = null;
             }, DispatcherPriority.Normal);
         }
 
