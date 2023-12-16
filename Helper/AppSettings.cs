@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
-using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
@@ -14,6 +13,28 @@ namespace Cokee.ClassService.Helper
         public bool EraseByPointEnable { get; set; } = true;
         public bool UseMemberAvatar { get; set; } = false;
         public bool SideCardEnable { get; set; } = true;
+
+        private bool _FitCurveEnable { get; set; } = false;
+        public bool FitCurveEnable
+        {
+            get { return _FitCurveEnable; }
+            set
+            {
+                if (value != _FitCurveEnable)
+                {
+                    _FitCurveEnable = value;
+                    if (value)
+                    {
+                        (App.Current.MainWindow as MainWindow).inkcanvas.DefaultDrawingAttributes.FitToCurve = true;
+                    }
+                    else
+                    {
+                        (App.Current.MainWindow as MainWindow).inkcanvas.DefaultDrawingAttributes.FitToCurve = false;
+                    }
+                }
+            }
+        }
+
 
         public string FileWatcherFilter { get; set; } = "*.*";
 

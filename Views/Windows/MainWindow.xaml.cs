@@ -1,17 +1,12 @@
 ﻿using AutoUpdaterDotNET;
-
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
-
 using Microsoft.Win32;
-
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,10 +28,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -269,16 +264,18 @@ namespace Cokee.ClassService
         {
             if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
             {
-                pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-
-                if (pptApplication != null)
+                try
                 {
-                    Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-                    if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
-                    pptApplication.PresentationClose += PptApplication_PresentationClose;
-                    pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                    pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                    pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+
+                    if (pptApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
+                        if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
+                        pptApplication.PresentationClose += PptApplication_PresentationClose;
+                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
 
                     if (pptApplication.SlideShowWindows.Count >= 1)
                     {
@@ -349,7 +346,7 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 page = 0;
-                (App.Current.MainWindow as MainWindow).ClearStrokes(true);
+                ClearStrokes(true);
                 pptControls.Visibility = Visibility.Collapsed;
                 Catalog.SetWindowStyle(1);
                 inkcanvas.IsEnabled = false;
@@ -367,7 +364,7 @@ namespace Cokee.ClassService
             {
                 if (!inkTool.isPPT) return;
                 page = Wn.View.CurrentShowPosition;
-                inkcanvas.Strokes.Clear();
+                ClearStrokes(true);
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
@@ -416,59 +413,76 @@ namespace Cokee.ClassService
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                     {
-                        Catalog.ShowInfo($"尝试备份文件。", $"{Pres.FullName}");
-                        if (File.Exists(Pres.FullName) && Pres.IsFullyDownloaded)
-                        {
-                            if (!Directory.Exists(Catalog.CONFIG_DIR + "\\PPTs")) Directory.CreateDirectory(Catalog.CONFIG_DIR + "\\PPTs");
-                            File.Copy(Pres.FullName, Catalog.CONFIG_DIR + "\\PPTs\\" + Pres.Name, true);
-                        }
+                        Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                     }
                 }
-            }), DispatcherPriority.Normal);
+            }), DispatcherPriority.Background);
         }
 
         public void ToggleCard(bool isForceShow = false)
         {
-            DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
-            DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
-            anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
-            anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
-            anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
-            if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                sideCard.Visibility = Visibility.Visible;
-                cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
-            }
-            else
-            {
-                cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-            }
+                DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
+                DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
+                anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
+                anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
+                {
+                    Random random = new Random();
+
+                    // 获取 Colors 类中定义的颜色数量
+                    int colorCount = typeof(Colors).GetProperties().Length;
+
+                    // 生成随机索引
+                    int randomIndex = random.Next(colorCount);
+
+                    // 获取随机颜色
+                    Color randomColor = ((Color)ColorConverter.ConvertFromString(typeof(Colors).GetProperties()[randomIndex].Name));
+                    randomColor.A = (byte)(randomColor.A -80);
+
+                    sideCard.Background = new SolidColorBrush(randomColor);
+                    sideCard.Visibility = Visibility.Visible;
+                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
+                }
+                else
+                {
+                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
+                }
+            }), DispatcherPriority.Background);
         }
 
         private void mouseUp(object sender, MouseButtonEventArgs e)
         {
-            //StartAnimation();
-            IconAnimation(true);
-            PicTimer_Elapsed();
-            isDragging = false;
-            floatGrid.ReleaseMouseCapture();
-            if (!Catalog.settings.SideCardEnable)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (cardPopup.IsOpen) cardPopup.IsOpen = false;
-                else cardPopup.IsOpen = true;
-            }
-            else ToggleCard();
+                //StartAnimation();
+                IconAnimation(true);
+                PicTimer_Elapsed();
+                isDragging = false;
+                floatGrid.ReleaseMouseCapture();
+                if (!Catalog.settings.SideCardEnable)
+                {
+                    if (cardPopup.IsOpen) cardPopup.IsOpen = false;
+                    else cardPopup.IsOpen = true;
+                }
+                else ToggleCard();
+            }), DispatcherPriority.Background);
         }
 
         private void StartAnimation(int time = 2, int angle = 180)
         {
-            DoubleAnimation doubleAnimation = new DoubleAnimation();
-            doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
-            doubleAnimation.EasingFunction = new CircleEase();
-            //doubleAnimation.From = 0;
-            // doubleAnimation.To = 360;
-            doubleAnimation.By = angle;
-            rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                DoubleAnimation doubleAnimation = new DoubleAnimation();
+                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
+                doubleAnimation.EasingFunction = new CircleEase();
+                //doubleAnimation.From = 0;
+                // doubleAnimation.To = 360;
+                doubleAnimation.By = angle;
+                rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
+            }), DispatcherPriority.Background);
         }
 
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Info12, int autoHideTime = 0)
@@ -539,16 +553,13 @@ namespace Cokee.ClassService
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
                     else inkTool.SetCursorMode(1);
                     Catalog.SetWindowStyle(0);
-                    inkcanvas.IsEnabled = true;
                     inkTool.Visibility = Visibility.Visible;
                     IconAnimation(false, SymbolRegular.Pen32);
                 }
                 else
                 {
                     Catalog.SetWindowStyle(1);
-                    inkcanvas.IsEnabled = false;
                     inkTool.Visibility = Visibility.Collapsed;
-                    inkcanvas.Background.Opacity = 0;
                     IconAnimation(true);
                 }
             }));

@@ -34,6 +34,7 @@ namespace Cokee.ClassService.Views.Controls
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
+                        
                     };
                     inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
                     inkCanvas.ActiveEditingModeChanged += (a, b) =>

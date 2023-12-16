@@ -24,7 +24,7 @@ namespace Cokee.ClassService.Helper
                 CLSIDFromProgIDEx(progID, out clsid);
             }
             //            catch
-            catch (Exception)
+            catch
             {
                 CLSIDFromProgID(progID, out clsid);
             }

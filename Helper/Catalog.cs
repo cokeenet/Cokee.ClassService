@@ -12,8 +12,6 @@ using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
 
-using Clipboard = Wpf.Ui.Common.Clipboard;
-
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -28,6 +26,7 @@ namespace Cokee.ClassService.Helper
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
         public static bool isScrSave = false;
+        public static IEasingFunction easingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
@@ -83,7 +82,7 @@ namespace Cokee.ClassService.Helper
                     {
                         await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
                     }
-            });
+            }, DispatcherPriority.Background);
         }
 
         public static void CreateWindow<T>() where T : Window, new()
@@ -102,7 +101,7 @@ namespace Cokee.ClassService.Helper
 
         public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            new Thread(new ThreadStart(() =>
             {
                 Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
                 if (File.Exists(filePath) && isFullyDownloaded)
@@ -115,10 +114,9 @@ namespace Cokee.ClassService.Helper
                     {
                         a.CopyTo(backupPath, true);
                     }
-                 )).Start();
                 }
                 else Catalog.ShowInfo($"文件不存在或未下载。");
-            }, DispatcherPriority.Normal);
+            })).Start();
         }
 
         public static void ReleaseCOMObject(object o)
