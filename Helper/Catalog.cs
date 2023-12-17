@@ -110,10 +110,7 @@ namespace Cokee.ClassService.Helper
                     if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
                     var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
                     if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
-                    new Thread(new ThreadStart(() =>
-                    {
-                        a.CopyTo(backupPath, true);
-                    }
+                    a.CopyTo(backupPath, true);
                 }
                 else Catalog.ShowInfo($"文件不存在或未下载。");
             })).Start();

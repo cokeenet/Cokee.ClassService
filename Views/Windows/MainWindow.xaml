@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
     x:Class="Cokee.ClassService.MainWindow"
         mc:Ignorable="d" FontFamily="Cairo-Regular"
-        Title="CokeeClassService"
+        Title="ClassService"
         Width="1920" Height="1080"
         Left="0" Top="0" Loaded="Window_Loaded"
         WindowStartupLocation="Manual"  ShowInTaskbar="False"
@@ -22,7 +22,7 @@
         <Grid x:Name="inkGrid">
             <InkCanvas x:Name="inkcanvas" EditingMode="Ink" IsEnabled="False" Focusable="False">
                 <InkCanvas.DefaultDrawingAttributes>
-                    <DrawingAttributes Color="Red" Height="3.5" Width="3.5" FitToCurve="True" />
+                    <DrawingAttributes Color="Red" Height="3.5" Width="3.5" />
                 </InkCanvas.DefaultDrawingAttributes>
                 <InkCanvas.Background>
                     <SolidColorBrush Color="White" Opacity="0.00" />
@@ -56,18 +56,12 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
             <ui:Card.Background>
-                <RadialGradientBrush Center="5,5">
-                    <GradientStop Offset="1" Color="#FFE0BFBF" />
-                    <GradientStop Offset="10" Color="#FF7C7C7C" />
-
-                </RadialGradientBrush>
+                <ImageBrush ImageSource="/Resources/bg1.jpg" Opacity="0.8" />
             </ui:Card.Background>
             <ui:Card.BorderBrush>
-                <RadialGradientBrush Center="5,5">
-                    <GradientStop Offset="1" Color="#FFE0BFBF" />
-                </RadialGradientBrush>
+                <SolidColorBrush Color="#FFE0BFBF" />
             </ui:Card.BorderBrush>
 
             <ui:Card.RenderTransform>
@@ -75,8 +69,8 @@
             </ui:Card.RenderTransform>
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
-                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Foreground="White" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="18" FontFamily="Cairo-Regular" Foreground="White" />
+                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Foreground="White" Margin="0,0,0,5" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="16" FontFamily="Cairo-Regular" Foreground="White" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>
@@ -95,14 +89,24 @@
                             <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
                             <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
-                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
+                    <StackPanel>
+                        <ui:InfoBar x:Name="birth" d:IsOpen="False" IsOpen="False" IsClosable="False" Severity="Success" Margin="5" d:Message="🎉 今天是 XXX 的生日！" />
+                        <ui:Card Margin="5,0,5,0" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock d:Text="本节课程:语文 11:30-12:40" Margin="0,0,0,5" />
+                                <TextBlock d:Text="下节课程:语文 11:30-12:40" />
+                            </StackPanel>
+                        </ui:Card>
+                    </StackPanel>
                     <Grid>
-                        <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Grid.Row="1"  Margin="5" Grid.ColumnSpan="2" />
-                        <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="18" FontFamily="Segoe UI Emoji" />
+                        <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Margin="5" />
+                        <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="19" FontFamily="Segoe UI Emoji" Foreground="Gold" />
                     </Grid>
+                    <TextBlock x:Name="Easter" Text="那，祝我，祝你，祝我们。" Margin="5" Visibility="Collapsed" />
                 </StackPanel>
             </StackPanel>
         </ui:Card>
@@ -156,7 +160,7 @@
                     <TranslateTransform x:Name="transT" X="-10" Y="-100" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <ui:Badge Appearance="Transparent" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center" />
+            <ui:Badge Appearance="Light" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center" />
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill" Grid.Row="1">
                 <Image.Effect>
                     <DropShadowEffect ShadowDepth="1" />

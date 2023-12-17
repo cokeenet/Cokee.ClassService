@@ -1,13 +1,4 @@
-﻿using AutoUpdaterDotNET;
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Windows;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -28,10 +19,24 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+using AutoUpdaterDotNET;
+
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+
+using Microsoft.Win32;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-using Color = System.Windows.Media.Color;
-using ColorConverter = System.Windows.Media.ColorConverter;
+
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -147,7 +152,6 @@ namespace Cokee.ClassService
                 desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
                 desktopWatcher.Created += DesktopWatcher_Changed;
                 desktopWatcher.Renamed += DesktopWatcher_Changed;
-                //desktopWatcher.Deleted += DesktopWatcher_Changed;
                 desktopWatcher.EnableRaisingEvents = true;
             }), DispatcherPriority.Normal);
         }
@@ -262,9 +266,9 @@ namespace Cokee.ClassService
 
         public void CheckOffice()
         {
-            if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
+            try
             {
-                try
+                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
                 {
                     pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
 
@@ -276,68 +280,73 @@ namespace Cokee.ClassService
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
                         pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                        if (pptApplication.SlideShowWindows.Count >= 1)
+                        {
+                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                        }
+                        if (pptApplication.Presentations.Count >= 1)
+                        {
+                            foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                            {
+                                Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                            }
+                        }
+                        else Catalog.ReleaseCOMObject(pptApplication);
+                    }
+                }
 
-                    if (pptApplication.SlideShowWindows.Count >= 1)
+                if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
+                {
+                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
+                    if (wordApplication != null)
                     {
-                        PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
-                    }
-                    if (pptApplication.Presentations.Count >= 1)
-                    {
-                        foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                        Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
+                        wordApplication.DocumentOpen += (Doc) =>
                         {
-                            Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                            Catalog.BackupFile(Doc.FullName, Doc.Name);
+                        };
+                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                        {
+                            Catalog.ReleaseCOMObject(wordApplication);
+                        };
+                        if (wordApplication.Documents.Count > 0)
+                        {
+                            foreach (MsWord.Document item in wordApplication.Documents)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
                         }
+                        else Catalog.ReleaseCOMObject(wordApplication);
                     }
-                    else Catalog.ReleaseCOMObject(pptApplication);
+                }
+                if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
+                {
+                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
+                    if (excelApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
+                        excelApplication.WorkbookOpen += (Workbook) =>
+                        {
+                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                        };
+                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                        {
+                            Catalog.ReleaseCOMObject(excelApplication);
+                        };
+                        if (excelApplication.Workbooks.Count > 0)
+                        {
+                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
+                        }
+                        else Catalog.ReleaseCOMObject(excelApplication);
+                    }
                 }
             }
-            if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
+            catch (Exception ex)
             {
-                wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
-                if (wordApplication != null)
-                {
-                    Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
-                    wordApplication.DocumentOpen += (Doc) =>
-                    {
-                        Catalog.BackupFile(Doc.FullName, Doc.Name);
-                    };
-                    wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
-                    {
-                        Catalog.ReleaseCOMObject(wordApplication);
-                    };
-                    if (wordApplication.Documents.Count > 0)
-                    {
-                        foreach (MsWord.Document item in wordApplication.Documents)
-                        {
-                            Catalog.BackupFile(item.FullName, item.Name);
-                        }
-                    }
-                    else Catalog.ReleaseCOMObject(wordApplication);
-                }
-            }
-            if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
-            {
-                excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
-                if (excelApplication != null)
-                {
-                    Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
-                    excelApplication.WorkbookOpen += (Workbook) =>
-                    {
-                        Catalog.BackupFile(Workbook.FullName, Workbook.Name);
-                    };
-                    excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
-                    {
-                        Catalog.ReleaseCOMObject(excelApplication);
-                    };
-                    if (excelApplication.Workbooks.Count > 0)
-                    {
-                        foreach (MsExcel.Workbook item in excelApplication.Workbooks)
-                        {
-                            Catalog.BackupFile(item.FullName, item.Name);
-                        }
-                    }
-                    else Catalog.ReleaseCOMObject(excelApplication);
-                }
+                Catalog.HandleException(ex, "COM对象");
             }
         }
 
@@ -377,10 +386,6 @@ namespace Cokee.ClassService
             {
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
-                pptApplication.PresentationClose -= PptApplication_PresentationClose;
-                pptApplication.SlideShowBegin -= PptApplication_SlideShowBegin;
-                pptApplication.SlideShowNextSlide -= PptApplication_SlideShowNextSlide;
-                pptApplication.SlideShowEnd -= PptApplication_SlideShowEnd;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("尝试释放PowerPoint对象");
                 IconAnimation(true);
@@ -430,19 +435,6 @@ namespace Cokee.ClassService
                 anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
                 if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
                 {
-                    Random random = new Random();
-
-                    // 获取 Colors 类中定义的颜色数量
-                    int colorCount = typeof(Colors).GetProperties().Length;
-
-                    // 生成随机索引
-                    int randomIndex = random.Next(colorCount);
-
-                    // 获取随机颜色
-                    Color randomColor = ((Color)ColorConverter.ConvertFromString(typeof(Colors).GetProperties()[randomIndex].Name));
-                    randomColor.A = (byte)(randomColor.A -80);
-
-                    sideCard.Background = new SolidColorBrush(randomColor);
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
                 }
@@ -570,6 +562,41 @@ namespace Cokee.ClassService
         private void Window_Closed(object sender, EventArgs e)
         {
             Log.Information($"Program Closed");
+        }
+
+        public void CheckBirthDay()
+        {
+            List<Student> students = Student.Load();
+            Student? nearest = null; int type = 0;
+            foreach (var person in students)
+            {
+                if (!person.BirthDay.HasValue) continue;
+                string shortBirthStr = person.BirthDay.Value.ToString("MM-dd");
+
+                if (DateTime.Now.ToString("MM-dd") == shortBirthStr)
+                {
+                    nearest = person; type = 1; break;
+                }
+                else if (DateTime.Now.AddDays(1).ToString("MM-dd") == shortBirthStr)
+                {
+                    nearest = person; type = 2; continue;
+                }
+            }
+            if (nearest != null)
+            {
+                if (type == 1)
+                {
+                    birth.IsOpen = true;
+                    birth.Message = $"🎉 今天是 {nearest.Name} 的生日！";
+                }
+                else if (type == 2)
+                {
+                    birth.IsOpen = true;
+                    birth.Message = $"🎉 明天是 {nearest.Name} 的生日！";
+                }
+                else birth.IsOpen = false;
+            }
+            else birth.IsOpen = false;
         }
 
         private void ShowStickys(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Sticky>();

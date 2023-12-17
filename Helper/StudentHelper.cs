@@ -71,6 +71,7 @@ namespace Cokee.ClassService.Helper
         public List<Student> students = new List<Student>();
         public string Name { get; set; }
         public int Score { get; set; }
+        public int ID { get; set; }
 
         public Class()
         {
@@ -82,6 +83,8 @@ namespace Cokee.ClassService.Helper
         public int ID { get; set; }
         public int Sex { get; set; }//0 girl 1 boy
         public string Name { get; set; }
+        public string ClassName { get; set; }
+        public int ClassID { get; set; }
         public int Score { get; set; }
         public DateTime? BirthDay { get; set; }
         public string? RoleStr { get; set; }

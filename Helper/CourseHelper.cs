@@ -79,9 +79,9 @@ namespace Cokee.ClassService.Helper
         public static CourseStatus GetNowCourse(Schedule schedule)
         {
             Course? course = null, nextCourse = null;
-            CourseNowStatus status = CourseNowStatus.NoCoursesScheduled;
-            if (schedule == null) return new CourseStatus(status);
             DateTime now = DateTime.Now;
+            CourseNowStatus status = CourseNowStatus.NoCoursesScheduled;
+            if (schedule == null || schedule.Courses.Length <= (int)now.DayOfWeek) return new CourseStatus(status);
             var coursesToday = schedule.Courses[(int)now.DayOfWeek];
             if (coursesToday != null)
             // 遍历课程列表，查找当前时间所在的课程
