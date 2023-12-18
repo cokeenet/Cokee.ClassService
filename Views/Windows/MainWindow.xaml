@@ -94,6 +94,8 @@
                         </StackPanel>
                     </Grid>
                     <StackPanel>
+
+                        <ui:Button Icon="Power28" Click="Button_Click"/>
                         <ui:InfoBar x:Name="birth" d:IsOpen="False" IsOpen="False" IsClosable="False" Severity="Success" Margin="5" d:Message="🎉 今天是 XXX 的生日！" />
                         <ui:Card Margin="5,0,5,0" Visibility="Collapsed">
                             <StackPanel>
