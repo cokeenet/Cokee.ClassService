@@ -146,7 +146,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                Catalog.ShowInfo($"初始化FileWatcher");
+                Catalog.ShowInfo($"FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
                 desktopWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 desktopWatcher.Changed += DesktopWatcher_Changed;
                 desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
@@ -431,8 +431,8 @@ namespace Cokee.ClassService
                 DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
                 DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
                 anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
-                anim1.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
-                anim2.EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                anim1.EasingFunction = Catalog.easingFunction;
+                anim2.EasingFunction = Catalog.easingFunction;
                 if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
                 {
                     sideCard.Visibility = Visibility.Visible;
@@ -469,7 +469,7 @@ namespace Cokee.ClassService
             {
                 DoubleAnimation doubleAnimation = new DoubleAnimation();
                 doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
-                doubleAnimation.EasingFunction = new CircleEase();
+                doubleAnimation.EasingFunction = Catalog.easingFunction;
                 //doubleAnimation.From = 0;
                 // doubleAnimation.To = 360;
                 doubleAnimation.By = angle;
@@ -477,14 +477,14 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Info12, int autoHideTime = 0)
+        public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty, int autoHideTime = 0)
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
                 DoubleAnimation doubleAnimation = new DoubleAnimation();
                 doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
-                doubleAnimation.EasingFunction = new CircleEase();
-                icon.Symbol = symbol;
+                doubleAnimation.EasingFunction = Catalog.easingFunction;
+                if (symbol != SymbolRegular.Empty) icon.Symbol = symbol;
                 if (!isHide)
                 {
                     doubleAnimation.From = 0;

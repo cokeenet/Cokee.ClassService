@@ -11,8 +11,6 @@ using System.Windows.Media.Animation;
 
 using Cokee.ClassService.Helper;
 
-using Wpf.Ui.Animations;
-
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -42,7 +40,7 @@ namespace Cokee.ClassService.Views.Controls
             DoubleAnimation anim2 = new DoubleAnimation(0, 368, TimeSpan.FromSeconds(1));
             DoubleAnimation anim1 = new DoubleAnimation(368, 0, TimeSpan.FromSeconds(1));
             anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
-            anim2.EasingFunction = new CircleEase();
+            anim2.EasingFunction = Catalog.easingFunction;
             if (!isUnplug)
             {
                 this.Visibility = Visibility.Visible;
@@ -100,7 +98,7 @@ namespace Cokee.ClassService.Views.Controls
                 }
                 return IntPtr.Zero;
             }
-            catch (Exception ex) { Catalog.HandleException(ex, "U盘检测功能 "); return IntPtr.Zero; }
+            catch { return IntPtr.Zero; }
         }
 
         public const int DBT_DEVICEARRIVAL = 0x8000;  //设备可用

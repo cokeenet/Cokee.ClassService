@@ -26,7 +26,7 @@ namespace Cokee.ClassService.Helper
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
         public static bool isScrSave = false;
-        public static IEasingFunction easingFunction = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+        public static IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();

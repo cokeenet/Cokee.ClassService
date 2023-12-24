@@ -34,7 +34,6 @@ namespace Cokee.ClassService.Views.Controls
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
                     {
                         penSlider.Value = b.NewDrawingAttributes.Width;
-                        
                     };
                     inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
                     inkCanvas.ActiveEditingModeChanged += (a, b) =>
@@ -130,7 +129,10 @@ namespace Cokee.ClassService.Views.Controls
                         var th = (App.Current.MainWindow as MainWindow).timeMachine.Undo();
                         try
                         {
-                            inkCanvas.Strokes.Remove(th.CurrentStroke);
+                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            if (th.StrokeHasBeenCleared) inkCanvas.Strokes.Remove(th.CurrentStroke);
+                            else inkCanvas.Strokes.Add(th.CurrentStroke);
+                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {
@@ -142,7 +144,11 @@ namespace Cokee.ClassService.Views.Controls
                         var th1 = (App.Current.MainWindow as MainWindow).timeMachine.Redo();
                         try
                         {
-                            inkCanvas.Strokes.Add(th1.CurrentStroke);
+                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            if (!th1.StrokeHasBeenCleared) inkCanvas.Strokes.Add(th1.CurrentStroke);
+                            else inkCanvas.Strokes.Remove(th1.CurrentStroke);
+
+                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {

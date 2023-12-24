@@ -12,6 +12,7 @@ using System.Windows.Controls.Primitives;
 using Wpf.Ui.Controls;
 using System.Collections;
 using System.Windows.Media.Animation;
+using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -35,13 +36,13 @@ namespace Cokee.ClassService.Views.Controls
 
         public void Toggle()
         {
-            DoubleAnimation doubleAnimation = new DoubleAnimation(330, 0, TimeSpan.FromSeconds(1));
-            doubleAnimation.EasingFunction = new CircleEase();
+            DoubleAnimation doubleAnimation = new DoubleAnimation(this.ActualWidth, 0, TimeSpan.FromSeconds(1));
+            doubleAnimation.EasingFunction = Catalog.easingFunction;
             doubleAnimation.Completed += async (a, b) =>
             {
                 await Task.Delay(TimeSpan.FromSeconds(10));
                 DoubleAnimation doubleAnimation = new DoubleAnimation(0, this.ActualWidth, TimeSpan.FromSeconds(1));
-                doubleAnimation.EasingFunction = new CircleEase();
+                doubleAnimation.EasingFunction = Catalog.easingFunction;
                 doubleAnimation.Completed += (a, b) => this.Visibility = Visibility.Collapsed;
                 this.RenderTransform.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
             };

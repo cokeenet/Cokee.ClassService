@@ -63,12 +63,12 @@ namespace Cokee.ClassService.Views.Controls
             if (!needHide)
             {
                 DoubleAnimation doubleAnimation = new DoubleAnimation(330, 0, TimeSpan.FromSeconds(1));
-                doubleAnimation.EasingFunction = new CircleEase();
+                doubleAnimation.EasingFunction = Catalog.easingFunction;
                 doubleAnimation.Completed += async (a, b) =>
                 {
                     await Task.Delay(TimeSpan.FromSeconds(10));
                     DoubleAnimation doubleAnimation = new DoubleAnimation(0, 330, TimeSpan.FromSeconds(1));
-                    doubleAnimation.EasingFunction = new CircleEase();
+                    doubleAnimation.EasingFunction = Catalog.easingFunction;
                     doubleAnimation.Completed += (a, b) => this.Visibility = Visibility.Collapsed;
                     transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
                 };
