@@ -45,7 +45,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 this.Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
-                string volumeLabel = string.IsNullOrEmpty(t.VolumeLabel) ? t.Name : t.VolumeLabel;
+                string volumeLabel = $"{t.Name}({t.VolumeLabel})";
 
                 disk = t.Name;
                 diskName.Text = volumeLabel;

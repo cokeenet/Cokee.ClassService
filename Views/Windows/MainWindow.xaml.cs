@@ -437,10 +437,12 @@ namespace Cokee.ClassService
                 {
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
+                    transT.Y= 0;
                 }
                 else
                 {
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
+                    transT.Y= -100;
                 }
             }), DispatcherPriority.Background);
         }
@@ -636,13 +638,13 @@ namespace Cokee.ClassService
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
             // 获取当前窗口样式
-            int currentStyle = Win32Func.GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
+            int currentStyle = Win32Helper.GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
 
             // 设置窗口样式，去掉 WS_EX_APPWINDOW，添加 WS_EX_TOOLWINDOW
             int newStyle = (currentStyle & ~0x00000040) | WS_EX_TOOLWINDOW;
 
             // 更新窗口样式
-            Win32Func.SetWindowLong(hwnd, -20, newStyle);
+            Win32Helper.SetWindowLong(hwnd, -20, newStyle);
         }
 
         private void ScreenShot(object sender, RoutedEventArgs e)
@@ -1195,6 +1197,15 @@ namespace Cokee.ClassService
             var result = status ? Visibility.Visible : Visibility.Collapsed;
             inkTool.redoBtn.Visibility = result;
             inkTool.redoBtn.IsEnabled = status;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //关闭显示器
+            Win32Helper.SendMessage(new WindowInteropHelper(this).Handle, Win32Helper.WM_SYSCOMMAND, Win32Helper.SC_MONITORPOWER, 2);
+
+            //打开显示器
+            //Win32Helper.SendMessage(this.Handle, WM_SYSCOMMAND, SC_MONITORPOWER, -1);
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
