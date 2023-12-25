@@ -58,7 +58,15 @@
         </Grid>
         <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
             <ui:Card.Background>
-                <ImageBrush ImageSource="/Resources/bg1.jpg" Opacity="0.8" />
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Image Source="/Resources/bg1.jpg" Opacity="1">
+                            <Image.Effect>
+                                <BlurEffect Radius="8"/>
+                            </Image.Effect>
+                        </Image>
+                    </VisualBrush.Visual>
+                </VisualBrush>
             </ui:Card.Background>
             <ui:Card.BorderBrush>
                 <SolidColorBrush Color="#FFE0BFBF" />
@@ -95,7 +103,7 @@
                     </Grid>
                     <StackPanel>
 
-                        <ui:Button Icon="Power28" Click="Button_Click"/>
+                        <ui:Button Icon="Power28" Click="Button_Click" HorizontalAlignment="Right" Margin="5"/>
                         <ui:InfoBar x:Name="birth" d:IsOpen="False" IsOpen="False" IsClosable="False" Severity="Success" Margin="5" d:Message="🎉 今天是 XXX 的生日！" />
                         <ui:Card Margin="5,0,5,0" Visibility="Collapsed">
                             <StackPanel>
@@ -106,7 +114,8 @@
                     </StackPanel>
                     <Grid>
                         <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Margin="5" />
-                        <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="19" FontFamily="Segoe UI Emoji" Foreground="Gold" />
+                        <ui:SymbolIcon HorizontalAlignment="Right" Symbol="TreeEvergreen20" FontSize="19" Filled="True" Foreground="Green" Margin="5"/>
+                        <!-- <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="19" FontFamily="Segoe UI Emoji" Foreground="Gold" />-->
                     </Grid>
                     <TextBlock x:Name="Easter" Text="那，祝我，祝你，祝我们。" Margin="5" Visibility="Collapsed" />
                 </StackPanel>

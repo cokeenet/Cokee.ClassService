@@ -47,6 +47,7 @@ namespace Cokee.ClassService
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+           
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Accent.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
@@ -63,15 +64,18 @@ namespace Cokee.ClassService
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = e.ExceptionObject as Exception;
+           
             if (ex == null) ex = new Exception("Null异常。");
-            Log.Error(ex, "发生错误");
-            Catalog.HandleException(ex, "未预期的异常! ");
+            Log.Error(ex, "AppDomain异常");
+            Catalog.HandleException(ex, "AppDomain异常! ");
+            
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception, "发生错误");
-            Catalog.HandleException(e.Exception, "未预期的异常! ");
+            Catalog.HandleException(e.Exception, "未捕获的异常! ");
+            
             e.Handled = true;
         }
     }

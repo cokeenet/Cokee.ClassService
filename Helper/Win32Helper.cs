@@ -9,7 +9,7 @@ using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
-    public static class Win32Func
+    public static class Win32Helper
     {
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -37,6 +37,12 @@ namespace Cokee.ClassService.Helper
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hwnd, IntPtr parentHwnd);
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint msg, uint wParam, int lParam);
+
+        public const uint WM_SYSCOMMAND = 0x0112;
+
+        public const uint SC_MONITORPOWER = 0xF170;
 
         public static IntPtr programHandle = IntPtr.Zero;
 
@@ -56,7 +62,7 @@ namespace Cokee.ClassService.Helper
                 if (FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null) != IntPtr.Zero)
                 {
                     // 找到当前第一个 WorkerW 窗口的，后一个窗口，及第二个 WorkerW 窗口。
-                    IntPtr tempHwnd = Win32Func.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
+                    IntPtr tempHwnd = Win32Helper.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
 
                     // 隐藏第二个 WorkerW 窗口
                     ShowWindow(tempHwnd, 0);
