@@ -291,7 +291,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(pptApplication);
+                        else Catalog.ReleaseCOMObject(pptApplication,"PPT");
                     }
                 }
 
@@ -316,7 +316,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(wordApplication);
+                        else Catalog.ReleaseCOMObject(wordApplication,"Word");
                     }
                 }
                 if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
@@ -340,7 +340,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(excelApplication);
+                        else Catalog.ReleaseCOMObject(excelApplication,"Excel");
                     }
                 }
             }

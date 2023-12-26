@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +13,10 @@ using System.Windows.Threading;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
+using Application = System.Windows.Application;
+using MsExcel = Microsoft.Office.Interop.Excel;
+using MsPpt = Microsoft.Office.Interop.PowerPoint;
+using MsWord = Microsoft.Office.Interop.Word;
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -80,6 +85,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                     {
+                        Log.Information($"Snack消息:{title}", content);
                         await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
                     }
             }, DispatcherPriority.Background);
@@ -116,11 +122,12 @@ namespace Cokee.ClassService.Helper
             })).Start();
         }
 
-        public static void ReleaseCOMObject(object o)
+        public static void ReleaseCOMObject(object o,string type="ComObject")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Catalog.ShowInfo($"尝试释放 {o.GetType().Name} 对象");
+
+                Catalog.ShowInfo($"尝试释放 {type} 对象");
                 try { Marshal.FinalReleaseComObject(o); }
                 catch { }
                 o = null;
