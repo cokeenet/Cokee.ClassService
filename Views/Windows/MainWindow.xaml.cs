@@ -387,16 +387,8 @@ namespace Cokee.ClassService
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
-                Catalog.ShowInfo("尝试释放PowerPoint对象");
+                Catalog.ReleaseCOMObject(pptApplication);
                 IconAnimation(true);
-                try
-                {
-                    Marshal.FinalReleaseComObject(pptApplication);
-                }
-                catch
-                {
-                }
-                pptApplication = null;
             }), DispatcherPriority.Background);
         }
 

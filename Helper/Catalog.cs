@@ -85,7 +85,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                     {
-                        Log.Information($"Snack消息:{title}", content);
+                        Log.Information($"Snack消息:{title} {content}");
                         await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
                     }
             }, DispatcherPriority.Background);
@@ -109,6 +109,9 @@ namespace Cokee.ClassService.Helper
         {
             new Thread(new ThreadStart(() =>
             {
+                try
+                {
+
                 Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
                 if (File.Exists(filePath) && isFullyDownloaded)
                 {
@@ -119,6 +122,11 @@ namespace Cokee.ClassService.Helper
                     a.CopyTo(backupPath, true);
                 }
                 else Catalog.ShowInfo($"文件不存在或未下载。");
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex, "FileCopy");
+                }
             })).Start();
         }
 
