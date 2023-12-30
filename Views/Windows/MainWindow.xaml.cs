@@ -613,6 +613,7 @@ namespace Cokee.ClassService
             var a = Student.Random(new RandomEventArgs(e, stu));
             ranres.ItemsSource = a;
             stu = stu.Union(a).ToList();
+            if (stu.Count == Student.Load().Count) stu.Clear();
             Catalog.ToggleControlVisible(ranres);
         }
 
