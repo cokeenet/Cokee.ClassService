@@ -21,7 +21,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             this.IsVisibleChanged += (a, b) =>
             {
-                Easter = 0; title.FontSize = 18; Count = 0;
+                title.FontSize = 18;
                 title.FontWeight = FontWeights.Normal;
             };
         }
@@ -101,7 +101,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (Number <= 0) { Number = 0; numbox.Text = "0"; }
             Catalog.ToggleControlVisible(this);
-            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{SexLimit}|{AllowExist}|{Easter}");
+            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{SexLimit}|{AllowExist}|{Count}");
             //if (Easter != 0) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
         }
 
