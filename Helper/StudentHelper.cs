@@ -149,11 +149,11 @@ namespace Cokee.ClassService.Helper
             catch (Exception)
             {
             }*/
-            while (randoms.Count <= Convert.ToInt32(Num))
+            while (randoms.Count < Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
                 if (randoms.Count > 0 && randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
-                if (AllowMLang == "0" && a.IsMinorLang) continue;
+                if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num)< students.Count) continue;
                 else if (LimitSex == "1" && a.Sex == 0) continue;
                 else if (LimitSex == "2" && a.Sex == 1) continue;
                 else
