@@ -148,8 +148,7 @@ namespace Cokee.ClassService.Helper
         public static List<Student> Random(RandomEventArgs rargs)
         {
             string e = rargs.Args;
-            List<Student> students = new List<Student>(), re = rargs.students;
-            if (students == null) students = Student.Load();
+            List<Student> students = Student.Load(), re = rargs.students;
             string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
             List<Student> randoms = new List<Student>();
             int i = 1;
@@ -166,7 +165,7 @@ namespace Cokee.ClassService.Helper
             while (randoms.Count < Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
-                if (randoms.Count > 0 && re.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
+                if (AllowExist=="0"&&(randoms.Exists(f => f.Name == a.Name)|| re.Exists(f => f.Name == a.Name))&& Convert.ToInt32(Num) < students.Count) continue;
                 if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num) < students.Count) continue;
                 else if (LimitSex == "1" && a.Sex == 0) continue;
                 else if (LimitSex == "2" && a.Sex == 1) continue;

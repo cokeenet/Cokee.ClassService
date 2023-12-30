@@ -21,6 +21,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             this.IsVisibleChanged += (a, b) =>
             {
+                cf.Content = $"不重复(已抽{(App.Current.MainWindow as MainWindow).stu.Count}个)";
                 title.FontSize = 18;
                 title.FontWeight = FontWeights.Normal;
             };
@@ -61,7 +62,7 @@ namespace Cokee.ClassService.Views.Controls
             }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 1;
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 0;
 
         private void ComboBox_Selected(object sender, SelectionChangedEventArgs e)
         {
@@ -95,7 +96,7 @@ namespace Cokee.ClassService.Views.Controls
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => AllowExist = 0;
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => AllowExist = 1;
 
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
