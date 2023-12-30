@@ -78,6 +78,18 @@ namespace Cokee.ClassService.Helper
         }
     }
 
+    public class RandomEventArgs
+    {
+        public string Args = "";
+        public List<Student> students = new List<Student>();
+
+        public RandomEventArgs(string args, List<Student> student = null)
+        {
+            Args = args;
+            students = student;
+        }
+    }
+
     public class Student
     {
         public int ID { get; set; }
@@ -133,8 +145,10 @@ namespace Cokee.ClassService.Helper
             return students;
         }
 
-        public static List<Student> Random(string e, List<Student>? students = null)
+        public static List<Student> Random(RandomEventArgs rargs)
         {
+            string e = rargs.Args;
+            List<Student> students = new List<Student>(), re = rargs.students;
             if (students == null) students = Student.Load();
             string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
             List<Student> randoms = new List<Student>();
@@ -152,8 +166,8 @@ namespace Cokee.ClassService.Helper
             while (randoms.Count < Convert.ToInt32(Num))
             {
                 var a = students[new Random().Next(students.Count)];
-                if (randoms.Count > 0 && randoms.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
-                if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num)< students.Count) continue;
+                if (randoms.Count > 0 && re.Exists(f => f.Name == a.Name) && AllowExist == "0" && Convert.ToInt32(Num) <= students.Count) continue;
+                if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num) < students.Count) continue;
                 else if (LimitSex == "1" && a.Sex == 0) continue;
                 else if (LimitSex == "2" && a.Sex == 1) continue;
                 else

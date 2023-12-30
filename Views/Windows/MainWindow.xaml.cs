@@ -65,7 +65,9 @@ namespace Cokee.ClassService
         private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
 
+        public List<Student> stu = new List<Student>();
         private Schedule schedule = Schedule.LoadFromJson();
+
         public SnackbarService snackbarService = new SnackbarService();
 
         public MainWindow()
@@ -291,7 +293,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(pptApplication,"PPT");
+                        else Catalog.ReleaseCOMObject(pptApplication, "PPT");
                     }
                 }
 
@@ -316,7 +318,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(wordApplication,"Word");
+                        else Catalog.ReleaseCOMObject(wordApplication, "Word");
                     }
                 }
                 if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
@@ -340,7 +342,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(excelApplication,"Excel");
+                        else Catalog.ReleaseCOMObject(excelApplication, "Excel");
                     }
                 }
             }
@@ -429,12 +431,12 @@ namespace Cokee.ClassService
                 {
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
-                    transT.Y= 0;
+                    transT.Y = 0;
                 }
                 else
                 {
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-                    transT.Y= -100;
+                    transT.Y = -100;
                 }
             }), DispatcherPriority.Background);
         }
@@ -607,7 +609,9 @@ namespace Cokee.ClassService
 
         private void RandomControl_StartRandom(object sender, string e)
         {
-            ranres.ItemsSource = Student.Random(e);
+            var a = Student.Random(new RandomEventArgs(e, stu));
+            ranres.ItemsSource = a;
+            stu.C;
             Catalog.ToggleControlVisible(ranres);
         }
 

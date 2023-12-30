@@ -55,7 +55,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void RandomStart(object sender, string e)
         {
-            randomres.ItemsSource = Student.Random(e, students.ToList());
+            randomres.ItemsSource = Student.Random(new RandomEventArgs(e));
             Catalog.ToggleControlVisible(randomres);
         }
 
