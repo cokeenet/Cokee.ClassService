@@ -12,7 +12,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class RandomControl : UserControl
     {
-        public int Number = 1, AllowMLang = 1, SexLimit = 1, AllowExist = 0, Easter = 0, tmc = 0;
+        public int Number = 1, AllowMLang = 1, SexLimit = 1, AllowExist = 0, Easter = 0, Count = 0;
 
         public event EventHandler<string>? StartRandom;
 
@@ -21,7 +21,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             this.IsVisibleChanged += (a, b) =>
             {
-                Easter = 0; title.FontSize = 18; tmc = 0;
+                Easter = 0; title.FontSize = 18; Count = 0;
                 title.FontWeight = FontWeights.Normal;
             };
         }
@@ -71,8 +71,8 @@ namespace Cokee.ClassService.Views.Controls
 
         private void tm(object sender, TouchEventArgs e)
         {
-            tmc++;
-            if (tmc == 8) { tmc = 0; EasterEgg(); }
+            Count++;
+            if (Count == 8) { Count = 0; EasterEgg(); }
         }
 
         private void EasterEgg(object sender = null, MouseButtonEventArgs e = null)

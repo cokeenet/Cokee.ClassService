@@ -38,7 +38,7 @@
                     <ComboBoxItem Content="男生"/>
                     <ComboBoxItem Content="女生"/>
                 </ComboBox>
-                <CheckBox Grid.Column="2" Content="允许重复" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+                <CheckBox Grid.Column="2" Content="不重复(已抽0次)" d:Content="不重复(已抽99次)" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
             
             </Grid>
             <Grid Grid.Row="3" Margin="5">
