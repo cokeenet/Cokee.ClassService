@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -611,7 +612,7 @@ namespace Cokee.ClassService
         {
             var a = Student.Random(new RandomEventArgs(e, stu));
             ranres.ItemsSource = a;
-            stu.C;
+            stu = stu.Union(a).ToList();
             Catalog.ToggleControlVisible(ranres);
         }
 
