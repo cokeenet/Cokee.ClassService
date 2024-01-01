@@ -23,16 +23,24 @@ namespace Cokee.ClassService.Views.Controls
         public UsbCard()
         {
             InitializeComponent();
-            DriveInfo[] s = DriveInfo.GetDrives();
-            s.Any(t =>
+            try
             {
-                if (t.DriveType == DriveType.Removable)
+                if (Catalog.isScrSave) return;
+                DriveInfo[] s = DriveInfo.GetDrives();
+                s.Any(t =>
                 {
-                    ShowUsbCard(false, t);
-                    return true;
-                }
-                return false;
-            });
+                    if (t.DriveType == DriveType.Removable)
+                    {
+                        ShowUsbCard(false, t);
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            catch (Exception ex)
+            {
+                Catalog.HandleException(ex, "UsbCard");
+            }
         }
 
         private async void ShowUsbCard(bool isUnplug, DriveInfo t = null)
@@ -45,7 +53,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 this.Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
-                string volumeLabel = $"{t.Name}({t.VolumeLabel})";
+                string volumeLabel = $"{t.VolumeLabel}({t.Name})";
 
                 disk = t.Name;
                 diskName.Text = volumeLabel;

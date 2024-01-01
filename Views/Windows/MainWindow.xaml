@@ -56,18 +56,8 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
-            <ui:Card.Background>
-                <VisualBrush>
-                    <VisualBrush.Visual>
-                        <Image Source="/Resources/bg1.jpg" Opacity="1">
-                            <Image.Effect>
-                                <BlurEffect Radius="8" />
-                            </Image.Effect>
-                        </Image>
-                    </VisualBrush.Visual>
-                </VisualBrush>
-            </ui:Card.Background>
+        <ui:Card x:Name="sideCard" Background="{ui:ThemeResource}" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
+            <!--<ui:Card.Background><VisualBrush> <VisualBrush.Visual> <Image Source="/Resources/bg1.jpg" Opacity="0"> <Image.Effect> <BlurEffect Radius="8" /></Image.Effect></Image></VisualBrush.Visual></VisualBrush></ui:Card.Background>-->
             <ui:Card.BorderBrush>
                 <SolidColorBrush Color="#FFE0BFBF" />
             </ui:Card.BorderBrush>
@@ -114,8 +104,8 @@
                     </StackPanel>
                     <Grid>
                         <TextBlock x:Name="VerStr" Text="CokeeClass 版本1.0.1111" Margin="5" />
-                        <ui:SymbolIcon HorizontalAlignment="Right" Symbol="TreeEvergreen20" FontSize="19" Filled="True" Foreground="Green" Margin="5" />
-                        <!-- <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="19" FontFamily="Segoe UI Emoji" Foreground="Gold" />-->
+                        <!--<ui:SymbolIcon HorizontalAlignment="Right" Symbol="TreeEvergreen20" FontSize="19" Filled="True" Foreground="Green" Margin="5" />-->
+                        <TextBlock HorizontalAlignment="Right" Text="🌟" VerticalAlignment="Center" FontSize="19" FontFamily="Segoe UI Emoji" Foreground="Gold" />
                     </Grid>
                     <TextBlock x:Name="Easter" Text="那，祝我，祝你，祝我们。" Margin="5" Visibility="Collapsed" />
                 </StackPanel>
@@ -196,7 +186,7 @@
                 <TextBlock x:Name="time" Text="--:--" TextAlignment="Center" d:Text="11:11:11" />
             </ui:Badge>
         </Grid>
-        <Controls:TouchableScrollViewer x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
+        <Controls:TouchableScrollViewer x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed">
             <StackPanel Background="{ui:ThemeResource}">
                 <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
                 <RichTextBox x:Name="richTextBox" Margin="5" />
