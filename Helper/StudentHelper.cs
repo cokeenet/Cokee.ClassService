@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -147,48 +148,52 @@ namespace Cokee.ClassService.Helper
 
         public static List<Student> Random(RandomEventArgs rargs)
         {
-            string e = rargs.Args;
-            List<Student> students = Student.Load(), re = rargs.students;
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
             List<Student> randoms = new List<Student>();
-            int i = 1;
-            /*try
+            try
             {
-                if (Easter == "1")
-                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("6Zer5a6d5oCh"))));
-                else if (Easter == "2")
-                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS"))));
-            }
-            catch (Exception)
-            {
-            }*/
-            while (randoms.Count < Convert.ToInt32(Num))
-            {
-                var a = students[new Random().Next(students.Count)];
-                if (AllowExist=="0"&&(randoms.Exists(f => f.Name == a.Name)|| re.Exists(f => f.Name == a.Name))&& Convert.ToInt32(Num) < students.Count) continue;
-                if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num) < students.Count) continue;
-                else if (LimitSex == "1" && a.Sex == 0) continue;
-                else if (LimitSex == "2" && a.Sex == 1) continue;
-                else
+                string e = rargs.Args;
+                List<Student> students = Student.Load(), re = rargs.students;
+                string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
+                
+                int i = 1;
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                while (randoms.Count < Convert.ToInt32(Num))
                 {
-                    randoms.Add(a);
-                    totalNames += a.Name + "|";
-                    i++;
+                    if (stopwatch.Elapsed.TotalSeconds >= 2)
+                        throw new TimeoutException("抽取超时。");
+                    var a = students[new Random().Next(students.Count)];
+                    if (AllowMLang == "0" && a.IsMinorLang) continue;
+                    else if (LimitSex == "1" && a.Sex == 0) continue;
+                    else if (LimitSex == "2" && a.Sex == 1) continue;
+                    else if (AllowExist == "0" && (randoms.Exists(f => f.Name == a.Name) || re.Exists(f => f.Name == a.Name)) && Convert.ToInt32(Num) < students.Count) continue;
+                    else
+                    {
+                        randoms.Add(a);
+                        totalNames += a.Name + "|";
+                        i++;
+                    }
                 }
+                stopwatch.Reset();
+                /*if (Easter == "1")
+                {
+                    randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
+                    Easter = "0";
+                    goto ranStart;
+                }*/
+                //randoms = Catalog.RandomizeList(randoms);
+                var eventProperties = new Dictionary<string, string>
+                    {
+                        { "Arg",e},{"Result",totalNames}
+                    };
+                Analytics.TrackEvent("RandomEvent", eventProperties);
+                return randoms;
             }
-            /*if (Easter == "1")
+            catch (Exception ex)
             {
-                randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
-                Easter = "0";
-                goto ranStart;
-            }*/
-            //randoms = Catalog.RandomizeList(randoms);
-            var eventProperties = new Dictionary<string, string>
-            {
-                  { "Arg",e},{"Result",totalNames}
-            };
-            Analytics.TrackEvent("RandomEvent", eventProperties);
-            return randoms;
+                Catalog.HandleException(ex, "Random");
+                return randoms;
+            }
         }
     }
 }
