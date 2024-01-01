@@ -1,5 +1,5 @@
-﻿
-using Serilog;
+﻿using Serilog;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +13,12 @@ using System.Windows.Threading;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using Application = System.Windows.Application;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
+
 namespace Cokee.ClassService.Helper
 {
     public class Catalog
@@ -31,7 +33,7 @@ namespace Cokee.ClassService.Helper
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType = 0;
         public static bool isScrSave = false;
-        public static IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
+        public static IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
@@ -40,10 +42,12 @@ namespace Cokee.ClassService.Helper
 
         public static void HandleException(Exception ex, string str = "")
         {
+            string shortExpInfo = ex.ToString();
+            if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        await GlobalSnackbarService.ShowAsync($"{str}发生错误", string.Concat(ex.ToString().Substring(0, 200), "..."), SymbolRegular.Warning24, ControlAppearance.Danger);
+                        await GlobalSnackbarService.ShowAsync($"{str}发生错误", shortExpInfo, SymbolRegular.Warning24, ControlAppearance.Danger);
             });
         }
 
@@ -79,10 +83,12 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static void ShowInfo(string title = "", string content = "")
+        public static void ShowInfo(string? title = "", string? content = "")
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
+                if (title == null) title = "";
+                if(content==null)content = "";
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                     {
                         Log.Information($"Snack消息:{title} {content}");
@@ -91,12 +97,12 @@ namespace Cokee.ClassService.Helper
             }, DispatcherPriority.Background);
         }
 
-        public static void CreateWindow<T>() where T : Window, new()
+        public static void CreateWindow<T>(bool allowMulti = false) where T : Window, new()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var win = Application.Current.Windows.OfType<T>().FirstOrDefault();
-                if (win == null)
+                if (win == null || allowMulti)
                 {
                     win = new T();
                     win.Show();
@@ -111,17 +117,16 @@ namespace Cokee.ClassService.Helper
             {
                 try
                 {
-
-                Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
-                if (File.Exists(filePath) && isFullyDownloaded)
-                {
-                    var a = new FileInfo(filePath);
-                    if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
-                    var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
-                    if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
-                    a.CopyTo(backupPath, true);
-                }
-                else Catalog.ShowInfo($"文件不存在或未下载。");
+                    Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
+                    if (File.Exists(filePath) && isFullyDownloaded)
+                    {
+                        var a = new FileInfo(filePath);
+                        if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
+                        var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
+                        if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
+                        a.CopyTo(backupPath, true);
+                    }
+                    else Catalog.ShowInfo($"文件不存在或未下载。");
                 }
                 catch (Exception ex)
                 {
@@ -130,11 +135,10 @@ namespace Cokee.ClassService.Helper
             })).Start();
         }
 
-        public static void ReleaseCOMObject(object o,string type="ComObject")
+        public static void ReleaseCOMObject(object o, string type = "ComObject")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-
                 Catalog.ShowInfo($"尝试释放 {type} 对象");
                 try { Marshal.FinalReleaseComObject(o); }
                 catch { }

@@ -32,9 +32,9 @@
             <ui:Button x:Name="remove" HorizontalAlignment="Right"
                  VerticalAlignment="Top" Background="White" BorderBrush="#6CBCEA" BorderThickness="1"
                  Click="ExitUsbDrive" Content="弹出" Icon="UsbPlug20" Foreground="Black" Grid.Row="1" Grid.Column="2" Margin="5" />
-            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="14" MaxWidth="75" />
+            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="14" MaxWidth="75" TextAlignment="Center" />
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5" FontSize="12" MaxWidth="75" />
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5" FontSize="12" MaxWidth="75" TextAlignment="Center" />
         </Grid>
     </ui:Card>
 </UserControl>

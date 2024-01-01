@@ -1,4 +1,13 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,7 +15,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,24 +28,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
+using ZetaIpc.Runtime.Client;
+using ZetaIpc.Runtime.Server;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -70,6 +64,8 @@ namespace Cokee.ClassService
         private Schedule schedule = Schedule.LoadFromJson();
 
         public SnackbarService snackbarService = new SnackbarService();
+        public IpcServer ipcServer = new IpcServer();
+        public IpcClient ipcClient = new IpcClient();
 
         public MainWindow()
         {
@@ -130,6 +126,9 @@ namespace Cokee.ClassService
             {
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+                ipcServer.Start(60103);
+                //ipcClient.Initialize(80103);
+                //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
             if (Catalog.settings.MultiTouchEnable)
             {
@@ -430,15 +429,31 @@ namespace Cokee.ClassService
                 anim2.EasingFunction = Catalog.easingFunction;
                 if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
                 {
+
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
-                    transT.Y = 0;
+                    anim1.Completed += (a, b) =>
+                    {
+                        Point floatGridTopLeft = floatGrid.PointToScreen(new Point(0, 0));
+                        Point sideCardTopLeft = sideCard.PointToScreen(new Point(0, 0));
+
+                        bool isFullyInside = new Rect(
+                            sideCardTopLeft.X,
+                            sideCardTopLeft.Y,
+                            sideCard.ActualWidth,
+                            sideCard.ActualHeight
+                        ).Contains(floatGridTopLeft);
+                        Catalog.ShowInfo(isFullyInside.ToString());
+                        if (isFullyInside)transT.Y= 0;
+                    };
+                    //transT.Y = 0;
                 }
                 else
                 {
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-                    transT.Y = -100;
+                    //transT.Y = -100;
                 }
+
             }), DispatcherPriority.Background);
         }
 
@@ -522,7 +537,6 @@ namespace Cokee.ClassService
             {
                 var c = sender as Control;
                 var pos = e.GetPosition(this);
-                //snackbarService.Show($"{pos.ToString()}");
                 var dp = pos - startPoint;
                 if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 || pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10) { isDragging = false; floatGrid.ReleaseMouseCapture(); transT.X = -10; transT.Y = -100; return; }
                 transT.X = _mouseDownControlPosition.X + dp.X;
@@ -554,7 +568,11 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = true;
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Log.Information($"Program Closeing.");
+            e.Cancel = true;
+        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -619,7 +637,7 @@ namespace Cokee.ClassService
 
         private void CourseMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<CourseMgr>();
 
-        private void AddFloatCard(object sender, RoutedEventArgs e) => Catalog.CreateWindow<FloatNote>();
+        private void AddFloatCard(object sender, RoutedEventArgs e) => Catalog.CreateWindow<FloatNote>(true);
 
         private void OpenSettings(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Settings>();
 
