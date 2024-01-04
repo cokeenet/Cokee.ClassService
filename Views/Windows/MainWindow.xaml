@@ -67,8 +67,8 @@
             </ui:Card.RenderTransform>
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
-                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Foreground="White" Margin="0,0,0,5" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="16" FontFamily="Cairo-Regular" Foreground="White" />
+                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Margin="0,0,0,5" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="16" FontFamily="Cairo-Regular" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>

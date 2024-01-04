@@ -142,6 +142,7 @@ namespace Cokee.ClassService
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
             inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
             GetCalendarInfo();
+            CheckBirthDay();
         }
 
         public void IntiFileWatcher()
@@ -293,7 +294,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(pptApplication, "PPT");
+                        //else Catalog.ReleaseCOMObject(pptApplication, "PPT");
                     }
                 }
 
@@ -389,7 +390,7 @@ namespace Cokee.ClassService
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
-                Catalog.ReleaseCOMObject(pptApplication);
+                Catalog.ReleaseCOMObject(pptApplication,"PPT");
                 IconAnimation(true);
             }), DispatcherPriority.Background);
         }
