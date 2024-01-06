@@ -34,8 +34,9 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (schedule.Courses[comboBox.SelectedIndex] == null) schedule.Courses[comboBox.SelectedIndex]=new List<Course> { new Course() };
             dayCourses = schedule.Courses[comboBox.SelectedIndex];
-            if(courseControl!=null) courseControl.ItemsSource = dayCourses;
+            if(courseControl!=null&&dayCourses!=null) courseControl.ItemsSource = dayCourses;
         }
 
         private void AddCourse(object sender, RoutedEventArgs e)

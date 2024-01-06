@@ -113,6 +113,7 @@ namespace Cokee.ClassService
             AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
+            longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
             if (Catalog.settings.FileWatcherEnable && !Catalog.isScrSave)
             {
                 IntiFileWatcher();
@@ -248,7 +249,21 @@ namespace Cokee.ClassService
                 if (Catalog.settings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
             }), DispatcherPriority.Background);
         }
-
+        public void ApplyOptAnimation(Label ele, string text)
+        {
+            if (ele == null) return;
+            DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
+            DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
+            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
+            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
+            anim1.Completed += async (a, b) =>
+            {
+                //await Task.Delay(500);
+                ele.Content = text;
+                ele.BeginAnimation(Label.OpacityProperty, anim2);
+            };
+            ele.BeginAnimation(Label.OpacityProperty, anim1);
+        }
         public async void GetCalendarInfo()
         {
             Stopwatch sw = new Stopwatch();
@@ -850,7 +865,7 @@ namespace Cokee.ClassService
                     strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
                 }
 
-                strokeVisual.Redraw();
+                strokeVisual.ReDraw();
             }
             catch { }
         }

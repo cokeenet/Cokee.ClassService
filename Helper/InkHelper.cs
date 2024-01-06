@@ -75,7 +75,7 @@ namespace Cokee.ClassService.Helper
         /// <summary>
         ///     重新画出笔迹
         /// </summary>
-        public void Redraw()
+        public void ReDraw()
         {
             try
             {

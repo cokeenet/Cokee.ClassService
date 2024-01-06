@@ -107,7 +107,7 @@ namespace Cokee.ClassService.Helper
                     win = new T();
                     win.Show();
                 }
-                else { win.Activate(); Catalog.ShowInfo("窗口在任务栏上!!", "就在底下"); }
+                //else { win.Activate(); Catalog.ShowInfo("窗口在任务栏上!!", "就在底下"); }
             });
         }
 

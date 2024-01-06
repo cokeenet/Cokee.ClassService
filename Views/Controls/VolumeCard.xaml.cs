@@ -30,19 +30,22 @@ namespace Cokee.ClassService.Views.Controls
         public VolumeCard()
         {
             InitializeComponent();
-            CancelTheMute();
+            
             UpdateSpkList();
-            this.IsVisibleChanged += (a,b) => { UpdateSpkList(); };
-            spk.ItemsSource = devices; 
-            speakDevice=devices.FirstOrDefault();
-            spk.SelectedItem = speakDevice;
-            vol.Text= $"{(speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f).ToString("0")}%";
-            slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f;
+            this.IsVisibleChanged += (a,b) => { UpdateSpkList(); CancelTheMute(); };
+            
+            
+
         }
         public void UpdateSpkList()
         {
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
             devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active).ToList();
+            spk.ItemsSource = devices;
+            speakDevice = devices.FirstOrDefault();
+            spk.SelectedItem = speakDevice;
+            vol.Text = $"{(speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f).ToString("0")}%";
+            slider.Value = speakDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f;
         }
         private void spk_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

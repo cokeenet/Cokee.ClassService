@@ -107,5 +107,12 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void MLang_UC(object sender, RoutedEventArgs e) => AllowMLang = 1;
+
+        private void Cf_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            (App.Current.MainWindow as MainWindow).stu.Clear();
+            cf.Content = "不重复(已抽0个)";
+            Catalog.ShowInfo("清除成功");
+        }
     }
 }
