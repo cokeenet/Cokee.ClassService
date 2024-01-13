@@ -127,7 +127,8 @@ namespace Cokee.ClassService
             {
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-                ipcServer.Start(60103);
+                ipcServer.Start(20011);
+                if(Catalog.)
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }

@@ -70,7 +70,7 @@
                             <TextBlock
                                 FontSize="13" FontWeight="Medium" Text="高级橡皮擦" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="模拟X沃白板橡皮擦" />
+                                FontSize="12" Opacity="0.7" Text="EraseByPoint" />
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable, Mode=TwoWay}" />
@@ -97,17 +97,15 @@
                     <ui:Button Icon="Delete48" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
                     <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
                 </StackPanel>
-                <RichTextBox x:Name="richTextBox" Margin="5" />
-                <ui:CardControl Icon="PenProhibited32" Height="100">
+                
+                <ui:CardControl Icon="PenProhibited32" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
-                                FontSize="13" FontWeight="Medium" Text="平滑墨迹" />
-                            <TextBlock
-                                FontSize="12" Opacity="0.7" Text="使用贝塞尔曲线平滑法优化墨迹" />
+                                FontSize="13" FontWeight="Medium" Text="CokeeAgent" />
                         </StackPanel>
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch IsChecked="{Binding FitCurveEnable, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsChecked="{Binding AgentEnable, Mode=TwoWay}" />
                 </ui:CardControl>
             </StackPanel>
         </Controls:TouchableScrollViewer>
