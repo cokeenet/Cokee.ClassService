@@ -81,20 +81,52 @@ namespace Cokee.ClassService.Helper
 
     public class RandomEventArgs
     {
-        public string Args = "";
-        public List<Student> students = new List<Student>();
+        public static List<Student> RandomHistory = new List<Student>();
+        public int Count = 1;
+        public bool AllowMLang = true, AllowExist = false;
+        public SexCombo SexLimit = SexCombo.None;
+        public Easter Easter = Easter.None;
 
-        public RandomEventArgs(string args, List<Student> student = null)
+        public RandomEventArgs(int num = 1, bool allowMLang = true, bool allowExist = false, SexCombo sexLimit = SexCombo.None, Easter easter = Easter.None)
         {
-            Args = args;
-            students = student;
+            Count = num;
+            AllowMLang = allowMLang;
+            AllowExist = allowExist;
+            SexLimit = sexLimit;
+            Easter = easter;
         }
+
+        public override string ToString()
+        {
+            return $"Count{Count}|MLang{AllowMLang}|Exist{AllowExist}|Sex{SexLimit}|Easter{Easter}";
+        }
+    }
+
+    public enum SexCombo
+    {
+        None,
+        Boy,
+        Girl
+    }
+
+    public enum Sex
+    {
+        Girl,
+        Boy
+    }
+
+    public enum Easter
+    {
+        None,
+        Y,
+        Z,
+        Me
     }
 
     public class Student
     {
         public int ID { get; set; }
-        public int Sex { get; set; }//0 girl 1 boy
+        public Sex Sex { get; set; }//0 girl 1 boy
         public string Name { get; set; }
         public string ClassName { get; set; }
         public int ClassID { get; set; }
@@ -107,7 +139,7 @@ namespace Cokee.ClassService.Helper
         public bool IsMinorLang { get; set; }
         public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
 
-        public Student(string name, int sex, DateTime birth, bool isMinorLang = false)
+        public Student(string name, Sex sex, DateTime birth, bool isMinorLang = false)
         {
             ID = new Random().Next(9000000);
             Sex = sex;
@@ -146,13 +178,14 @@ namespace Cokee.ClassService.Helper
             return students;
         }
 
-        public static List<Student> Random(RandomEventArgs rargs)
+        public static List<Student> Random(RandomEventArgs args)
         {
-            string e = rargs.Args;
-            List<Student> students = Student.Load(), re = rargs.students;
-            string Num = e.Split("|")[0], AllowMLang = e.Split("|")[1], LimitSex = e.Split("|")[2], AllowExist = e.Split("|")[3], Easter = e.Split("|")[4], totalNames = "";
+            List<Student> students = Student.Load();
             List<Student> randoms = new List<Student>();
             int i = 1;
+
+            #region Easter
+
             /*try
             {
                 if (Easter == "1")
@@ -163,32 +196,37 @@ namespace Cokee.ClassService.Helper
             catch (Exception)
             {
             }*/
-            while (randoms.Count < Convert.ToInt32(Num))
+
+            #endregion Easter
+
+            while (randoms.Count < args.Count)
             {
                 var a = students[new Random().Next(students.Count)];
-                if (AllowExist=="0"&&(randoms.Exists(f => f.Name == a.Name)|| re.Exists(f => f.Name == a.Name))&& Convert.ToInt32(Num) <= students.Count) continue;
-                if (AllowMLang == "0" && a.IsMinorLang && Convert.ToInt32(Num) <= students.Count) continue;
-                else if (LimitSex == "1" && a.Sex == 0) continue;
-                else if (LimitSex == "2" && a.Sex == 1) continue;
+                if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || RandomEventArgs.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
+                if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
+                else if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
+                else if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
                 else
                 {
                     randoms.Add(a);
-                    totalNames += a.Name + "|";
                     i++;
                 }
             }
+
+            #region easter
+
             /*if (Easter == "1")
             {
                 randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
                 Easter = "0";
                 goto ranStart;
             }*/
-            //randoms = Catalog.RandomizeList(randoms);
-            var eventProperties = new Dictionary<string, string>
-            {
-                  { "Arg",e},{"Result",totalNames}
-            };
-            Analytics.TrackEvent("RandomEvent", eventProperties);
+
+            #endregion easter
+
+            randoms = Catalog.RandomizeList(randoms);
+            RandomEventArgs.RandomHistory = RandomEventArgs.RandomHistory.Union(randoms).ToList();
+            if (RandomEventArgs.RandomHistory.Count >= students.Count) RandomEventArgs.RandomHistory.Clear();
             return randoms;
         }
     }

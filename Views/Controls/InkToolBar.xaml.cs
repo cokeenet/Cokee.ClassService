@@ -126,13 +126,13 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Back":
-                        var th = (App.Current.MainWindow as MainWindow).timeMachine.Undo();
+                        var th = Catalog.MainWindow.timeMachine.Undo();
                         try
                         {
-                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.CodeInput;
                             if (th.StrokeHasBeenCleared) inkCanvas.Strokes.Remove(th.CurrentStroke);
                             else inkCanvas.Strokes.Add(th.CurrentStroke);
-                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.UserInput;
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {
@@ -141,14 +141,14 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Redo":
-                        var th1 = (App.Current.MainWindow as MainWindow).timeMachine.Redo();
+                        var th1 = Catalog.MainWindow.timeMachine.Redo();
                         try
                         {
-                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.CodeInput;
                             if (!th1.StrokeHasBeenCleared) inkCanvas.Strokes.Add(th1.CurrentStroke);
                             else inkCanvas.Strokes.Remove(th1.CurrentStroke);
 
-                            (App.Current.MainWindow as MainWindow)._currentCommitType = MainWindow.CommitReason.UserInput;
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {
@@ -179,7 +179,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             inkCanvas.IsEnabled = false;
             isEraser = false;
-            (App.Current.MainWindow as MainWindow).ClearStrokes(true);
+            Catalog.MainWindow.ClearStrokes(true);
             inkCanvas.Background.Opacity = 0;
             Visibility = Visibility.Collapsed;
         }
@@ -196,7 +196,7 @@ namespace Cokee.ClassService.Views.Controls
             }, DispatcherPriority.Normal);
         }
 
-        private void ClearScr(object sender, MouseButtonEventArgs e) => (App.Current.MainWindow as MainWindow).ClearStrokes(true);
+        private void ClearScr(object sender, MouseButtonEventArgs e) => Catalog.MainWindow.ClearStrokes(true);
 
         private void ColorBtn(object sender, RoutedEventArgs e)
         {

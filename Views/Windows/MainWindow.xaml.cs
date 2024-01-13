@@ -1,12 +1,17 @@
 ﻿using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,10 +33,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
+
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -60,7 +69,6 @@ namespace Cokee.ClassService
         private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
 
-        public List<Student> stu = new List<Student>();
         private Schedule schedule = Schedule.LoadFromJson();
 
         public SnackbarService snackbarService = new SnackbarService();
@@ -70,6 +78,7 @@ namespace Cokee.ClassService
         public MainWindow()
         {
             InitializeComponent();
+            Catalog.MainWindow = this;
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
@@ -81,6 +90,7 @@ namespace Cokee.ClassService
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
             DpiChanged += new DpiChangedEventHandler(DisplaySettingsChanged);
             SizeChanged += new SizeChangedEventHandler(DisplaySettingsChanged);
+
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
             picTimer.Elapsed += PicTimer_Elapsed;
@@ -103,6 +113,7 @@ namespace Cokee.ClassService
             transT.X = -10;
             transT.Y = -100;
             this.UpdateLayout();
+            Accent.ApplySystemAccent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -128,7 +139,7 @@ namespace Cokee.ClassService
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
                 ipcServer.Start(20011);
-                if(Catalog.)
+
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
@@ -250,6 +261,7 @@ namespace Cokee.ClassService
                 if (Catalog.settings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
             }), DispatcherPriority.Background);
         }
+
         public void ApplyOptAnimation(Label ele, string text)
         {
             if (ele == null) return;
@@ -265,6 +277,7 @@ namespace Cokee.ClassService
             };
             ele.BeginAnimation(Label.OpacityProperty, anim1);
         }
+
         public async void GetCalendarInfo()
         {
             Stopwatch sw = new Stopwatch();
@@ -335,7 +348,7 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(wordApplication, "Word");
+                        //else Catalog.ReleaseCOMObject(wordApplication, "Word");
                     }
                 }
                 if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
@@ -359,13 +372,13 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        else Catalog.ReleaseCOMObject(excelApplication, "Excel");
+                        //else Catalog.ReleaseCOMObject(excelApplication, "Excel");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Catalog.HandleException(ex, "COM对象");
+                Catalog.HandleException(ex, "COM对象线程");
             }
         }
 
@@ -406,7 +419,7 @@ namespace Cokee.ClassService
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
-                Catalog.ReleaseCOMObject(pptApplication,"PPT");
+                Catalog.ReleaseCOMObject(pptApplication, "PPT");
                 IconAnimation(true);
             }), DispatcherPriority.Background);
         }
@@ -446,7 +459,6 @@ namespace Cokee.ClassService
                 anim2.EasingFunction = Catalog.easingFunction;
                 if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
                 {
-
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
                     anim1.Completed += (a, b) =>
@@ -461,7 +473,7 @@ namespace Cokee.ClassService
                             sideCard.ActualHeight
                         ).Contains(floatGridTopLeft);
                         Catalog.ShowInfo(isFullyInside.ToString());
-                        if (isFullyInside)transT.Y= 0;
+                        if (isFullyInside) transT.Y = 0;
                     };
                     //transT.Y = 0;
                 }
@@ -470,7 +482,6 @@ namespace Cokee.ClassService
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
                     //transT.Y = -100;
                 }
-
             }), DispatcherPriority.Background);
         }
 
@@ -643,12 +654,10 @@ namespace Cokee.ClassService
 
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
 
-        private void RandomControl_StartRandom(object sender, string e)
+        private void RandomControl_StartRandom(object sender, RandomEventArgs e)
         {
-            var a = Student.Random(new RandomEventArgs(e, stu));
+            var a = Student.Random(e);
             ranres.ItemsSource = a;
-            stu = stu.Union(a).ToList();
-            if (stu.Count == Student.Load().Count) stu.Clear();
             Catalog.ToggleControlVisible(ranres);
         }
 

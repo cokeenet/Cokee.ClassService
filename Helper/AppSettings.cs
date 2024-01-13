@@ -1,4 +1,5 @@
 ﻿using Serilog;
+
 using System;
 using System.IO;
 using System.Text.Json;
@@ -15,6 +16,7 @@ namespace Cokee.ClassService.Helper
         public bool SideCardEnable { get; set; } = true;
         public bool AgentEnable { get; set; } = false;
         private bool _FitCurveEnable { get; set; } = false;
+
         public bool FitCurveEnable
         {
             get { return _FitCurveEnable; }
@@ -25,16 +27,15 @@ namespace Cokee.ClassService.Helper
                     _FitCurveEnable = value;
                     if (value)
                     {
-                        (App.Current.MainWindow as MainWindow).inkcanvas.DefaultDrawingAttributes.FitToCurve = true;
+                        Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = true;
                     }
                     else
                     {
-                        (App.Current.MainWindow as MainWindow).inkcanvas.DefaultDrawingAttributes.FitToCurve = false;
+                        Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = false;
                     }
                 }
             }
         }
-
 
         public string FileWatcherFilter { get; set; } = "*.*";
 
@@ -51,11 +52,11 @@ namespace Cokee.ClassService.Helper
                     _FileWatcherEnable = value;
                     if (value)
                     {
-                        (App.Current.MainWindow as MainWindow).IntiFileWatcher();
+                        Catalog.MainWindow.IntiFileWatcher();
                     }
                     else
                     {
-                        (App.Current.MainWindow as MainWindow).desktopWatcher.EnableRaisingEvents = false;
+                        Catalog.MainWindow.desktopWatcher.EnableRaisingEvents = false;
                     }
                 }
             }

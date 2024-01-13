@@ -63,17 +63,19 @@ namespace Cokee.ClassService
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = e.ExceptionObject as Exception;
+            Exception? ex = e.ExceptionObject as Exception;
 
             if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "AppDomain异常");
-            Catalog.HandleException(ex, "AppDomain异常! ");
+            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序.");
+            Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
+            Shutdown();
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception, "发生错误");
-            Catalog.HandleException(e.Exception, "未捕获的异常! ");
+            Catalog.HandleException(e.Exception, "发生错误 ");
 
             e.Handled = true;
         }

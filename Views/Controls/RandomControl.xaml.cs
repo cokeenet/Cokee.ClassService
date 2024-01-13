@@ -12,35 +12,36 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class RandomControl : UserControl
     {
-        public int Number = 1, AllowMLang = 1, SexLimit = 1, AllowExist = 0, Easter = 0, Count = 0;
+        public RandomEventArgs randomArgs = new RandomEventArgs();
 
-        public event EventHandler<string>? StartRandom;
+        public event EventHandler<RandomEventArgs>? StartRandom;
 
         public RandomControl()
         {
             InitializeComponent();
             this.IsVisibleChanged += (a, b) =>
             {
-                cf.Content = $"不重复(已抽{(App.Current.MainWindow as MainWindow).stu.Count}个)";
+                cf.Content = $"不重复(已抽{RandomEventArgs.RandomHistory.Count}个)";
                 title.FontSize = 18;
                 title.FontWeight = FontWeights.Normal;
+                randomArgs.Easter = Easter.None;
             };
         }
 
         private void AddBtn(object sender, RoutedEventArgs e)
         {
-            Number++;
-            numbox.Text = Number.ToString();
+            randomArgs.Count++;
+            numbox.Text = randomArgs.Count.ToString();
         }
 
         private void SubBtn(object sender, RoutedEventArgs e)
         {
-            if (Number <= 0) return;
-            Number--;
-            numbox.Text = Number.ToString();
+            if (randomArgs.Count <= 0) return;
+            randomArgs.Count--;
+            numbox.Text = randomArgs.Count.ToString();
         }
 
-        private void MLang_C(object sender, RoutedEventArgs e) => AllowMLang = 0;
+        private void MLang_C(object sender, RoutedEventArgs e) => randomArgs.AllowMLang = false;
 
         private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
@@ -52,65 +53,70 @@ namespace Cokee.ClassService.Views.Controls
                 try
                 {
                     var a = Convert.ToInt32(textBox.Text);
-                    if (a >= 0) Number = a;
+                    if (a >= 0 && a <= 999) randomArgs.Count = a;
                 }
                 catch (Exception)
                 {
                     textBox.Text = "1";
-                    Number = 1;
+                    randomArgs.Count = 1;
                 }
             }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e) => AllowExist = 0;
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) => randomArgs.AllowExist = false;
 
         private void ComboBox_Selected(object sender, SelectionChangedEventArgs e)
         {
             var a = (ComboBox)sender;
-            if (a.SelectedIndex != -1) SexLimit = a.SelectedIndex;
+            if (a.SelectedIndex != -1) randomArgs.SexLimit = (SexCombo)a.SelectedIndex;
         }
 
-        private void tm(object sender, TouchEventArgs e)
+        private int touchCount = 0;
+
+        private void LabelTouchMove(object sender, TouchEventArgs e)
         {
-            Count++;
-            if (Count == 8) { Count = 0; EasterEgg(); }
+            touchCount++;
+            if (touchCount == 8) { touchCount = 0; EasterEgg(); }
         }
 
         private void EasterEgg(object sender = null, MouseButtonEventArgs e = null)
         {
             //if (File.Exists(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}")) { Easter = 0; return; }
-            Easter++;
-            if (Easter == 1)
+            randomArgs.Easter++;
+            if (randomArgs.Easter == Easter.Z)
             {
                 title.FontWeight = FontWeights.Light;
             }
-            else if (Easter == 2)
+            else if (randomArgs.Easter == Easter.Y)
             {
                 title.FontSize = 19;
+            }
+            else if (randomArgs.Easter == Easter.Me)
+            {
+                title.FontWeight = FontWeights.Bold;
             }
             else
             {
                 title.FontSize = 18;
                 title.FontWeight = FontWeights.Normal;
-                Easter = 0;
+                randomArgs.Easter = Easter.None;
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => AllowExist = 1;
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => randomArgs.AllowExist = true;
 
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
-            if (Number <= 0) { Number = 0; numbox.Text = "0"; }
             Catalog.ToggleControlVisible(this);
-            StartRandom?.Invoke(this, $"{Number}|{AllowMLang}|{SexLimit}|{AllowExist}|{Count}");
+            StartRandom?.Invoke(this, randomArgs);
             //if (Easter != 0) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
         }
 
-        private void MLang_UC(object sender, RoutedEventArgs e) => AllowMLang = 1;
+        private void MLang_UC(object sender, RoutedEventArgs e) => randomArgs.AllowMLang = true;
 
         private void Cf_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            (App.Current.MainWindow as MainWindow).stu.Clear();
+            RandomEventArgs.RandomHistory.Clear();
             cf.Content = "不重复(已抽0个)";
             Catalog.ShowInfo("清除成功");
         }

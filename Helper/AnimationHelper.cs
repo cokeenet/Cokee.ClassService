@@ -18,7 +18,7 @@ namespace Cokee.ClassService.Helper
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
             anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
             anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
-            anim1.Completed += async (a, b) =>
+            anim1.Completed += (a, b) =>
             {
                 //await Task.Delay(500);
                 ele.Content = text;
@@ -26,6 +26,7 @@ namespace Cokee.ClassService.Helper
             };
             ele.BeginAnimation(Label.OpacityProperty, anim1);
         }
+
         public static void ApplyOptAnimation(TextBlock ele, string text)
         {
             if (ele == null) return;
@@ -33,7 +34,7 @@ namespace Cokee.ClassService.Helper
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
             anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
             anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
-            anim1.Completed += async (a, b) =>
+            anim1.Completed += (a, b) =>
             {
                 //await Task.Delay(500);
                 ele.Text = text;
@@ -41,6 +42,7 @@ namespace Cokee.ClassService.Helper
             };
             ele.BeginAnimation(TextBlock.OpacityProperty, anim1);
         }
+
         public static void ApplyOptAnimation(FrameworkElement ele)
         {
             if (ele == null) return;
@@ -48,9 +50,8 @@ namespace Cokee.ClassService.Helper
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
             anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
             anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
-            anim1.Completed += async (a, b) =>
+            anim1.Completed += (a, b) =>
             {
-                
                 ele.BeginAnimation(UIElement.OpacityProperty, anim2);
             };
             ele.BeginAnimation(UIElement.OpacityProperty, anim1);

@@ -38,6 +38,7 @@ namespace Cokee.ClassService.Helper
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
 
+        public static MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
         public static SnackbarService? GlobalSnackbarService;
 
         public static void HandleException(Exception ex, string str = "")
@@ -77,7 +78,7 @@ namespace Cokee.ClassService.Helper
                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
                if (mainWindow != null)
                {
-                   if (mainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                   if (Catalog.MainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
                    mainWindow.IconAnimation(true);
                }
            });
@@ -88,7 +89,7 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 if (title == null) title = "";
-                if(content==null)content = "";
+                if (content == null) content = "";
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
                     {
                         Log.Information($"Snack消息:{title} {content}");
@@ -150,22 +151,21 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
                 Catalog.WindowType = type;
-                if (mainWindow == null) return;
+                if (Catalog.MainWindow == null) return;
                 if (type == 0)
                 {
-                    mainWindow.Width = SystemParameters.PrimaryScreenWidth;
-                    mainWindow.Height = SystemParameters.PrimaryScreenHeight;
-                    mainWindow.Top = 0;
-                    mainWindow.Left = 0;
+                    MainWindow.Width = SystemParameters.PrimaryScreenWidth;
+                    MainWindow.Height = SystemParameters.PrimaryScreenHeight;
+                    MainWindow.Top = 0;
+                    MainWindow.Left = 0;
                 }
                 else
                 {
-                    mainWindow.Width = SystemParameters.WorkArea.Width;
-                    mainWindow.Height = SystemParameters.WorkArea.Height;
-                    mainWindow.Top = 0;
-                    mainWindow.Left = 0;
+                    MainWindow.Width = SystemParameters.WorkArea.Width;
+                    MainWindow.Height = SystemParameters.WorkArea.Height;
+                    MainWindow.Top = 0;
+                    MainWindow.Left = 0;
                 }
             });
         }

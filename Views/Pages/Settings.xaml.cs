@@ -57,7 +57,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Restart(object sender, RoutedEventArgs e)
         {
-            Process.Start(System.Windows.Forms.Application.ExecutablePath, "-restart");
+            Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
             Application.Current.Shutdown();
         }
 
@@ -67,18 +67,18 @@ namespace Cokee.ClassService.Views.Pages
             switch (((Button)sender).Tag)
             {
                 case "0":
-                    Catalog.ReleaseCOMObject(mainWindow.wordApplication,"Word");
+                    Catalog.ReleaseCOMObject(mainWindow.wordApplication, "Word");
                     mainWindow.wordApplication = null;
-                    
+
                     break;
 
                 case "1":
-                    Catalog.ReleaseCOMObject(mainWindow.excelApplication,"Excel");
+                    Catalog.ReleaseCOMObject(mainWindow.excelApplication, "Excel");
                     mainWindow.excelApplication = null;
                     break;
 
                 case "2":
-                    Catalog.ReleaseCOMObject(mainWindow.pptApplication,"PPT");
+                    Catalog.ReleaseCOMObject(mainWindow.pptApplication, "PPT");
                     mainWindow.pptApplication = null;
                     break;
 

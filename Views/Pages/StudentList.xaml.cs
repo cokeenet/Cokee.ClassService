@@ -53,9 +53,9 @@ namespace Cokee.ClassService.Views.Pages
             Catalog.ShowInfo("数据已保存.");
         }
 
-        private void RandomStart(object sender, string e)
+        private void RandomStart(object sender, RandomEventArgs e)
         {
-            randomres.ItemsSource = Student.Random(new RandomEventArgs(e));
+            randomres.ItemsSource = Student.Random(e);
             Catalog.ToggleControlVisible(randomres);
         }
 
@@ -71,8 +71,6 @@ namespace Cokee.ClassService.Views.Pages
 
         private void StudentInfo_EditStudent(object? sender, Student e)
         {
-            Student stu1 = null;
-            //Catalog.ShowInfo(e.RoleStr.ToString());
             int index = students.ToList().FindIndex(f => f.ID == e.ID);
             if (index != -1) students[index] = e;
             else students.Add(e);

@@ -35,8 +35,8 @@ namespace Cokee.ClassService.Views.Controls
             {
                 string[] values = line.Split(' ');
                 string name = values[0];
-                int sex = 0;
-                if (values[1] == "男") sex = 1;
+                Sex sex = Sex.Girl;
+                if (values[1] == "男") sex = Sex.Boy;
                 DateTime dt = new DateTime();
                 values[2] = values[2].Insert(4, "-");
                 values[2] = values[2].Insert(7, "-");
