@@ -54,15 +54,15 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <CheckBox IsChecked="{Binding IsChecked}" Click="CheckBox_Click"/>
-                                    <ui:TextBox Text="{Binding Name}" Grid.Column="1"/>
+                                    <CheckBox IsChecked="{Binding IsChecked,Mode=TwoWay}" Click="CheckBox_Click"/>
+                                    <ui:TextBox Text="{Binding Name,Mode=TwoWay}" Grid.Column="1"/>
                                     <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <ui:TextBox Grid.Column="0" Margin="5" Text="{Binding StartTime, Converter={StaticResource TimeSpanConverter}}"/>
-                                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding EndTime, Converter={StaticResource TimeSpanConverter}}"/>
+                                        <ui:TextBox Grid.Column="0" Margin="5" Text="{Binding StartTime, Converter={StaticResource TimeSpanConverter},Mode=TwoWay}"/>
+                                        <ui:TextBox Grid.Column="1" Margin="5" Text="{Binding EndTime, Converter={StaticResource TimeSpanConverter},Mode=TwoWay}"/>
                                     </Grid>
                                 </Grid>
                             </ui:Card>

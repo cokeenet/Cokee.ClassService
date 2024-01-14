@@ -56,11 +56,18 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" Background="{ui:ThemeResource}" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
-            <!--<ui:Card.Background><VisualBrush> <VisualBrush.Visual> <Image Source="/Resources/bg1.jpg" Opacity="0"> <Image.Effect> <BlurEffect Radius="8" /></Image.Effect></Image></VisualBrush.Visual></VisualBrush></ui:Card.Background>-->
-            <ui:Card.BorderBrush>
-                <SolidColorBrush Color="#FFE0BFBF" />
-            </ui:Card.BorderBrush>
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
+            <ui:Card.Background>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Image Source="/Resources/bg2.png">
+                            <Image.Effect>
+                                <BlurEffect Radius="6.8" />
+                            </Image.Effect>
+                        </Image>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </ui:Card.Background>
 
             <ui:Card.RenderTransform>
                 <TranslateTransform x:Name="cardtran" X="300" />
@@ -87,13 +94,13 @@
                             <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
                             <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
-                            <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="Debug" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
                     <StackPanel>
 
-                        <ui:Button Icon="Power28" Click="Button_Click" HorizontalAlignment="Right" Margin="5" Width="35" />
+                        <ui:Button Icon="Power28" Click="Button_Click" HorizontalAlignment="Right" Margin="5" Content="休眠" />
                         <ui:InfoBar x:Name="birth" d:IsOpen="False" IsOpen="False" IsClosable="False" Severity="Success" Margin="5" d:Message="🎉 今天是 XXX 的生日！" />
                         <ui:Card Margin="5,0,5,0" Visibility="Collapsed">
                             <StackPanel>

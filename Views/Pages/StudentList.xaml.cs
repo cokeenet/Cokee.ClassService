@@ -53,7 +53,7 @@ namespace Cokee.ClassService.Views.Pages
             Catalog.ShowInfo("数据已保存.");
         }
 
-        private void RandomStart(object sender, RandomEventArgs e)
+        private async void RandomStart(object sender, RandomEventArgs e)
         {
             randomres.ItemsSource = Student.Random(e);
             Catalog.ToggleControlVisible(randomres);

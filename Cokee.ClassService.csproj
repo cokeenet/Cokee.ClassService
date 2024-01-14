@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AssemblyVersion>2.5.555.24013</AssemblyVersion>
-    <FileVersion>2.5.555.24013</FileVersion>
+    <AssemblyVersion>2.5.563.24014</AssemblyVersion>
+    <FileVersion>2.5.563.24014</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>head.ico</ApplicationIcon>
     <Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -34,6 +34,8 @@
 
   <ItemGroup>
     <None Remove="Resources\bg1.jpg" />
+    <None Remove="Resources\bg1.png" />
+    <None Remove="Resources\bg2.png" />
     <None Remove="Resources\Segoe Fluent Icons.ttf" />
   </ItemGroup>
 
@@ -129,8 +131,10 @@
 
   <ItemGroup>
 	<Content Include="head.ico" />
+	<Resource Include="Resources\bg1.png" />
 	<EmbeddedResource Include="Resources\Cairo-Regular.ttf" />
 	<Resource Include="Resources\bg1.jpg" />
+	<Resource Include="Resources\bg2.png" />
     <Resource Include="Resources\Eraser.png" />
     <Resource Include="Resources\head.jpg" />
     <Resource Include="Resources\HeadPics\0.jpg" />

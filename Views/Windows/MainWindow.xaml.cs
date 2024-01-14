@@ -472,7 +472,7 @@ namespace Cokee.ClassService
                             sideCard.ActualWidth,
                             sideCard.ActualHeight
                         ).Contains(floatGridTopLeft);
-                        Catalog.ShowInfo(isFullyInside.ToString());
+                        //Catalog.ShowInfo(isFullyInside.ToString());
                         if (isFullyInside) transT.Y = 0;
                     };
                     //transT.Y = 0;
@@ -654,7 +654,7 @@ namespace Cokee.ClassService
 
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
 
-        private void RandomControl_StartRandom(object sender, RandomEventArgs e)
+        private async void RandomControl_StartRandom(object sender, RandomEventArgs e)
         {
             var a = Student.Random(e);
             ranres.ItemsSource = a;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,17 +10,17 @@ using Wpf.Ui.Common;
 
 namespace Cokee.ClassService.Views.Controls
 {
-
     public partial class CoursesManage : UserControl
     {
-        Schedule schedule = Schedule.LoadFromJson();
-        List<Course> dayCourses = new List<Course>();
+        private Schedule schedule = Schedule.LoadFromJson();
+        private ObservableCollection<Course> dayCourses = new ObservableCollection<Course>();
+
         public CoursesManage()
         {
             InitializeComponent();
-            if(!DesignerHelper.IsInDesignMode)this.Loaded += (a, b) =>
+            if (!DesignerHelper.IsInDesignMode) this.Loaded += (a, b) =>
             {
-                dayCourses = schedule.Courses[0];
+                dayCourses = new ObservableCollection<Course>(schedule.Courses[0]);
                 courseControl.ItemsSource = dayCourses;
             };
         }
@@ -34,9 +35,9 @@ namespace Cokee.ClassService.Views.Controls
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (schedule.Courses[comboBox.SelectedIndex] == null) schedule.Courses[comboBox.SelectedIndex]=new List<Course> { new Course() };
-            dayCourses = schedule.Courses[comboBox.SelectedIndex];
-            if(courseControl!=null&&dayCourses!=null) courseControl.ItemsSource = dayCourses;
+            if (schedule.Courses[comboBox.SelectedIndex] == null) schedule.Courses[comboBox.SelectedIndex] = new List<Course> { new Course() };
+            dayCourses = new ObservableCollection<Course>(schedule.Courses[comboBox.SelectedIndex]);
+            if (courseControl != null && dayCourses != null) courseControl.ItemsSource = dayCourses;
         }
 
         private void AddCourse(object sender, RoutedEventArgs e)
@@ -48,7 +49,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void MoveUp(object sender, RoutedEventArgs e)
         {
-            int c = dayCourses.FindIndex(t => t.IsChecked == true);
+            int c = dayCourses.ToList().FindIndex(t => t.IsChecked == true);
             if (c != -1)
             {
                 Course a, b;
@@ -62,7 +63,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void MoveDown(object sender, RoutedEventArgs e)
         {
-            int c = dayCourses.FindIndex(t => t.IsChecked == true);
+            int c = dayCourses.ToList().FindIndex(t => t.IsChecked == true);
             if (c != -1)
             {
                 Course a, b;
@@ -76,14 +77,14 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Delete(object sender, RoutedEventArgs e)
         {
-            var c = dayCourses.Find(t => t.IsChecked == true);
-            if(c!=null) dayCourses.Remove(c);
+            var c = dayCourses.ToList().Find(t => t.IsChecked == true);
+            if (c != null) dayCourses.Remove(c);
             courseControl.ItemsSource = dayCourses;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            var a = dayCourses.FindAll(t => t.IsChecked == true);
+            var a = dayCourses.ToList().FindAll(t => t.IsChecked == true);
             if (a.Count > 1)
             {
                 foreach (var item in a.Skip(1))

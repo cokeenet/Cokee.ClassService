@@ -7,8 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-using Microsoft.AppCenter.Analytics;
-
 using Newtonsoft.Json;
 
 using Wpf.Ui.Common;
@@ -180,8 +178,9 @@ namespace Cokee.ClassService.Helper
 
         public static List<Student> Random(RandomEventArgs args)
         {
-            List<Student> students = Student.Load();
             List<Student> randoms = new List<Student>();
+
+            List<Student> students = Student.Load();
             int i = 1;
 
             #region Easter
@@ -199,6 +198,8 @@ namespace Cokee.ClassService.Helper
 
             #endregion Easter
 
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             while (randoms.Count < args.Count)
             {
                 var a = students[new Random().Next(students.Count)];
@@ -211,6 +212,7 @@ namespace Cokee.ClassService.Helper
                     randoms.Add(a);
                     i++;
                 }
+                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
             }
 
             #region easter
@@ -224,9 +226,10 @@ namespace Cokee.ClassService.Helper
 
             #endregion easter
 
-            randoms = Catalog.RandomizeList(randoms);
+            //randoms = Catalog.RandomizeList(randoms);
             RandomEventArgs.RandomHistory = RandomEventArgs.RandomHistory.Union(randoms).ToList();
             if (RandomEventArgs.RandomHistory.Count >= students.Count) RandomEventArgs.RandomHistory.Clear();
+
             return randoms;
         }
     }
