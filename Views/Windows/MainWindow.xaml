@@ -60,7 +60,7 @@
             <ui:Card.Background>
                 <VisualBrush>
                     <VisualBrush.Visual>
-                        <Image Source="/Resources/bg2.png">
+                        <Image Source="/Resources/bg1.png">
                             <Image.Effect>
                                 <BlurEffect Radius="6.8" />
                             </Image.Effect>

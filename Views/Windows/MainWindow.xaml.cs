@@ -68,8 +68,9 @@ namespace Cokee.ClassService
 
         private StrokeCollection[] strokes = new StrokeCollection[101];
         public int page = 0;
-
+        public Process agent = new Process();
         private Schedule schedule = Schedule.LoadFromJson();
+        
 
         public SnackbarService snackbarService = new SnackbarService();
         public IpcServer ipcServer = new IpcServer();
@@ -138,8 +139,23 @@ namespace Cokee.ClassService
             {
                 hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-                ipcServer.Start(20011);
-
+                //ipcServer.Start(20011);
+                agent.StartInfo.FileName=@"D:\Program Files (x86)\CokeeTech\WorkFolder\CokeeAgentV2\bin1\Debug\net6.0-windows10.0.22000.0\CokeeAgent.exe";
+                agent.StartInfo.Arguments = "-cls";
+                agent.StartInfo.CreateNoWindow=true;
+                agent.StartInfo.UseShellExecute = true;
+                agent.StartInfo.RedirectStandardOutput = true;
+                agent.Exited += async (a, b) =>
+                {
+                    Log.Information("Agent Exited. Try restart.");
+                    await Task.Delay(3000);
+                    Log.Information($"Restart:{agent.Start()}");
+                };
+                agent.OutputDataReceived += (a, b) =>
+                {
+                    Log.Information($"AgentData: {b.Data}");
+                };
+                Log.Information($"Try to start agent. Status:{agent.Start()} Exited:{agent.HasExited}");
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
@@ -215,8 +231,7 @@ namespace Cokee.ClassService
 
         public void PptUp(object sender = null, RoutedEventArgs e = null)
         {
-            try
-            {
+            try {
                 new Thread(new ThreadStart(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
@@ -560,7 +575,7 @@ namespace Cokee.ClassService
         }
 
         private void mouseMove(object sender, MouseEventArgs e)
-        {
+        { 
             if (isDragging)
             {
                 var c = sender as Control;
@@ -605,6 +620,7 @@ namespace Cokee.ClassService
         private void Window_Closed(object sender, EventArgs e)
         {
             Log.Information($"Program Closed");
+            agent.Kill();
         }
 
         public void CheckBirthDay()
@@ -710,7 +726,7 @@ namespace Cokee.ClassService
             Catalog.ShowInfo("成功保存截图", "路径:" + savePath);
         }
 
-        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
+        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => App.Current.Shutdown(-1);
 
         private void QuickFix(object sender, RoutedEventArgs e)
         {

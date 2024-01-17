@@ -47,7 +47,11 @@ namespace Cokee.ClassService
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-
+            this.Exit += (a, b) =>
+            {
+                Catalog.MainWindow.agent.Kill();
+            };
+            
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Accent.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
