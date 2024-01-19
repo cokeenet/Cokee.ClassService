@@ -1,31 +1,19 @@
-﻿using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -33,17 +21,29 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
+using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
-
+using Application = System.Windows.Application;
+using Control = System.Windows.Controls.Control;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Label = System.Windows.Controls.Label;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
 
@@ -54,20 +54,20 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        public bool isDragging = false;
+        public bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
 
         //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
 
         private Timer picTimer = new Timer(120000);
-        public MsPpt.Application? pptApplication = null;
-        public MsWord.Application? wordApplication = null;
-        public MsExcel.Application? excelApplication = null;
+        public MsPpt.Application? pptApplication;
+        public MsWord.Application? wordApplication;
+        public MsExcel.Application? excelApplication;
         public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
 
         private StrokeCollection[] strokes = new StrokeCollection[101];
-        public int page = 0;
+        public int page;
 
         private Schedule schedule = Schedule.LoadFromJson();
 
@@ -82,14 +82,14 @@ namespace Cokee.ClassService
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes)
+                .WriteTo.AppCenterSink(null, LogEventLevel.Error)
                 .WriteTo.RichTextBox(richTextBox)
                 .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-            DpiChanged += new DpiChangedEventHandler(DisplaySettingsChanged);
-            SizeChanged += new SizeChangedEventHandler(DisplaySettingsChanged);
+            DpiChanged += DisplaySettingsChanged;
+            SizeChanged += DisplaySettingsChanged;
 
             secondTimer.Elapsed += SecondTimer_Elapsed;
             secondTimer.Start();
@@ -99,7 +99,7 @@ namespace Cokee.ClassService
             snackbarService.Timeout = 4000;
             inkTool.inkCanvas = inkcanvas;
             //inkcanvas.StrokeCollected += ;
-            VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
+            VerStr.Text = $"CokeeClass 版本{Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
 
             /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
             else Theme.Apply(ThemeType.Dark);*/
@@ -112,7 +112,7 @@ namespace Cokee.ClassService
             Catalog.SetWindowStyle(Catalog.WindowType);
             transT.X = -10;
             transT.Y = -100;
-            this.UpdateLayout();
+            UpdateLayout();
             Accent.ApplySystemAccent();
         }
 
@@ -132,11 +132,11 @@ namespace Cokee.ClassService
             if (Catalog.isScrSave)
             {
                 nameBadge.Visibility = Visibility.Visible;
-                nameBadge.Content = $"屏保模式";
+                nameBadge.Content = "屏保模式";
             }
             else
             {
-                hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
+                hwndSource.AddHook(usbCard.WndProc);
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
                 ipcServer.Start(20011);
 
@@ -162,7 +162,7 @@ namespace Cokee.ClassService
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                Catalog.ShowInfo($"FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
+                Catalog.ShowInfo("FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
                 desktopWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 desktopWatcher.Changed += DesktopWatcher_Changed;
                 desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
@@ -195,7 +195,7 @@ namespace Cokee.ClassService
                 }
                 else
                 {
-                    new Thread(new ThreadStart(() =>
+                    new Thread(() =>
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
@@ -207,7 +207,7 @@ namespace Cokee.ClassService
                             nameBadge.Visibility = Visibility.Visible;
                             nameBadge.Content = $"{b.Name} 的头像";
                         }));
-                    })).Start();
+                    }).Start();
                 }
                 StartAnimation(3, 3600);
             }));
@@ -217,12 +217,12 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(new ThreadStart(() =>
+                new Thread(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Previous();
-                })).Start();
+                }).Start();
             }
             catch
             {
@@ -235,12 +235,12 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(new ThreadStart(() =>
+                new Thread(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Next();
-                })).Start();
+                }).Start();
             }
             catch
             {
@@ -251,15 +251,15 @@ namespace Cokee.ClassService
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
                 //longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
                 var status = Schedule.GetNowCourse(schedule);
                 if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
-                if (Catalog.settings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
-            }), DispatcherPriority.Background);
+                if (Catalog.settings.OfficeFunctionEnable) new Thread(CheckOffice).Start();
+            }, DispatcherPriority.Background);
         }
 
         public void ApplyOptAnimation(Label ele, string text)
@@ -267,15 +267,15 @@ namespace Cokee.ClassService
             if (ele == null) return;
             DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
+            anim1.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut };
+            anim2.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn };
             anim1.Completed += async (a, b) =>
             {
                 //await Task.Delay(500);
                 ele.Content = text;
-                ele.BeginAnimation(Label.OpacityProperty, anim2);
+                ele.BeginAnimation(OpacityProperty, anim2);
             };
-            ele.BeginAnimation(Label.OpacityProperty, anim1);
+            ele.BeginAnimation(OpacityProperty, anim1);
         }
 
         public async void GetCalendarInfo()
@@ -333,7 +333,7 @@ namespace Cokee.ClassService
                     if (wordApplication != null)
                     {
                         Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
-                        wordApplication.DocumentOpen += (Doc) =>
+                        wordApplication.DocumentOpen += Doc =>
                         {
                             Catalog.BackupFile(Doc.FullName, Doc.Name);
                         };
@@ -357,7 +357,7 @@ namespace Cokee.ClassService
                     if (excelApplication != null)
                     {
                         Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
-                        excelApplication.WorkbookOpen += (Workbook) =>
+                        excelApplication.WorkbookOpen += Workbook =>
                         {
                             Catalog.BackupFile(Workbook.FullName, Workbook.Name);
                         };
@@ -496,8 +496,7 @@ namespace Cokee.ClassService
                 floatGrid.ReleaseMouseCapture();
                 if (!Catalog.settings.SideCardEnable)
                 {
-                    if (cardPopup.IsOpen) cardPopup.IsOpen = false;
-                    else cardPopup.IsOpen = true;
+                    cardPopup.IsOpen = !cardPopup.IsOpen;
                 }
                 else ToggleCard();
             }), DispatcherPriority.Background);
@@ -507,8 +506,10 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                DoubleAnimation doubleAnimation = new DoubleAnimation();
-                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
+                DoubleAnimation doubleAnimation = new DoubleAnimation
+                {
+                    Duration = new Duration(TimeSpan.FromSeconds(time))
+                };
                 doubleAnimation.EasingFunction = Catalog.easingFunction;
                 //doubleAnimation.From = 0;
                 // doubleAnimation.To = 360;
@@ -521,8 +522,10 @@ namespace Cokee.ClassService
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
-                DoubleAnimation doubleAnimation = new DoubleAnimation();
-                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+                DoubleAnimation doubleAnimation = new DoubleAnimation
+                {
+                    Duration = new Duration(TimeSpan.FromSeconds(0.5))
+                };
                 doubleAnimation.EasingFunction = Catalog.easingFunction;
                 if (symbol != SymbolRegular.Empty) icon.Symbol = symbol;
                 if (!isHide)
@@ -583,7 +586,7 @@ namespace Cokee.ClassService
                 {
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
                     else inkTool.SetCursorMode(1);
-                    Catalog.SetWindowStyle(0);
+                    Catalog.SetWindowStyle();
                     inkTool.Visibility = Visibility.Visible;
                     IconAnimation(false, SymbolRegular.Pen32);
                 }
@@ -596,15 +599,15 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
-            Log.Information($"Program Closeing.");
+            Log.Information("Program Closing.");
             e.Cancel = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Log.Information($"Program Closed");
+            Log.Information("Program Closed");
         }
 
         public void CheckBirthDay()
@@ -620,9 +623,10 @@ namespace Cokee.ClassService
                 {
                     nearest = person; type = 1; break;
                 }
-                else if (DateTime.Now.AddDays(1).ToString("MM-dd") == shortBirthStr)
+
+                if (DateTime.Now.AddDays(1).ToString("MM-dd") == shortBirthStr)
                 {
-                    nearest = person; type = 2; continue;
+                    nearest = person; type = 2;
                 }
             }
             if (nearest != null)
@@ -692,8 +696,8 @@ namespace Cokee.ClassService
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
             cardPopup.IsOpen = false;
-            Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
-            var bitmap = new Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Rectangle rc = SystemInformation.VirtualScreen;
+            var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
 
             using (Graphics memoryGrahics = Graphics.FromImage(bitmap))
             {
@@ -1274,11 +1278,9 @@ namespace Cokee.ClassService
                     ReplacedStroke = null;
                     return;
                 }
-                else
-                {
-                    timeMachine.CommitStrokeUserInputHistory(e.Added);
-                    return;
-                }
+
+                timeMachine.CommitStrokeUserInputHistory(e.Added);
+                return;
             }
 
             if (e.Removed.Count != 0)
@@ -1288,10 +1290,10 @@ namespace Cokee.ClassService
                     ReplacedStroke = e.Removed;
                     return;
                 }
-                else if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
+
+                if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
                 {
                     timeMachine.CommitStrokeEraseHistory(e.Removed);
-                    return;
                 }
             }
         }

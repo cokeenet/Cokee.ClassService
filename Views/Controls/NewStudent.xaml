@@ -25,7 +25,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm" Grid.Row="3"/>
+                <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="Confirm"/>
                 <ui:Button Grid.Column="1" Icon="Dismiss48" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Cancel"/>
             </Grid>
         </Grid>

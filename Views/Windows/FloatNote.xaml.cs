@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Timers;
-using System.Windows;
-using Newtonsoft.Json;
-using Wpf.Ui.Controls;
+﻿using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
 {

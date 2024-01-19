@@ -19,8 +19,7 @@
             ShowMaximize="True" ShowMinimize="True" UseSnapLayout="True" />
         <Grid Grid.Row="1" Margin="3,3,3,3">
 
-            <Border
-                Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
+            <Border Margin="0" CornerRadius="8,0,0,0">
                 <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/Settings.xaml" />
             </Border>
         </Grid>

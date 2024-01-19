@@ -31,7 +31,7 @@ namespace Cokee.ClassService.Helper
         /// <summary>
         ///     创建显示笔迹的类
         /// </summary>
-        public StrokeVisual() : this(new DrawingAttributes()
+        public StrokeVisual() : this(new DrawingAttributes
         {
             Color = Colors.Red,
             //FitToCurve = true,
@@ -79,10 +79,8 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                using (var dc = RenderOpen())
-                {
-                    Stroke.Draw(dc);
-                }
+                using var dc = RenderOpen();
+                Stroke.Draw(dc);
             }
             catch { }
         }

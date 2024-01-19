@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using System.Windows.Shell;
-using System.Windows;
-using System.Media;
-using System.Runtime.InteropServices;
 using System.Windows.Media;
+using System.Windows.Shell;
 
 namespace Cokee.ClassService.Helper
 {
@@ -19,34 +14,34 @@ namespace Cokee.ClassService.Helper
         // Token: 0x0600001E RID: 30 RVA: 0x00002438 File Offset: 0x00000638
         public PerformanceDesktopTransparentWindow()
         {
-            base.WindowStyle = WindowStyle.None;
-            base.ResizeMode = ResizeMode.NoResize;
+            WindowStyle = WindowStyle.None;
+            ResizeMode = ResizeMode.NoResize;
             WindowChrome.SetWindowChrome(this, new WindowChrome
             {
                 GlassFrameThickness = WindowChrome.GlassFrameCompleteThickness,
                 CaptionHeight = 0.0
             });
             FrameworkElementFactory frameworkElementFactory = new FrameworkElementFactory(typeof(Border));
-            frameworkElementFactory.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Control.BackgroundProperty));
+            frameworkElementFactory.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
             FrameworkElementFactory frameworkElementFactory2 = new FrameworkElementFactory(typeof(ContentPresenter));
-            frameworkElementFactory2.SetValue(UIElement.ClipToBoundsProperty, true);
+            frameworkElementFactory2.SetValue(ClipToBoundsProperty, true);
             frameworkElementFactory.AppendChild(frameworkElementFactory2);
-            base.Template = new ControlTemplate
+            Template = new ControlTemplate
             {
                 TargetType = typeof(Window),
                 VisualTree = frameworkElementFactory
             };
             //this._dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
-            if (this._dwmEnabled)
+            if (_dwmEnabled)
             {
-                this._hwnd = new WindowInteropHelper(this).EnsureHandle();
-                base.Loaded += this.PerformanceDesktopTransparentWindow_Loaded;
-                base.Background = Brushes.Transparent;
+                _hwnd = new WindowInteropHelper(this).EnsureHandle();
+                Loaded += PerformanceDesktopTransparentWindow_Loaded;
+                Background = Brushes.Transparent;
                 return;
             }
-            base.AllowsTransparency = true;
+            AllowsTransparency = true;
             //base.Background = BrushCreator.GetOrCreate("#01000000");
-            this._hwnd = new WindowInteropHelper(this).EnsureHandle();
+            _hwnd = new WindowInteropHelper(this).EnsureHandle();
         }
 
         // Token: 0x0600001F RID: 31 RVA: 0x00002557 File Offset: 0x00000757
@@ -56,7 +51,7 @@ namespace Cokee.ClassService.Helper
             {
                 if (msg == 124 && (long)wParam == -20L)
                 {
-                    PerformanceDesktopTransparentWindow.STYLESTRUCT stylestruct = (PerformanceDesktopTransparentWindow.STYLESTRUCT)Marshal.PtrToStructure(lParam, typeof(PerformanceDesktopTransparentWindow.STYLESTRUCT));
+                    STYLESTRUCT stylestruct = (STYLESTRUCT)Marshal.PtrToStructure(lParam, typeof(STYLESTRUCT));
                     stylestruct.styleNew |= 524288;
                     Marshal.StructureToPtr(stylestruct, lParam, false);
                     handled = true;
@@ -68,21 +63,20 @@ namespace Cokee.ClassService.Helper
         // Token: 0x06000020 RID: 32 RVA: 0x00002588 File Offset: 0x00000788
         public void SetTransparentHitThrough()
         {
-            if (this._dwmEnabled)
+            if (_dwmEnabled)
             {
                 // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | 32L)));
                 return;
             }
-            base.Background = Brushes.Transparent;
+            Background = Brushes.Transparent;
         }
 
         // Token: 0x06000021 RID: 33 RVA: 0x000025C8 File Offset: 0x000007C8
         public void SetTransparentNotHitThrough()
         {
-            if (this._dwmEnabled)
+            if (_dwmEnabled)
             {
                 // Win32.User32.SetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)((int)((long)Win32.User32.GetWindowLongPtr(this._hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & -33L)));
-                return;
             }
             //base.Background = BrushCreator.GetOrCreate("#0100000");
         }

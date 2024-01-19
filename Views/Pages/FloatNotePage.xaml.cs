@@ -1,10 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Timers;
-using System.Windows.Controls;
-
-using Wpf.Ui.Controls;
+﻿using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Pages
 {

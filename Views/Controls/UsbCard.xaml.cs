@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -51,7 +50,7 @@ namespace Cokee.ClassService.Views.Controls
             anim2.EasingFunction = Catalog.easingFunction;
             if (!isUnplug)
             {
-                this.Visibility = Visibility.Visible;
+                Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
                 string volumeLabel = $"{t.VolumeLabel}({t.Name})";
 
@@ -65,7 +64,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
                 await Task.Delay(1000);
-                this.Visibility = Visibility.Collapsed;
+                Visibility = Visibility.Collapsed;
             }
         }
 
@@ -98,9 +97,6 @@ namespace Cokee.ClassService.Views.Controls
 
                         case DBT_DEVICEREMOVECOMPLETE:
                             ShowUsbCard(true);
-                            break;
-
-                        default:
                             break;
                     }
                 }

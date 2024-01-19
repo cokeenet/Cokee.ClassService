@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Windows;
-
-using Newtonsoft.Json;
-
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows

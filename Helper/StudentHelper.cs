@@ -6,9 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-
 using Newtonsoft.Json;
-
 using Wpf.Ui.Common;
 
 namespace Cokee.ClassService.Helper
@@ -23,10 +21,8 @@ namespace Cokee.ClassService.Helper
             {
                 return Visibility.Visible;
             }
-            else
-            {
-                return Visibility.Collapsed;
-            }
+
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -71,17 +67,13 @@ namespace Cokee.ClassService.Helper
         public string Name { get; set; }
         public int Score { get; set; }
         public int ID { get; set; }
-
-        public Class()
-        {
-        }
     }
 
     public class RandomEventArgs
     {
         public static List<Student> RandomHistory = new List<Student>();
         public int Count = 1;
-        public bool AllowMLang = true, AllowExist = false;
+        public bool AllowMLang = true, AllowExist;
         public SexCombo SexLimit = SexCombo.None;
         public Easter Easter = Easter.None;
 
@@ -128,10 +120,10 @@ namespace Cokee.ClassService.Helper
         public string Name { get; set; }
         public string ClassName { get; set; }
         public int ClassID { get; set; }
-        public int Score { get; set; }
+        public int Score { get; set; } = 0;
         public DateTime? BirthDay { get; set; }
         public string? RoleStr { get; set; }
-        public int Role { get; set; } //0-3
+        public int Role { get; set; } = 0; //0-3
         public string? Desc { get; set; }
         public long? QQ { get; set; }
         public bool IsMinorLang { get; set; }
@@ -155,7 +147,8 @@ namespace Cokee.ClassService.Helper
                 a.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
                 return a;
             }
-            else return new List<Student>();
+
+            return new List<Student>();
         }
 
         public static List<Student> Save(List<Student> students)
@@ -180,7 +173,7 @@ namespace Cokee.ClassService.Helper
         {
             List<Student> randoms = new List<Student>();
 
-            List<Student> students = Student.Load();
+            List<Student> students = Load();
             int i = 1;
 
             #region Easter
@@ -205,13 +198,10 @@ namespace Cokee.ClassService.Helper
                 var a = students[new Random().Next(students.Count)];
                 if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || RandomEventArgs.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
                 if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
-                else if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
-                else if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
-                else
-                {
-                    randoms.Add(a);
-                    i++;
-                }
+                if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
+                if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
+                randoms.Add(a);
+                i++;
                 if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
             }
 

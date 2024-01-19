@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows;
-
+using System.Windows.Forms;
 using IWshRuntimeLibrary;
-
-using Serilog;
+using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
 {
@@ -62,7 +60,7 @@ namespace Cokee.ClassService.Helper
                 if (FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null) != IntPtr.Zero)
                 {
                     // 找到当前第一个 WorkerW 窗口的，后一个窗口，及第二个 WorkerW 窗口。
-                    IntPtr tempHwnd = Win32Helper.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
+                    IntPtr tempHwnd = FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
 
                     // 隐藏第二个 WorkerW 窗口
                     ShowWindow(tempHwnd, 0);
@@ -85,10 +83,10 @@ namespace Cokee.ClassService.Helper
                 WshShell shell = new WshShell();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
                 //设置快捷方式的目标所在的位置(源程序完整路径)
-                shortcut.TargetPath = System.Windows.Forms.Application.ExecutablePath;
+                shortcut.TargetPath = Application.ExecutablePath;
                 //应用程序的工作目录
                 //当用户没有指定一个具体的目录时，快捷方式的目标应用程序将使用该属性所指定的目录来装载或保存文件。
-                shortcut.WorkingDirectory = System.Environment.CurrentDirectory;
+                shortcut.WorkingDirectory = Environment.CurrentDirectory;
                 //目标应用程序窗口类型(1.Normal window普通窗口,3.Maximized最大化窗口,7.Minimized最小化)
                 shortcut.WindowStyle = 1;
                 //快捷方式的描述
@@ -111,10 +109,13 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
                 return true;
             }
-            catch (Exception) { }
+            catch
+            {
+            }
+
             return false;
         }
     }
@@ -166,7 +167,7 @@ namespace Cokee.ClassService.Helper
              var processes = Process.GetProcessesByName("powerpnt").Length+Process.GetProcessesByName("wpp").Length+Process.GetProcessesByName("POWERPNT").Length;
              if (processes >= 0)
                     return true;
-             else return false;
+             return false;
         }
 
         public static bool HasWordProcess()
@@ -174,7 +175,7 @@ namespace Cokee.ClassService.Helper
             var processes = Process.GetProcessesByName("WINWORD").Length+Process.GetProcessesByName("wps").Length+Process.GetProcessesByName("winword").Length;
             if (processes >= 0)
                 return true;
-            else return false;
+            return false;
         }
 
         public static bool HasExcelProcess()
@@ -182,8 +183,8 @@ namespace Cokee.ClassService.Helper
             var processes = Process.GetProcessesByName("excel").Length+Process.GetProcessesByName("et").Length+Process.GetProcessesByName("EXCEL").Length;
             if (processes >= 0)
                 return true;
-            else return false;
-            
+            return false;
+
         }
 
         public static void TryKillWppProcess()
@@ -192,9 +193,9 @@ namespace Cokee.ClassService.Helper
             if (processesByName.Length == 1)
             {
                 Process[] array = processesByName;
-                for (int i = 0; i < array.Length; i++)
+                foreach (var t in array)
                 {
-                    array[i].Kill();
+                    t.Kill();
                 }
             }
         }

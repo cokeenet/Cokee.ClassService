@@ -1,10 +1,4 @@
-﻿using System;
-using System.Windows;
-
-using Cokee.ClassService.Helper;
-
-using Newtonsoft.Json;
-
+﻿using Cokee.ClassService.Helper;
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -18,9 +12,9 @@ namespace Cokee.ClassService.Views.Windows
         public Settings()
         {
             InitializeComponent();
-            this.Closing += (a, b) =>
+            Closing += (a, b) =>
             {
-                AppSettingsExtensions.SaveSettings(Catalog.settings);
+                Catalog.settings.SaveSettings();
             };
         }
     }

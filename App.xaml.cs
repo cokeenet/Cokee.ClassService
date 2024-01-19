@@ -5,17 +5,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
 using Cokee.ClassService.Helper;
-
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-
 using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
 using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService
@@ -46,7 +40,7 @@ namespace Cokee.ClassService
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Accent.ApplySystemAccent();
@@ -63,9 +57,8 @@ namespace Cokee.ClassService
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception? ex = e.ExceptionObject as Exception;
+            Exception ex = e.ExceptionObject as Exception ?? new Exception("Null异常。");
 
-            if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "AppDomain异常");
             Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序.");
             Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");

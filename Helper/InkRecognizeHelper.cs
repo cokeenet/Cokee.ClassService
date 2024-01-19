@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Media;
@@ -17,7 +16,7 @@ namespace Cokee.ClassService.Helper
 
             var analyzer = new InkAnalyzer();
             analyzer.AddStrokes(strokes);
-            analyzer.SetStrokesType(strokes, System.Windows.Ink.StrokeType.Drawing);
+            analyzer.SetStrokesType(strokes, StrokeType.Drawing);
 
             AnalysisAlternate analysisAlternate = null;
             int strokesCount = strokes.Count;
@@ -31,7 +30,7 @@ namespace Cokee.ClassService.Helper
                         !IsContainShapeType(((InkDrawingNode)alternates[0].AlternateNodes[0]).GetShapeName()))
                         && strokesCount >= 2)
                     {
-                        analyzer.RemoveStroke(strokes[strokes.Count - strokesCount]);
+                        analyzer.RemoveStroke(strokes[^strokesCount]);
                         strokesCount--;
                         sfsaf = analyzer.Analyze();
                         if (sfsaf.Successful)

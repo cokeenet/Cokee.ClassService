@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using Newtonsoft.Json;
+﻿using System.Windows;
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -12,11 +10,11 @@ namespace Cokee.ClassService.Views.Windows
 
     public partial class CourseMgr : UiWindow
     {
-        bool isClosing = false;
+        bool isClosing;
         public CourseMgr()
         {
             InitializeComponent();
-            this.Closing+=(a,b)=>isClosing=true; 
+            Closing+=(a,b)=>isClosing=true; 
         }
 
         private void CoursesManage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

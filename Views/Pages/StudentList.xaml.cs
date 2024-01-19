@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
-
 using Serilog;
-
 using Wpf.Ui.Controls;
-
 using MessageBox = System.Windows.MessageBox;
 
 namespace Cokee.ClassService.Views.Pages
@@ -22,7 +17,7 @@ namespace Cokee.ClassService.Views.Pages
     public partial class StudentList : UiPage
     {
         private ObservableCollection<Student> students = new ObservableCollection<Student>();
-        private int RightClickCount = 0;
+        private int RightClickCount;
 
         public StudentList()
         {

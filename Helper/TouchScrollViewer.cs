@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Controls.Primitives;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -25,9 +19,18 @@ namespace Cokee.ClassService.Views.Controls
         public TouchableScrollViewer()
         {
             TouchDown += TouchableScrollViewer_TouchDown;
-
+            MouseDown += Ta;
             TouchUp += TouchableScrollViewer_TouchUp;
         }
+
+        private void Ta(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(this);
+            HitTestResult hitTestResult = VisualTreeHelper.HitTest(this, point);
+            MessageBox.Show(hitTestResult.VisualHit.ToString());
+
+        }
+
         private void TouchableScrollViewer_TouchDown(object sender, TouchEventArgs e)
         {
             TouchPoint point = e.GetTouchPoint(this);

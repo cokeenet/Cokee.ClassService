@@ -1,9 +1,8 @@
-﻿using Serilog;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
@@ -12,10 +11,10 @@ namespace Cokee.ClassService.Helper
         public bool MultiTouchEnable { get; set; } = true;
         public bool OfficeFunctionEnable { get; set; } = true;
         public bool EraseByPointEnable { get; set; } = true;
-        public bool UseMemberAvatar { get; set; } = false;
+        public bool UseMemberAvatar { get; set; }
         public bool SideCardEnable { get; set; } = true;
-        public bool AgentEnable { get; set; } = false;
-        private bool _FitCurveEnable { get; set; } = false;
+        public bool AgentEnable { get; set; }
+        private bool _FitCurveEnable { get; set; }
 
         public bool FitCurveEnable
         {
@@ -25,14 +24,7 @@ namespace Cokee.ClassService.Helper
                 if (value != _FitCurveEnable)
                 {
                     _FitCurveEnable = value;
-                    if (value)
-                    {
-                        Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = true;
-                    }
-                    else
-                    {
-                        Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = false;
-                    }
+                    Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = value;
                 }
             }
         }
@@ -77,7 +69,7 @@ namespace Cokee.ClassService.Helper
             }
             catch (Exception e)
             {
-                Log.Error($"Error while loading settings:" + e.ToString());
+                Log.Error("Error while loading settings:" + e);
                 return new AppSettings();
             }
         }
@@ -94,7 +86,7 @@ namespace Cokee.ClassService.Helper
             }
             catch (Exception e)
             {
-                Log.Error($"Error while saving settings: " + e.ToString());
+                Log.Error("Error while saving settings: " + e);
             }
         }
     }

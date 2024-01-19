@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -19,7 +18,7 @@ namespace Cokee.ClassService.Views.Controls
         public RandomControl()
         {
             InitializeComponent();
-            this.IsVisibleChanged += (a, b) =>
+            IsVisibleChanged += (a, b) =>
             {
                 cf.Content = $"不重复(已抽{RandomEventArgs.RandomHistory.Count}个)";
                 title.FontSize = 18;
@@ -53,7 +52,7 @@ namespace Cokee.ClassService.Views.Controls
                 try
                 {
                     var a = Convert.ToInt32(textBox.Text);
-                    if (a >= 0 && a <= 999) randomArgs.Count = a;
+                    if (a is >= 0 and <= 999) randomArgs.Count = a;
                 }
                 catch (Exception)
                 {
@@ -71,7 +70,7 @@ namespace Cokee.ClassService.Views.Controls
             if (a.SelectedIndex != -1) randomArgs.SexLimit = (SexCombo)a.SelectedIndex;
         }
 
-        private int touchCount = 0;
+        private int touchCount;
 
         private void LabelTouchMove(object sender, TouchEventArgs e)
         {

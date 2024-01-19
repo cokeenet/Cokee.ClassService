@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -31,7 +20,7 @@ namespace Cokee.ClassService.Views.Controls
 
         public void Show(CourseStatus status, bool needHide = true)
         {
-            this.Visibility = Visibility.Visible;
+            Visibility = Visibility.Visible;
 
             switch (status.nowStatus)
             {
@@ -52,12 +41,12 @@ namespace Cokee.ClassService.Views.Controls
 
                 case CourseNowStatus.InProgress:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{status.now.Name}";
-                    subtitle.Text = $"pupupu";
+                    subtitle.Text = "pupupu";
                     break;
 
                 case CourseNowStatus.NoCoursesScheduled:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Text = $"今天没有课了嗷";
+                    subtitle.Text = "今天没有课了嗷";
                     break;
             }
             if (!needHide)
@@ -69,7 +58,7 @@ namespace Cokee.ClassService.Views.Controls
                     await Task.Delay(TimeSpan.FromSeconds(10));
                     DoubleAnimation doubleAnimation = new DoubleAnimation(0, 330, TimeSpan.FromSeconds(1));
                     doubleAnimation.EasingFunction = Catalog.easingFunction;
-                    doubleAnimation.Completed += (a, b) => this.Visibility = Visibility.Collapsed;
+                    doubleAnimation.Completed += (a, b) => Visibility = Visibility.Collapsed;
                     transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);
                 };
                 transT.BeginAnimation(TranslateTransform.XProperty, doubleAnimation);

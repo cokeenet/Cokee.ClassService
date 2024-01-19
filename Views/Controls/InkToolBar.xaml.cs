@@ -1,6 +1,4 @@
-﻿using Cokee.ClassService.Helper;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,10 +6,9 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
+using Cokee.ClassService.Helper;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-
 using Button = Wpf.Ui.Controls.Button;
 
 namespace Cokee.ClassService.Views.Controls
@@ -22,7 +19,7 @@ namespace Cokee.ClassService.Views.Controls
     public partial class InkToolBar : UserControl
     {
         public InkCanvas? inkCanvas;
-        public bool isPPT = false, isWhiteBoard = false, isEraser = false;
+        public bool isPPT = false, isWhiteBoard, isEraser;
 
         public InkToolBar()
         {
@@ -43,7 +40,7 @@ namespace Cokee.ClassService.Views.Controls
                     };
                     moreCard.DataContext = Catalog.settings;
                 }
-                this.IsVisibleChanged += (a, b) =>
+                IsVisibleChanged += (a, b) =>
                 {
                     if ((bool)b.NewValue && !isPPT)
                     {
@@ -120,9 +117,7 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.IsEnabled = true;
                         isEraser = true;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
-                        if (!Catalog.settings.EraseByPointEnable)
-                            inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
-                        else inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                        inkCanvas.EditingMode = !Catalog.settings.EraseByPointEnable ? InkCanvasEditingMode.EraseByStroke : InkCanvasEditingMode.EraseByPoint;
                         break;
 
                     case "Back":
@@ -157,8 +152,7 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "More":
-                        if (moreMenu.IsOpen) moreMenu.IsOpen = false;
-                        else moreMenu.IsOpen = true;
+                        moreMenu.IsOpen = !moreMenu.IsOpen;
                         break;
 
                     case "Select":
@@ -244,9 +238,6 @@ namespace Cokee.ClassService.Views.Controls
                             Catalog.settings.EraseByPointEnable = false;
                             Catalog.settings.SaveSettings();
                         }
-                        break;
-
-                    default:
                         break;
                 }
             }

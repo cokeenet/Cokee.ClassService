@@ -4,14 +4,10 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
-
 using Cokee.ClassService.Helper;
-
 using Newtonsoft.Json;
-
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-
 using Button = Wpf.Ui.Controls.Button;
 using Clipboard = Wpf.Ui.Common.Clipboard;
 using MessageBox = System.Windows.MessageBox;
@@ -23,7 +19,7 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class PostNote : UserControl
     {
-        public bool IsEraser = false;
+        public bool IsEraser;
         public Student stu = null;
         public string stud = "";
         List<Student> students = new List<Student>();
@@ -43,7 +39,7 @@ namespace Cokee.ClassService.Views.Controls
                 atu.ItemsSource = str;
                 
             }
-            this.IsVisibleChanged += (a, b) => {
+            IsVisibleChanged += (a, b) => {
                 IsEraser = false;
                 ink.Strokes.Clear();
                 atu.Text = null;

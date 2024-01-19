@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
 using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Pages;
 using Cokee.ClassService.Views.Windows;
-
-using Newtonsoft.Json;
-
 using Wpf.Ui.Common;
 
 namespace Cokee.ClassService.Views.Controls

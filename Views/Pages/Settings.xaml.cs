@@ -1,17 +1,11 @@
-﻿using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-
-using Serilog;
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
-
+using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-
-using Button = Wpf.Ui.Controls.Button;
+using Application = System.Windows.Forms.Application;
 
 namespace Cokee.ClassService.Views.Pages
 {
@@ -25,11 +19,10 @@ namespace Cokee.ClassService.Views.Pages
             try
             {
                 InitializeComponent();
-                if (!Wpf.Ui.Appearance.Background.IsSupported(BackgroundType.Mica)) micaInfo.IsOpen = true;
-                else micaInfo.IsOpen = false;
-                this.IsVisibleChanged += (a, b) =>
+                micaInfo.IsOpen = !Wpf.Ui.Appearance.Background.IsSupported(BackgroundType.Mica);
+                IsVisibleChanged += (a, b) =>
                 {
-                    this.DataContext = Catalog.settings;
+                    DataContext = Catalog.settings;
 
                     if (!(bool)b.NewValue) SaveData();
                 };
@@ -57,8 +50,8 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Restart(object sender, RoutedEventArgs e)
         {
-            Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
-            Application.Current.Shutdown();
+            Process.Start(Application.ExecutablePath, "-m");
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void ReleaseObj(object sender, RoutedEventArgs e)
@@ -80,9 +73,6 @@ namespace Cokee.ClassService.Views.Pages
                 case "2":
                     Catalog.ReleaseCOMObject(mainWindow.pptApplication, "PPT");
                     mainWindow.pptApplication = null;
-                    break;
-
-                default:
                     break;
             }
         }

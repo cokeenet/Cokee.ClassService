@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
-
 using Newtonsoft.Json;
 
 namespace Cokee.ClassService.Helper
@@ -35,7 +34,7 @@ namespace Cokee.ClassService.Helper
     public class Course
     {
         public string Name { get; set; } = "";
-        public int DayOfWeek { get; set; } = 0;//0-6
+        public int DayOfWeek { get; set; } //0-6
         public TimeSpan StartTime { get; set; } = TimeSpan.Zero;
         public TimeSpan EndTime { get; set; } = TimeSpan.Zero;
 
@@ -66,13 +65,13 @@ namespace Cokee.ClassService.Helper
             var json = File.ReadAllText(Catalog.SCHEDULE_FILE);
             var a = JsonConvert.DeserializeObject<Schedule>(json);
             if (a != null) return a;
-            else return new Schedule();
+            return new Schedule();
         }
 
         // 获取指定星期几的课程列表
         public static string GetShortTimeStr(DateTime t)
         {
-            if (t.Hour == 17) if (t.Minute >= 18 && t.Minute <= 22) return "";
+            if (t.Hour == 17) if (t.Minute is >= 18 and <= 22) return "";
             return DateTime.Now.ToString("HH:mm");
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Versioning;
 using System.Security;
+using Microsoft.Office.Interop.PowerPoint;
 
 namespace Cokee.ClassService.Helper
 {
@@ -43,21 +43,21 @@ namespace Cokee.ClassService.Helper
         [DllImport(OLE32, PreserveSig = false)]
         [ResourceExposure(ResourceScope.None)]
         [SuppressUnmanagedCodeSecurity]
-        [System.Security.SecurityCritical]  // auto-generated
+        [SecurityCritical]  // auto-generated
         private static extern void CLSIDFromProgIDEx([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
 
         //[DllImport(Microsoft.Win32.Win32Native.OLE32, PreserveSig = false)]
         [DllImport(OLE32, PreserveSig = false)]
         [ResourceExposure(ResourceScope.None)]
         [SuppressUnmanagedCodeSecurity]
-        [System.Security.SecurityCritical]  // auto-generated
+        [SecurityCritical]  // auto-generated
         private static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
 
         //[DllImport(Microsoft.Win32.Win32Native.OLEAUT32, PreserveSig = false)]
         [DllImport(OLEAUT32, PreserveSig = false)]
         [ResourceExposure(ResourceScope.None)]
         [SuppressUnmanagedCodeSecurity]
-        [System.Security.SecurityCritical]  // auto-generated
+        [SecurityCritical]  // auto-generated
         private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out Object ppunk);
     }
 
@@ -66,21 +66,18 @@ namespace Cokee.ClassService.Helper
         [DllImport("ole32.dll")]
         public static extern int GetActiveObject(ref Guid rclsid, IntPtr pvReserved, out object ppunk);
 
-        public static Microsoft.Office.Interop.PowerPoint.Application? GetObj()
+        public static Application? GetObj()
         {
             Guid clsid = new Guid("91493441-5A91-11CF-8700-00AA0060263B");  // PowerPoint.Application 的 CLSID
 
-            object activeObject;
-            int hr = GetActiveObject(ref clsid, IntPtr.Zero, out activeObject);
+            int hr = GetActiveObject(ref clsid, IntPtr.Zero, out var activeObject);
 
             if (hr == 0)  // S_OK
             {
-                return (Microsoft.Office.Interop.PowerPoint.Application)activeObject;
+                return (Application)activeObject;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }

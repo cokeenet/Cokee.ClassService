@@ -1,6 +1,4 @@
-﻿using Serilog;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,12 +7,10 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
+using Serilog;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
-using Application = System.Windows.Application;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -23,7 +19,7 @@ namespace Cokee.ClassService.Helper
 {
     public class Catalog
     {
-        public static string CONFIG_DISK = @$"D:\";
+        public static string CONFIG_DISK = @"D:\";
         public static string CONFIG_DIR = @$"{CONFIG_DISK}CokeeTech\CokeeClass";
         public static string BACKUP_FILE_DIR = @$"{CONFIG_DIR}\Files";
         public static string INK_DIR = @$"{CONFIG_DIR}\ink";
@@ -31,9 +27,9 @@ namespace Cokee.ClassService.Helper
         public static string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
         public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
-        public static int WindowType = 0;
+        public static int WindowType;
         public static bool isScrSave = false;
-        public static IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
+        public static IEasingFunction easingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
@@ -64,9 +60,9 @@ namespace Cokee.ClassService.Helper
                 SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
                 STU_FILE = @$"{CONFIG_DIR}\students.json";
                 SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
-                if (!Directory.Exists(Catalog.CONFIG_DIR))
+                if (!Directory.Exists(CONFIG_DIR))
                 {
-                    Directory.CreateDirectory(Catalog.CONFIG_DIR);
+                    Directory.CreateDirectory(CONFIG_DIR);
                 }
             }
         }
@@ -78,7 +74,7 @@ namespace Cokee.ClassService.Helper
                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
                if (mainWindow != null)
                {
-                   if (Catalog.MainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                   if (MainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
                    mainWindow.IconAnimation(true);
                }
            });
@@ -88,13 +84,13 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                if (title == null) title = "";
-                if (content == null) content = "";
+                title ??= "";
+                content ??= "";
                 if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                    {
-                        Log.Information($"Snack消息:{title} {content}");
-                        await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
-                    }
+                {
+                    Log.Information($"Snack消息:{title} {content}");
+                    await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
+                }
             }, DispatcherPriority.Background);
         }
 
@@ -114,11 +110,11 @@ namespace Cokee.ClassService.Helper
 
         public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 try
                 {
-                    Catalog.ShowInfo($"尝试备份文件。", $"{filePath}");
+                    ShowInfo("尝试备份文件。", $"{filePath}");
                     if (File.Exists(filePath) && isFullyDownloaded)
                     {
                         var a = new FileInfo(filePath);
@@ -127,20 +123,20 @@ namespace Cokee.ClassService.Helper
                         if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
                         a.CopyTo(backupPath, true);
                     }
-                    else Catalog.ShowInfo($"文件不存在或未下载。");
+                    else ShowInfo("文件不存在或未下载。");
                 }
                 catch (Exception ex)
                 {
                     HandleException(ex, "FileCopy");
                 }
-            })).Start();
+            }).Start();
         }
 
         public static void ReleaseCOMObject(object o, string type = "ComObject")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Catalog.ShowInfo($"尝试释放 {type} 对象");
+                ShowInfo($"尝试释放 {type} 对象");
                 try { Marshal.FinalReleaseComObject(o); }
                 catch { }
                 o = null;
@@ -151,8 +147,8 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Catalog.WindowType = type;
-                if (Catalog.MainWindow == null) return;
+                WindowType = type;
+                if (MainWindow == null) return;
                 if (type == 0)
                 {
                     MainWindow.Width = SystemParameters.PrimaryScreenWidth;
@@ -182,11 +178,13 @@ namespace Cokee.ClassService.Helper
                 else
                 {
                     // 创建一个淡出动画
-                    DoubleAnimation fadeOutAnimation = new DoubleAnimation();
-                    fadeOutAnimation.From = 1.0;
-                    fadeOutAnimation.To = 0.0;
-                    fadeOutAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.2)); // 设置动画持续时间
-                                                                                         // 创建一个淡出故事板，并将动画应用于控件的透明度属性
+                    var fadeOutAnimation = new DoubleAnimation
+                    {
+                        From = 1.0,
+                        To = 0.0,
+                        Duration = new Duration(TimeSpan.FromSeconds(0.2)) // 设置动画持续时间
+                    };
+                    // 创建一个淡出故事板，并将动画应用于控件的透明度属性
                     Storyboard fadeOutStoryboard = new Storyboard();
                     fadeOutStoryboard.Children.Add(fadeOutAnimation);
                     Storyboard.SetTarget(fadeOutAnimation, uIElement);

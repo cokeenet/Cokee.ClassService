@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -16,8 +12,8 @@ namespace Cokee.ClassService.Helper
             if (ele == null) return;
             DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
+            anim1.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut };
+            anim2.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn };
             anim1.Completed += (a, b) =>
             {
                 //await Task.Delay(500);
@@ -32,8 +28,8 @@ namespace Cokee.ClassService.Helper
             if (ele == null) return;
             DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
+            anim1.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut };
+            anim2.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn };
             anim1.Completed += (a, b) =>
             {
                 //await Task.Delay(500);
@@ -48,8 +44,8 @@ namespace Cokee.ClassService.Helper
             if (ele == null) return;
             DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
             DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
+            anim1.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut };
+            anim2.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn };
             anim1.Completed += (a, b) =>
             {
                 ele.BeginAnimation(UIElement.OpacityProperty, anim2);

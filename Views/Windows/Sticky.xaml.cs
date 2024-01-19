@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
-
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows

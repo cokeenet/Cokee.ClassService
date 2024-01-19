@@ -56,7 +56,7 @@
                 </ui:Card>
             </Grid>
         </Grid>
-        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
+        <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Visible" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
             <ui:Card.Background>
                 <VisualBrush>
                     <VisualBrush.Visual>
@@ -70,7 +70,7 @@
             </ui:Card.Background>
 
             <ui:Card.RenderTransform>
-                <TranslateTransform x:Name="cardtran" X="300" />
+                <TranslateTransform x:Name="cardtran" X="-300" />
             </ui:Card.RenderTransform>
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
