@@ -3,11 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Cokee.ClassService"
              StartupUri="/Views/Windows/MainWindow.xaml"
+             ShutdownMode="OnMainWindowClose"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <FontFamily x:Key="SegoeFluentIcons">/Cokee.ClassService;component/Resources/#Segoe Fluent Icons</FontFamily>
+            <FontFamily x:Key="Segoe Fluent Icons">/Cokee.ClassService;component/Resources/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
+            <FontFamily x:Key="Segoe UI Emoji">/Cokee.ClassService;component/Resources/#segulemj</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />

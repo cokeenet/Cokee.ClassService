@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -17,7 +18,7 @@ using MsWord = Microsoft.Office.Interop.Word;
 
 namespace Cokee.ClassService.Helper
 {
-    public class Catalog
+    public static class Catalog
     {
         public static string CONFIG_DISK = @"D:\";
         public static string CONFIG_DIR = @$"{CONFIG_DISK}CokeeTech\CokeeClass";
@@ -28,13 +29,13 @@ namespace Cokee.ClassService.Helper
         public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType;
-        public static bool isScrSave = false;
+        public static bool IsScrSave = false;
         public static IEasingFunction easingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut };
 
         // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
 
-        public static MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
+        public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static SnackbarService? GlobalSnackbarService;
 
         public static void HandleException(Exception ex, string str = "")
@@ -80,16 +81,16 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static void ShowInfo(string? title = "", string? content = "")
+        public static void ShowInfo(string? title = "", string? content = "",ControlAppearance appearance=ControlAppearance.Light,SymbolRegular symbol=SymbolRegular.Info28)
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 title ??= "";
                 content ??= "";
-                if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
+                Log.Information($"Snack消息:{title} {content}");
+                if (GlobalSnackbarService?.GetSnackbarControl() != null)
                 {
-                    Log.Information($"Snack消息:{title} {content}");
-                    await GlobalSnackbarService.ShowAsync(title, content, SymbolRegular.Info28, ControlAppearance.Light);
+                    await GlobalSnackbarService.ShowAsync(title, content, symbol,appearance);
                 }
             }, DispatcherPriority.Background);
         }
@@ -110,7 +111,7 @@ namespace Cokee.ClassService.Helper
 
         public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
-            new Thread(() =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -118,27 +119,28 @@ namespace Cokee.ClassService.Helper
                     if (File.Exists(filePath) && isFullyDownloaded)
                     {
                         var a = new FileInfo(filePath);
-                        if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}");
-                        var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\{fileName}";
-                        if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now.ToString("yyyy-MM")}\\1_{fileName}";
+                        if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}");
+                        var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\{fileName}";
+                        if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\1_{fileName}";
                         a.CopyTo(backupPath, true);
                     }
-                    else ShowInfo("文件不存在或未下载。");
+                    else ShowInfo("文件不存在。");
                 }
                 catch (Exception ex)
                 {
-                    HandleException(ex, "FileCopy");
+                    HandleException(ex, "FileCopyTask");
                 }
             }).Start();
         }
 
-        public static void ReleaseCOMObject(object o, string type = "ComObject")
+        public static void ReleaseComObject(object? o, string type = "COM")
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 ShowInfo($"尝试释放 {type} 对象");
+                if(o==null)return;
                 try { Marshal.FinalReleaseComObject(o); }
-                catch { }
+                catch(Exception ex) { HandleException(ex,"释放COM对象");}
                 o = null;
             }, DispatcherPriority.Normal);
         }
@@ -185,13 +187,13 @@ namespace Cokee.ClassService.Helper
                         Duration = new Duration(TimeSpan.FromSeconds(0.2)) // 设置动画持续时间
                     };
                     // 创建一个淡出故事板，并将动画应用于控件的透明度属性
-                    Storyboard fadeOutStoryboard = new Storyboard();
+                    var fadeOutStoryboard = new Storyboard();
                     fadeOutStoryboard.Children.Add(fadeOutAnimation);
                     Storyboard.SetTarget(fadeOutAnimation, uIElement);
                     Storyboard.SetTargetProperty(fadeOutAnimation, new PropertyPath(UIElement.OpacityProperty));
 
                     // 淡出动画完成时将控件设置为不可见
-                    fadeOutStoryboard.Completed += (sender, e) =>
+                    fadeOutStoryboard.Completed += (a,b) =>
                     {
                         uIElement.Visibility = Visibility.Collapsed;
                         uIElement.Opacity = 1.0;
@@ -205,7 +207,7 @@ namespace Cokee.ClassService.Helper
 
         public static List<T> RandomizeList<T>(List<T> list)
         {
-            Random random = new Random();
+            var random = new Random();
             int n = list.Count;
 
             while (n > 1)

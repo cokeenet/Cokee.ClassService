@@ -19,17 +19,10 @@ namespace Cokee.ClassService.Views.Controls
         public TouchableScrollViewer()
         {
             TouchDown += TouchableScrollViewer_TouchDown;
-            MouseDown += Ta;
             TouchUp += TouchableScrollViewer_TouchUp;
         }
 
-        private void Ta(object sender, MouseButtonEventArgs e)
-        {
-            Point point = e.GetPosition(this);
-            HitTestResult hitTestResult = VisualTreeHelper.HitTest(this, point);
-            MessageBox.Show(hitTestResult.VisualHit.ToString());
-
-        }
+      
 
         private void TouchableScrollViewer_TouchDown(object sender, TouchEventArgs e)
         {

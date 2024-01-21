@@ -49,7 +49,7 @@ namespace Cokee.ClassService
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             this.Exit += (a, b) =>
             {
-                Catalog.MainWindow.agent.Kill();
+               // Catalog.MainWindow.agent.Kill();
             };
             
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -57,7 +57,7 @@ namespace Cokee.ClassService
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 0)
             {
-                if (args.Contains("-scrsave")) Catalog.isScrSave = true;
+                if (args.Contains("-scrsave")) Catalog.IsScrSave = true;
                 else if (!args.Contains("-m"))
                 {
                     if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
@@ -79,7 +79,7 @@ namespace Cokee.ClassService
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error(e.Exception, "发生错误");
-            Catalog.HandleException(e.Exception, "发生错误 ");
+            Catalog.HandleException(e.Exception);
 
             e.Handled = true;
         }

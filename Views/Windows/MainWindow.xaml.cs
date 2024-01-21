@@ -1,31 +1,20 @@
-﻿using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -33,17 +22,28 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
+using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
-
+using Application = System.Windows.Application;
+using Control = System.Windows.Controls.Control;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
 
@@ -54,57 +54,46 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class MainWindow : Window
     {
-        public bool isDragging = false;
+        private bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
 
         //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
 
         private Timer picTimer = new Timer(120000);
-        public MsPpt.Application? pptApplication = null;
-        public MsWord.Application? wordApplication = null;
-        public MsExcel.Application? excelApplication = null;
-        public FileSystemWatcher desktopWatcher = new FileSystemWatcher(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
+        public MsPpt.Application? pptApplication;
+        public MsWord.Application? wordApplication;
+        public MsExcel.Application? excelApplication;
+
+        public FileSystemWatcher desktopWatcher = new FileSystemWatcher(
+            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
 
         private StrokeCollection[] strokes = new StrokeCollection[101];
-        public int page = 0;
+        public int page;
 
         private Schedule schedule = Schedule.LoadFromJson();
 
         public SnackbarService snackbarService = new SnackbarService();
         public IpcServer ipcServer = new IpcServer();
         public IpcClient ipcClient = new IpcClient();
-
+        private Task CheckOfficeTask;
         public MainWindow()
         {
             InitializeComponent();
             Catalog.MainWindow = this;
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt",
-               outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.AppCenterSink(null, LogEventLevel.Error, AppCenterTarget.ExceptionsAsCrashes)
+                    outputTemplate:
+                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.AppCenterSink(null, LogEventLevel.Error)
                 .WriteTo.RichTextBox(richTextBox)
                 .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
-            Catalog.SetWindowStyle(1);
-            SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-            DpiChanged += new DpiChangedEventHandler(DisplaySettingsChanged);
-            SizeChanged += new SizeChangedEventHandler(DisplaySettingsChanged);
-
-            secondTimer.Elapsed += SecondTimer_Elapsed;
-            secondTimer.Start();
-            picTimer.Elapsed += PicTimer_Elapsed;
-            picTimer.Start();
             snackbarService.SetSnackbarControl(snackbar);
             snackbarService.Timeout = 4000;
             inkTool.inkCanvas = inkcanvas;
-            //inkcanvas.StrokeCollected += ;
-            VerStr.Text = $"CokeeClass 版本{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}";
-
-            /*if (!Catalog.appSettings.DarkModeEnable) Theme.Apply(ThemeType.Light);
-            else Theme.Apply(ThemeType.Dark);*/
-            /*var videoDevices = MultimediaUtil.VideoInputNames;// 获取所有视频设备
-            string videoName = videoDevices[0];// 选择第一个*/
+            VerStr.Text =
+                $"CokeeClass 版本{Assembly.GetExecutingAssembly().GetName().Version?.ToString(4)}";
         }
 
         private void DisplaySettingsChanged(object? sender, EventArgs e)
@@ -112,36 +101,41 @@ namespace Cokee.ClassService
             Catalog.SetWindowStyle(Catalog.WindowType);
             transT.X = -10;
             transT.Y = -100;
-            this.UpdateLayout();
+            UpdateLayout();
             Accent.ApplySystemAccent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            Catalog.SetWindowStyle(1);
+            SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
+            DpiChanged += DisplaySettingsChanged;
+            SizeChanged += DisplaySettingsChanged;
+            secondTimer.Elapsed += SecondTimer_Elapsed;
+            secondTimer.Start();
+            picTimer.Elapsed += PicTimer_Elapsed;
+            picTimer.Start();
             AutoUpdater.ShowSkipButton = false;
             AutoUpdater.RemindLaterAt = 5;
             AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
             longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
-            if (Catalog.settings.FileWatcherEnable && !Catalog.isScrSave)
+            if (Catalog.settings.FileWatcherEnable && !Catalog.IsScrSave)IntiFileWatcher();
+            if (!Catalog.IsScrSave)
             {
-                IntiFileWatcher();
-            }
-            if (Catalog.isScrSave)
-            {
-                nameBadge.Visibility = Visibility.Visible;
-                nameBadge.Content = $"屏保模式";
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+                ipcServer.Start(20011);
+                HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+                hwndSource.AddHook(usbCard.WndProc);
+                CheckOfficeTask = new Task(CheckOffice);
+                //ipcClient.Initialize(80103);
+                //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
             else
             {
-                hwndSource.AddHook(new HwndSourceHook(usbCard.WndProc));
-                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-                ipcServer.Start(20011);
-
-                //ipcClient.Initialize(80103);
-                //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
+                nameBadge.Visibility = Visibility.Visible;
+                nameBadge.Content = "屏保模式";
             }
             if (Catalog.settings.MultiTouchEnable)
             {
@@ -150,6 +144,7 @@ namespace Cokee.ClassService
                 inkcanvas.StylusUp += MainWindow_StylusUp;
                 inkcanvas.TouchDown += MainWindow_TouchDown;
             }
+
             inkcanvas.StrokeCollected += inkcanvas_StrokeCollected;
             timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
             timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
@@ -162,10 +157,14 @@ namespace Cokee.ClassService
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                Catalog.ShowInfo($"FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
+                Catalog.ShowInfo("FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
                 desktopWatcher.NotifyFilter = NotifyFilters.LastWrite;
                 desktopWatcher.Changed += DesktopWatcher_Changed;
-                desktopWatcher.Error += (a, b) => { desktopWatcher.EnableRaisingEvents = false; Catalog.HandleException(b.GetException(), "FileWatcher"); };
+                desktopWatcher.Error += (a, b) =>
+                {
+                    desktopWatcher.EnableRaisingEvents = false;
+                    Catalog.HandleException(b.GetException(), "FileWatcher");
+                };
                 desktopWatcher.Created += DesktopWatcher_Changed;
                 desktopWatcher.Renamed += DesktopWatcher_Changed;
                 desktopWatcher.EnableRaisingEvents = true;
@@ -176,9 +175,10 @@ namespace Cokee.ClassService
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (!e.Name.Contains(".lnk") && !e.Name.Contains(".tmp") && !e.Name.Contains("~$") && e.Name.Contains("."))
+                if (!e.Name.Contains(".lnk") && !e.Name.Contains(".tmp") && !e.Name.Contains("~$") &&
+                    e.Name.Contains("."))
                 {
-                    Catalog.ShowInfo($"桌面文件变动 {e.ChangeType.ToString()}", e.FullPath);
+                    Catalog.ShowInfo($"桌面文件变动 Type:{e.ChangeType.ToString()}", e.FullPath);
                     if (e.ChangeType != WatcherChangeTypes.Deleted) Catalog.BackupFile(e.FullPath, e.Name);
                 }
             }), DispatcherPriority.Normal);
@@ -195,7 +195,7 @@ namespace Cokee.ClassService
                 }
                 else
                 {
-                    new Thread(new ThreadStart(() =>
+                    new Thread(() =>
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                         {
@@ -207,8 +207,9 @@ namespace Cokee.ClassService
                             nameBadge.Visibility = Visibility.Visible;
                             nameBadge.Content = $"{b.Name} 的头像";
                         }));
-                    })).Start();
+                    }).Start();
                 }
+
                 StartAnimation(3, 3600);
             }));
         }
@@ -217,12 +218,12 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(new ThreadStart(() =>
+                new Thread(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Previous();
-                })).Start();
+                }).Start();
             }
             catch
             {
@@ -235,12 +236,12 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(new ThreadStart(() =>
+                new Thread(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
                     pptApplication.SlideShowWindows[1].View.Next();
-                })).Start();
+                }).Start();
             }
             catch
             {
@@ -251,31 +252,30 @@ namespace Cokee.ClassService
 
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
                 //longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
                 var status = Schedule.GetNowCourse(schedule);
-                if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming) { courseCard.Show(status); StartAnimation(10, 3600); }
-                if (Catalog.settings.OfficeFunctionEnable) new Thread(new ThreadStart(CheckOffice)).Start();
-            }), DispatcherPriority.Background);
-        }
+                if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming)
+                {
+                    courseCard.Show(status);
+                    StartAnimation(10, 3600);
+                }
 
-        public void ApplyOptAnimation(Label ele, string text)
-        {
-            if (ele == null) return;
-            DoubleAnimation anim1 = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.5));
-            DoubleAnimation anim2 = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-            anim1.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-            anim2.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseIn };
-            anim1.Completed += async (a, b) =>
-            {
-                //await Task.Delay(500);
-                ele.Content = text;
-                ele.BeginAnimation(Label.OpacityProperty, anim2);
-            };
-            ele.BeginAnimation(Label.OpacityProperty, anim1);
+                if (Catalog.settings.OfficeFunctionEnable)
+                {
+                    if(CheckOfficeTask.Status==TaskStatus.Created)CheckOfficeTask.Start();
+                        if(CheckOfficeTask.IsCompleted||CheckOfficeTask.Status==TaskStatus.Canceled||CheckOfficeTask.Status==TaskStatus.Faulted)
+                        {
+                            Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
+                            CheckOfficeTask = new Task(CheckOffice);
+                            CheckOfficeTask.Start();
+                        }
+                        
+                }
+            }, DispatcherPriority.Background);
         }
 
         public async void GetCalendarInfo()
@@ -284,30 +284,38 @@ namespace Cokee.ClassService
             sw.Start();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var client = new HttpClient();
-            var json = await client.GetStringAsync($"https://opendata.baidu.com/api.php?tn=wisetpl&format=json&resource_id=39043&query={DateTime.Now.Year}年{DateTime.Now.Month}月");
-            JObject dt = JsonConvert.DeserializeObject<JObject>(json);
-            string fes = "";
-            foreach (var item in dt["data"][0]["almanac"])
-            {
-                if (item["month"].ToString() == DateTime.Now.Month.ToString() && item["day"].ToString() == DateTime.Now.Day.ToString()) fes = item["term"].ToString();
-            }
-            longDate.Text = $"{DateTime.Now.ToString("yyyy年MM月dd日 ddd")} {fes}";
+            var json = await client.GetStringAsync(
+                $"https://opendata.baidu.com/api.php?tn=wisetpl&format=json&resource_id=39043&query={DateTime.Now.Year}年{DateTime.Now.Month}月");
+            var dt = JsonConvert.DeserializeObject<JObject>(json);
+            var fes = "";
+            if (dt != null)
+                foreach (var item in dt["data"][0]["almanac"])
+                {
+                    if (item["month"].ToString() == DateTime.Now.Month.ToString() &&
+                        item["day"].ToString() == DateTime.Now.Day.ToString()) fes = item["term"].ToString();
+                }
+
+            longDate.Text = $"{DateTime.Now:yyyy年MM月dd日 ddd} {fes}";
             sw.Stop();
             Log.Information($"获取节假日信息用时:{sw.Elapsed.TotalSeconds}s");
         }
 
-        public void CheckOffice()
+        private void CheckOffice()
         {
             try
             {
+                Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
                 if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
                 {
                     pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
 
                     if (pptApplication != null)
                     {
-                        Catalog.ShowInfo("成功捕获PPT程序对象", pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" + pptApplication.ProductCode);
-                        if (!pptApplication.Name.Contains("Microsoft")) Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。");
+                        Catalog.ShowInfo("成功捕获PPT程序对象",
+                            pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
+                            pptApplication.ProductCode,ControlAppearance.Success);
+                        if (!pptApplication.Name.Contains("Microsoft"))
+                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。",ControlAppearance.Caution);
                         pptApplication.PresentationClose += PptApplication_PresentationClose;
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
@@ -316,14 +324,14 @@ namespace Cokee.ClassService
                         {
                             PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
                         }
+
                         if (pptApplication.Presentations.Count >= 1)
                         {
-                            foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                            foreach (MsPpt.Presentation pres in pptApplication.Presentations)
                             {
-                                Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                                Catalog.BackupFile(pres.FullName, pres.Name, pres.IsFullyDownloaded);
                             }
                         }
-                        //else Catalog.ReleaseCOMObject(pptApplication, "PPT");
                     }
                 }
 
@@ -332,14 +340,13 @@ namespace Cokee.ClassService
                     wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
                     if (wordApplication != null)
                     {
-                        Catalog.ShowInfo("成功捕获Word程序对象", wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" + wordApplication.ProductCode());
-                        wordApplication.DocumentOpen += (Doc) =>
-                        {
-                            Catalog.BackupFile(Doc.FullName, Doc.Name);
-                        };
+                        Catalog.ShowInfo("成功捕获Word程序对象",
+                            wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" +
+                            wordApplication.ProductCode(),ControlAppearance.Success);
+                        wordApplication.DocumentOpen += Doc => { Catalog.BackupFile(Doc.FullName, Doc.Name); };
                         wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
                         {
-                            Catalog.ReleaseCOMObject(wordApplication);
+                            Catalog.ReleaseComObject(wordApplication,"Word");
                         };
                         if (wordApplication.Documents.Count > 0)
                         {
@@ -348,22 +355,24 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        //else Catalog.ReleaseCOMObject(wordApplication, "Word");
                     }
                 }
+
                 if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
                 {
                     excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
                     if (excelApplication != null)
                     {
-                        Catalog.ShowInfo("成功捕获Excel程序对象", excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" + excelApplication.ProductCode);
-                        excelApplication.WorkbookOpen += (Workbook) =>
+                        Catalog.ShowInfo("成功捕获Excel程序对象",
+                            excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" +
+                            excelApplication.ProductCode,ControlAppearance.Success);
+                        excelApplication.WorkbookOpen += Workbook =>
                         {
                             Catalog.BackupFile(Workbook.FullName, Workbook.Name);
                         };
                         excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
                         {
-                            Catalog.ReleaseCOMObject(excelApplication);
+                            Catalog.ReleaseComObject(excelApplication,"Excel");
                         };
                         if (excelApplication.Workbooks.Count > 0)
                         {
@@ -372,7 +381,6 @@ namespace Cokee.ClassService
                                 Catalog.BackupFile(item.FullName, item.Name);
                             }
                         }
-                        //else Catalog.ReleaseCOMObject(excelApplication, "Excel");
                     }
                 }
             }
@@ -419,7 +427,7 @@ namespace Cokee.ClassService
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
-                Catalog.ReleaseCOMObject(pptApplication, "PPT");
+                Catalog.ReleaseComObject(pptApplication, "PPT");
                 IconAnimation(true);
             }), DispatcherPriority.Background);
         }
@@ -485,56 +493,45 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void mouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                //StartAnimation();
-                IconAnimation(true);
-                PicTimer_Elapsed();
-                isDragging = false;
-                floatGrid.ReleaseMouseCapture();
-                if (!Catalog.settings.SideCardEnable)
-                {
-                    if (cardPopup.IsOpen) cardPopup.IsOpen = false;
-                    else cardPopup.IsOpen = true;
-                }
-                else ToggleCard();
-            }), DispatcherPriority.Background);
-        }
 
         private void StartAnimation(int time = 2, int angle = 180)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                DoubleAnimation doubleAnimation = new DoubleAnimation();
-                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(time));
-                doubleAnimation.EasingFunction = Catalog.easingFunction;
-                //doubleAnimation.From = 0;
-                // doubleAnimation.To = 360;
-                doubleAnimation.By = angle;
+                var doubleAnimation = new DoubleAnimation
+                {
+                    Duration = new Duration(TimeSpan.FromSeconds(time)),
+                    EasingFunction = Catalog.easingFunction,
+                    //doubleAnimation.From = 0;
+                    // doubleAnimation.To = 360;
+                    By = angle
+                };
                 rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             }), DispatcherPriority.Background);
         }
 
-        public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty, int autoHideTime = 0)
+        public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty,
+            int autoHideTime = 0)
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
-                DoubleAnimation doubleAnimation = new DoubleAnimation();
-                doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.5));
-                doubleAnimation.EasingFunction = Catalog.easingFunction;
-                if (symbol != SymbolRegular.Empty) icon.Symbol = symbol;
-                if (!isHide)
+                var doubleAnimation = new DoubleAnimation
                 {
-                    doubleAnimation.From = 0;
-                    doubleAnimation.To = 1;
-                }
-                else
+                    Duration = new Duration(TimeSpan.FromSeconds(0.5)),
+                    EasingFunction = Catalog.easingFunction
+                };
+                if (symbol != SymbolRegular.Empty) icon.Symbol = symbol;
+                if (isHide)
                 {
                     doubleAnimation.From = 1;
                     doubleAnimation.To = 0;
                 }
+                else
+                {
+                    doubleAnimation.From = 0;
+                    doubleAnimation.To = 1;
+                }
+
                 iconTrans.BeginAnimation(ScaleTransform.ScaleXProperty, doubleAnimation);
                 iconTrans.BeginAnimation(ScaleTransform.ScaleYProperty, doubleAnimation);
                 if (autoHideTime != 0)
@@ -550,26 +547,55 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void mouseDown(object sender, MouseButtonEventArgs e)
+        private Stopwatch floatStopwatch = new Stopwatch();
+
+        private void FloatGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            isDragging = true;
-            startPoint = e.GetPosition(this);
-            _mouseDownControlPosition = new Point(transT.X, transT.Y);
-            floatGrid.CaptureMouse();
-            IconAnimation(false, SymbolRegular.ArrowMove24);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                floatStopwatch.Restart();
+                isDragging = true;
+                startPoint = e.GetPosition(this);
+                _mouseDownControlPosition = new Point(transT.X, transT.Y);
+                floatGrid.CaptureMouse();
+            }));
         }
 
-        private void mouseMove(object sender, MouseEventArgs e)
+        private void FloatGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDragging)
+            if (isDragging && floatStopwatch.ElapsedMilliseconds >= 100)
             {
                 var c = sender as Control;
                 var pos = e.GetPosition(this);
                 var dp = pos - startPoint;
-                if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 || pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10) { isDragging = false; floatGrid.ReleaseMouseCapture(); transT.X = -10; transT.Y = -100; return; }
+                if (pos.X >= SystemParameters.FullPrimaryScreenWidth - 10 ||
+                    pos.Y >= SystemParameters.FullPrimaryScreenHeight - 10)
+                {
+                    isDragging = false;
+                    floatGrid.ReleaseMouseCapture();
+                    transT.X = -10;
+                    transT.Y = -100;
+                    return;
+                }
+
                 transT.X = _mouseDownControlPosition.X + dp.X;
                 transT.Y = _mouseDownControlPosition.Y + dp.Y;
             }
+        }
+
+        private void FloatGrid_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                floatStopwatch.Stop();
+                StartAnimation();
+                isDragging = false;
+                floatGrid.ReleaseMouseCapture();
+                Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
+                if (floatStopwatch.ElapsedMilliseconds > 200) return;
+                if (Catalog.settings.SideCardEnable) ToggleCard();
+                else cardPopup.IsOpen = !cardPopup.IsOpen;
+            }), DispatcherPriority.Background);
         }
 
         private void StuMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<StudentMgr>();
@@ -583,7 +609,7 @@ namespace Cokee.ClassService
                 {
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
                     else inkTool.SetCursorMode(1);
-                    Catalog.SetWindowStyle(0);
+                    Catalog.SetWindowStyle();
                     inkTool.Visibility = Visibility.Visible;
                     IconAnimation(false, SymbolRegular.Pen32);
                 }
@@ -596,21 +622,22 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
-            Log.Information($"Program Closeing.");
+            Log.Information("Program Closing.");
             e.Cancel = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Log.Information($"Program Closed");
+            Log.Information("Program Closed");
         }
 
         public void CheckBirthDay()
         {
             List<Student> students = Student.Load();
-            Student? nearest = null; int type = 0;
+            Student? nearest = null;
+            int type = 0;
             foreach (var person in students)
             {
                 if (!person.BirthDay.HasValue) continue;
@@ -618,13 +645,18 @@ namespace Cokee.ClassService
 
                 if (DateTime.Now.ToString("MM-dd") == shortBirthStr)
                 {
-                    nearest = person; type = 1; break;
+                    nearest = person;
+                    type = 1;
+                    break;
                 }
-                else if (DateTime.Now.AddDays(1).ToString("MM-dd") == shortBirthStr)
+
+                if (DateTime.Now.AddDays(1).ToString("MM-dd") == shortBirthStr)
                 {
-                    nearest = person; type = 2; continue;
+                    nearest = person;
+                    type = 2;
                 }
             }
+
             if (nearest != null)
             {
                 if (type == 1)
@@ -675,7 +707,7 @@ namespace Cokee.ClassService
 
         public void SetToolWindow()
         {
-            int WS_EX_TOOLWINDOW = 0x80;
+            const int WS_EX_TOOLWINDOW = 0x80;
             // 获取窗口句柄
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
@@ -692,13 +724,14 @@ namespace Cokee.ClassService
         private void ScreenShot(object sender, RoutedEventArgs e)
         {
             cardPopup.IsOpen = false;
-            Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
-            var bitmap = new Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Rectangle rc = SystemInformation.VirtualScreen;
+            var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
 
             using (Graphics memoryGrahics = Graphics.FromImage(bitmap))
             {
                 memoryGrahics.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
             }
+
             var savePath =
                 $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now:yyyy-MM-dd}\{DateTime.Now:HH-mm-ss)}.png";
             if (!Directory.Exists(Path.GetDirectoryName(savePath)))
@@ -710,20 +743,15 @@ namespace Cokee.ClassService
             Catalog.ShowInfo("成功保存截图", "路径:" + savePath);
         }
 
-        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => Environment.Exit(0);
+        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => App.Current.Shutdown();
 
-        private void QuickFix(object sender, RoutedEventArgs e)
-        {
-            Catalog.ToggleControlVisible(logview);
-        }
+        private void QuickFix(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(logview);
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (inkTool.isPPT)
-            {
-                if (e.Key == Key.PageDown || e.Key == Key.Down) PptDown();
-                else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
-            }
+            if (!inkTool.isPPT) return;
+            if (e.Key == Key.PageDown || e.Key == Key.Down) PptDown();
+            else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
         }
 
         #region Multi-Touch
@@ -754,29 +782,34 @@ namespace Cokee.ClassService
             try
             {
                 // 检查是否是压感笔书写
-                foreach (StylusPoint stylusPoint in e.Stroke.StylusPoints)
+                if (e.Stroke.StylusPoints.Any(stylusPoint => stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0))
                 {
-                    if (stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0)
-                    {
-                        return;
-                    }
+                    return;
                 }
 
                 double GetPointSpeed(Point point1, Point point2, Point point3)
                 {
-                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y))
-                        + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) + (point3.Y - point2.Y) * (point3.Y - point2.Y)))
-                        / 20;
+                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) +
+                                      (point1.Y - point2.Y) * (point1.Y - point2.Y))
+                            + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) +
+                                        (point3.Y - point2.Y) * (point3.Y - point2.Y)))
+                           / 20;
                 }
+
                 try
                 {
                     if (e.Stroke.StylusPoints.Count > 3)
                     {
                         Random random = new Random();
-                        double _speed = GetPointSpeed(e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(), e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
+                        double _speed = GetPointSpeed(
+                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(),
+                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(),
+                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
                     }
                 }
-                catch { }
+                catch
+                {
+                }
 
                 try
                 {
@@ -796,6 +829,7 @@ namespace Cokee.ClassService
                             point.Y = e.Stroke.StylusPoints[i].Y;
                             stylusPoints.Add(point);
                         }
+
                         for (int i = n - x; i <= n; i++)
                         {
                             StylusPoint point = new StylusPoint();
@@ -818,13 +852,16 @@ namespace Cokee.ClassService
                             stylusPoints.Add(point);
                         }
                     }
+
                     e.Stroke.StylusPoints = stylusPoints;
                 }
                 catch
                 {
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private void MainWindow_StylusUp(object sender, StylusEventArgs e)
@@ -835,12 +872,14 @@ namespace Cokee.ClassService
                 {
                     inkcanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
                     inkcanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                    inkcanvas_StrokeCollected(inkcanvas, new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
+                    inkcanvas_StrokeCollected(inkcanvas,
+                        new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
                 }
             }
             catch (Exception ex)
             {
             }
+
             try
             {
                 StrokeVisualList.Remove(e.StylusDevice.Id);
@@ -854,7 +893,9 @@ namespace Cokee.ClassService
                     TouchDownPointsList.Clear();
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private void MainWindow_StylusMove(object sender, StylusEventArgs e)
@@ -867,7 +908,10 @@ namespace Cokee.ClassService
                 {
                     if (e.StylusDevice.StylusButtons[1].StylusButtonState == StylusButtonState.Down) return;
                 }
-                catch { }
+                catch
+                {
+                }
+
                 var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
                 var stylusPointCollection = e.GetStylusPoints(this);
                 foreach (var stylusPoint in stylusPointCollection)
@@ -877,7 +921,9 @@ namespace Cokee.ClassService
 
                 strokeVisual.ReDraw();
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private StrokeVisual GetStrokeVisual(int id)
@@ -903,19 +949,23 @@ namespace Cokee.ClassService
             {
                 return visualCanvas;
             }
+
             return null;
         }
 
         private InkCanvasEditingMode GetTouchDownPointsList(int id)
         {
-            if (TouchDownPointsList.TryGetValue(id, out var InkCanvasEditingMode))
+            if (TouchDownPointsList.TryGetValue(id, out var inkCanvasEditingMode))
             {
-                return InkCanvasEditingMode;
+                return inkCanvasEditingMode;
             }
+
             return inkcanvas.EditingMode;
         }
 
-        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } = new Dictionary<int, InkCanvasEditingMode>();
+        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } =
+            new Dictionary<int, InkCanvasEditingMode>();
+
         private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
         private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
 
@@ -992,6 +1042,7 @@ namespace Cokee.ClassService
                                     if (inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Remove(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (!inkcanvas.Strokes.Contains(strokes))
@@ -1005,6 +1056,7 @@ namespace Cokee.ClassService
                                     if (!inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Add(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (inkcanvas.Strokes.Contains(strokes))
@@ -1021,6 +1073,7 @@ namespace Cokee.ClassService
                                     if (inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Remove(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (!inkcanvas.Strokes.Contains(strokes))
@@ -1034,6 +1087,7 @@ namespace Cokee.ClassService
                                     if (!inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Add(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (inkcanvas.Strokes.Contains(strokes))
@@ -1049,14 +1103,17 @@ namespace Cokee.ClassService
                                 {
                                     foreach (var currentStroke in item.CurrentStroke)
                                     {
-                                        if (!inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Add(currentStroke);
+                                        if (!inkcanvas.Strokes.Contains(currentStroke))
+                                            inkcanvas.Strokes.Add(currentStroke);
                                     }
                                 }
+
                                 if (item.ReplacedStroke != null)
                                 {
                                     foreach (var replacedStroke in item.ReplacedStroke)
                                     {
-                                        if (inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Remove(replacedStroke);
+                                        if (inkcanvas.Strokes.Contains(replacedStroke))
+                                            inkcanvas.Strokes.Remove(replacedStroke);
                                     }
                                 }
                             }
@@ -1066,18 +1123,22 @@ namespace Cokee.ClassService
                                 {
                                     foreach (var replacedStroke in item.ReplacedStroke)
                                     {
-                                        if (!inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Add(replacedStroke);
+                                        if (!inkcanvas.Strokes.Contains(replacedStroke))
+                                            inkcanvas.Strokes.Add(replacedStroke);
                                     }
                                 }
+
                                 if (item.CurrentStroke != null)
                                 {
                                     foreach (var currentStroke in item.CurrentStroke)
                                     {
-                                        if (inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Remove(currentStroke);
+                                        if (inkcanvas.Strokes.Contains(currentStroke))
+                                            inkcanvas.Strokes.Remove(currentStroke);
                                     }
                                 }
                             }
                         }
+
                         _currentCommitType = CommitReason.UserInput;
                     }
                 }
@@ -1115,6 +1176,7 @@ namespace Cokee.ClassService
                                     if (inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Remove(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (!inkcanvas.Strokes.Contains(strokes))
@@ -1128,6 +1190,7 @@ namespace Cokee.ClassService
                                     if (!inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Add(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (inkcanvas.Strokes.Contains(strokes))
@@ -1144,6 +1207,7 @@ namespace Cokee.ClassService
                                     if (inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Remove(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (!inkcanvas.Strokes.Contains(strokes))
@@ -1157,6 +1221,7 @@ namespace Cokee.ClassService
                                     if (!inkcanvas.Strokes.Contains(strokes))
                                         inkcanvas.Strokes.Add(strokes);
                                 }
+
                                 foreach (var strokes in item.ReplacedStroke)
                                 {
                                     if (inkcanvas.Strokes.Contains(strokes))
@@ -1172,14 +1237,17 @@ namespace Cokee.ClassService
                                 {
                                     foreach (var currentStroke in item.CurrentStroke)
                                     {
-                                        if (!inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Add(currentStroke);
+                                        if (!inkcanvas.Strokes.Contains(currentStroke))
+                                            inkcanvas.Strokes.Add(currentStroke);
                                     }
                                 }
+
                                 if (item.ReplacedStroke != null)
                                 {
                                     foreach (var replacedStroke in item.ReplacedStroke)
                                     {
-                                        if (inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Remove(replacedStroke);
+                                        if (inkcanvas.Strokes.Contains(replacedStroke))
+                                            inkcanvas.Strokes.Remove(replacedStroke);
                                     }
                                 }
                             }
@@ -1189,23 +1257,29 @@ namespace Cokee.ClassService
                                 {
                                     foreach (var replacedStroke in item.ReplacedStroke)
                                     {
-                                        if (!inkcanvas.Strokes.Contains(replacedStroke)) inkcanvas.Strokes.Add(replacedStroke);
+                                        if (!inkcanvas.Strokes.Contains(replacedStroke))
+                                            inkcanvas.Strokes.Add(replacedStroke);
                                     }
                                 }
+
                                 if (item.CurrentStroke != null)
                                 {
                                     foreach (var currentStroke in item.CurrentStroke)
                                     {
-                                        if (inkcanvas.Strokes.Contains(currentStroke)) inkcanvas.Strokes.Remove(currentStroke);
+                                        if (inkcanvas.Strokes.Contains(currentStroke))
+                                            inkcanvas.Strokes.Remove(currentStroke);
                                     }
                                 }
                             }
                         }
                     }
+
                     _currentCommitType = CommitReason.UserInput;
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         #region TimeMachine
@@ -1244,7 +1318,8 @@ namespace Cokee.ClassService
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //关闭显示器
-            Win32Helper.SendMessage(new WindowInteropHelper(this).Handle, Win32Helper.WM_SYSCOMMAND, Win32Helper.SC_MONITORPOWER, 2);
+            Win32Helper.SendMessage(new WindowInteropHelper(this).Handle, Win32Helper.WM_SYSCOMMAND,
+                Win32Helper.SC_MONITORPOWER, 2);
 
             //打开显示器
             //Win32Helper.SendMessage(this.Handle, WM_SYSCOMMAND, SC_MONITORPOWER, -1);
@@ -1258,6 +1333,7 @@ namespace Cokee.ClassService
                 timeMachine.CommitStrokeRotateHistory(e.Removed, e.Added);
                 return;
             }
+
             if ((e.Added.Count != 0 || e.Removed.Count != 0) && IsEraseByPoint)
             {
                 if (AddedStroke == null) AddedStroke = new StrokeCollection();
@@ -1266,6 +1342,7 @@ namespace Cokee.ClassService
                 ReplacedStroke.Add(e.Removed);
                 return;
             }
+
             if (e.Added.Count != 0)
             {
                 if (_currentCommitType == CommitReason.ShapeRecognition)
@@ -1274,11 +1351,9 @@ namespace Cokee.ClassService
                     ReplacedStroke = null;
                     return;
                 }
-                else
-                {
-                    timeMachine.CommitStrokeUserInputHistory(e.Added);
-                    return;
-                }
+
+                timeMachine.CommitStrokeUserInputHistory(e.Added);
+                return;
             }
 
             if (e.Removed.Count != 0)
@@ -1288,10 +1363,10 @@ namespace Cokee.ClassService
                     ReplacedStroke = e.Removed;
                     return;
                 }
-                else if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
+
+                if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
                 {
                     timeMachine.CommitStrokeEraseHistory(e.Removed);
-                    return;
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             try
             {
-                if (Catalog.isScrSave) return;
+                if (Catalog.IsScrSave) return;
                 DriveInfo[] s = DriveInfo.GetDrives();
                 s.Any(t =>
                 {

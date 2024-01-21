@@ -23,23 +23,20 @@ namespace Cokee.ClassService.Views.Controls
         public Student stu = null;
         public string stud = "";
         List<Student> students = new List<Student>();
+
         public PostNote()
         {
             InitializeComponent();
-            string DATA_FILE = "D:\\Program Files (x86)\\CokeeTech\\CokeeClass\\students.json";
-            if (File.Exists(DATA_FILE))
+            IsVisibleChanged += (a, b) =>
             {
                 List<Student> students = new List<Student>();
                 List<string> str = new List<string>();
-                students = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(DATA_FILE));
+                students = Student.Load();
                 foreach (var item in students)
                 {
                     str.Add(item.Name);
                 }
                 atu.ItemsSource = str;
-                
-            }
-            IsVisibleChanged += (a, b) => {
                 IsEraser = false;
                 ink.Strokes.Clear();
                 atu.Text = null;
@@ -73,12 +70,11 @@ namespace Cokee.ClassService.Views.Controls
                 Catalog.ShowInfo("已保存。");
                 ink.Strokes = new StrokeCollection();
                 atu.Text = null;
-                //Catalog.ToggleControlVisible(this);
             }
             catch (Exception ex)
             {
                 Clipboard.SetText(ex.ToString());
-                Catalog.ShowInfo(ex.ToString());
+                Catalog.HandleException(ex,"PostNote");
             }
         }
 
@@ -96,7 +92,8 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Atu_sc(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists(@$"{Catalog.INK_DIR}\backup")) Directory.CreateDirectory(@$"{Catalog.INK_DIR}\backup");
+            if (!Directory.Exists(@$"{Catalog.INK_DIR}\backup"))
+                Directory.CreateDirectory(@$"{Catalog.INK_DIR}\backup");
             AutoSuggestBox atu = sender as AutoSuggestBox;
             atu.Text = atu.Text.Trim();
             stud = atu.Text.Trim();
@@ -105,26 +102,17 @@ namespace Cokee.ClassService.Views.Controls
                 FileStream fs = new FileStream(@$"{Catalog.INK_DIR}\{stud}.ink", FileMode.Open);
                 ink.Strokes = new StrokeCollection(fs);
                 fs.Close();
-
-                if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", MessageBoxButton.OKCancel) !=
+                    MessageBoxResult.OK)
                 {
                     atu.Text = "";
                     stud = "";
                     ink.Strokes.Clear();
                 }
-                else File.Move(@$"{Catalog.INK_DIR}\{stud}.ink", @$"{Catalog.INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
+                else
+                    File.Move(@$"{Catalog.INK_DIR}\{stud}.ink",
+                        @$"{Catalog.INK_DIR}\backup\{stud}-bk-{DateTime.Now.ToString("yyyy-MM-dd")}.ink");
             }
-            /* foreach (Student item in students)
-             {
-                 Catalog.ShowInfo(atu.Text.Trim());
-                 if (atu.Text.Trim() == item.Name)
-                 { 
-                     stu=item;
-                     name.Content = item.Name;
-                 }
-             }*/
         }
-
-
     }
 }
