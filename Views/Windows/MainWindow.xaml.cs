@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -346,7 +347,11 @@ namespace Cokee.ClassService
                         wordApplication.DocumentOpen += Doc => { Catalog.BackupFile(Doc.FullName, Doc.Name); };
                         wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
                         {
-                            Catalog.ReleaseComObject(wordApplication,"Word");
+                            Catalog.ShowInfo($"尝试释放 Word 对象");
+                            if (wordApplication == null) return;
+                            try { Marshal.FinalReleaseComObject(wordApplication); }
+                            catch (Exception ex) { Catalog.HandleException(ex, "释放COM对象"); }
+                            wordApplication = null;
                         };
                         if (wordApplication.Documents.Count > 0)
                         {
@@ -372,7 +377,11 @@ namespace Cokee.ClassService
                         };
                         excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
                         {
-                            Catalog.ReleaseComObject(excelApplication,"Excel");
+                            Catalog.ShowInfo($"尝试释放 Excel 对象");
+                            if (excelApplication == null) return;
+                            try { Marshal.FinalReleaseComObject(excelApplication); }
+                            catch (Exception ex) { Catalog.HandleException(ex, "释放COM对象"); }
+                            excelApplication = null;
                         };
                         if (excelApplication.Workbooks.Count > 0)
                         {
@@ -427,7 +436,11 @@ namespace Cokee.ClassService
                 page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
-                Catalog.ReleaseComObject(pptApplication, "PPT");
+                Catalog.ShowInfo($"尝试释放 PPT 对象");
+                if (pptApplication == null) return;
+                try { Marshal.FinalReleaseComObject(pptApplication); }
+                catch (Exception ex) { Catalog.HandleException(ex, "释放COM对象"); }
+                pptApplication = null;
                 IconAnimation(true);
             }), DispatcherPriority.Background);
         }
@@ -591,7 +604,7 @@ namespace Cokee.ClassService
                 StartAnimation();
                 isDragging = false;
                 floatGrid.ReleaseMouseCapture();
-                Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
+               // Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
                 if (floatStopwatch.ElapsedMilliseconds > 200) return;
                 if (Catalog.settings.SideCardEnable) ToggleCard();
                 else cardPopup.IsOpen = !cardPopup.IsOpen;
