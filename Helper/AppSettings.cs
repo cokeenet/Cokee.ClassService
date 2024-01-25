@@ -13,7 +13,7 @@ namespace Cokee.ClassService.Helper
         public bool EraseByPointEnable { get; set; } = true;
         public bool UseMemberAvatar { get; set; }
         public bool SideCardEnable { get; set; } = true;
-        public bool AgentEnable { get; set; }
+        public bool AgentEnable { get; set; } = true;
         private bool _FitCurveEnable { get; set; }
 
         public bool FitCurveEnable

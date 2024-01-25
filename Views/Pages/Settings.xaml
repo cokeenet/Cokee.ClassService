@@ -98,7 +98,7 @@
                     <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
                 </StackPanel>
                 
-                <ui:CardControl Icon="PenProhibited32" Margin="5">
+                <ui:CardControl Icon="Fingerprint48" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock

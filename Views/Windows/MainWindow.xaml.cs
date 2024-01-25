@@ -26,6 +26,7 @@ using System.Windows.Threading;
 using AutoUpdaterDotNET;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
+using CokeeAgent;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -58,6 +59,7 @@ namespace Cokee.ClassService
         private bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
 
+        private CapService service;
         //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
 
@@ -110,6 +112,7 @@ namespace Cokee.ClassService
         {
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
+            richTextBox.TextChanged += (a, b) => {if(richTextBox.Document.Blocks.Count>=100)richTextBox.Document.Blocks.Clear(); };
             DpiChanged += DisplaySettingsChanged;
             SizeChanged += DisplaySettingsChanged;
             secondTimer.Elapsed += SecondTimer_Elapsed;
@@ -130,6 +133,12 @@ namespace Cokee.ClassService
                 HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                 hwndSource.AddHook(usbCard.WndProc);
                 CheckOfficeTask = new Task(CheckOffice);
+                if (Catalog.settings.AgentEnable)
+                {
+                    service = new CapService();
+                    service.Start();
+                }
+                
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
@@ -270,7 +279,7 @@ namespace Cokee.ClassService
                     if(CheckOfficeTask.Status==TaskStatus.Created)CheckOfficeTask.Start();
                         if(CheckOfficeTask.IsCompleted||CheckOfficeTask.Status==TaskStatus.Canceled||CheckOfficeTask.Status==TaskStatus.Faulted)
                         {
-                            Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
+                            //Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
                             CheckOfficeTask = new Task(CheckOffice);
                             CheckOfficeTask.Start();
                         }
@@ -305,7 +314,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
+                //Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
                 if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
                 {
                     pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
@@ -1336,6 +1345,12 @@ namespace Cokee.ClassService
 
             //打开显示器
             //Win32Helper.SendMessage(this.Handle, WM_SYSCOMMAND, SC_MONITORPOWER, -1);
+        }
+
+        private void Button_MouseRightButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            service = new CapService();
+            service.Start();
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)

@@ -90,6 +90,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AForge" Version="2.2.5" />
+		<PackageReference Include="AForge.Imaging" Version="2.2.5" />
+		<PackageReference Include="AForge.Video" Version="2.2.5" />
+		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
 		<PackageReference Include="Autoupdater.NET.Official" Version="1.8.4" />
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
