@@ -26,7 +26,6 @@ using System.Windows.Threading;
 using AutoUpdaterDotNET;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
-using CokeeAgent;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -108,6 +107,24 @@ namespace Cokee.ClassService
             Accent.ApplySystemAccent();
         }
 
+        public void IntiAgent()
+        {
+            service = new CapService();
+            service.CapStartEvent += CapStart;
+            service.CapDoneEvent += CapDone;
+            service.Start();
+        }
+
+        private void CapDone(object? sender, string e)
+        {
+            IconAnimation(false,SymbolRegular.Balloon20,new SolidColorBrush(){Color = Colors.ForestGreen},5000);
+        }
+
+        private void CapStart(object? sender, string e)
+        {
+            IconAnimation(false,SymbolRegular.Add24,new SolidColorBrush(){Color = Colors.IndianRed},3000);
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Catalog.SetWindowStyle(1);
@@ -133,11 +150,7 @@ namespace Cokee.ClassService
                 HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                 hwndSource.AddHook(usbCard.WndProc);
                 CheckOfficeTask = new Task(CheckOffice);
-                if (Catalog.settings.AgentEnable)
-                {
-                    service = new CapService();
-                    service.Start();
-                }
+                if (Catalog.settings.AgentEnable)IntiAgent();
                 
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
@@ -421,7 +434,7 @@ namespace Cokee.ClassService
                 inkcanvas.Background.Opacity = 0;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("放映结束.");
-                IconAnimation(true);
+                //IconAnimation(true);
             }), DispatcherPriority.Background);
         }
 
@@ -450,7 +463,7 @@ namespace Cokee.ClassService
                 try { Marshal.FinalReleaseComObject(pptApplication); }
                 catch (Exception ex) { Catalog.HandleException(ex, "释放COM对象"); }
                 pptApplication = null;
-                IconAnimation(true);
+                //IconAnimation(true);
             }), DispatcherPriority.Background);
         }
 
@@ -531,9 +544,9 @@ namespace Cokee.ClassService
                 rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             }), DispatcherPriority.Background);
         }
-
+        
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty,
-            int autoHideTime = 0)
+            SolidColorBrush bgc=null,int autoHideTime = 0)
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
@@ -542,6 +555,8 @@ namespace Cokee.ClassService
                     Duration = new Duration(TimeSpan.FromSeconds(0.5)),
                     EasingFunction = Catalog.easingFunction
                 };
+                if (bgc != null) iconE.Fill = bgc;
+                else iconE.Fill = new SolidColorBrush() { Color = Colors.White };
                 if (symbol != SymbolRegular.Empty) icon.Symbol = symbol;
                 if (isHide)
                 {
@@ -1349,8 +1364,7 @@ namespace Cokee.ClassService
 
         private void Button_MouseRightButtonDown_1(object sender, MouseButtonEventArgs e)
         {
-            service = new CapService();
-            service.Start();
+            IntiAgent();
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
