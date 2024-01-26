@@ -76,7 +76,7 @@ namespace Cokee.ClassService.Helper
                if (mainWindow != null)
                {
                    if (MainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
-                   mainWindow.IconAnimation(true);
+                   //mainWindow.IconAnimation(true);
                }
            });
         }

@@ -186,7 +186,7 @@
                 <Grid.RenderTransform>
                     <ScaleTransform x:Name="iconTrans" ScaleX="0" ScaleY="0" CenterX="15" CenterY="15" d:ScaleX="1" d:ScaleY="1" />
                 </Grid.RenderTransform>
-                <Ellipse Fill="White" />
+                <Ellipse x:Name="iconE" Fill="White" />
                 <ui:SymbolIcon x:Name="icon" Width="15" Height="15" Foreground="Black" Margin="5" FontSize="15" Symbol="Info12" />
             </Grid>
             <ui:Badge Grid.Row="2" Margin="5" Appearance="Dark" FontSize="14" HorizontalContentAlignment="Center">
