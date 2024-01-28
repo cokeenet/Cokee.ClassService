@@ -23,20 +23,28 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
+
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
+
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -59,6 +67,7 @@ namespace Cokee.ClassService
         private Point startPoint, _mouseDownControlPosition;
 
         private CapService service;
+
         //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
 
@@ -79,6 +88,7 @@ namespace Cokee.ClassService
         public IpcServer ipcServer = new IpcServer();
         public IpcClient ipcClient = new IpcClient();
         private Task CheckOfficeTask;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -88,7 +98,7 @@ namespace Cokee.ClassService
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.AppCenterSink(null, LogEventLevel.Error)
-                .WriteTo.RichTextBox(richTextBox)
+                .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
             snackbarService.SetSnackbarControl(snackbar);
@@ -117,19 +127,23 @@ namespace Cokee.ClassService
 
         private void CapDone(object? sender, string e)
         {
-            IconAnimation(false,SymbolRegular.Balloon20,new SolidColorBrush(){Color = Colors.ForestGreen},5000);
+            //IconAnimation(false, SymbolRegular.Balloon20, new SolidColorBrush() { Color = Colors.ForestGreen }, 5000);
         }
 
         private void CapStart(object? sender, string e)
         {
-            IconAnimation(false,SymbolRegular.Add24,new SolidColorBrush(){Color = Colors.IndianRed},3000);
+            //IconAnimation(false, SymbolRegular.Add24, new SolidColorBrush() { Color = Colors.IndianRed }, 3000);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Catalog.SetWindowStyle(1);
             SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-            richTextBox.TextChanged += (a, b) => {if(richTextBox.Document.Blocks.Count>=100)richTextBox.Document.Blocks.Clear(); };
+            richTextBox.TextChanged += (a, b) =>
+            {
+                if (richTextBox.Document.Blocks.Count >= 100)
+                    richTextBox.Document.Blocks.Clear();
+            };
             DpiChanged += DisplaySettingsChanged;
             SizeChanged += DisplaySettingsChanged;
             secondTimer.Elapsed += SecondTimer_Elapsed;
@@ -142,16 +156,17 @@ namespace Cokee.ClassService
             AutoUpdater.ShowRemindLaterButton = true;
             AutoUpdater.RunUpdateAsAdmin = false;
             longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
-            if (Catalog.settings.FileWatcherEnable && !Catalog.IsScrSave)IntiFileWatcher();
+
+            CheckOfficeTask = new Task(CheckOffice);
+            if (Catalog.settings.FileWatcherEnable && !Catalog.IsScrSave) IntiFileWatcher();
             if (!Catalog.IsScrSave)
             {
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
                 ipcServer.Start(20011);
                 HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                 hwndSource.AddHook(usbCard.WndProc);
-                CheckOfficeTask = new Task(CheckOffice);
-                if (Catalog.settings.AgentEnable)IntiAgent();
-                
+                if (Catalog.settings.AgentEnable) IntiAgent();
+
                 //ipcClient.Initialize(80103);
                 //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
             }
@@ -174,6 +189,27 @@ namespace Cokee.ClassService
             inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
             GetCalendarInfo();
             CheckBirthDay();
+        }
+
+        private void MonitorOff(object sender, RoutedEventArgs e)
+        {
+            //关闭显示器
+            Win32Helper.SendMessage(new WindowInteropHelper(this).Handle, Win32Helper.WM_SYSCOMMAND,
+                Win32Helper.SC_MONITORPOWER, 2);
+
+            //打开显示器
+            //Win32Helper.SendMessage(this.Handle, WM_SYSCOMMAND, SC_MONITORPOWER, -1);
+        }
+
+        private void Debug_RightBtn(object sender, MouseButtonEventArgs e)
+        {
+            if (service == null) IntiAgent();
+            else
+            {
+                IntiAgent();
+                //service.lastCapTime = null;
+                // service.CapAction();
+            }
         }
 
         public void IntiFileWatcher()
@@ -289,14 +325,13 @@ namespace Cokee.ClassService
 
                 if (Catalog.settings.OfficeFunctionEnable)
                 {
-                    if(CheckOfficeTask.Status==TaskStatus.Created)CheckOfficeTask.Start();
-                        if(CheckOfficeTask.IsCompleted||CheckOfficeTask.Status==TaskStatus.Canceled||CheckOfficeTask.Status==TaskStatus.Faulted)
-                        {
-                            //Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
-                            CheckOfficeTask = new Task(CheckOffice);
-                            CheckOfficeTask.Start();
-                        }
-                        
+                    if (CheckOfficeTask.Status == TaskStatus.Created) CheckOfficeTask.Start();
+                    if (CheckOfficeTask.IsCompleted || CheckOfficeTask.Status == TaskStatus.Canceled || CheckOfficeTask.Status == TaskStatus.Faulted)
+                    {
+                        //Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
+                        CheckOfficeTask = new Task(CheckOffice);
+                        CheckOfficeTask.Start();
+                    }
                 }
             }, DispatcherPriority.Background);
         }
@@ -336,9 +371,9 @@ namespace Cokee.ClassService
                     {
                         Catalog.ShowInfo("成功捕获PPT程序对象",
                             pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
-                            pptApplication.ProductCode,ControlAppearance.Success);
+                            pptApplication.ProductCode, ControlAppearance.Success);
                         if (!pptApplication.Name.Contains("Microsoft"))
-                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。",ControlAppearance.Caution);
+                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。", ControlAppearance.Caution);
                         pptApplication.PresentationClose += PptApplication_PresentationClose;
                         pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
                         pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
@@ -365,7 +400,7 @@ namespace Cokee.ClassService
                     {
                         Catalog.ShowInfo("成功捕获Word程序对象",
                             wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" +
-                            wordApplication.ProductCode(),ControlAppearance.Success);
+                            wordApplication.ProductCode(), ControlAppearance.Success);
                         wordApplication.DocumentOpen += Doc => { Catalog.BackupFile(Doc.FullName, Doc.Name); };
                         wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
                         {
@@ -392,7 +427,7 @@ namespace Cokee.ClassService
                     {
                         Catalog.ShowInfo("成功捕获Excel程序对象",
                             excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" +
-                            excelApplication.ProductCode,ControlAppearance.Success);
+                            excelApplication.ProductCode, ControlAppearance.Success);
                         excelApplication.WorkbookOpen += Workbook =>
                         {
                             Catalog.BackupFile(Workbook.FullName, Workbook.Name);
@@ -528,7 +563,6 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-
         private void StartAnimation(int time = 2, int angle = 180)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -544,9 +578,9 @@ namespace Cokee.ClassService
                 rotateT.BeginAnimation(RotateTransform.AngleProperty, doubleAnimation);
             }), DispatcherPriority.Background);
         }
-        
+
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty,
-            SolidColorBrush bgc=null,int autoHideTime = 0)
+            SolidColorBrush bgc = null, int autoHideTime = 0)
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
@@ -628,7 +662,7 @@ namespace Cokee.ClassService
                 StartAnimation();
                 isDragging = false;
                 floatGrid.ReleaseMouseCapture();
-               // Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
+                // Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
                 if (floatStopwatch.ElapsedMilliseconds > 200) return;
                 if (Catalog.settings.SideCardEnable) ToggleCard();
                 else cardPopup.IsOpen = !cardPopup.IsOpen;
@@ -1350,21 +1384,6 @@ namespace Cokee.ClassService
             var result = status ? Visibility.Visible : Visibility.Collapsed;
             inkTool.redoBtn.Visibility = result;
             inkTool.redoBtn.IsEnabled = status;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //关闭显示器
-            Win32Helper.SendMessage(new WindowInteropHelper(this).Handle, Win32Helper.WM_SYSCOMMAND,
-                Win32Helper.SC_MONITORPOWER, 2);
-
-            //打开显示器
-            //Win32Helper.SendMessage(this.Handle, WM_SYSCOMMAND, SC_MONITORPOWER, -1);
-        }
-
-        private void Button_MouseRightButtonDown_1(object sender, MouseButtonEventArgs e)
-        {
-            IntiAgent();
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
