@@ -6,30 +6,35 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+
 using AForge.Video;
 using AForge.Video.DirectShow;
+
 using Serilog;
+
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
+
 using Timer = System.Timers.Timer;
 
 namespace Cokee.ClassService.Helper
 {
     public class CapService
     {
-        public Version SwVer = new Version(2,1);
+        public Version SwVer = new Version(2, 1);
         private string disk = "D:\\";
         private int camIndex, res;
         private string copyPath = null;
         private VideoCaptureDevice captureDevice;
         private Timer CapTimer = new Timer(10 * 1000);
         private Timer ClearTimer = new Timer(72 * 60 * 60 * 1000);
-        public bool debugDesktop = false,isCls=false;
-        private DateTime? lastCapTime = null;
+        public bool debugDesktop = false, isCls = false;
+        public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public IpcServer ipcServer = new IpcServer();
         public IpcClient ipcClient = new IpcClient();
         public Stopwatch sw = new Stopwatch();
+
         public event EventHandler<string> CapStartEvent, CapDoneEvent;
 
         public void Start()
@@ -72,7 +77,6 @@ namespace Cokee.ClassService.Helper
             if (args.Request == "Ping")
             {
                 args.Response = $"OK|CokeeAgent|{SwVer.ToString()}";
-
             }
             if (args.Request == "Cap")
             {
@@ -115,55 +119,52 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                    
-                    
-                    int hour = DateTime.Now.Hour;
-                    int minute = DateTime.Now.Minute;
-                    if ((hour >= 22 && minute >= 45) || hour <= 5) { WriteInfo("[CapFunc]Not cap time."); return; }
-                    /*if (lastCapTime.HasValue)
+                int hour = DateTime.Now.Hour;
+                int minute = DateTime.Now.Minute;
+                if ((hour >= 22 && minute >= 45) || hour <= 5) { WriteInfo("[CapFunc]Not cap time."); return; }
+                /*if (lastCapTime.HasValue)
+                {
+                    if (DateTime.Now.Subtract(lastCapTime.Value).Minutes <= 1)
+                        WriteInfo($"[CapFunc]No-need to cap at this time. lastTime: {lastCapTime.Value.ToString("HH-mm-ss")}"); return;
+                }*/
+                WriteInfo("Start to cap.");
+                if (captureDevice == null)
+                {
+                    var a = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                    WriteInfo($"Found {a.Count} CAMS.");
+                    for (int i = 0; i < a.Count; i++)
                     {
-                        if (DateTime.Now.Subtract(lastCapTime.Value).Minutes <= 1)
-                            WriteInfo($"[CapFunc]No-need to cap at this time. lastTime: {lastCapTime.Value.ToString("HH-mm-ss")}"); return;
-                    }*/
-                    WriteInfo("Start to cap.");
-                    if (captureDevice == null)
-                    {
-                        var a = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-                        WriteInfo($"Found {a.Count} CAMS.");
-                        for (int i = 0; i < a.Count; i++)
-                        {
-                            WriteInfo($"CAM[{i}]: {a[i].Name}   Moniker:  {a[i].MonikerString}");
-                        }
-                        captureDevice = new VideoCaptureDevice(a[camIndex].MonikerString);
-                        WriteInfo($"Selected CAM: {a[camIndex].Name}   Moniker:  {a[camIndex].MonikerString}");
-                        var resolutionList = captureDevice.VideoCapabilities;
-                        if (resolutionList.Length > 0)
-                        {
-                            for (int j = 0; j < resolutionList.Length; j++)
-                            {
-                                WriteInfo($"[{j}] Available Resolution: W{resolutionList[j].FrameSize.Width} xH{resolutionList[j].FrameSize.Height} FPS:{resolutionList[j].AverageFrameRate}");
-                            }
-                            if (res == -1) captureDevice.VideoResolution = FindMaxResolution(resolutionList);
-                            else captureDevice.VideoResolution = resolutionList[res];
-
-                            WriteInfo("Selected Resolution: W" + captureDevice.VideoResolution.FrameSize.Width + "xH" + captureDevice.VideoResolution.FrameSize.Height + " FPS:" + captureDevice.VideoResolution.AverageFrameRate);
-                        }
+                        WriteInfo($"CAM[{i}]: {a[i].Name}   Moniker:  {a[i].MonikerString}");
                     }
-                    else
+                    captureDevice = new VideoCaptureDevice(a[camIndex].MonikerString);
+                    WriteInfo($"Selected CAM: {a[camIndex].Name}   Moniker:  {a[camIndex].MonikerString}");
+                    var resolutionList = captureDevice.VideoCapabilities;
+                    if (resolutionList.Length > 0)
                     {
+                        for (int j = 0; j < resolutionList.Length; j++)
+                        {
+                            WriteInfo($"[{j}] Available Resolution: W{resolutionList[j].FrameSize.Width} xH{resolutionList[j].FrameSize.Height} FPS:{resolutionList[j].AverageFrameRate}");
+                        }
+                        if (res == -1) captureDevice.VideoResolution = FindMaxResolution(resolutionList);
+                        else captureDevice.VideoResolution = resolutionList[res];
+
                         WriteInfo("Selected Resolution: W" + captureDevice.VideoResolution.FrameSize.Width + "xH" + captureDevice.VideoResolution.FrameSize.Height + " FPS:" + captureDevice.VideoResolution.AverageFrameRate);
                     }
-                    sw.Restart();
-                    CapStartEvent.Invoke(this,$"Res{res} Cam{camIndex}");
-                    captureDevice.NewFrame += CaptureDevice_NewFrame;
-                    captureDevice.VideoSourceError += CaptureDevice_VideoSourceError;
-                    captureDevice.Start();
-                    await Task.Delay(1000);
-                    captureDevice.SignalToStop();
-                    WriteInfo($"NewFrame Event Registed. Sw:{sw.Elapsed.TotalSeconds}s");
-                    captureDevice.WaitForStop();
-                    //4:3 8.0mp 3264*2448max!
-                
+                }
+                else
+                {
+                    WriteInfo("Selected Resolution: W" + captureDevice.VideoResolution.FrameSize.Width + "xH" + captureDevice.VideoResolution.FrameSize.Height + " FPS:" + captureDevice.VideoResolution.AverageFrameRate);
+                }
+                sw.Restart();
+                CapStartEvent.Invoke(this, $"Res{res} Cam{camIndex}");
+                captureDevice.NewFrame += CaptureDevice_NewFrame;
+                captureDevice.VideoSourceError += CaptureDevice_VideoSourceError;
+                captureDevice.Start();
+                await Task.Delay(1000);
+                captureDevice.SignalToStop();
+                WriteInfo($"NewFrame Event Registed. Sw:{sw.Elapsed.TotalSeconds}s");
+                captureDevice.WaitForStop();
+                //4:3 8.0mp 3264*2448max!
             }
             catch (Exception e)
             {
@@ -213,12 +214,13 @@ namespace Cokee.ClassService.Helper
                 if (debugDesktop) fullPath = @"C:\Users\seewo\aa\" + fileName;
                 if (!Directory.Exists(Path.GetDirectoryName(fullPath))) Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                 if (File.Exists(fullPath)) { WriteInfo("[CapEvent]Warning:Existing file. Skip cap."); return; }
-                try {
+                try
+                {
                     bitmap = eventArgs.Frame;
                     bitmap.Save(fullPath, ImageFormat.Png);
                 }
-                catch(Exception ex) { WriteInfo(ex.ToString()); }
-                
+                catch (Exception ex) { WriteInfo(ex.ToString()); }
+
                 WriteInfo($"Caped: {fileName} IsCamRunning:{captureDevice.IsRunning} FramesReceiced: {captureDevice.FramesReceived} FileInfo:{new FileInfo(fullPath).Length} bytes");
 
                 captureDevice.SignalToStop();
@@ -235,7 +237,7 @@ namespace Cokee.ClassService.Helper
                 else WriteInfo($"Can't find copy folder.");
                 lastCapTime = DateTime.Now;
                 WriteInfo($"Done. Sw:{sw.Elapsed.TotalSeconds}s");
-                CapDoneEvent.Invoke(this,$"{sw.Elapsed.TotalSeconds}|{fullPath}");
+                CapDoneEvent.Invoke(this, $"{sw.Elapsed.TotalSeconds}|{fullPath}");
                 sw.Stop();
                 //ipcClient.Send("");
                 //captureDevice.SignalToStop();
@@ -305,11 +307,11 @@ namespace Cokee.ClassService.Helper
 
         public void WriteInfo(string info)
         {
-            Log.Verbose($"Agent|{info}");
+            Log.Information($"Agent|{info}");
             //Console.WriteLine(info);
             //var dir = @"D:\logs\v2";
             if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
-            using (FileStream stream = new FileStream(configPath+"\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append))
+            using (FileStream stream = new FileStream(configPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
