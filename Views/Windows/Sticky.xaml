@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Title="Sticky" Width="1150" Topmost="True" FontFamily="Cairo-Regular"
+             Title="Sticky" Width="1150" Topmost="True" FontFamily="Cairo-Regular" WindowStartupLocation="CenterScreen"
     Height="695" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
     <Grid>
@@ -31,19 +31,19 @@
                 </ui:NavigationStore.Items>
             </ui:NavigationStore>
             <local:TouchableScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Grid.Column="1" Margin="0">
-                    <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="2" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <local:StickyNote DataContext="{Binding Name}" Margin="10" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </local:TouchableScrollViewer>
+                <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:StickyNote DataContext="{Binding Name}" Margin="10" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </local:TouchableScrollViewer>
             <StatusBar Grid.Column="1" VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
                 <StatusBarItem x:Name="count" Content="共 -- 人" />
             </StatusBar>

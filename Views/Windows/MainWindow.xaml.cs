@@ -206,7 +206,6 @@ namespace Cokee.ClassService
             if (service == null) IntiAgent();
             else
             {
-                IntiAgent();
                 //service.lastCapTime = null;
                 // service.CapAction();
             }
@@ -273,7 +272,11 @@ namespace Cokee.ClassService
             }));
         }
 
-        public void PptUp(object sender = null, RoutedEventArgs e = null)
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        public void PptUp(object? sender = null, RoutedEventArgs? e = null)
         {
             try
             {
@@ -291,7 +294,7 @@ namespace Cokee.ClassService
             }
         }
 
-        public void PptDown(object sender = null, RoutedEventArgs e = null)
+        public void PptDown(object? sender = null, RoutedEventArgs? e = null)
         {
             try
             {

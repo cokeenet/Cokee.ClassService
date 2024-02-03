@@ -11,7 +11,7 @@
         Title="ClassService"
         Width="1920" Height="1080"
         Left="0" Top="0" Loaded="Window_Loaded"
-        WindowStartupLocation="Manual"  ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen"  ShowInTaskbar="False"
         Closing="Window_Closing" Closed="Window_Closed" KeyDown="MainWindow_OnKeyDown"
         WindowStyle="None"  WindowState="Normal" SnapsToDevicePixels="True" Focusable="False"
         ResizeMode="NoResize"  AllowsTransparency="True" Background="{x:Null}" Topmost="True">
@@ -94,8 +94,8 @@
                             <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
                             <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
-                            <ui:Button Content="Debug" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="Debug_RightBtn"/>
-                            <ui:Button Content="设置" Icon="Settings32"  Margin="5"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="计时器" Icon="Clock28" Click="Button_Click" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="Debug_RightBtn" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5" MouseRightButtonDown="QuickFix"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
                     <StackPanel>

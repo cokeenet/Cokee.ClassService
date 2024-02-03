@@ -19,9 +19,8 @@ using Timer = System.Timers.Timer;
 
 namespace Cokee.ClassService.Helper
 {
-    public class CapService
+    public class CapService : IDisposable
     {
-        public Version SwVer = new Version(2, 1);
         private string disk = "D:\\";
         private int camIndex, res;
         private string copyPath = null;
@@ -31,8 +30,6 @@ namespace Cokee.ClassService.Helper
         public bool debugDesktop = false, isCls = false;
         public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
-        public IpcServer ipcServer = new IpcServer();
-        public IpcClient ipcClient = new IpcClient();
         public Stopwatch sw = new Stopwatch();
 
         public event EventHandler<string> CapStartEvent, CapDoneEvent;
@@ -55,14 +52,6 @@ namespace Cokee.ClassService.Helper
             WriteInfo($"Timer Interval:{CapTimer.Interval / 1000}s IsEnabled:{CapTimer.Enabled}");
             SetTimer(CapTimer, CapTimer_Elapsed);
             SetTimer(ClearTimer, ClearTimer_Elapsed);
-            try
-            {
-                ipcServer.Start(20103);
-                ipcServer.ReceivedRequest += IpcServer_ReceivedRequest;
-                ipcClient.Initialize(20011);
-                WriteInfo("IpcServer Port 20103\nIpcClient Port 20011");
-            }
-            catch (Exception ex) { WriteInfo(ex.ToString()); }
             if (copyPath != null) WriteInfo("CopyPath Loaded.");
             else WriteInfo("Failed to load copyPath.");
             copyPath = "C:\\Users\\seewo\\OneDrive - Cokee Technologies";
@@ -71,36 +60,15 @@ namespace Cokee.ClassService.Helper
             //Console.ReadKey(); //debug
         }
 
-        private void IpcServer_ReceivedRequest(object? sender, ReceivedRequestEventArgs args)
-        {
-            WriteInfo("IPC-Got: " + args.Request);
-            if (args.Request == "Ping")
-            {
-                args.Response = $"OK|CokeeAgent|{SwVer.ToString()}";
-            }
-            if (args.Request == "Cap")
-            {
-                lastCapTime = null;
-                CapAction();
-                args.Response = $"Running:{captureDevice.IsRunning}";
-            }
-            if (args.Request == "getCamStatus")
-            {
-                args.Response = $"Running:{captureDevice.IsRunning} Selected Resolution: W{captureDevice.VideoResolution.FrameSize.Width}xH{captureDevice.VideoResolution.FrameSize.Height} FPS:{captureDevice.VideoResolution.AverageFrameRate}";
-            }
-            if (args.Request == "stopService")
-            {
-                OnStop();
-                args.Response = "OK";
-            }
-            args.Handled = true;
-        }
-
         protected void OnStop()
         {
             CapTimer.Stop();
             WriteInfo("Service stopped");
             //Environment.Exit(0);
+        }
+
+        public void Dispose()
+        {
         }
 
         public void SetTimer(Timer a, ElapsedEventHandler handler, bool dontstart = false)
@@ -203,7 +171,10 @@ namespace Cokee.ClassService.Helper
                 if (lastCapTime.HasValue)
                 {
                     var a = DateTime.Now.Subtract(lastCapTime.Value);
-                    if (a.TotalMilliseconds < CapTimer.Interval) { /*WriteInfo($"[CapEvent]Too fast to cap. Skip. Countdown:{a.Seconds}s Timer:{CapTimer.Interval}ms");*/ return; }
+                    if (a.TotalMilliseconds < CapTimer.Interval)
+                    { /*WriteInfo($"[CapEvent]Too fast to cap. Skip. Countdown:{a.Seconds}s Timer:{CapTimer.Interval}ms");*/
+                        return;
+                    }
                 }
                 Bitmap bitmap;
                 captureDevice.NewFrame -= null;

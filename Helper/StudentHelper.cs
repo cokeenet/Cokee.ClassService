@@ -6,7 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+
+using Cokee.ClassService.Shared;
+
 using Newtonsoft.Json;
+
 using Wpf.Ui.Common;
 
 namespace Cokee.ClassService.Helper
@@ -15,7 +19,7 @@ namespace Cokee.ClassService.Helper
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string rolestr = value as string;
+            string? rolestr = value as string;
 
             if (!string.IsNullOrEmpty(rolestr))
             {
@@ -61,14 +65,6 @@ namespace Cokee.ClassService.Helper
         }
     }
 
-    public class Class
-    {
-        public List<Student> students = new List<Student>();
-        public string Name { get; set; }
-        public int Score { get; set; }
-        public int ID { get; set; }
-    }
-
     public class RandomEventArgs
     {
         public static List<Student> RandomHistory = new List<Student>();
@@ -92,52 +88,8 @@ namespace Cokee.ClassService.Helper
         }
     }
 
-    public enum SexCombo
+    public static class StudentExtensions
     {
-        None,
-        Boy,
-        Girl
-    }
-
-    public enum Sex
-    {
-        Girl,
-        Boy
-    }
-
-    public enum Easter
-    {
-        None,
-        Y,
-        Z,
-        Me
-    }
-
-    public class Student
-    {
-        public int ID { get; set; }
-        public Sex Sex { get; set; }//0 girl 1 boy
-        public string Name { get; set; }
-        public string ClassName { get; set; }
-        public int ClassID { get; set; }
-        public int Score { get; set; } = 0;
-        public DateTime? BirthDay { get; set; }
-        public string? RoleStr { get; set; }
-        public int Role { get; set; } = 0; //0-3
-        public string? Desc { get; set; }
-        public long? QQ { get; set; }
-        public bool IsMinorLang { get; set; }
-        public string HeadPicUrl { get; set; } = "/Resources/head.jpg";
-
-        public Student(string name, Sex sex, DateTime birth, bool isMinorLang = false)
-        {
-            ID = new Random().Next(9000000);
-            Sex = sex;
-            Name = name;
-            BirthDay = birth;
-            IsMinorLang = isMinorLang;
-        }
-
         public static List<Student> Load()
         {
             if (!File.Exists(Catalog.STU_FILE)) return new List<Student>();
@@ -151,7 +103,7 @@ namespace Cokee.ClassService.Helper
             return new List<Student>();
         }
 
-        public static List<Student> Save(List<Student> students)
+        public static List<Student> Save(this List<Student> students)
         {
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
             foreach (var a in students.GroupBy(s => s.ID).Where(g => g.Count() > 1).SelectMany(g => g))

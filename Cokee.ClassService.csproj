@@ -2,20 +2,22 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.6.575.24028</AssemblyVersion>
-		<FileVersion>2.6.575.24028</FileVersion>
+		<AssemblyVersion>2.6.577.24034</AssemblyVersion>
+		<FileVersion>2.6.577.24034</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
 		<Description>A Student Manage Software for your Classroom</Description>
 		<Authors>Cokee</Authors>
 		<Title>Cokee.ClassService</Title>
-		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Cokee.snk</AssemblyOriginatorKeyFile>
+		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+		<UseWindowsForms>True</UseWindowsForms>
+		<StartupObject>Cokee.ClassService.App</StartupObject>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -176,4 +178,6 @@
 			<SubType>Code</SubType>
 		</Compile>
 	</ItemGroup>
+
+	<Import Project="..\Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems" Label="Shared" />
 </Project>

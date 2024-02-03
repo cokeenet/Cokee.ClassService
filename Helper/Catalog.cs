@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+
 using Serilog;
+
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
@@ -72,16 +75,15 @@ namespace Cokee.ClassService.Helper
         {
             Application.Current.Dispatcher.Invoke(() =>
            {
-               MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-               if (mainWindow != null)
+               if (MainWindow != null)
                {
-                   if (MainWindow.inkTool.isPPT && mainWindow.pptApplication != null && mainWindow.pptApplication.SlideShowWindows[1] != null) mainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                   if (MainWindow.inkTool.isPPT && MainWindow.pptApplication != null && MainWindow.pptApplication.SlideShowWindows[1] != null) MainWindow.pptApplication.SlideShowWindows[1].View.Exit();
                    //mainWindow.IconAnimation(true);
                }
            });
         }
 
-        public static void ShowInfo(string? title = "", string? content = "",ControlAppearance appearance=ControlAppearance.Light,SymbolRegular symbol=SymbolRegular.Info28)
+        public static void ShowInfo(string? title = "", string? content = "", ControlAppearance appearance = ControlAppearance.Light, SymbolRegular symbol = SymbolRegular.Info28)
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
@@ -90,7 +92,7 @@ namespace Cokee.ClassService.Helper
                 Log.Information($"Snack消息:{title} {content}");
                 if (GlobalSnackbarService?.GetSnackbarControl() != null)
                 {
-                    await GlobalSnackbarService.ShowAsync(title, content, symbol,appearance);
+                    await GlobalSnackbarService.ShowAsync(title, content, symbol, appearance);
                 }
             }, DispatcherPriority.Background);
         }
@@ -105,7 +107,7 @@ namespace Cokee.ClassService.Helper
                     win = new T();
                     win.Show();
                 }
-                //else { win.Activate(); Catalog.ShowInfo("窗口在任务栏上!!", "就在底下"); }
+                else { win.Activate(); Catalog.ShowInfo("窗口已开启"); }
             });
         }
 
@@ -138,9 +140,9 @@ namespace Cokee.ClassService.Helper
             Application.Current.Dispatcher.Invoke(() =>
             {
                 ShowInfo($"尝试释放 {type} 对象");
-                if(o==null)return;
+                if (o == null) return;
                 try { Marshal.FinalReleaseComObject(o); }
-                catch(Exception ex) { HandleException(ex,"释放COM对象");}
+                catch (Exception ex) { HandleException(ex, "释放COM对象"); }
                 o = null;
             }, DispatcherPriority.Normal);
         }
@@ -193,7 +195,7 @@ namespace Cokee.ClassService.Helper
                     Storyboard.SetTargetProperty(fadeOutAnimation, new PropertyPath(UIElement.OpacityProperty));
 
                     // 淡出动画完成时将控件设置为不可见
-                    fadeOutStoryboard.Completed += (a,b) =>
+                    fadeOutStoryboard.Completed += (a, b) =>
                     {
                         uIElement.Visibility = Visibility.Collapsed;
                         uIElement.Opacity = 1.0;
