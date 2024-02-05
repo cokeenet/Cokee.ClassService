@@ -40,18 +40,12 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
-            AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",
-                  typeof(Analytics), typeof(Crashes));
+            AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",typeof(Analytics), typeof(Crashes));
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
             );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-            this.Exit += (a, b) =>
-            {
-                // Catalog.MainWindow.agent.Kill();
-            };
-
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Accent.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
@@ -68,10 +62,9 @@ namespace Cokee.ClassService
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception? ex = e.ExceptionObject as Exception;
-
             if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "AppDomain异常");
-            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序.");
+            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序. | ");
             Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
             Shutdown();
         }

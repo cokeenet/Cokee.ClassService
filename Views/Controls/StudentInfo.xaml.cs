@@ -3,9 +3,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 using Cokee.ClassService.Helper;
+using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Wpf.Ui.Common;
 
 namespace Cokee.ClassService.Views.Controls
@@ -16,16 +20,24 @@ namespace Cokee.ClassService.Views.Controls
     public partial class StudentInfo : UserControl
     {
         public event EventHandler<Student>? EditStudent;
+
         public StudentInfo()
         {
             InitializeComponent();
-            if (!DesignerHelper.IsInDesignMode)
-                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += (a, b) =>
-                {
-                    DataContext = new Student("",0,DateTime.Today);
-                    Catalog.ToggleControlVisible(this,true);
+            this.Loaded += (a, b) =>
+            {
+                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += AddStuEvent;
+            };
+            this.Unloaded += (a, b) =>
+            {
+                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent -= AddStuEvent;
+            };
+        }
 
-                };
+        private void AddStuEvent(object? sender, bool e)
+        {
+            DataContext = new Student();
+            Catalog.ToggleControlVisible(this, true);
         }
 
         private void Confirm(object sender, RoutedEventArgs e)

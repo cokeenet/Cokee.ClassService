@@ -23,7 +23,6 @@ namespace Cokee.ClassService.Views.Pages
                 IsVisibleChanged += (a, b) =>
                 {
                     DataContext = Catalog.settings;
-
                     if (!(bool)b.NewValue) SaveData();
                 };
             }
@@ -40,12 +39,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void CheckUpdate(object sender, RoutedEventArgs e)
         {
-            AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.ShowRemindLaterButton = true;
-            AutoUpdater.RemindLaterAt = 5;
-            AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
-            AutoUpdater.RunUpdateAsAdmin = false;
-            AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+            Catalog.CheckUpdate();
         }
 
         private void Restart(object sender, RoutedEventArgs e)

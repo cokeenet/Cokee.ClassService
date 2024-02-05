@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
+using AutoUpdaterDotNET;
 using Serilog;
 
 using Wpf.Ui.Animations;
@@ -71,6 +71,21 @@ namespace Cokee.ClassService.Helper
             }
         }
 
+        public static void CheckUpdate()
+        {
+            try
+            {
+                AutoUpdater.ShowSkipButton = false;
+                AutoUpdater.ShowRemindLaterButton = true;
+                AutoUpdater.RemindLaterAt = 5;
+                AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+            }
+            catch 
+            {
+                
+            }
+        }
         public static void ExitPPTShow()
         {
             Application.Current.Dispatcher.Invoke(() =>

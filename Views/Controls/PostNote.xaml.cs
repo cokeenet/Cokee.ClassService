@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
 using Cokee.ClassService.Helper;
+using Cokee.ClassService.Shared;
 using Newtonsoft.Json;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -31,7 +32,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 List<Student> students = new List<Student>();
                 List<string> str = new List<string>();
-                students = Student.Load();
+                students = StudentExtensions.Load();
                 foreach (var item in students)
                 {
                     str.Add(item.Name);
