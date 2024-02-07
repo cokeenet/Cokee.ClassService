@@ -21,10 +21,10 @@ namespace Cokee.ClassService.Views.Controls
         {
             InitializeComponent();
             this.Loaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
-            this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent -= (a, b) => Catalog.ToggleControlVisible(this);
+            //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent -= (a, b) => Catalog.ToggleControlVisible(this);
         }
 
-        private void Confirm(object sender, RoutedEventArgs e)
+        private async void Confirm(object sender, RoutedEventArgs e)
         {
             string[] lines = stutb.Text.Split("\r");
             List<Student> students = new List<Student>();
@@ -39,8 +39,8 @@ namespace Cokee.ClassService.Views.Controls
                 values[2] = values[2].Insert(7, "-");
                 DateTime.TryParse(values[2], out dt);
                 students.Add(new Student { Name = name, Sex = sex, BirthDay = dt });
-                StudentExtensions.Save(students);
             }
+            await StudentExtensions.Save(students);
             Catalog.ToggleControlVisible(this);
         }
 

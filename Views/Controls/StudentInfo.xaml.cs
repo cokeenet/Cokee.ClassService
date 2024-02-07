@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Cokee.ClassService.Helper;
@@ -17,6 +19,7 @@ namespace Cokee.ClassService.Views.Controls
     /// <summary>
     /// StudentInfo.xaml 的交互逻辑
     /// </summary>
+    ///
     public partial class StudentInfo : UserControl
     {
         public event EventHandler<Student>? EditStudent;
@@ -28,10 +31,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += AddStuEvent;
             };
-            this.Unloaded += (a, b) =>
-            {
-                Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent -= AddStuEvent;
-            };
+            //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent -= AddStuEvent;
         }
 
         private void AddStuEvent(object? sender, bool e)

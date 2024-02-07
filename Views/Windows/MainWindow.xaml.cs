@@ -23,21 +23,29 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
+
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using ZetaIpc.Runtime.Client;
 using ZetaIpc.Runtime.Server;
+
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -196,12 +204,7 @@ namespace Cokee.ClassService
 
         private void Debug_RightBtn(object sender, MouseButtonEventArgs e)
         {
-            if (service == null) IntiAgent();
-            else
-            {
-                //service.lastCapTime = null;
-                // service.CapAction();
-            }
+            Catalog.ToggleControlVisible(logview);
         }
 
         public void IntiFileWatcher()
@@ -248,9 +251,9 @@ namespace Cokee.ClassService
                 {
                     new Thread(() =>
                     {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
                         {
-                            var a = StudentExtensions.Load();
+                            var a = await StudentExtensions.Load();
                             var b = a[new Random().Next(a.Count)];
                             if (b.HeadPicUrl.StartsWith("http"))
                                 head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
@@ -730,9 +733,9 @@ namespace Cokee.ClassService
 
         public void CheckBirthDay()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
-                List<Student> students = StudentExtensions.Load();
+                List<Student> students = await StudentExtensions.Load();
                 Student? nearest = null;
                 int type = 0;
                 foreach (var person in students)
@@ -784,9 +787,9 @@ namespace Cokee.ClassService
 
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
 
-        private void RandomControl_StartRandom(object sender, RandomEventArgs e)
+        private async void RandomControl_StartRandom(object sender, RandomEventArgs e)
         {
-            var a = StudentExtensions.Random(e);
+            var a = await StudentExtensions.Random(e);
             ranres.ItemsSource = a;
             Catalog.ToggleControlVisible(ranres);
         }

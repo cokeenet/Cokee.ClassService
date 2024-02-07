@@ -3,48 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+using Cokee.ClassService.Shared;
+
+using Newtonsoft.Json.Linq;
 
 namespace Cokee.ClassService.Api
 {
     public class ApiClient
     {
         private readonly HttpClient _httpClient;
+        public static string AccessToken = "";
 
         public ApiClient()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://your-api-base-url.com/api/"); // 替换为您的API基地址
+            _httpClient.BaseAddress = new Uri("http://127.0.0.1:15043/api/"); // API基地址
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3MDcyNDIyODAsImlzcyI6IkNva2VlIiwiYXVkIjoiQ29rZWVDbGFzc1NlcnZpY2UifQ.WoTegG8jJG4ifj0PA1pRI7LRDz7szVMTn6vZ2ouqZvc");
         }
 
-        // 获取所有学生
-        public async Task<string> GetStudentsAsync()
+        public async Task<ClassInfoRequest> GetClassInfo(int classId)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync("students");
+            var response = await _httpClient.GetAsync($"Class/GetClassInfo?classId={classId}");
+            response.EnsureSuccessStatusCode(); // Throw if not a success code
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                return $"Error: {response.StatusCode}";
-            }
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var classInfo = JsonSerializer.Deserialize<ClassInfoRequest>(jsonString);
+
+            return classInfo;
+        }
+
+        public async Task<IEnumerable<Student>> GetStudents(int classId)
+        {
+            var response = await _httpClient.GetAsync($"Class/GetStudents?classId={classId}");
+            response.EnsureSuccessStatusCode(); // Throw if not a success code
+
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var students = JsonSerializer.Deserialize<List<Student>>(jsonString);
+
+            return students;
         }
 
         // 创建学生
         public async Task<string> CreateStudentAsync(string jsonContent)
         {
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _httpClient.PostAsync("students", content);
-
+            HttpResponseMessage response = await _httpClient.PostAsync("students/CreateStudent", content);
+            var a = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
                 return "Student created successfully";
             }
             else
             {
-                return $"Error: {response.StatusCode}";
+                return $"Error: {response.StatusCode} {a}";
             }
         }
 

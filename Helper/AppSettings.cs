@@ -48,7 +48,7 @@ namespace Cokee.ClassService.Helper
                     }
                     else
                     {
-                        Catalog.MainWindow.desktopWatcher.EnableRaisingEvents = false;
+                        if(Catalog.MainWindow!=null)Catalog.MainWindow.desktopWatcher.EnableRaisingEvents = false;
                     }
                 }
             }

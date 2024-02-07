@@ -4,11 +4,15 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
+
 using Newtonsoft.Json;
+
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+
 using Button = Wpf.Ui.Controls.Button;
 using Clipboard = Wpf.Ui.Common.Clipboard;
 using MessageBox = System.Windows.MessageBox;
@@ -23,16 +27,16 @@ namespace Cokee.ClassService.Views.Controls
         public bool IsEraser;
         public Student stu = null;
         public string stud = "";
-        List<Student> students = new List<Student>();
+        private List<Student> students = new List<Student>();
 
         public PostNote()
         {
             InitializeComponent();
-            IsVisibleChanged += (a, b) =>
+            if (!DesignerHelper.IsInDesignMode) IsVisibleChanged += async (a, b) =>
             {
                 List<Student> students = new List<Student>();
                 List<string> str = new List<string>();
-                students = StudentExtensions.Load();
+                students = await StudentExtensions.Load();
                 foreach (var item in students)
                 {
                     str.Add(item.Name);
@@ -75,7 +79,7 @@ namespace Cokee.ClassService.Views.Controls
             catch (Exception ex)
             {
                 Clipboard.SetText(ex.ToString());
-                Catalog.HandleException(ex,"PostNote");
+                Catalog.HandleException(ex, "PostNote");
             }
         }
 

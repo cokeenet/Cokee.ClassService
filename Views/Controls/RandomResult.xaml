@@ -2,24 +2,25 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
-              xmlns:Pages="clr-namespace:Cokee.ClassService.Helper"
-             mc:Ignorable="d" 
+              xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
+             mc:Ignorable="d"
              Height="400" Width="500">
     <UserControl.Resources>
-        <Pages:VisibilityConverter x:Key="VisibilityConverter"/>
-        <Pages:LevelConverter x:Key="LevelConverter"/>
+        <helper:VisibilityConverter x:Key="VisibilityConverter" />
+        <helper:LevelConverter x:Key="LevelConverter" />
+        <helper:HeadPicUrlConverter x:Key="HeadPicUrlConverter" />
     </UserControl.Resources>
     <ui:Card VerticalAlignment="Stretch">
         <Grid Margin="0,10,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Margin="5" x:Name="title" Text="抽取结果"  HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center"/>
+            <TextBlock Margin="5" x:Name="title" Text="抽取结果"  HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" />
             <local:TouchableScrollViewer Grid.Row="1">
                 <ItemsControl x:Name="Students" d:ItemsSource="{d:SampleData ItemCount=56}" ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}">
                     <ItemsControl.ItemsPanel>
@@ -41,16 +42,15 @@
                                             <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
                                         </Image.Clip>
                                     </Image>
-                                    <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="12" Margin="5" HorizontalAlignment="Center"/>
-                                    <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="12" Margin="5" HorizontalAlignment="Center" />
+                                    <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" />
                                 </Grid>
                             </ui:Card>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                </local:TouchableScrollViewer>
-            <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2"/>
-
+            </local:TouchableScrollViewer>
+            <ui:Button Content="确认" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2" />
         </Grid>
     </ui:Card>
 </UserControl>

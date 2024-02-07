@@ -40,7 +40,7 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
-            AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71",typeof(Analytics), typeof(Crashes));
+            AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71", typeof(Analytics), typeof(Crashes));
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
@@ -54,7 +54,7 @@ namespace Cokee.ClassService
                 if (args.Contains("-scrsave")) Catalog.IsScrSave = true;
                 else if (!args.Contains("-m"))
                 {
-                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
+                    //if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
                 }
             }
         }

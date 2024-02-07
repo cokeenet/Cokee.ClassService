@@ -3,11 +3,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
+
 using Serilog;
+
 using Wpf.Ui.Controls;
+
 using MessageBox = System.Windows.MessageBox;
 
 namespace Cokee.ClassService.Views.Pages
@@ -25,24 +29,19 @@ namespace Cokee.ClassService.Views.Pages
             try
             {
                 InitializeComponent();
-                this.Loaded += (a, b) =>
+                this.Loaded += async (a, b) =>
                 {
                     Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
                         StudentList_RandomEvent;
                     studentInfo.EditStudent += StudentInfo_EditStudent;
-                    students = new ObservableCollection<Student>(StudentExtensions.Load());
+                    students = new ObservableCollection<Student>(await StudentExtensions.Load());
                     if (students != null)
                     {
                         Students.ItemsSource = students;
                         stuCount.Text = $"共 {students.Count} 名学生";
                     }
                 };
-                this.Unloaded += (a, b) =>
-                {
-                    Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent -=
-                        StudentList_RandomEvent;
-                    studentInfo.EditStudent -= StudentInfo_EditStudent;
-                };
+                this.Unloaded += (a, b) => SaveData();
             }
             catch (Exception ex)
             {
@@ -52,16 +51,17 @@ namespace Cokee.ClassService.Views.Pages
 
         private void StudentList_RandomEvent(object? sender, bool e) => Catalog.ToggleControlVisible(randomcontrol);
 
-        public void SaveData()
+        public async void SaveData()
         {
-            students = new ObservableCollection<Student>(StudentExtensions.Save(students.ToList()));
-            Students.ItemsSource = students;
+            //await StudentExtensions.Save(students.ToList());
+            //students = new ObservableCollection<Student>();
+            //Students.ItemsSource = students;
             Catalog.ShowInfo("数据已保存.");
         }
 
         private async void RandomStart(object sender, RandomEventArgs e)
         {
-            randomres.ItemsSource = StudentExtensions.Random(e);
+            randomres.ItemsSource = await StudentExtensions.Random(e);
             Catalog.ToggleControlVisible(randomres);
         }
 

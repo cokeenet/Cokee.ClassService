@@ -4,8 +4,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
     xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
-    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
     x:Class="Cokee.ClassService.MainWindow"
         mc:Ignorable="d" FontFamily="Cairo-Regular"
         Title="ClassService"
@@ -75,7 +75,7 @@
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
                     <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Margin="0,0,0,5" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年6月15日 周六 国庆节" FontSize="16" FontFamily="Cairo-Regular" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年 周六 不知道什么节" FontSize="16" FontFamily="Cairo-Regular" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>
@@ -125,7 +125,7 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <local:TouchableScrollViewer MaxHeight="165">
+                    <Controls:TouchableScrollViewer MaxHeight="165">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -146,7 +146,7 @@
                                 <ui:Button Content="快速修复" Icon="Toolbox28" Margin="5" Click="QuickFix" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             </StackPanel>
                         </Grid>
-                    </local:TouchableScrollViewer>
+                    </Controls:TouchableScrollViewer>
                 </Grid>
             </ui:Card>
         </Popup>
@@ -199,7 +199,7 @@
                 <RichTextBox x:Name="richTextBox" Margin="5" />
             </StackPanel>
         </Controls:TouchableScrollViewer>
-        <local:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" d:IsHidden="True" />
+        <Controls:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" d:IsHidden="True" />
         <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Light" Margin="24,24,24,80" d:IsHidden="True" MaxHeight="300" Timeout="3000" CloseButtonEnabled="False" />
     </Grid>
 </Window>

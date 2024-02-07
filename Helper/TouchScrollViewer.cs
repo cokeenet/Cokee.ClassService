@@ -12,17 +12,18 @@ namespace Cokee.ClassService.Views.Controls
     public class TouchableScrollViewer : ScrollViewer
     {
         //触摸点的坐标
-        Point _startPosition;
+        private Point _startPosition;
+
         //滚动条当前位置
-        double _startVerticalOffset;
-        double _startHorizontalOffset;
+        private double _startVerticalOffset;
+
+        private double _startHorizontalOffset;
+
         public TouchableScrollViewer()
         {
             TouchDown += TouchableScrollViewer_TouchDown;
             TouchUp += TouchableScrollViewer_TouchUp;
         }
-
-      
 
         private void TouchableScrollViewer_TouchDown(object sender, TouchEventArgs e)
         {
@@ -42,7 +43,7 @@ namespace Cokee.ClassService.Views.Controls
             _startHorizontalOffset = HorizontalOffset;
 
             //获取相对于ScrollViewer的触摸点位置
-            
+
             _startPosition = point.Position;
         }
 
