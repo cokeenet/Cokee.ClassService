@@ -254,7 +254,6 @@ namespace Cokee.ClassService.Helper
                     {
                         WriteInfo($"Dir: {item.Name} Space: {CountLength}M. MUST!!DELETE!!!");
                         item.Delete(true);
-                        continue;
                     }
                 }
                 var logs = Directory.GetFiles(configPath);

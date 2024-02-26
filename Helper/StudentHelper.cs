@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-using Cokee.ClassService.Api;
 using Cokee.ClassService.Shared;
 
 using Newtonsoft.Json;
@@ -16,6 +15,9 @@ using Newtonsoft.Json;
 using Serilog;
 
 using Wpf.Ui.Common;
+
+using Sex = Cokee.ClassService.Shared.Sex;
+using Student = Cokee.ClassService.Shared.Student;
 
 namespace Cokee.ClassService.Helper
 {

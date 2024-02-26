@@ -84,10 +84,8 @@ namespace Cokee.ClassService
         public int page;
 
         private Schedule schedule = Schedule.LoadFromJson();
-
+        private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         public SnackbarService snackbarService = new SnackbarService();
-        public IpcServer ipcServer = new IpcServer();
-        public IpcClient ipcClient = new IpcClient();
         private Task CheckOfficeTask;
 
         public MainWindow()
@@ -106,7 +104,7 @@ namespace Cokee.ClassService
             snackbarService.Timeout = 4000;
             inkTool.inkCanvas = inkcanvas;
             VerStr.Text =
-                $"CokeeClass 版本{Assembly.GetExecutingAssembly().GetName().Version?.ToString(4)}";
+                $"CokeeClass 版本{version?.ToString(4)}";
         }
 
         private void DisplaySettingsChanged(object? sender, EventArgs e)
@@ -142,32 +140,34 @@ namespace Cokee.ClassService
             {
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-                richTextBox.TextChanged += (a, b) =>
+                richTextBox.TextChanged += (sender, e) =>
                 {
-                    if (richTextBox.Document.Blocks.Count >= 100)
-                        richTextBox.Document.Blocks.Clear();
+                    if (richTextBox.Document.Blocks.Count > 100)
+                    {
+                        while (richTextBox.Document.Blocks.Count > 100)
+                        {
+                            richTextBox.Document.Blocks.Remove(richTextBox.Document.Blocks.FirstBlock);
+                        }
+                    }
                 };
+
                 DpiChanged += DisplaySettingsChanged;
                 SizeChanged += DisplaySettingsChanged;
                 secondTimer.Elapsed += SecondTimer_Elapsed;
                 secondTimer.Start();
                 picTimer.Elapsed += PicTimer_Elapsed;
                 picTimer.Start();
-                Catalog.CheckUpdate();
                 longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
 
                 CheckOfficeTask = new Task(CheckOffice);
-                if (Catalog.settings.FileWatcherEnable && !Catalog.IsScrSave) IntiFileWatcher();
                 if (!Catalog.IsScrSave)
                 {
                     AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
-                    ipcServer.Start(20011);
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                     hwndSource.AddHook(usbCard.WndProc);
                     if (Catalog.settings.AgentEnable) IntiAgent();
-
-                    //ipcClient.Initialize(80103);
-                    //ipcClient.Send($"CONN|CLSService|{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(4)}");
+                    if (Catalog.settings.FileWatcherEnable) IntiFileWatcher();
+                    Catalog.CheckUpdate();
                 }
                 else
                 {
@@ -272,42 +272,6 @@ namespace Cokee.ClassService
         {
         }
 
-        public void PptUp(object? sender = null, RoutedEventArgs? e = null)
-        {
-            try
-            {
-                new Thread(() =>
-                {
-                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
-                    pptApplication.SlideShowWindows[1].Activate();
-                    pptApplication.SlideShowWindows[1].View.Previous();
-                }).Start();
-            }
-            catch
-            {
-                pptControls.Visibility = Visibility.Collapsed;
-                inkTool.isPPT = false;
-            }
-        }
-
-        public void PptDown(object? sender = null, RoutedEventArgs? e = null)
-        {
-            try
-            {
-                new Thread(() =>
-                {
-                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
-                    pptApplication.SlideShowWindows[1].Activate();
-                    pptApplication.SlideShowWindows[1].View.Next();
-                }).Start();
-            }
-            catch
-            {
-                pptControls.Visibility = Visibility.Collapsed;
-                inkTool.isPPT = false;
-            }
-        }
-
         private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -359,195 +323,6 @@ namespace Cokee.ClassService
                 sw.Stop();
                 Log.Information($"获取节假日信息用时:{sw.Elapsed.TotalSeconds}s");
             }, DispatcherPriority.Background);
-        }
-
-        private void CheckOffice()
-        {
-            try
-            {
-                //Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
-                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
-                {
-                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-
-                    if (pptApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获PPT程序对象",
-                            pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
-                            pptApplication.ProductCode, ControlAppearance.Success);
-                        if (!pptApplication.Name.Contains("Microsoft"))
-                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。", ControlAppearance.Caution);
-                        pptApplication.PresentationClose += PptApplication_PresentationClose;
-                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-                        if (pptApplication.SlideShowWindows.Count >= 1)
-                        {
-                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
-                        }
-
-                        if (pptApplication.Presentations.Count >= 1)
-                        {
-                            foreach (MsPpt.Presentation pres in pptApplication.Presentations)
-                            {
-                                Catalog.BackupFile(pres.FullName, pres.Name, pres.IsFullyDownloaded);
-                            }
-                        }
-                    }
-                }
-
-                if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
-                {
-                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
-                    if (wordApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Word程序对象",
-                            wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" +
-                            wordApplication.ProductCode(), ControlAppearance.Success);
-                        wordApplication.DocumentOpen += Doc => { Catalog.BackupFile(Doc.FullName, Doc.Name); };
-                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo($"尝试释放 Word 对象");
-                            if (wordApplication == null) return;
-                            try
-                            {
-                                Marshal.FinalReleaseComObject(wordApplication);
-                            }
-                            catch (Exception ex)
-                            {
-                                Catalog.HandleException(ex, "释放COM对象");
-                            }
-
-                            wordApplication = null;
-                        };
-                        if (wordApplication.Documents.Count > 0)
-                        {
-                            foreach (MsWord.Document item in wordApplication.Documents)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                    }
-                }
-
-                if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
-                {
-                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
-                    if (excelApplication != null)
-                    {
-                        Catalog.ShowInfo("成功捕获Excel程序对象",
-                            excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" +
-                            excelApplication.ProductCode, ControlAppearance.Success);
-                        excelApplication.WorkbookOpen += Workbook =>
-                        {
-                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
-                        };
-                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
-                        {
-                            Catalog.ShowInfo($"尝试释放 Excel 对象");
-                            if (excelApplication == null) return;
-                            try
-                            {
-                                Marshal.FinalReleaseComObject(excelApplication);
-                            }
-                            catch (Exception ex)
-                            {
-                                Catalog.HandleException(ex, "释放COM对象");
-                            }
-
-                            excelApplication = null;
-                        };
-                        if (excelApplication.Workbooks.Count > 0)
-                        {
-                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
-                            {
-                                Catalog.BackupFile(item.FullName, item.Name);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Catalog.HandleException(ex, "COM对象线程");
-            }
-        }
-
-        private void PptApplication_SlideShowEnd(MsPpt.Presentation Pres)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                page = 0;
-                ClearStrokes(true);
-                pptControls.Visibility = Visibility.Collapsed;
-                Catalog.SetWindowStyle(1);
-                inkcanvas.IsEnabled = false;
-                inkTool.Visibility = Visibility.Collapsed;
-                inkcanvas.Background.Opacity = 0;
-                inkTool.isPPT = false;
-                Catalog.ShowInfo("放映结束.");
-                //IconAnimation(true);
-            }), DispatcherPriority.Background);
-        }
-
-        private void PptApplication_SlideShowNextSlide(MsPpt.SlideShowWindow Wn)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (!inkTool.isPPT) return;
-                page = Wn.View.CurrentShowPosition;
-                ClearStrokes(true);
-                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
-            }), DispatcherPriority.Normal);
-        }
-
-        private void PptApplication_PresentationClose(MsPpt.Presentation Pres)
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                page = 0;
-                pptControls.Visibility = Visibility.Collapsed;
-                inkTool.isPPT = false;
-                Catalog.ShowInfo($"尝试释放 PPT 对象");
-                if (pptApplication == null) return;
-                try
-                {
-                    Marshal.FinalReleaseComObject(pptApplication);
-                }
-                catch (Exception ex)
-                {
-                    Catalog.HandleException(ex, "释放COM对象");
-                }
-
-                pptApplication = null;
-                //IconAnimation(true);
-            }), DispatcherPriority.Background);
-        }
-
-        private void PptApplication_SlideShowBegin(MsPpt.SlideShowWindow Wn)
-        {
-            inkTool.isPPT = true;
-            //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Catalog.ShowInfo("放映已开始.");
-                StartInk(null, null);
-                inkTool.SetCursorMode(0);
-                inkcanvas.Background.Opacity = 0;
-                pptControls.Visibility = Visibility.Visible;
-                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                page = Wn.View.CurrentShowPosition;
-                if (pptApplication.Presentations.Count >= 1)
-                {
-                    foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
-                    {
-                        Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
-                    }
-                }
-            }), DispatcherPriority.Background);
         }
 
         public void ToggleCard(bool isForceShow = false)
@@ -858,6 +633,235 @@ namespace Cokee.ClassService
             if (e.Key == Key.PageDown || e.Key == Key.Down) PptDown();
             else if (e.Key == Key.PageUp || e.Key == Key.Up) PptUp();
         }
+
+        #region OfficeObj
+
+        public void PptUp(object? sender = null, RoutedEventArgs? e = null)
+        {
+            try
+            {
+                new Thread(() =>
+                {
+                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
+                    pptApplication.SlideShowWindows[1].Activate();
+                    pptApplication.SlideShowWindows[1].View.Previous();
+                }).Start();
+            }
+            catch
+            {
+                pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
+            }
+        }
+
+        public void PptDown(object? sender = null, RoutedEventArgs? e = null)
+        {
+            try
+            {
+                new Thread(() =>
+                {
+                    if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
+                    pptApplication.SlideShowWindows[1].Activate();
+                    pptApplication.SlideShowWindows[1].View.Next();
+                }).Start();
+            }
+            catch
+            {
+                pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
+            }
+        }
+
+        private void CheckOffice()
+        {
+            try
+            {
+                //Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
+                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
+                {
+                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+
+                    if (pptApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获PPT程序对象",
+                            pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
+                            pptApplication.ProductCode, ControlAppearance.Success);
+                        if (!pptApplication.Name.Contains("Microsoft"))
+                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。", ControlAppearance.Caution);
+                        pptApplication.PresentationClose += PptApplication_PresentationClose;
+                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                        if (pptApplication.SlideShowWindows.Count >= 1)
+                        {
+                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
+                        }
+
+                        if (pptApplication.Presentations.Count >= 1)
+                        {
+                            foreach (MsPpt.Presentation pres in pptApplication.Presentations)
+                            {
+                                Catalog.BackupFile(pres.FullName, pres.Name, pres.IsFullyDownloaded);
+                            }
+                        }
+                    }
+                }
+
+                if (ProcessHelper.HasWordProcess() && wordApplication == null && Catalog.settings.FileWatcherEnable)
+                {
+                    wordApplication = (MsWord.Application)MarshalForCore.GetActiveObject("Word.Application");
+                    if (wordApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获Word程序对象",
+                            wordApplication.Name + "/版本:" + wordApplication.Version + "/PC:" +
+                            wordApplication.ProductCode(), ControlAppearance.Success);
+                        wordApplication.DocumentOpen += Doc => { Catalog.BackupFile(Doc.FullName, Doc.Name); };
+                        wordApplication.DocumentBeforeClose += (MsWord.Document Doc, ref bool Cancel) =>
+                        {
+                            Catalog.ShowInfo($"尝试释放 Word 对象");
+                            if (wordApplication == null) return;
+                            try
+                            {
+                                Marshal.FinalReleaseComObject(wordApplication);
+                            }
+                            catch (Exception ex)
+                            {
+                                Catalog.HandleException(ex, "释放COM对象");
+                            }
+
+                            wordApplication = null;
+                        };
+                        if (wordApplication.Documents.Count > 0)
+                        {
+                            foreach (MsWord.Document item in wordApplication.Documents)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
+                        }
+                    }
+                }
+
+                if (ProcessHelper.HasExcelProcess() && excelApplication == null && Catalog.settings.FileWatcherEnable)
+                {
+                    excelApplication = (MsExcel.Application)MarshalForCore.GetActiveObject("Excel.Application");
+                    if (excelApplication != null)
+                    {
+                        Catalog.ShowInfo("成功捕获Excel程序对象",
+                            excelApplication.Name + "/版本:" + excelApplication.Version + "/PC:" +
+                            excelApplication.ProductCode, ControlAppearance.Success);
+                        excelApplication.WorkbookOpen += Workbook =>
+                        {
+                            Catalog.BackupFile(Workbook.FullName, Workbook.Name);
+                        };
+                        excelApplication.WorkbookBeforeClose += (MsExcel.Workbook Wb, ref bool Cancel) =>
+                        {
+                            Catalog.ShowInfo($"尝试释放 Excel 对象");
+                            if (excelApplication == null) return;
+                            try
+                            {
+                                Marshal.FinalReleaseComObject(excelApplication);
+                            }
+                            catch (Exception ex)
+                            {
+                                Catalog.HandleException(ex, "释放COM对象");
+                            }
+
+                            excelApplication = null;
+                        };
+                        if (excelApplication.Workbooks.Count > 0)
+                        {
+                            foreach (MsExcel.Workbook item in excelApplication.Workbooks)
+                            {
+                                Catalog.BackupFile(item.FullName, item.Name);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Catalog.HandleException(ex, "COM对象线程");
+            }
+        }
+
+        private void PptApplication_SlideShowEnd(MsPpt.Presentation Pres)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                page = 0;
+                ClearStrokes(true);
+                pptControls.Visibility = Visibility.Collapsed;
+                Catalog.SetWindowStyle(1);
+                inkcanvas.IsEnabled = false;
+                inkTool.Visibility = Visibility.Collapsed;
+                inkcanvas.Background.Opacity = 0;
+                inkTool.isPPT = false;
+                Catalog.ShowInfo("放映结束.");
+                //IconAnimation(true);
+            }), DispatcherPriority.Background);
+        }
+
+        private void PptApplication_SlideShowNextSlide(MsPpt.SlideShowWindow Wn)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!inkTool.isPPT) return;
+                page = Wn.View.CurrentShowPosition;
+                ClearStrokes(true);
+                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
+            }), DispatcherPriority.Normal);
+        }
+
+        private void PptApplication_PresentationClose(MsPpt.Presentation Pres)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                page = 0;
+                pptControls.Visibility = Visibility.Collapsed;
+                inkTool.isPPT = false;
+                Catalog.ShowInfo($"尝试释放 PPT 对象");
+                if (pptApplication == null) return;
+                try
+                {
+                    Marshal.FinalReleaseComObject(pptApplication);
+                }
+                catch (Exception ex)
+                {
+                    Catalog.HandleException(ex, "释放COM对象");
+                }
+
+                pptApplication = null;
+                //IconAnimation(true);
+            }), DispatcherPriority.Background);
+        }
+
+        private void PptApplication_SlideShowBegin(MsPpt.SlideShowWindow Wn)
+        {
+            inkTool.isPPT = true;
+            //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Catalog.ShowInfo("放映已开始.");
+                StartInk(null, null);
+                inkTool.SetCursorMode(0);
+                inkcanvas.Background.Opacity = 0;
+                pptControls.Visibility = Visibility.Visible;
+                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                page = Wn.View.CurrentShowPosition;
+                if (pptApplication.Presentations.Count >= 1)
+                {
+                    foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                    {
+                        Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                    }
+                }
+            }), DispatcherPriority.Background);
+        }
+
+        #endregion OfficeObj
 
         #region Multi-Touch
 
@@ -1419,6 +1423,11 @@ namespace Cokee.ClassService
             var result = status ? Visibility.Visible : Visibility.Collapsed;
             inkTool.redoBtn.Visibility = result;
             inkTool.redoBtn.IsEnabled = status;
+        }
+
+        private void QuickFix(object sender, MouseButtonEventArgs e)
+        {
+            Catalog.CreateWindow<UserLogin>();
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)

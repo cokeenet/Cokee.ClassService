@@ -17,10 +17,5 @@ namespace Cokee.ClassService.Views.Windows
             InitializeComponent();
             Closing += (a, b) => isClosing = true;
         }
-
-        private void CoursesManage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue == false && !isClosing) Close();
-        }
     }
 }

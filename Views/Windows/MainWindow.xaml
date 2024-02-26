@@ -7,7 +7,7 @@
     xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
     xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
     x:Class="Cokee.ClassService.MainWindow"
-        mc:Ignorable="d" FontFamily="Cairo-Regular"
+        mc:Ignorable="d" FontFamily="Lato"
         Title="ClassService"
         Width="1920" Height="1080"
         Left="0" Top="0" Loaded="Window_Loaded"
@@ -60,7 +60,7 @@
             <ui:Card.Background>
                 <VisualBrush>
                     <VisualBrush.Visual>
-                        <Image Source="/Resources/bg1.png">
+                        <Image>
                             <Image.Effect>
                                 <BlurEffect Radius="6.8" />
                             </Image.Effect>
@@ -74,8 +74,8 @@
             </ui:Card.RenderTransform>
             <StackPanel>
                 <StackPanel VerticalAlignment="Top" Margin="5">
-                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Cairo-Regular" Margin="0,0,0,5" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年 周六 不知道什么节" FontSize="16" FontFamily="Cairo-Regular" />
+                    <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Lato" Margin="0,0,0,5" />
+                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年 周六 不知道什么节" FontSize="16" FontFamily="Lato" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>

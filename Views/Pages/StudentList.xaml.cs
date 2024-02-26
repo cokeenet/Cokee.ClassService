@@ -38,7 +38,7 @@ namespace Cokee.ClassService.Views.Pages
                     if (students != null)
                     {
                         Students.ItemsSource = students;
-                        stuCount.Text = $"共 {students.Count} 名学生";
+                        Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().stuCount.Text = $"共 {students.Count} 名学生";
                     }
                 };
                 this.Unloaded += (a, b) => SaveData();

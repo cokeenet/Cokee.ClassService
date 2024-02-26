@@ -9,7 +9,7 @@
         <ResourceDictionary>
             <FontFamily x:Key="Segoe Fluent Icons">/Cokee.ClassService;component/Resources/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
-            <FontFamily x:Key="Segoe UI Emoji">/Cokee.ClassService;component/Resources/#segulemj</FontFamily>
+            <FontFamily x:Key="Lato">/Cokee.ClassService;component/Resources/#Lato-Regular</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />

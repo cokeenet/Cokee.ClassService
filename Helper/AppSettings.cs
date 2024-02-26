@@ -2,7 +2,12 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using Cokee.ClassService.Shared;
+
 using Serilog;
+
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Cokee.ClassService.Helper
 {
@@ -14,21 +19,7 @@ namespace Cokee.ClassService.Helper
         public bool UseMemberAvatar { get; set; }
         public bool SideCardEnable { get; set; } = true;
         public bool AgentEnable { get; set; } = true;
-        private bool _FitCurveEnable { get; set; }
-
-        public bool FitCurveEnable
-        {
-            get { return _FitCurveEnable; }
-            set
-            {
-                if (value != _FitCurveEnable)
-                {
-                    _FitCurveEnable = value;
-                    Catalog.MainWindow.inkcanvas.DefaultDrawingAttributes.FitToCurve = value;
-                }
-            }
-        }
-
+        public string LoginState { get; set; }
         public string FileWatcherFilter { get; set; } = "*.*";
 
         [JsonIgnore]
@@ -48,7 +39,7 @@ namespace Cokee.ClassService.Helper
                     }
                     else
                     {
-                        if(Catalog.MainWindow!=null)Catalog.MainWindow.desktopWatcher.EnableRaisingEvents = false;
+                        if (Catalog.MainWindow != null) Catalog.MainWindow.desktopWatcher.EnableRaisingEvents = false;
                     }
                 }
             }

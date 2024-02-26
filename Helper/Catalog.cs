@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+
 using AutoUpdaterDotNET;
+
+using Cokee.ClassService.Shared;
+
 using Serilog;
 
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
@@ -34,11 +41,10 @@ namespace Cokee.ClassService.Helper
         public static int WindowType;
         public static bool IsScrSave = false;
         public static IEasingFunction easingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut };
-
-        // public static MainWindow mainWindow = App.Current.MainWindow as MainWindow;
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
-
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
+        public static User? user = null;
+        public static ApiClient apiClient = new ApiClient();
         public static SnackbarService? GlobalSnackbarService;
 
         public static void HandleException(Exception ex, string str = "")
@@ -71,6 +77,13 @@ namespace Cokee.ClassService.Helper
             }
         }
 
+        public static void TryLoginFromCache()
+        {
+            if (!string.IsNullOrEmpty(settings.LoginState))
+            {
+            }
+        }
+
         public static void CheckUpdate()
         {
             try
@@ -81,11 +94,11 @@ namespace Cokee.ClassService.Helper
                 AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
                 AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
             }
-            catch 
+            catch
             {
-                
             }
         }
+
         public static void ExitPPTShow()
         {
             Application.Current.Dispatcher.Invoke(() =>

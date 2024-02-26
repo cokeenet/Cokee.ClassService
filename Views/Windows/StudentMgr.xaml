@@ -4,8 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Title="StudentMgr" Width="995" Topmost="True" FontFamily="Cairo-Regular" WindowStartupLocation="CenterScreen"
-    Height="605" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
+             Title="StudentMgr" Width="995" Topmost="True" FontFamily="Lato" WindowStartupLocation="CenterScreen"
+    Height="625" ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     mc:Ignorable="d">
     <Grid>
 
@@ -42,6 +42,14 @@
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
                 <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />
             </Border>
+            <StatusBar Grid.Column="1" VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
+                <StatusBarItem>
+                    <TextBlock x:Name="className" d:Text="高一一班" />
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock x:Name="stuCount" d:Text="共 56 名学生" />
+                </StatusBarItem>
+            </StatusBar>
         </Grid>
     </Grid>
 </ui:UiWindow>
