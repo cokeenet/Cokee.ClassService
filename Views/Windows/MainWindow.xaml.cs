@@ -1,4 +1,14 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using Cokee.ClassService.Helper;
+using Cokee.ClassService.Shared;
+using Cokee.ClassService.Views.Windows;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sink.AppCenter;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,29 +33,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
-using Cokee.ClassService.Shared;
-using Cokee.ClassService.Views.Windows;
-
-using Microsoft.Win32;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
-using ZetaIpc.Runtime.Client;
-using ZetaIpc.Runtime.Server;
-
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -242,27 +232,8 @@ namespace Cokee.ClassService
         {
             App.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (!Catalog.settings.UseMemberAvatar)
-                {
-                    string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
-                    head.Source = new BitmapImage(new Uri(url));
-                }
-                else
-                {
-                    new Thread(() =>
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
-                        {
-                            var a = await StudentExtensions.Load();
-                            var b = a[new Random().Next(a.Count)];
-                            if (b.HeadPicUrl.StartsWith("http"))
-                                head.Source = new BitmapImage(new Uri(b.HeadPicUrl));
-                            else return;
-                            nameBadge.Visibility = Visibility.Visible;
-                            nameBadge.Content = $"{b.Name} 的头像";
-                        }));
-                    }).Start();
-                }
+                string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
+                head.Source = new BitmapImage(new Uri(url));
 
                 StartAnimation(3, 3600);
             }));

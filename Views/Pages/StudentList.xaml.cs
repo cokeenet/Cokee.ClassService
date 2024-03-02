@@ -53,7 +53,7 @@ namespace Cokee.ClassService.Views.Pages
 
         public async void SaveData()
         {
-            //await StudentExtensions.Save(students.ToList());
+            await StudentExtensions.Save(students.ToList());
             //students = new ObservableCollection<Student>();
             //Students.ItemsSource = students;
             Catalog.ShowInfo("数据已保存.");
