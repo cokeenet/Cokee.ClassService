@@ -23,7 +23,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <ui:SymbolIcon
+            <ui:SymbolIcon MouseRightButtonDown="SymbolIcon_MouseRightButtonDown"
                                 Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 FontSize="40" Symbol="UsbStick20" Grid.RowSpan="2" />
             <ui:Button x:Name="open" HorizontalAlignment="Right"

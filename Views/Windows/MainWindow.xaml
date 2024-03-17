@@ -168,6 +168,7 @@
                 </TransformGroup>
             </Grid.RenderTransform>
             <ui:Badge Appearance="Light" FontSize="11" d:Content="0000" x:Name="nameBadge" Visibility="Collapsed" d:Visibility="Visible" HorizontalAlignment="Center" Margin="3" />
+
             <Image Source="/Resources/head.jpg" x:Name="head" RenderTransformOrigin="0.5,0.5" Width="80" Height="80" Stretch="Fill" Grid.Row="1">
                 <Image.Effect>
                     <DropShadowEffect ShadowDepth="1" />
@@ -181,6 +182,8 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
+            <ui:ProgressRing x:Name="progress" Grid.Row="1" Height="80" Width="80" Progress="0" Visibility="Visible" />
+
             <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="25" Height="25" Grid.Row="1">
                 <Grid.RenderTransform>
                     <ScaleTransform x:Name="iconTrans" ScaleX="0" ScaleY="0" CenterX="15" CenterY="15" d:ScaleX="1" d:ScaleY="1" />
@@ -198,7 +201,7 @@
                 <RichTextBox x:Name="richTextBox" Margin="5" />
             </StackPanel>
         </Controls:TouchableScrollViewer>
-        <Controls:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" d:IsHidden="True" />
-        <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Light" Margin="24,24,24,80" d:IsHidden="True" MaxHeight="300" Timeout="3000" CloseButtonEnabled="False" />
+        <Controls:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" />
+        <ui:Snackbar x:Name="snackbar" Icon="Info12" Width="400" Appearance="Light" Margin="24,24,24,80" MaxHeight="300" Timeout="3000" CloseButtonEnabled="False" d:IsHidden="True" />
     </Grid>
 </Window>
