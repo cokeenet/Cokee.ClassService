@@ -69,6 +69,7 @@ namespace Cokee.ClassService.Helper
 
         public void Dispose()
         {
+            GC.Collect();
         }
 
         public void SetTimer(Timer a, ElapsedEventHandler handler, bool dontstart = false)

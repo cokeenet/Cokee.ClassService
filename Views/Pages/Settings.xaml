@@ -7,8 +7,8 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            mc:Ignorable="d"
-       d:DesignHeight="620"
-       d:DesignWidth="511"
+       d:DesignHeight="6200"
+       d:DesignWidth="511" FontFamily="Lato"
       Title="Settings">
     <ui:UiPage.Resources>
         <local:VisibilityConverter x:Key="VisibilityConverter" />
@@ -97,8 +97,8 @@
                     <ui:Button Icon="Delete48" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
                     <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
                 </StackPanel>
-                
-                <ui:CardControl Icon="Fingerprint48" Margin="5">
+
+                <ui:CardControl Icon="Tab16" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock

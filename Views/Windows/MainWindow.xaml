@@ -57,25 +57,23 @@
             </Grid>
         </Grid>
         <ui:Card x:Name="sideCard" VerticalAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Right" HorizontalContentAlignment="Stretch" Visibility="Collapsed" d:Visibility="Visible" Margin="0,0,5,0" BorderThickness="2">
+
             <ui:Card.Background>
-                <VisualBrush>
-                    <VisualBrush.Visual>
-                        <Image Source="/Resources/CardBackground/3.jpg" Stretch="None" StretchDirection="DownOnly">
-                            <Image.Effect>
-                                <BlurEffect Radius="6.8" />
-                            </Image.Effect>
-                        </Image>
-                    </VisualBrush.Visual>
-                </VisualBrush>
+                <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" Stretch="UniformToFill" TileMode="None" Opacity="1" />
             </ui:Card.Background>
 
             <ui:Card.RenderTransform>
-                <TranslateTransform x:Name="cardtran" X="300" />
+                <TranslateTransform x:Name="cardtran" X="300" d:X="0" />
             </ui:Card.RenderTransform>
-            <StackPanel>
+            <StackPanel Background="#4C2D2D2D">
+                <Grid>
+                    <Grid.Effect>
+                        <BlurEffect />
+                    </Grid.Effect>
+                </Grid>
                 <StackPanel VerticalAlignment="Top" Margin="5">
                     <TextBlock x:Name="time1" Text="--:--" d:Text="21:03:03" FontSize="30" FontFamily="Lato" Margin="0,0,0,5" />
-                    <TextBlock x:Name="longDate" Text="--:--" d:Text="2023年 周六 不知道什么节" FontSize="16" FontFamily="Lato" />
+                    <TextBlock x:Name="longDate" Text="-----" d:Text="2023年 周六 不知道什么节" FontSize="16" FontFamily="Lato" />
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Grid>
@@ -94,7 +92,7 @@
                             <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
                             <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                             <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
-                            <ui:Button Content="计时器" Icon="Clock28" Click="Button_Click" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="Debug_RightBtn" />
+                            <ui:Button Content="计时器" Icon="Clock28" Click="Timer" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="Debug_RightBtn" />
                             <ui:Button Content="设置" Icon="Settings32"  Margin="5" MouseRightButtonDown="QuickFix"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
@@ -102,7 +100,7 @@
 
                         <ui:Button Icon="Power28" Click="MonitorOff" HorizontalAlignment="Right" Margin="5" Content="休眠" />
                         <ui:InfoBar x:Name="birth" d:IsOpen="False" IsOpen="False" IsClosable="False" Severity="Success" Margin="5" d:Message="🎉 今天是 XXX 的生日！" />
-                        <ui:Card Margin="5,0,5,0" Visibility="Collapsed">
+                        <ui:Card Margin="5,0,5,0" Visibility="Collapsed" d:Visibility="Visible">
                             <StackPanel>
                                 <TextBlock d:Text="本节课程:语文 11:30-12:40" Margin="0,0,0,5" />
                                 <TextBlock d:Text="下节课程:语文 11:30-12:40" />
@@ -116,6 +114,7 @@
                     </Grid>
                     <TextBlock x:Name="Easter" Text="那，祝我，祝你，祝我们。" Margin="5" Visibility="Collapsed" />
                 </StackPanel>
+                <TextBlock Text="CokeeTech 秋坂科技" Margin="5" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
             </StackPanel>
         </ui:Card>
         <Popup x:Name="cardPopup" PlacementTarget="{Binding ElementName=floatGrid}" Placement="Top" PopupAnimation="Fade" StaysOpen="False" AllowsTransparency="True" KeyDown="MainWindow_OnKeyDown">

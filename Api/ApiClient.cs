@@ -21,11 +21,11 @@ namespace Cokee.ClassService.Helper
         public ApiClient()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://127.0.0.1:15043/api/"); // API基地址
+            _httpClient.BaseAddress = new Uri("http://api.cokee.tech:15043/api/"); // API基地址
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NDA1Mzk3OTgsImlzcyI6IkNva2VlIiwiYXVkIjoiQ29rZWVDbGFzc1NlcnZpY2UifQ.3Fda7QoBHWmfnPSN8kBnP4Va34TTub4E6eRaCVQUvCo");
         }
 
-        public async Task<string> LoginAsync(string userName, string password)
+        public async Task<LoginResult> LoginAsync(string userName, string password)
         {
             var content = new StringContent(JsonSerializer.Serialize(new LoginRequest { Username = userName, Password = password }), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _httpClient.PostAsync($"user/login", content);
@@ -33,12 +33,12 @@ namespace Cokee.ClassService.Helper
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                // 处理登录成功后的逻辑
-                return responseContent;
+                var model = JsonSerializer.Deserialize<LoginResult>(responseContent);
+                return model;
             }
             else
             {
-                return $"Error: {response.StatusCode}";
+                throw new Exception($"Error: {response.StatusCode}");
             }
         }
 

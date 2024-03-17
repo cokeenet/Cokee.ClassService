@@ -1,13 +1,18 @@
 ﻿using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
+
 using Microsoft.Win32;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Serilog;
 using Serilog.Events;
 using Serilog.Sink.AppCenter;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,9 +38,11 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
+
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -83,7 +90,7 @@ namespace Cokee.ClassService
             InitializeComponent();
             Catalog.MainWindow = this;
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.File("log.txt",
+                .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.AppCenterSink(null, LogEventLevel.Error)
@@ -109,19 +116,7 @@ namespace Cokee.ClassService
         public void IntiAgent()
         {
             service = new CapService();
-            service.CapStartEvent += CapStart;
-            service.CapDoneEvent += CapDone;
             service.Start();
-        }
-
-        private void CapDone(object? sender, string e)
-        {
-            //IconAnimation(false, SymbolRegular.Balloon20, new SolidColorBrush() { Color = Colors.ForestGreen }, 5000);
-        }
-
-        private void CapStart(object? sender, string e)
-        {
-            //IconAnimation(false, SymbolRegular.Add24, new SolidColorBrush() { Color = Colors.IndianRed }, 3000);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -239,7 +234,7 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Timer(object sender, RoutedEventArgs e)
         {
         }
 

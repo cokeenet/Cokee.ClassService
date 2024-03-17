@@ -140,9 +140,9 @@ namespace Cokee.ClassService.Helper
     {
         public static async Task<List<Student>> Load()
         {
-         //  var a = await new ApiClient().GetStudents(0);
-          // return a.ToList();
-            
+            //  var a = await new ApiClient().GetStudents(0);
+            // return a.ToList();
+
             if (!File.Exists(Catalog.STU_FILE)) return new List<Student>();
             var a = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
             if (a != null)
@@ -157,17 +157,19 @@ namespace Cokee.ClassService.Helper
         public static async Task<List<Student>> Save(this List<Student> students)
         {
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
+            int i = 0;
             foreach (var item in students)
             {
-                item.ID = null;
+                i++;
+                item.ID = i;
                 if (item.QQ != null && item.QQ.ToString().Length >= 5)
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
                 else item.HeadPicUrl = "/Resources/head.jpg";
-               // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
-              //  Log.Information(a);
+                // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
+                //  Log.Information(a);
             }
 
-           if (!Directory.Exists(Catalog.CONFIG_DIR)) Directory.CreateDirectory(Catalog.CONFIG_DIR);
+            if (!Directory.Exists(Catalog.CONFIG_DIR)) Directory.CreateDirectory(Catalog.CONFIG_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonConvert.SerializeObject(students));
             return students;
         }

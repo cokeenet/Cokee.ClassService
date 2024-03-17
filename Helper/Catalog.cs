@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -19,12 +17,6 @@ using Serilog;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Services;
-
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-
-using MsExcel = Microsoft.Office.Interop.Excel;
-using MsPpt = Microsoft.Office.Interop.PowerPoint;
-using MsWord = Microsoft.Office.Interop.Word;
 
 namespace Cokee.ClassService.Helper
 {
@@ -141,7 +133,7 @@ namespace Cokee.ClassService.Helper
 
         public static void BackupFile(string filePath, string fileName, bool isFullyDownloaded = true)
         {
-            Task.Run(() =>
+            new Thread(() =>
             {
                 try
                 {
@@ -160,7 +152,7 @@ namespace Cokee.ClassService.Helper
                 {
                     HandleException(ex, "FileCopyTask");
                 }
-            }).Start();
+            });
         }
 
         public static void ReleaseComObject(object? o, string type = "COM")
