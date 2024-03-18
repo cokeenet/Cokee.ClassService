@@ -131,7 +131,7 @@ namespace Cokee.ClassService
                     {
                         while (richTextBox.Document.Blocks.Count > 100)
                         {
-                            richTextBox.Document.Blocks.Remove(richTextBox.Document.Blocks.FirstBlock);
+                            richTextBox.Document = null;
                         }
                     }
                 };
@@ -1396,9 +1396,9 @@ namespace Cokee.ClassService
             Catalog.CreateWindow<UserLogin>();
         }
 
-        private void Button_MouseRightButtonDown_1(object sender, MouseButtonEventArgs e)
+        private void UsbDebug(object sender, MouseButtonEventArgs e)
         {
-
+            usbCard.EnumDrive();
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)

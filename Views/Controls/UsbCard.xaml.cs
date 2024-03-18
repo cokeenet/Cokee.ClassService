@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using Cokee.ClassService.Helper;
+using Serilog;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -31,7 +32,7 @@ namespace Cokee.ClassService.Views.Controls
                 backgroundWorker1.WorkerSupportsCancellation = true;
                 backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
                 backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
-                backgroundWorker1.RunWorkerCompleted += (a, b) => { Catalog.ShowInfo($"Copied Done. Cancelled{b.Cancelled} Res{b.Result}", $"Err{b.Error.ToString()}"); };
+                backgroundWorker1.RunWorkerCompleted += (a, b) => { Catalog.ShowInfo($"Copied Done. Cancelled{b.Cancelled} Res{b.Result}", $"Err{b.Error?.ToString()}");Catalog.UpdateProgress(100, false); };
                 if (Catalog.IsScrSave) return;
                 EnumDrive();
                 
@@ -71,9 +72,10 @@ namespace Cokee.ClassService.Views.Controls
                 disk = t.Name;
                 diskName.Text = volumeLabel;
                 diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
+
+                if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
                 await Task.Delay(15000);
                 ShowUsbCard(true);
-                if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
             }
             else if (isUnplug)
             {
@@ -169,13 +171,14 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (File.Exists(disk + "picDisk"))
             {
-                Catalog.ShowInfo($"Start to move pics. Isbusy{backgroundWorker1.IsBusy}");
+                Catalog.ShowInfo($"Start to move pics. Isbusy: {backgroundWorker1.IsBusy}");
                 copyDisk = disk;
                 if (backgroundWorker1.IsBusy != true)
                 {
                     backgroundWorker1.RunWorkerAsync();
                 }
             }
+            else Catalog.ShowInfo("nonTag");
         }
 
         private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
@@ -184,19 +187,22 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
+        { 
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
                 var files = Directory.GetFiles(dir);
+                var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
                 int num = 0;
+                if(!Directory.Exists(cpTo))Directory.CreateDirectory(cpTo);
                 foreach (string file in files)
                 {
                     FileInfo f = new FileInfo(file);
-                    f.CopyTo(copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}\\{f.Name}");
+                    if (File.Exists($"{cpTo}\\{f.Name}")) continue;
+                    f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
-                    worker.ReportProgress((num / files.Length) * 100);
+                    Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
+                    backgroundWorker1.ReportProgress((num / files.Length) * 100);
                 }
             }
         }

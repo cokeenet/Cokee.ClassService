@@ -90,10 +90,10 @@
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <ui:Button Content="音量调节" Icon="Speaker228" Margin="5" HorizontalAlignment="Stretch" Click="VolumeCard" VerticalAlignment="Stretch" />
-                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="桌面便签" Icon="NoteAdd28" Margin="5" Click="AddFloatCard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="UsbDebug"/>
                             <ui:Button Content="大学梦" Icon="Notebook32"  Margin="5" Click="ShowStickys" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="PostNote" />
                             <ui:Button Content="计时器" Icon="Clock28" Click="Timer" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseRightButtonDown="Debug_RightBtn" />
-                            <ui:Button Content="设置" Icon="Settings32"  Margin="5" MouseRightButtonDown="QuickFix"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <ui:Button Content="设置" Icon="Settings32"  Margin="5" MouseRightButtonDown="QuickFix"  Click="OpenSettings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </StackPanel>
                     </Grid>
                     <StackPanel>
