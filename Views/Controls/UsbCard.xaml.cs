@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -18,30 +20,42 @@ namespace Cokee.ClassService.Views.Controls
     public partial class UsbCard : UserControl
     {
         public string disk;
+        private BackgroundWorker backgroundWorker1 = new BackgroundWorker();
 
         public UsbCard()
         {
             InitializeComponent();
             try
             {
+                backgroundWorker1.WorkerReportsProgress = true;
+                backgroundWorker1.WorkerSupportsCancellation = true;
+                backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
+                backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
+                backgroundWorker1.RunWorkerCompleted += (a, b) => { Catalog.ShowInfo($"Copied Done. Cancelled{b.Cancelled} Res{b.Result}", $"Err{b.Error.ToString()}"); };
                 if (Catalog.IsScrSave) return;
-                DriveInfo[] s = DriveInfo.GetDrives();
-                s.Any(t =>
-                {
-                    if (t.DriveType == DriveType.Removable)
-                    {
-                        ShowUsbCard(false, t);
-                        return true;
-                    }
-                    return false;
-                });
+                EnumDrive();
+                
+                
             }
             catch (Exception ex)
             {
                 Catalog.HandleException(ex, "UsbCard");
             }
         }
-
+        public void EnumDrive()
+        {
+            if (Catalog.IsScrSave) return;
+            DriveInfo[] s = DriveInfo.GetDrives();
+            s.Any(t =>
+            {
+                if (t.DriveType == DriveType.Removable)
+                {
+                    ShowUsbCard(false, t);
+                    return true;
+                }
+                return false;
+            });
+        }
         private async void ShowUsbCard(bool isUnplug, DriveInfo t = null)
         {
             DoubleAnimation anim2 = new DoubleAnimation(0, 368, TimeSpan.FromSeconds(1));
@@ -59,6 +73,7 @@ namespace Cokee.ClassService.Views.Controls
                 diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
                 await Task.Delay(15000);
                 ShowUsbCard(true);
+                if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
             }
             else if (isUnplug)
             {
@@ -147,5 +162,43 @@ namespace Cokee.ClassService.Views.Controls
             out uint lpBytesReturned,
             IntPtr lpOverlapped
         );
+
+        private string copyDisk;
+
+        private void SymbolIcon_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (File.Exists(disk + "picDisk"))
+            {
+                Catalog.ShowInfo($"Start to move pics. Isbusy{backgroundWorker1.IsBusy}");
+                copyDisk = disk;
+                if (backgroundWorker1.IsBusy != true)
+                {
+                    backgroundWorker1.RunWorkerAsync();
+                }
+            }
+        }
+
+        private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
+        {
+            Catalog.UpdateProgress(e.ProgressPercentage, true, "picCopy");
+        }
+
+        private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
+            {
+                DirectoryInfo dirinfo = new DirectoryInfo(dir);
+                var files = Directory.GetFiles(dir);
+                int num = 0;
+                foreach (string file in files)
+                {
+                    FileInfo f = new FileInfo(file);
+                    f.CopyTo(copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}\\{f.Name}");
+                    num++;
+                    worker.ReportProgress((num / files.Length) * 100);
+                }
+            }
+        }
     }
 }

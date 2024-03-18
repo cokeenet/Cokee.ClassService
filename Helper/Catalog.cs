@@ -155,6 +155,25 @@ namespace Cokee.ClassService.Helper
             });
         }
 
+        public static void UpdateProgress(int progress, bool isvisible = true, string? taskname = null)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                MainWindow.progress.Progress = progress;
+                MainWindow.nameBadge.Content = $"{taskname}:{progress}%";
+                if (!isvisible || progress == 100)
+                {
+                    MainWindow.progress.Visibility = Visibility.Collapsed;
+                    MainWindow.nameBadge.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    MainWindow.progress.Visibility = Visibility.Visible;
+                    MainWindow.nameBadge.Visibility = Visibility.Visible;
+                }
+            }, DispatcherPriority.Background);
+        }
+
         public static void ReleaseComObject(object? o, string type = "COM")
         {
             Application.Current.Dispatcher.Invoke(() =>

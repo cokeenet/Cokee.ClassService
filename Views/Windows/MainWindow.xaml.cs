@@ -1396,6 +1396,11 @@ namespace Cokee.ClassService
             Catalog.CreateWindow<UserLogin>();
         }
 
+        private void Button_MouseRightButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
         {
             if (_currentCommitType == CommitReason.CodeInput || _currentCommitType == CommitReason.ShapeDrawing) return;
