@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using Cokee.ClassService.Helper;
+
 using Serilog;
 
 namespace Cokee.ClassService.Views.Controls
@@ -32,17 +33,22 @@ namespace Cokee.ClassService.Views.Controls
                 backgroundWorker1.WorkerSupportsCancellation = true;
                 backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
                 backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
-                backgroundWorker1.RunWorkerCompleted += (a, b) => { Catalog.ShowInfo($"Copied Done. Cancelled{b.Cancelled} Res{b.Result}", $"Err{b.Error?.ToString()}");Catalog.UpdateProgress(100, false); };
+                backgroundWorker1.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
                 if (Catalog.IsScrSave) return;
                 EnumDrive();
-                
-                
             }
             catch (Exception ex)
             {
                 Catalog.HandleException(ex, "UsbCard");
             }
         }
+
+        private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            Catalog.ShowInfo($"Copied Done. Cancelled:{e.Cancelled}", $"Err{e.Error?.ToString()}");
+            Catalog.UpdateProgress(100, false);
+        }
+
         public void EnumDrive()
         {
             if (Catalog.IsScrSave) return;
@@ -57,6 +63,7 @@ namespace Cokee.ClassService.Views.Controls
                 return false;
             });
         }
+
         private async void ShowUsbCard(bool isUnplug, DriveInfo t = null)
         {
             DoubleAnimation anim2 = new DoubleAnimation(0, 368, TimeSpan.FromSeconds(1));
@@ -187,14 +194,14 @@ namespace Cokee.ClassService.Views.Controls
         }
 
         private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
-        { 
+        {
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
                 var files = Directory.GetFiles(dir);
                 var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
-                int num = 0;
-                if(!Directory.Exists(cpTo))Directory.CreateDirectory(cpTo);
+                decimal num = 0;
+                if (!Directory.Exists(cpTo)) Directory.CreateDirectory(cpTo);
                 foreach (string file in files)
                 {
                     FileInfo f = new FileInfo(file);
@@ -202,7 +209,7 @@ namespace Cokee.ClassService.Views.Controls
                     f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
                     Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
-                    backgroundWorker1.ReportProgress((num / files.Length) * 100);
+                    backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)files.Length * 100));
                 }
             }
         }
