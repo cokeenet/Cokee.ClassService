@@ -182,7 +182,7 @@
                     <EllipseGeometry RadiusX="40" RadiusY="40" Center="40,40" />
                 </Image.Clip>
             </Image>
-            <ui:ProgressRing x:Name="progress" Grid.Row="1" Height="80" Width="80" Progress="0" Visibility="Visible" />
+            <ui:ProgressRing x:Name="progress" Grid.Row="1" Height="80" Width="80" Progress="0" Visibility="Collapsed" />
 
             <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="25" Height="25" Grid.Row="1">
                 <Grid.RenderTransform>
