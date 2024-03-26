@@ -14,9 +14,10 @@ using Cokee.ClassService.Shared;
 
 using Serilog;
 
+using Wpf.Ui;
 using Wpf.Ui.Animations;
-using Wpf.Ui.Common;
-using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace Cokee.ClassService.Helper
 {
@@ -37,16 +38,16 @@ namespace Cokee.ClassService.Helper
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
-        public static SnackbarService? GlobalSnackbarService;
+        public static SnackbarService GlobalSnackbarService = new SnackbarService();
 
         public static void HandleException(Exception ex, string str = "")
         {
             string shortExpInfo = ex.ToString();
             if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
-            Application.Current.Dispatcher.Invoke(async () =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                if (GlobalSnackbarService != null) if (GlobalSnackbarService.GetSnackbarControl() != null)
-                        await GlobalSnackbarService.ShowAsync($"{str}发生错误", shortExpInfo, SymbolRegular.Warning24, ControlAppearance.Danger);
+                if (GlobalSnackbarService.GetSnackbarPresenter() != null)
+                    GlobalSnackbarService.Show($"{str}发生错误", shortExpInfo, ControlAppearance.Danger, new SymbolIcon(SymbolRegular.Warning24), TimeSpan.FromSeconds(8));
             });
         }
 
@@ -105,14 +106,14 @@ namespace Cokee.ClassService.Helper
 
         public static void ShowInfo(string? title = "", string? content = "", ControlAppearance appearance = ControlAppearance.Light, SymbolRegular symbol = SymbolRegular.Info28)
         {
-            Application.Current.Dispatcher.Invoke(async () =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 title ??= "";
                 content ??= "";
                 Log.Information($"Snack消息:{title} {content}");
-                if (GlobalSnackbarService?.GetSnackbarControl() != null)
+                if (GlobalSnackbarService.GetSnackbarPresenter() != null)
                 {
-                    await GlobalSnackbarService.ShowAsync(title, content, symbol, appearance);
+                    GlobalSnackbarService.Show(title, content, appearance, new SymbolIcon(symbol), TimeSpan.FromSeconds(3));
                 }
             }, DispatcherPriority.Background);
         }
@@ -216,7 +217,7 @@ namespace Cokee.ClassService.Helper
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;
-                    Transitions.ApplyTransition(uIElement, TransitionType.FadeInWithSlide, 200);
+                    TransitionAnimationProvider.ApplyTransition(uIElement, Transition.FadeInWithSlide, 200);
                 }
                 else
                 {

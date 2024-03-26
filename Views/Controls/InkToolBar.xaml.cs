@@ -6,9 +6,12 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 using Cokee.ClassService.Helper;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
+using Wpf.Ui.Designer;
+
 using Button = Wpf.Ui.Controls.Button;
 
 namespace Cokee.ClassService.Views.Controls
@@ -203,10 +206,10 @@ namespace Cokee.ClassService.Views.Controls
                     if (item is Button)
                     {
                         Button a = (Button)item;
-                        a.Icon = SymbolRegular.Empty;
+                        a.Icon = new SymbolIcon(SymbolRegular.Empty);
                     }
                 }
-                button.Icon = SymbolRegular.CheckmarkCircle48;
+                button.Icon = new SymbolIcon(SymbolRegular.CheckmarkCircle48);
             }
         }
 

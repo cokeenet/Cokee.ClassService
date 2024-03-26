@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="Cokee.ClassService.Views.Pages.LoginPage"
+﻿<Page x:Class="Cokee.ClassService.Views.Pages.LoginPage"
            xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            xmlns:local="clr-namespace:Cokee.ClassService.Views.Pages"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,9 +9,6 @@
            mc:Ignorable="d"  FontFamily="Lato"
            Height="600" Width="500"
            Title="LoginPage">
-    <ui:UiPage.Resources>
-        <local:TextToVisibilityConverter x:Key="TextToVisibilityConverter" />
-    </ui:UiPage.Resources>
     <ui:Card VerticalAlignment="Stretch">
         <Grid Margin="20">
             <Grid.RowDefinitions>
@@ -36,30 +33,15 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ui:TextBox Margin="15" Grid.Row="0" HorizontalAlignment="Center" MinWidth="280" Height="40" Text="{Binding Username,Mode=TwoWay}">
-                    <ui:TextBox.Background>
-                        <VisualBrush Stretch="Uniform">
-                            <VisualBrush.Visual>
-                                <Label Content="用户名" FontSize="5" FontFamily="Lato" FontWeight="Light" Visibility="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource TextToVisibilityConverter}}" />
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </ui:TextBox.Background>
-                </ui:TextBox>
-                <ui:TextBox x:Name="textBox" Margin="5" Grid.Row="1" HorizontalAlignment="Center" MinWidth="280" Height="40" Text="{Binding Password,Mode=TwoWay}">
-                    <ui:TextBox.Background>
-                        <VisualBrush Stretch="Uniform">
-                            <VisualBrush.Visual>
-                                <Label Content="密码" FontSize="5" FontFamily="Microsoft YaHei UI" FontWeight="Light" Visibility="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource TextToVisibilityConverter}}" />
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </ui:TextBox.Background>
-                </ui:TextBox>
+                <ui:TextBox Margin="15" Grid.Row="0" HorizontalAlignment="Center" MinWidth="280" Height="40" Text="{Binding Username,Mode=TwoWay}" PlaceholderText="用户名" />
+
+                <ui:TextBox x:Name="textBox" Margin="5" Grid.Row="1" HorizontalAlignment="Center" MinWidth="280" Height="40" Text="{Binding Password,Mode=TwoWay}" PlaceholderText="密码" />
             </Grid>
             <Grid Grid.Row="3" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=textBox, Mode=OneWay}">
                 <CheckBox Content="记住我" HorizontalAlignment="Left" Margin="5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" IsChecked="True" FontFamily="Microsoft YaHei UI" />
-                <ui:Anchor Content="忘记密码" Icon="KeyReset24" HorizontalAlignment="Right" />
+                <ui:Button Content="忘记密码" Icon="{ui:SymbolIcon Symbol=KeyReset24}" HorizontalAlignment="Right" />
             </Grid>
-            <ui:Button Content="登录" Icon="Key32" Appearance="Primary" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Click="Confirm" MinWidth="250" MinHeight="40" />
+            <ui:Button Content="登录" Icon="{ui:SymbolIcon Symbol=Key32}" Appearance="Primary" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Click="Confirm" MinWidth="250" MinHeight="40" />
         </Grid>
     </ui:Card>
-</ui:UiPage>
+</Page>

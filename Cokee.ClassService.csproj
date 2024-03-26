@@ -5,8 +5,8 @@
 		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.6.650.24079</AssemblyVersion>
-		<FileVersion>2.6.650.24079</FileVersion>
+		<AssemblyVersion>2.6.679.24086</AssemblyVersion>
+		<FileVersion>2.6.679.24086</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -106,22 +106,17 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="9.0.0-preview.2.24128.4">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.0.3">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Serilog" Version="4.0.0-dev-02122" />
 		<PackageReference Include="Serilog.Sink.AppCenter" Version="1.5.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-		<PackageReference Include="WPF-UI" Version="3.0.1" />
-		<PackageReference Include="ZetaIpc" Version="1.0.4.12" />
+		<PackageReference Include="WPF-UI" Version="3.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -172,12 +167,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Namespace="Cokee.ClassService.Api" ClassName="ApiClient">
-	    <SourceUri>http://127.0.0.1:15043/swagger/v1/swagger.json</SourceUri>
-	  </OpenApiReference>
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Update="Views\Controls\CoursesManage.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
@@ -185,7 +174,7 @@
 			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\Windows\UserLogin.xaml.cs">
-		  <SubType>Code</SubType>
+			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\Windows\FloatNote.xaml.cs">
 			<SubType>Code</SubType>

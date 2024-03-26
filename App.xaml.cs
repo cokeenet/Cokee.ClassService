@@ -47,7 +47,7 @@ namespace Cokee.ClassService
             );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            Accent.ApplySystemAccent();
+            ApplicationAccentColorManager.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 0)
             {

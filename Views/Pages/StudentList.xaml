@@ -1,4 +1,4 @@
-﻿<ui:UiPage xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+﻿<Page xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            x:Class="Cokee.ClassService.Views.Pages.StudentList"
            xmlns:local="clr-namespace:Cokee.ClassService.Helper"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,10 +10,10 @@
        d:DesignHeight="432"
         d:DesignWidth="794"
       Title="StudentList">
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <local:VisibilityConverter x:Key="VisibilityConverter" />
         <local:LevelConverter x:Key="LevelConverter" />
-    </ui:UiPage.Resources>
+    </Page.Resources>
     <Grid>
         <Controls:TouchableScrollViewer>
             <ItemsControl x:Name="Students" d:ItemsSource="{d:SampleData ItemCount=56}">
@@ -50,4 +50,4 @@
         <Controls:NewStudent Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:StudentInfo x:Name="studentInfo" Background="{ui:ThemeResource}"  Width="500" Height="400" Visibility="Collapsed" DataContext="" />
     </Grid>
-</ui:UiPage>
+</Page>

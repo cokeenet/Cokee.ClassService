@@ -14,6 +14,8 @@ using Cokee.ClassService.Helper;
 
 using Serilog;
 
+using Wpf.Ui.Designer;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -27,6 +29,7 @@ namespace Cokee.ClassService.Views.Controls
         public UsbCard()
         {
             InitializeComponent();
+            if (DesignerHelper.IsInDesignMode) return;
             try
             {
                 backgroundWorker1.WorkerReportsProgress = true;

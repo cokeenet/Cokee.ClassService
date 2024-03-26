@@ -12,9 +12,6 @@ using AForge.Video.DirectShow;
 
 using Serilog;
 
-using ZetaIpc.Runtime.Client;
-using ZetaIpc.Runtime.Server;
-
 using Timer = System.Timers.Timer;
 
 namespace Cokee.ClassService.Helper

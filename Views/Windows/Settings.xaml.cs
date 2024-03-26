@@ -1,4 +1,7 @@
-﻿using Cokee.ClassService.Helper;
+﻿using System.Windows;
+
+using Cokee.ClassService.Helper;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -7,7 +10,7 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class Settings : UiWindow
+    public partial class Settings : Window
     {
         public Settings()
         {

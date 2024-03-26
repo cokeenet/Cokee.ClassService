@@ -12,7 +12,7 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class Sticky : UiWindow
+    public partial class Sticky : Window
     {
         public Sticky()
         {

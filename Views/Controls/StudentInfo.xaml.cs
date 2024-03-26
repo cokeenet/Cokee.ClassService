@@ -12,8 +12,6 @@ using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
 
-using Wpf.Ui.Common;
-
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>

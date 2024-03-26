@@ -25,8 +25,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ui:Button Content="确认抽取" Icon="Checkmark48" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="ConfirmBtn" />
-                <ui:Button Grid.Column="1" Icon="Dismiss48" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelBtn" />
+                <ui:Button Content="确认抽取" Icon="{ui:SymbolIcon Symbol=Checkmark48}" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="ConfirmBtn" />
+                <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Dismiss48}" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelBtn" />
             </Grid>
         </Grid>
     </ui:Card>

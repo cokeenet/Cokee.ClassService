@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
+
 using Cokee.ClassService.Helper;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Pages
@@ -31,7 +34,7 @@ namespace Cokee.ClassService.Views.Pages
         }
     }
 
-    public partial class QuickFixPage : UiPage
+    public partial class QuickFixPage : Page
     {
         private Timer timer = new Timer(1000);
         private List<ProcessInfo> processList = new List<ProcessInfo>();
@@ -46,7 +49,8 @@ namespace Cokee.ClassService.Views.Pages
             foreach (Process process in processes)
             {
                 try { if (process.MainModule != null) processList.Add(new ProcessInfo(process)); }
-                catch {
+                catch
+                {
                 }
             }
 

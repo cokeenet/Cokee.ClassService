@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+
 using Cokee.ClassService.Helper;
-using Wpf.Ui.Common;
+
+using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Controls
 {
