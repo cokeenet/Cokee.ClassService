@@ -1,4 +1,6 @@
-﻿using Wpf.Ui.Controls;
+﻿using System.Windows.Controls;
+
+using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Pages
 {
@@ -6,9 +8,8 @@ namespace Cokee.ClassService.Views.Pages
     /// QuickFix.xaml 的交互逻辑
     /// </summary
 
-    public partial class FloatNotePage : UiPage
+    public partial class FloatNotePage : Page
     {
-
         public FloatNotePage()
         {
             InitializeComponent();
@@ -21,6 +22,5 @@ namespace Cokee.ClassService.Views.Pages
                 if (content.FontSize >= 5) content.FontSize -= 5;
             };
         }
-
     }
 }

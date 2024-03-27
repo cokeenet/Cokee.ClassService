@@ -1,4 +1,4 @@
-﻿<ui:UiPage xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+﻿<Page xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            x:Class="Cokee.ClassService.Views.Pages.Settings"
            xmlns:local="clr-namespace:Cokee.ClassService.Helper"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,16 +10,15 @@
        d:DesignHeight="6200"
        d:DesignWidth="511" FontFamily="Lato"
       Title="Settings">
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <local:VisibilityConverter x:Key="VisibilityConverter" />
         <local:LevelConverter x:Key="LevelConverter" />
-    </ui:UiPage.Resources>
+    </Page.Resources>
     <Grid>
         <Controls:TouchableScrollViewer>
             <StackPanel>
-                <ui:InfoBar x:Name="micaInfo" Message="当前系统版本不支持Mica窗口背景模糊效果。😓" d:IsOpen="True" Severity="Warning" Margin="5" IsOpen="False" />
                 <TextBlock Text="一般" FontSize="16" Margin="5" />
-                <ui:CardControl Icon="Image32" Margin="5">
+                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Image32}" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock
@@ -30,7 +29,7 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="Folder48">
+                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=Folder48}">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -41,7 +40,7 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding FileWatcherEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="TextAddSpaceAfter20">
+                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=TextAddSpaceAfter20}">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -53,7 +52,7 @@
                     <ui:TextBox Text="{Binding FileWatcherFilter,Mode=TwoWay}" MinWidth="200" />
                 </ui:CardControl>
                 <TextBlock Text="书写" FontSize="16" Margin="5" />
-                <ui:CardControl Icon="People28" Margin="5">
+                <ui:CardControl Icon="{ui:SymbolIcon Symbol=People28}" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -64,7 +63,7 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Icon="Eraser24" Margin="5">
+                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Eraser24}" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -75,7 +74,7 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="CardUi24">
+                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=CardUi24}">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -88,17 +87,17 @@
                 </ui:CardControl>
                 <TextBlock Text="Debug 调试功能" FontSize="16" Margin="5" />
                 <StackPanel Orientation="Horizontal">
-                    <ui:Button Icon="ArrowRedo48" Content="重启ClassService" Margin="5" Click="Restart" />
-                    <ui:Button Icon="ArrowDownload48" Content="检查更新" Margin="5" Click="CheckUpdate" />
-                    <ui:Button Icon="ArrowRedo48" Content="" Margin="5" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowRedo48}" Content="重启ClassService" Margin="5" Click="Restart" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowDownload48}" Content="检查更新" Margin="5" Click="CheckUpdate" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowRedo48}" Content="" Margin="5" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <ui:Button Icon="Delete48" Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0" />
-                    <ui:Button Icon="Delete48" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
-                    <ui:Button Icon="Delete48" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
+                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
                 </StackPanel>
 
-                <ui:CardControl Icon="Tab16" Margin="5">
+                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Tab16}" Margin="5">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -110,4 +109,4 @@
             </StackPanel>
         </Controls:TouchableScrollViewer>
     </Grid>
-</ui:UiPage>
+</Page>

@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 using Serilog;
 
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;

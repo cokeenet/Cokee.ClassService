@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 using Cokee.ClassService.Helper;
@@ -13,13 +14,14 @@ using Serilog;
 using Wpf.Ui.Controls;
 
 using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
 
 namespace Cokee.ClassService.Views.Pages
 {
     /// <summary>
     /// StudentList.xaml 的交互逻辑
     /// </summary>
-    public partial class StudentList : UiPage
+    public partial class StudentList : Page
     {
         private ObservableCollection<Student> students = new ObservableCollection<Student>();
         private int RightClickCount;
@@ -90,7 +92,7 @@ namespace Cokee.ClassService.Views.Pages
             {
                 RightClickCount = 0;
                 Student stu = (sender as Card).Tag as Student;
-                if (MessageBox.Show("确定删除？", "确定删除？\n删除记录将保存.", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
+                if (MessageBox.Show("确定删除？", "确定删除？\n删除记录将保存.", MessageBoxButton.YesNoCancel) == System.Windows.MessageBoxResult.Yes)
                 {
                     Log.Warning($"Tried to DELETE Student {stu.Name} ID {stu.ID}");
                     students.Remove(stu);

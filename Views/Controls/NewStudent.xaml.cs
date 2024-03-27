@@ -8,8 +8,6 @@ using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
 
-using Wpf.Ui.Common;
-
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>

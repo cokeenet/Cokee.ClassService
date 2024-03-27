@@ -39,9 +39,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
-using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui.Controls;
 
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
@@ -97,8 +97,8 @@ namespace Cokee.ClassService
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
-            snackbarService.SetSnackbarControl(snackbar);
-            snackbarService.Timeout = 4000;
+            snackbarService.SetSnackbarPresenter(snackbar);
+            snackbarService.DefaultTimeOut = TimeSpan.FromSeconds(2);
             inkTool.inkCanvas = inkcanvas;
             VerStr.Text =
                 $"CokeeClass 版本{version?.ToString(4)}";
@@ -110,7 +110,7 @@ namespace Cokee.ClassService
             transT.X = -10;
             transT.Y = -100;
             UpdateLayout();
-            Accent.ApplySystemAccent();
+            ApplicationAccentColorManager.ApplySystemAccent();
         }
 
         public void IntiAgent()
@@ -590,8 +590,6 @@ namespace Cokee.ClassService
         }
 
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => App.Current.Shutdown();
-
-        private void QuickFix(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(logview);
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -1391,7 +1389,7 @@ namespace Cokee.ClassService
             inkTool.redoBtn.IsEnabled = status;
         }
 
-        private void QuickFix(object sender, MouseButtonEventArgs e)
+        private void QuickFix(object sender, RoutedEventArgs e)
         {
             Catalog.CreateWindow<UserLogin>();
         }

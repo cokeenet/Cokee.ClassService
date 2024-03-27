@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+
 using AutoUpdaterDotNET;
+
 using Cokee.ClassService.Helper;
+
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+
 using Application = System.Windows.Forms.Application;
+using Button = Wpf.Ui.Controls.Button;
 
 namespace Cokee.ClassService.Views.Pages
 {
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class Settings : UiPage
+    public partial class Settings : Page
     {
         public Settings()
         {
             try
             {
                 InitializeComponent();
-                micaInfo.IsOpen = !Wpf.Ui.Appearance.Background.IsSupported(BackgroundType.Mica);
+
                 IsVisibleChanged += (a, b) =>
                 {
                     DataContext = Catalog.settings;

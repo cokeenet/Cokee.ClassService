@@ -10,11 +10,10 @@ using Cokee.ClassService.Shared;
 
 using Newtonsoft.Json;
 
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Designer;
 
 using Button = Wpf.Ui.Controls.Button;
-using Clipboard = Wpf.Ui.Common.Clipboard;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Cokee.ClassService.Views.Controls
@@ -107,8 +106,8 @@ namespace Cokee.ClassService.Views.Controls
                 FileStream fs = new FileStream(@$"{Catalog.INK_DIR}\{stud}.ink", FileMode.Open);
                 ink.Strokes = new StrokeCollection(fs);
                 fs.Close();
-                if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", MessageBoxButton.OKCancel) !=
-                    MessageBoxResult.OK)
+                if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", System.Windows.MessageBoxButton.OKCancel) !=
+                    System.Windows.MessageBoxResult.OK)
                 {
                     atu.Text = "";
                     stud = "";

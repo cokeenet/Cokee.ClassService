@@ -8,7 +8,7 @@ namespace Cokee.ClassService.Views.Windows
     /// </summary>
 
 
-    public partial class CourseMgr : UiWindow
+    public partial class CourseMgr : Window
     {
         bool isClosing;
         public CourseMgr()

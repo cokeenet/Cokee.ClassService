@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -8,7 +9,7 @@ namespace Cokee.ClassService.Views.Windows
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class StudentMgr : UiWindow
+    public partial class StudentMgr : Window
     {
         public event EventHandler<bool>? RandomEvent;
 
