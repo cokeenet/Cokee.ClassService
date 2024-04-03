@@ -1378,15 +1378,15 @@ namespace Cokee.ClassService
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-            inkTool.backBtn.Visibility = result;
-            inkTool.backBtn.IsEnabled = status;
+           // inkTool.backBtn.Visibility = result;
+            //inkTool.backBtn.IsEnabled = status;
         }
 
         private void TimeMachine_OnRedoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-            inkTool.redoBtn.Visibility = result;
-            inkTool.redoBtn.IsEnabled = status;
+           // inkTool.redoBtn.Visibility = result;
+           // inkTool.redoBtn.IsEnabled = status;
         }
 
         private void QuickFix(object sender, RoutedEventArgs e)

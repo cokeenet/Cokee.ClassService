@@ -38,7 +38,7 @@ namespace Cokee.ClassService.Helper
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
-        public static SnackbarService GlobalSnackbarService = new SnackbarService();
+        public static SnackbarService GlobalSnackbarService;
 
         public static void HandleException(Exception ex, string str = "")
         {
@@ -46,7 +46,7 @@ namespace Cokee.ClassService.Helper
             if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (GlobalSnackbarService.GetSnackbarPresenter() != null)
+                if (GlobalSnackbarService!= null)
                     GlobalSnackbarService.Show($"{str}发生错误", shortExpInfo, ControlAppearance.Danger, new SymbolIcon(SymbolRegular.Warning24), TimeSpan.FromSeconds(8));
             });
         }
@@ -111,7 +111,7 @@ namespace Cokee.ClassService.Helper
                 title ??= "";
                 content ??= "";
                 Log.Information($"Snack消息:{title} {content}");
-                if (GlobalSnackbarService.GetSnackbarPresenter() != null)
+                if (GlobalSnackbarService != null)
                 {
                     GlobalSnackbarService.Show(title, content, appearance, new SymbolIcon(symbol), TimeSpan.FromSeconds(3));
                 }

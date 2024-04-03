@@ -33,7 +33,7 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
                     {
-                        penSlider.Value = b.NewDrawingAttributes.Width;
+                        //penSlider.Value = b.NewDrawingAttributes.Width;
                     };
                     inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
                     inkCanvas.ActiveEditingModeChanged += (a, b) =>
@@ -41,7 +41,7 @@ namespace Cokee.ClassService.Views.Controls
                         if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
                         else isEraser = false;
                     };
-                    moreCard.DataContext = Catalog.settings;
+                    //moreCard.DataContext = Catalog.settings;
                 }
                 IsVisibleChanged += (a, b) =>
                 {
@@ -64,7 +64,7 @@ namespace Cokee.ClassService.Views.Controls
                 if (inkCanvas == null) return;
                 if (mode == 0)
                 {
-                    SetBtnState(curBtn);
+                   // SetBtnState(curBtn);
                     inkCanvas.IsEnabled = false;
                     inkCanvas.Background.Opacity = 0;
                 }
@@ -72,7 +72,7 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     inkCanvas.IsEnabled = true;
                     inkCanvas.Background.Opacity = 0.01;
-                    SetBtnState(penBtn);
+                    //SetBtnState(penBtn);
                     inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 }
             }, DispatcherPriority.Normal);
@@ -91,7 +91,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var btn = (Button)sender;
+               /* var btn = (Button)sender;
                 switch (btn.Tag.ToString())
                 {
                     case "Cursor":
@@ -168,7 +168,7 @@ namespace Cokee.ClassService.Views.Controls
                         Catalog.ExitPPTShow();
                         Catalog.SetWindowStyle(1);
                         break;
-                }
+                }*/
             }, DispatcherPriority.Normal);
         }
 
@@ -201,14 +201,14 @@ namespace Cokee.ClassService.Views.Controls
             if (button != null && sender is Button)
             {
                 inkCanvas.DefaultDrawingAttributes.Color = (button.Background as SolidColorBrush).Color;
-                foreach (var item in colorGrid.Children)
+                /*foreach (var item in colorGrid.Children)
                 {
                     if (item is Button)
                     {
                         Button a = (Button)item;
                         a.Icon = new SymbolIcon(SymbolRegular.Empty);
                     }
-                }
+                }*/
                 button.Icon = new SymbolIcon(SymbolRegular.CheckmarkCircle48);
             }
         }
