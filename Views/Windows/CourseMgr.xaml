@@ -1,4 +1,4 @@
-﻿<Window x:Class="Cokee.ClassService.Views.Windows.CourseMgr"
+﻿<ui:FluentWindow x:Class="Cokee.ClassService.Views.Windows.CourseMgr"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Title="CourseMgr" Width="525" Topmost="True" FontFamily="Lato" WindowStartupLocation="CenterScreen"
-    Height="705" 
+
+             ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
+    Height="705"
     mc:Ignorable="d">
     <Grid>
 
@@ -16,7 +18,7 @@
         </Grid.RowDefinitions>
         <ui:TitleBar
             Title="CokeeClass | 课程管理" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True"
-            ShowMaximize="True" ShowMinimize="True"/>
+            ShowMaximize="True" ShowMinimize="True" />
         <Grid Grid.Row="1" Margin="3,3,3,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -24,8 +26,8 @@
             </Grid.ColumnDefinitions>
             <Border
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
-                <Controls:CoursesManage IsVisibleChanged="CoursesManage_IsVisibleChanged" />
+                <Frame Source="/Views/Pages/CoursesManage.xaml" IsVisibleChanged="CoursesManage_IsVisibleChanged" />
             </Border>
         </Grid>
     </Grid>
-</Window>
+</ui:FluentWindow>

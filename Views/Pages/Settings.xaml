@@ -18,7 +18,10 @@
         <Controls:TouchableScrollViewer>
             <StackPanel>
                 <TextBlock Text="一般" FontSize="16" Margin="5" />
-                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Image32}" Margin="5">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Image32" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock
@@ -29,7 +32,10 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding UseMemberAvatar,Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=Folder48}">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Folder48" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -40,19 +46,25 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding FileWatcherEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=TextAddSpaceAfter20}">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="TextAddSpaceAfter20" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
                         FontSize="13" FontWeight="Medium" Text="文件监测筛选器" />
                             <TextBlock
-                                FontSize="12" Opacity="0.7" Text="只备份特定格式的文件。e.g. *.pdf" />
+                                FontSize="12" Opacity="0.7" Text="可以只备份特定文件。e.g. *.* 或 *.pdf" />
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:TextBox Text="{Binding FileWatcherFilter,Mode=TwoWay}" MinWidth="200" />
                 </ui:CardControl>
                 <TextBlock Text="书写" FontSize="16" Margin="5" />
-                <ui:CardControl Icon="{ui:SymbolIcon Symbol=People28}" Margin="5">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="People28" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -63,7 +75,10 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding MultiTouchEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Eraser24}" Margin="5">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Eraser24" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -74,7 +89,10 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding EraseByShapeEnable, Mode=TwoWay}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="5" Icon="{ui:SymbolIcon Symbol=CardUi24}">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="PlayingCards20" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock
@@ -87,17 +105,44 @@
                 </ui:CardControl>
                 <TextBlock Text="Debug 调试功能" FontSize="16" Margin="5" />
                 <StackPanel Orientation="Horizontal">
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowRedo48}" Content="重启ClassService" Margin="5" Click="Restart" />
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowDownload48}" Content="检查更新" Margin="5" Click="CheckUpdate" />
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=ArrowRedo48}" Content="" Margin="5" />
+                    <ui:Button Content="重启ClassService" Margin="5" Click="Restart">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="ArrowRedo48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <ui:Button Content="检查更新" Margin="5" Click="CheckUpdate">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="ArrowDownload48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <ui:Button Content="" Margin="5">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="ArrowRedo48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0" />
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1" />
-                    <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2" />
+                    <ui:Button Content="释放Word对象" Margin="5" Click="ReleaseObj" Tag="0">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Delete48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <ui:Button Content="释放Excel对象" Margin="5" Click="ReleaseObj" Tag="1">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Delete48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <ui:Button Content="释放PPT对象" Margin="5" Click="ReleaseObj" Tag="2">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Delete48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
                 </StackPanel>
 
-                <ui:CardControl Icon="{ui:SymbolIcon Symbol=Tab16}" Margin="5">
+                <ui:CardControl Margin="5">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Tab16" />
+                    </ui:CardControl.Icon>
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock

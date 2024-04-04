@@ -19,8 +19,16 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ui:Button x:Name="infBtn" Icon="{ui:SymbolIcon Symbol=FontIncrease24}" Content="增加字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" />
-        <ui:Button x:Name="defBtn" Grid.Column="1" Icon="{ui:SymbolIcon Symbol=FontDecrease24}" Content="减小字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" />
+        <ui:Button x:Name="infBtn" Content="增加字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+            <ui:Button.Icon>
+                <ui:SymbolIcon Symbol="FontIncrease24" />
+            </ui:Button.Icon>
+        </ui:Button>
+        <ui:Button x:Name="defBtn" Grid.Column="1" Content="减小字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+            <ui:Button.Icon>
+                <ui:SymbolIcon Symbol="FontDecrease24" />
+            </ui:Button.Icon>
+        </ui:Button>
         <ui:TextBox Grid.Row="1" x:Name="title" Text="" AcceptsReturn="False" FontSize="22" Grid.ColumnSpan="3" Margin="5,0,5,0" />
         <ui:TextBox x:Name="content" Text="" Grid.Row="2" Margin="5" AcceptsReturn="True" FontSize="28" Grid.ColumnSpan="3" />
     </Grid>

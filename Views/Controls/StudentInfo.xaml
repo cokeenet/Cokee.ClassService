@@ -63,7 +63,11 @@
                         </Grid>
                     </Grid>
 
-                    <ui:CardControl Grid.Row="1" Margin="10" Icon="{ui:SymbolIcon Symbol=People28}">
+                    <ui:CardControl Grid.Row="1" Margin="10">
+
+                        <ui:CardControl.Icon>
+                            <ui:SymbolIcon Symbol="People28" />
+                        </ui:CardControl.Icon>
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="性别" />
                         </ui:CardControl.Header>
@@ -72,7 +76,11 @@
                             <ComboBoxItem Content="男" />
                         </ComboBox>
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="2" Margin="10" Icon="{ui:SymbolIcon Symbol=Notebook32}">
+                    <ui:CardControl Grid.Row="2" Margin="10">
+
+                        <ui:CardControl.Icon>
+                            <ui:SymbolIcon Symbol="Notebook32" />
+                        </ui:CardControl.Icon>
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="职位" />
                         </ui:CardControl.Header>
@@ -90,14 +98,20 @@
                             </ComboBox>
                         </Grid>
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="3" Margin="10" Icon="{ui:SymbolIcon Symbol=FoodCake24}">
+                    <ui:CardControl Grid.Row="3" Margin="10">
+
+                        <ui:CardControl.Icon>
+                            <ui:SymbolIcon Symbol="FoodCake24" />
+                        </ui:CardControl.Icon>
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="生日" />
                         </ui:CardControl.Header>
                         <DatePicker MinWidth="100" SelectedDate="{Binding BirthDay,Mode=TwoWay}" />
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="4" Margin="10" Icon="{ui:SymbolIcon Symbol=Chat48}">
-
+                    <ui:CardControl Grid.Row="4" Margin="10">
+                        <ui:CardControl.Icon>
+                            <ui:SymbolIcon Symbol="Chat48" />
+                        </ui:CardControl.Icon>
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="QQ" />
@@ -107,7 +121,11 @@
                         </ui:CardControl.Header>
                         <ui:TextBox Text="{Binding QQ}" MinWidth="150" />
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="5" Margin="10" Icon="{ui:SymbolIcon Symbol=LocalLanguage28}">
+                    <ui:CardControl Grid.Row="5" Margin="10">
+
+                        <ui:CardControl.Icon>
+                            <ui:SymbolIcon Symbol="LocalLanguage28" />
+                        </ui:CardControl.Icon>
                         <ui:CardControl.Header>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="小语种" />
                         </ui:CardControl.Header>
@@ -115,7 +133,11 @@
                     </ui:CardControl>
                 </Grid>
             </local:TouchableScrollViewer>
-            <ui:Button Grid.Row="4" Content="确认" Icon="{ui:SymbolIcon Symbol=Checkmark48}" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10" Click="Confirm" />
+            <ui:Button Grid.Row="4" Content="确认" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10" Click="Confirm">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="Checkmark48" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </ui:Card>
 </UserControl>

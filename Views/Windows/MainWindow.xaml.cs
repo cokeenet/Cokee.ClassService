@@ -223,9 +223,9 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Normal);
         }
 
-        private void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
+        private async void PicTimer_Elapsed(object? sender = null, ElapsedEventArgs e = null)
         {
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 string url = $"pack://application:,,,/Resources/HeadPics/{new Random().Next(8)}.jpg";
                 head.Source = new BitmapImage(new Uri(url));
@@ -236,11 +236,14 @@ namespace Cokee.ClassService
 
         private void Timer(object sender, RoutedEventArgs e)
         {
+            if (ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light)
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Tabbed);
+            else ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Tabbed);
         }
 
-        private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
+        private async void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Dispatcher.InvokeAsync(() =>
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
@@ -266,9 +269,9 @@ namespace Cokee.ClassService
             }, DispatcherPriority.Background);
         }
 
-        public void GetCalendarInfo()
+        public async void GetCalendarInfo()
         {
-            Application.Current.Dispatcher.Invoke(async () =>
+            await Dispatcher.InvokeAsync(async () =>
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
@@ -291,9 +294,9 @@ namespace Cokee.ClassService
             }, DispatcherPriority.Background);
         }
 
-        public void ToggleCard(bool isForceShow = false)
+        public async void ToggleCard(bool isForceShow = false)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
                 DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
@@ -328,9 +331,9 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void StartAnimation(int time = 2, int angle = 180)
+        private async void StartAnimation(int time = 2, int angle = 180)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 var doubleAnimation = new DoubleAnimation
                 {
@@ -347,7 +350,7 @@ namespace Cokee.ClassService
         public async void IconAnimation(bool isHide = false, SymbolRegular symbol = SymbolRegular.Empty,
             SolidColorBrush bgc = null, int autoHideTime = 0)
         {
-            await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            await Dispatcher.InvokeAsync(new Action(async () =>
             {
                 var doubleAnimation = new DoubleAnimation
                 {
@@ -385,9 +388,9 @@ namespace Cokee.ClassService
 
         private Stopwatch floatStopwatch = new Stopwatch();
 
-        private void FloatGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void FloatGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 floatStopwatch.Restart();
                 isDragging = true;
@@ -397,9 +400,9 @@ namespace Cokee.ClassService
             }));
         }
 
-        private void FloatGrid_MouseMove(object sender, MouseEventArgs e)
+        private async void FloatGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Dispatcher.InvokeAsync(() =>
             {
                 if (isDragging && floatStopwatch.ElapsedMilliseconds >= 100)
                 {
@@ -422,9 +425,9 @@ namespace Cokee.ClassService
             });
         }
 
-        private void FloatGrid_MouseUp(object sender, MouseButtonEventArgs e)
+        private async void FloatGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 floatStopwatch.Stop();
                 StartAnimation();
@@ -439,9 +442,9 @@ namespace Cokee.ClassService
 
         private void StuMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<StudentMgr>();
 
-        private void StartInk(object sender, RoutedEventArgs e)
+        private async void StartInk(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 timeMachine.ClearStrokeHistory();
                 if (inkTool.Visibility == Visibility.Collapsed || inkTool.isPPT)
@@ -472,9 +475,9 @@ namespace Cokee.ClassService
             Log.Information("Program Closed");
         }
 
-        public void CheckBirthDay()
+        public async void CheckBirthDay()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            await Dispatcher.InvokeAsync(new Action(async () =>
             {
                 List<Student> students = await StudentExtensions.Load();
                 Student? nearest = null;
@@ -563,9 +566,9 @@ namespace Cokee.ClassService
             Win32Helper.SetWindowLong(hwnd, -20, newStyle);
         }
 
-        private void ScreenShot(object sender, RoutedEventArgs e)
+        private async void ScreenShot(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 cardPopup.IsOpen = false;
                 if (sideCard.Visibility != Visibility.Collapsed) ToggleCard();
@@ -1378,15 +1381,15 @@ namespace Cokee.ClassService
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-           // inkTool.backBtn.Visibility = result;
+            // inkTool.backBtn.Visibility = result;
             //inkTool.backBtn.IsEnabled = status;
         }
 
         private void TimeMachine_OnRedoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-           // inkTool.redoBtn.Visibility = result;
-           // inkTool.redoBtn.IsEnabled = status;
+            // inkTool.redoBtn.Visibility = result;
+            // inkTool.redoBtn.IsEnabled = status;
         }
 
         private void QuickFix(object sender, RoutedEventArgs e)

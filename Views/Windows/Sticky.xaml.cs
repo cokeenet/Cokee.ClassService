@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Controls;
+
 using Wpf.Ui.Controls;
 
 namespace Cokee.ClassService.Views.Windows
@@ -12,7 +14,7 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class Sticky : Window
+    public partial class Sticky : FluentWindow
     {
         public Sticky()
         {
@@ -23,7 +25,6 @@ namespace Cokee.ClassService.Views.Windows
             }
             catch (Exception e)
             {
-                
             }
         }
 

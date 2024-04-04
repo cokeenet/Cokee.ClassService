@@ -8,7 +8,7 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class UserLogin : Window
+    public partial class UserLogin : FluentWindow
     {
         private bool isClosing;
 

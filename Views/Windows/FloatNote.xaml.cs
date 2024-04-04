@@ -8,7 +8,7 @@ namespace Cokee.ClassService.Views.Windows
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class FloatNote : Window
+    public partial class FloatNote : FluentWindow
     {
         public FloatNote()
         {

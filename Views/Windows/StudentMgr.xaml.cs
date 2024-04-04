@@ -9,7 +9,7 @@ namespace Cokee.ClassService.Views.Windows
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class StudentMgr : Window
+    public partial class StudentMgr : FluentWindow
     {
         public event EventHandler<bool>? RandomEvent;
 

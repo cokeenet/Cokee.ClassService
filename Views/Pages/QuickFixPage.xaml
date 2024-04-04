@@ -35,7 +35,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <ui:TextBox />
-                    <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Symbol=Search12}" Content="Search" Click="Button_Click_1" />
+                    <ui:Button Grid.Column="1" Content="Search" Click="Button_Click_1" HorizontalAlignment="Right">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Search12" />
+                        </ui:Button.Icon>
+                    </ui:Button>
                 </Grid>
                 <ListView x:Name="ProcessView" d:ItemsSource="{d:SampleData ItemCount=50}" Grid.Row="1" Grid.ColumnSpan="2">
                     <ListView.ItemTemplate>
@@ -55,7 +59,11 @@
                         <TextBlock d:Text="共 278 个进程" />
                     </StatusBarItem>
                     <StatusBarItem HorizontalAlignment="Right">
-                        <ui:Button Icon="{ui:SymbolIcon Symbol=Delete48}" Appearance="Danger" Content="结束进程" Click="Button_Click" />
+                        <ui:Button Appearance="Danger" Content="结束进程" Click="Button_Click">
+                            <ui:Button.Icon>
+                                <ui:SymbolIcon Symbol="Delete48" />
+                            </ui:Button.Icon>
+                        </ui:Button>
                     </StatusBarItem>
                 </StatusBar>
             </Grid>

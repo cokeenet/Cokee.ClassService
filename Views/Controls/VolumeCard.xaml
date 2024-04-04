@@ -28,7 +28,11 @@
             </ComboBox>
             <TextBlock x:Name="vol" Text="--%" Margin="5" Grid.Row="1" MaxWidth="40" />
             <Slider x:Name="slider" Grid.Row="1" Margin="5" Maximum="100" ValueChanged="SliderChanged" Grid.Column="1" MinWidth="200" />
-            <ui:Button Grid.Row="2" Icon="{ui:SymbolIcon Symbol=Dismiss48}" HorizontalAlignment="Right" Grid.Column="1" Margin="5" Click="Button_Click" />
+            <ui:Button Grid.Row="2" HorizontalAlignment="Right" Grid.Column="1" Margin="5" Click="Button_Click">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="Dismiss48" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </ui:Card>
 </UserControl>

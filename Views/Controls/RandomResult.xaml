@@ -50,7 +50,11 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </local:TouchableScrollViewer>
-            <ui:Button Content="确认" Icon="{ui:SymbolIcon Symbol=Checkmark48}" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2" />
+            <ui:Button Content="确认" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" Click="Confirm" Grid.Row="2">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="Checkmark48" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </ui:Card>
 </UserControl>

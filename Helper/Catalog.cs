@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -17,7 +18,6 @@ using Serilog;
 using Wpf.Ui;
 using Wpf.Ui.Animations;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Extensions;
 
 namespace Cokee.ClassService.Helper
 {
@@ -40,13 +40,13 @@ namespace Cokee.ClassService.Helper
         public static ApiClient apiClient = new ApiClient();
         public static SnackbarService GlobalSnackbarService;
 
-        public static void HandleException(Exception ex, string str = "")
+        public static async void HandleException(Exception ex, string str = "")
         {
             string shortExpInfo = ex.ToString();
             if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                if (GlobalSnackbarService!= null)
+                if (GlobalSnackbarService != null)
                     GlobalSnackbarService.Show($"{str}发生错误", shortExpInfo, ControlAppearance.Danger, new SymbolIcon(SymbolRegular.Warning24), TimeSpan.FromSeconds(8));
             });
         }
@@ -92,9 +92,9 @@ namespace Cokee.ClassService.Helper
             }
         }
 
-        public static void ExitPPTShow()
+        public static async void ExitPPTShow()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
            {
                if (MainWindow != null)
                {
@@ -104,9 +104,9 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static void ShowInfo(string? title = "", string? content = "", ControlAppearance appearance = ControlAppearance.Light, SymbolRegular symbol = SymbolRegular.Info28)
+        public static async void ShowInfo(string? title = "", string? content = "", ControlAppearance appearance = ControlAppearance.Light, SymbolRegular symbol = SymbolRegular.Info28)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 title ??= "";
                 content ??= "";
@@ -118,9 +118,9 @@ namespace Cokee.ClassService.Helper
             }, DispatcherPriority.Background);
         }
 
-        public static void CreateWindow<T>(bool allowMulti = false) where T : Window, new()
+        public static async void CreateWindow<T>(bool allowMulti = false) where T : Window, new()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var win = Application.Current.Windows.OfType<T>().FirstOrDefault();
                 if (win == null || allowMulti)
@@ -156,9 +156,9 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static void UpdateProgress(int progress, bool isvisible = true, string? taskname = null)
+        public static async void UpdateProgress(int progress, bool isvisible = true, string? taskname = null)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.progress.Progress = progress;
                 MainWindow.nameBadge.Content = $"{taskname}:{progress}%";
@@ -175,9 +175,9 @@ namespace Cokee.ClassService.Helper
             }, DispatcherPriority.Background);
         }
 
-        public static void ReleaseComObject(object? o, string type = "COM")
+        public static async void ReleaseComObject(object? o, string type = "COM")
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 ShowInfo($"尝试释放 {type} 对象");
                 if (o == null) return;
@@ -187,9 +187,9 @@ namespace Cokee.ClassService.Helper
             }, DispatcherPriority.Normal);
         }
 
-        public static void SetWindowStyle(int type = 0)
+        public static async void SetWindowStyle(int type = 0)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 WindowType = type;
                 if (MainWindow == null) return;
@@ -210,9 +210,9 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static void ToggleControlVisible(UIElement uIElement, bool IsForceShow = false)
+        public static async void ToggleControlVisible(UIElement uIElement, bool IsForceShow = false)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
@@ -247,17 +247,19 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static List<T> RandomizeList<T>(List<T> list)
+        public static async Task<List<T>> RandomizeList<T>(List<T> list)
         {
-            var random = new Random();
-            int n = list.Count;
-
-            while (n > 1)
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                n--;
-                int k = random.Next(n + 1);
-                (list[n], list[k]) = (list[k], list[n]);
-            }
+                var random = new Random();
+                int n = list.Count;
+                while (n > 1)
+                {
+                    n--;
+                    int k = random.Next(n + 1);
+                    (list[n], list[k]) = (list[k], list[n]);
+                }
+            });
             return list;
         }
     }

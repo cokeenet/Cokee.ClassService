@@ -37,11 +37,19 @@
 
                 <ui:TextBox x:Name="textBox" Margin="5" Grid.Row="1" HorizontalAlignment="Center" MinWidth="280" Height="40" Text="{Binding Password,Mode=TwoWay}" PlaceholderText="密码" />
             </Grid>
-            <Grid Grid.Row="3" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=textBox, Mode=OneWay}">
+            <Grid Grid.Row="3" MinWidth="{Binding ActualWidth, ElementName=textBox, Mode=OneWay}">
                 <CheckBox Content="记住我" HorizontalAlignment="Left" Margin="5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" IsChecked="True" FontFamily="Microsoft YaHei UI" />
-                <ui:Button Content="忘记密码" Icon="{ui:SymbolIcon Symbol=KeyReset24}" HorizontalAlignment="Right" />
+                <ui:Button Content="忘记密码" HorizontalAlignment="Right">
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="KeyReset24" />
+                    </ui:Button.Icon>
+                </ui:Button>
             </Grid>
-            <ui:Button Content="登录" Icon="{ui:SymbolIcon Symbol=Key32}" Appearance="Primary" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Click="Confirm" MinWidth="250" MinHeight="40" />
+            <ui:Button Content="登录" Appearance="Primary" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Click="Confirm" MinWidth="250" MinHeight="40">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="Key24" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </ui:Card>
 </Page>

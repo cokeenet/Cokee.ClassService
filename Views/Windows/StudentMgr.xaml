@@ -1,10 +1,11 @@
-﻿<Window x:Class="Cokee.ClassService.Views.Windows.StudentMgr"
+﻿<ui:FluentWindow x:Class="Cokee.ClassService.Views.Windows.StudentMgr"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Title="StudentMgr" Width="995" Topmost="True" FontFamily="Lato" WindowStartupLocation="CenterScreen"
+             ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
     Height="625"
     mc:Ignorable="d">
     <Grid>
@@ -26,15 +27,35 @@
                Grid.Column="0" Margin="6,0,6,0">
                 <ui:NavigationView.MenuItems>
                     <ui:NavigationViewItem
-                        Content="班级设置" Icon="{ui:SymbolIcon Symbol=Settings32}" Click="ClassSetting" />
+                        Content="班级设置" Click="ClassSetting">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Settings32" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                     <ui:NavigationViewItemSeparator />
-                    <ui:NavigationViewItem Content="随机抽取" Icon="{ui:SymbolIcon Symbol=ArrowShuffle48}" Click="Random" />
-                    <ui:NavigationViewItem Content="添加学生" Icon="{ui:SymbolIcon Symbol=Add48}" Click="AddStu" />
-                    <ui:NavigationViewItem Content="批量添加" Icon="{ui:SymbolIcon Symbol=AddSubtractCircle48}" Click="AddMuitlStu" />
+                    <ui:NavigationViewItem Content="随机抽取" Click="Random">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="ArrowShuffle48" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
+                    <ui:NavigationViewItem Content="添加学生" Click="AddStu">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Add48" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
+                    <ui:NavigationViewItem Content="批量添加" Click="AddMuitlStu">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="AddSubtractCircle48" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                 </ui:NavigationView.MenuItems>
                 <ui:NavigationView.FooterMenuItems>
                     <ui:NavigationViewItem
-                        Content="关于" Icon="{ui:SymbolIcon Symbol=Info24}" />
+                        Content="关于">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Info24" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                 </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>
             <Border
@@ -51,4 +72,4 @@
             </StatusBar>
         </Grid>
     </Grid>
-</Window>
+</ui:FluentWindow>

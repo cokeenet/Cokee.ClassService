@@ -8,9 +8,9 @@ using Cokee.ClassService.Helper;
 
 using Wpf.Ui.Designer;
 
-namespace Cokee.ClassService.Views.Controls
+namespace Cokee.ClassService.Views.Pages
 {
-    public partial class CoursesManage : UserControl
+    public partial class CoursesManage : Page
     {
         private Schedule schedule = Schedule.LoadFromJson();
         private ObservableCollection<Course> dayCourses = new ObservableCollection<Course>();
@@ -28,7 +28,6 @@ namespace Cokee.ClassService.Views.Controls
         private void Confirm(object sender, RoutedEventArgs e)
         {
             Schedule.SaveToJson(schedule);
-            Catalog.ToggleControlVisible(this);
         }
 
         private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
