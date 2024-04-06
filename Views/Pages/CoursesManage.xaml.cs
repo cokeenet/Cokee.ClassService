@@ -13,14 +13,14 @@ namespace Cokee.ClassService.Views.Pages
     public partial class CoursesManage : Page
     {
         private Schedule schedule = Schedule.LoadFromJson();
-        private ObservableCollection<Course> dayCourses = new ObservableCollection<Course>();
+        private ObservableCollection<Lesson> dayCourses = new ObservableCollection<Lesson>();
 
         public CoursesManage()
         {
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode) Loaded += (a, b) =>
             {
-                dayCourses = new ObservableCollection<Course>(schedule.Courses[0]);
+                dayCourses = new ObservableCollection<Lesson>(schedule.Courses[0]);
                 courseControl.ItemsSource = dayCourses;
             };
         }
@@ -34,8 +34,8 @@ namespace Cokee.ClassService.Views.Pages
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            schedule.Courses[comboBox.SelectedIndex] ??= new List<Course> { new Course() };
-            dayCourses = new ObservableCollection<Course>(schedule.Courses[comboBox.SelectedIndex]);
+            schedule.Courses[comboBox.SelectedIndex] ??= new List<Lesson> { new Lesson() };
+            dayCourses = new ObservableCollection<Lesson>(schedule.Courses[comboBox.SelectedIndex]);
             if (courseControl != null && dayCourses != null) courseControl.ItemsSource = dayCourses;
         }
 
@@ -51,7 +51,7 @@ namespace Cokee.ClassService.Views.Pages
             int c = dayCourses.ToList().FindIndex(t => t.IsChecked);
             if (c != -1)
             {
-                Course a, b;
+                Lesson a, b;
                 a = dayCourses[c];
                 b = dayCourses[c - 1];
                 dayCourses[c - 1] = a;
@@ -65,7 +65,7 @@ namespace Cokee.ClassService.Views.Pages
             int c = dayCourses.ToList().FindIndex(t => t.IsChecked);
             if (c != -1)
             {
-                Course a, b;
+                Lesson a, b;
                 a = dayCourses[c];
                 b = dayCourses[c + 1];
                 dayCourses[c + 1] = a;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
+
 using Newtonsoft.Json;
 
 namespace Cokee.ClassService.Helper
@@ -31,26 +32,31 @@ namespace Cokee.ClassService.Helper
         }
     }
 
-    public class Course
+    public class Lesson
     {
         public string Name { get; set; } = "";
-        public int DayOfWeek { get; set; } //0-6
         public TimeSpan StartTime { get; set; } = TimeSpan.Zero;
         public TimeSpan EndTime { get; set; } = TimeSpan.Zero;
 
         [JsonIgnore]
         public bool IsChecked { get; set; } = false;
 
-        public Course(string name = "", int dayOfWeek = 0)
+        public Lesson(string name = "")
         {
             Name = name;
-            DayOfWeek = dayOfWeek;
         }
     }
 
     public class Schedule
     {
-        public List<Course>[] Courses = new List<Course>[7];
+        public List<Lesson> Monday = new List<Lesson>();
+        public List<Lesson> Tuesday = new List<Lesson>();
+        public List<Lesson> Wendesday = new List<Lesson>();
+        public List<Lesson> Thursday = new List<Lesson>();
+        public List<Lesson> Friday = new List<Lesson>();
+        public List<Lesson> Saturday = new List<Lesson>();
+        public List<Lesson> Sunday = new List<Lesson>();
+        public List<Lesson> LessonList = new List<Lesson>();
 
         public static void SaveToJson(Schedule schedule)
         {
@@ -68,7 +74,6 @@ namespace Cokee.ClassService.Helper
             return new Schedule();
         }
 
-        // 获取指定星期几的课程列表
         public static string GetShortTimeStr(DateTime t)
         {
             if (t.Hour == 17) if (t.Minute is >= 18 and <= 22) return "";
@@ -77,11 +82,44 @@ namespace Cokee.ClassService.Helper
 
         public static CourseStatus GetNowCourse(Schedule schedule)
         {
-            Course? course = null, nextCourse = null;
+            Lesson? course = null, nextCourse = null;
             DateTime now = DateTime.Now;
             CourseNowStatus status = CourseNowStatus.NoCoursesScheduled;
-            if (schedule == null || schedule.Courses.Length <= (int)now.DayOfWeek) return new CourseStatus(status);
-            var coursesToday = schedule.Courses[(int)now.DayOfWeek];
+            List<Lesson>? coursesToday = new List<Lesson>();
+            if (schedule == null) return new CourseStatus(status);
+            switch (now.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    coursesToday = schedule.Sunday;
+                    break;
+
+                case DayOfWeek.Monday:
+                    coursesToday = schedule.Monday;
+                    break;
+
+                case DayOfWeek.Tuesday:
+                    coursesToday = schedule.Tuesday; ;
+                    break;
+
+                case DayOfWeek.Wednesday:
+                    coursesToday = schedule.Wendesday;
+                    break;
+
+                case DayOfWeek.Thursday:
+                    coursesToday = schedule.Thursday;
+                    break;
+
+                case DayOfWeek.Friday:
+                    coursesToday = schedule.Friday;
+                    break;
+
+                case DayOfWeek.Saturday:
+                    coursesToday = schedule.Saturday;
+                    break;
+
+                default:
+                    break;
+            }
             if (coursesToday != null)
             // 遍历课程列表，查找当前时间所在的课程
             {
@@ -120,9 +158,9 @@ namespace Cokee.ClassService.Helper
     public class CourseStatus
     {
         public CourseNowStatus nowStatus;
-        public Course? now, next;
+        public Lesson? now, next;
 
-        public CourseStatus(CourseNowStatus nowStatus, Course? now = null, Course? next = null)
+        public CourseStatus(CourseNowStatus nowStatus, Lesson? now = null, Lesson? next = null)
         {
             this.nowStatus = nowStatus;
             this.now = now;

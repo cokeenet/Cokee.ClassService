@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -56,6 +57,22 @@ namespace Cokee.ClassService.Helper
             else
             {
                 return $"Error: {response.StatusCode}";
+            }
+        }
+
+        public async Task<bool> CheckSystemStatus()
+        {
+            var content = new StringContent("", Encoding.UTF8, "application/text");
+            HttpResponseMessage response = await _httpClient.PostAsync("system/status", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
