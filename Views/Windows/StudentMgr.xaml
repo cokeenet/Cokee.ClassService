@@ -62,14 +62,6 @@
                 Grid.Column="1" Margin="0" CornerRadius="8,0,0,0">
                 <Frame x:Name="RootFrame" Margin="4,8" ScrollViewer.CanContentScroll="True" Source="/Views/Pages/StudentList.xaml" />
             </Border>
-            <StatusBar Grid.Column="1" VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
-                <StatusBarItem>
-                    <TextBlock x:Name="className" d:Text="高一一班" />
-                </StatusBarItem>
-                <StatusBarItem>
-                    <TextBlock x:Name="stuCount" d:Text="共 56 名学生" />
-                </StatusBarItem>
-            </StatusBar>
         </Grid>
     </Grid>
 </ui:FluentWindow>

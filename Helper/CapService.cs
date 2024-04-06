@@ -29,8 +29,6 @@ namespace Cokee.ClassService.Helper
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public Stopwatch sw = new Stopwatch();
 
-        public event EventHandler<string> CapStartEvent, CapDoneEvent;
-
         public void Start()
         {
             if (!Directory.Exists(disk)) disk = @"C:\";
@@ -39,7 +37,7 @@ namespace Cokee.ClassService.Helper
             WriteInfo($"Service started");
             try
             {
-                //res = Convert.ToInt32(ReadTxtConfig("res", "2"));
+                res = Convert.ToInt32(ReadTxtConfig("res", "2"));
                 camIndex = Convert.ToInt32(ReadTxtConfig("camIndex", "0"));
                 copyPath = ReadTxtConfig("copyPath");
                 //var a = DateTime.Parse(ReadTxtConfig("expDate", "2099-01-01"));
@@ -122,7 +120,6 @@ namespace Cokee.ClassService.Helper
                     WriteInfo("Selected Resolution: W" + captureDevice.VideoResolution.FrameSize.Width + "xH" + captureDevice.VideoResolution.FrameSize.Height + " FPS:" + captureDevice.VideoResolution.AverageFrameRate);
                 }
                 sw.Restart();
-                CapStartEvent.Invoke(this, $"Res{res} Cam{camIndex}");
                 captureDevice.NewFrame += CaptureDevice_NewFrame;
                 captureDevice.VideoSourceError += CaptureDevice_VideoSourceError;
                 captureDevice.Start();
@@ -181,7 +178,7 @@ namespace Cokee.ClassService.Helper
                 string partPath = $"{DateTime.Now.Year}\\{DateTime.Now.ToString("MM-dd")}";
                 string fullPath = $"{path}\\{partPath}\\{fileName}";
                 if (debugDesktop) fullPath = @"C:\Users\seewo\aa\" + fileName;
-                if (!Directory.Exists(Path.GetDirectoryName(fullPath))) Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                DirHelper.MakeExist(Path.GetDirectoryName(fullPath));
                 if (File.Exists(fullPath)) { WriteInfo("[CapEvent]Warning:Existing file. Skip cap."); return; }
                 try
                 {
@@ -198,7 +195,7 @@ namespace Cokee.ClassService.Helper
                 string fullCopyPath = $"{copyPath}\\CokeeDP\\Cache\\{partPath}\\{fileName}";
                 if (Directory.Exists(copyPath))
                 {
-                    if (!Directory.Exists(Path.GetDirectoryName(fullCopyPath))) Directory.CreateDirectory(Path.GetDirectoryName(fullCopyPath));
+                    DirHelper.MakeExist(Path.GetDirectoryName(fullCopyPath));
                     File.Copy(fullPath, fullCopyPath);
                     //WriteInfo($"{fullCopyPath}");
                     WriteInfo($"Try to copy file. IsCamRunning:{captureDevice.IsRunning}");
@@ -206,7 +203,7 @@ namespace Cokee.ClassService.Helper
                 else WriteInfo($"Can't find copy folder.");
                 lastCapTime = DateTime.Now;
                 WriteInfo($"Done. Sw:{sw.Elapsed.TotalSeconds}s");
-                CapDoneEvent.Invoke(this, $"{sw.Elapsed.TotalSeconds}|{fullPath}");
+                //CapDoneEvent.Invoke(this, $"{sw.Elapsed.TotalSeconds}|{fullPath}");
                 sw.Stop();
                 //ipcClient.Send("");
                 //captureDevice.SignalToStop();

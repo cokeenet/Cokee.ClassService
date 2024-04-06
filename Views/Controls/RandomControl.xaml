@@ -6,66 +6,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d"
-             Height="300" Width="430">
+             Height="300" Width="Auto">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <!--W430 H300-->
     <ui:Card VerticalAlignment="Stretch">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <TextBlock x:Name="title" Text="请选择人数" HorizontalAlignment="Center" FontSize="17" VerticalAlignment="Center" MouseRightButtonDown="EasterEgg" TouchMove="LabelTouchMove" Margin="5" />
-            <ToggleButton HorizontalAlignment="Right" Margin="5">
-                <ui:SymbolIcon Symbol="Toolbox12" />
-            </ToggleButton>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ui:Button HorizontalAlignment="Right" Margin="10" FontSize="36" Click="SubBtn">
-                    <ui:Button.Icon>
-                        <ui:SymbolIcon Symbol="Subtract48" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <TextBox x:Name="numbox" Grid.Column="1" Margin="5" Text="1" FontSize="36" TextAlignment="Center" InputScope="Number" TextChanged="numbox_TC" />
-                <ui:Button Grid.Column="2" Margin="10" FontSize="36" Click="AddBtn">
-                    <ui:Button.Icon>
-                        <ui:SymbolIcon Symbol="Add48" />
-                    </ui:Button.Icon>
-                </ui:Button>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="title" Text="请选择人数" HorizontalAlignment="Center" FontSize="17" VerticalAlignment="Center" MouseRightButtonDown="EasterEgg" TouchMove="LabelTouchMove" Margin="5" />
+                <ToggleButton x:Name="advBtn" HorizontalAlignment="Right" Margin="5">
+                    <ui:SymbolIcon Symbol="Toolbox12" />
+                </ToggleButton>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ui:Button HorizontalAlignment="Right" Margin="10" FontSize="36" Click="SubBtn">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Subtract48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <TextBox x:Name="numbox" Grid.Column="1" Margin="5" Text="1" FontSize="36" TextAlignment="Center" InputScope="Number" TextChanged="numbox_TC" />
+                    <ui:Button Grid.Column="2" Margin="10" FontSize="36" Click="AddBtn">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Add48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                </Grid>
+                <Grid Grid.Row="2" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="不抽小语种" HorizontalAlignment="Center" Checked="MLang_C" Unchecked="MLang_UC" />
+                    <ComboBox Grid.Column="1" SelectedIndex="0" Margin="5" SelectionChanged="ComboBox_Selected">
+                        <ComboBoxItem Content="性别限定" />
+                        <ComboBoxItem Content="男生" />
+                        <ComboBoxItem Content="女生" />
+                    </ComboBox>
+                    <CheckBox x:Name="cf" Grid.Column="2" Content="不重复(已抽0次)" d:Content="不重复(已抽999次)" HorizontalAlignment="Center" MouseRightButtonDown="Cf_OnMouseRightButtonDown" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" IsChecked="True" />
+                </Grid>
+                <Grid Grid.Row="3" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ui:Button Content="确认抽取" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="ConfirmBtn">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Checkmark48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                    <ui:Button Grid.Column="1" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelBtn">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Dismiss48" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                </Grid>
             </Grid>
-            <Grid Grid.Row="2" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <CheckBox Content="不抽小语种" HorizontalAlignment="Center" Checked="MLang_C" Unchecked="MLang_UC" />
-                <ComboBox Grid.Column="1" SelectedIndex="0" Margin="5" SelectionChanged="ComboBox_Selected">
-                    <ComboBoxItem Content="性别限定" />
-                    <ComboBoxItem Content="男生" />
-                    <ComboBoxItem Content="女生" />
-                </ComboBox>
-                <CheckBox x:Name="cf" Grid.Column="2" Content="不重复(已抽0次)" d:Content="不重复(已抽999次)" HorizontalAlignment="Center" MouseRightButtonDown="Cf_OnMouseRightButtonDown" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" IsChecked="True" />
-            </Grid>
-            <Grid Grid.Row="3" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ui:Button Content="确认抽取" Appearance="Primary" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Click="ConfirmBtn">
-                    <ui:Button.Icon>
-                        <ui:SymbolIcon Symbol="Checkmark48" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button Grid.Column="1" Appearance="Danger" Content="取消" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelBtn">
-                    <ui:Button.Icon>
-                        <ui:SymbolIcon Symbol="Dismiss48" />
-                    </ui:Button.Icon>
-                </ui:Button>
+            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Visible">
+                <TextBlock Text="高级抽取" HorizontalAlignment="Center" FontSize="17" VerticalAlignment="Top" />
             </Grid>
         </Grid>
     </ui:Card>

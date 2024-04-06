@@ -8,6 +8,8 @@ using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
 
+using Wpf.Ui.Designer;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -18,12 +20,14 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
+            if (DesignerHelper.IsInDesignMode) return;
             this.Loaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
             //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent -= (a, b) => Catalog.ToggleControlVisible(this);
         }
 
         private async void Confirm(object sender, RoutedEventArgs e)
         {
+            if (DesignerHelper.IsInDesignMode) return;
             string[] lines = stutb.Text.Split("\r");
             List<Student> students = new List<Student>();
             foreach (string line in lines)

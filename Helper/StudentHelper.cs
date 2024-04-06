@@ -138,23 +138,46 @@ namespace Cokee.ClassService.Helper
 
     public static class StudentExtensions
     {
-        public static async Task<List<Student>> Load()
+        public static Class CreateSimpleClass(List<Student>? stu = null)
+        {
+            return new Class()
+            {
+                Students = stu,
+                Name = "敏行八班",
+                SchoolName = "阜阳师范大学附属中学",
+                Grade = GradeType.High2,
+                ID = 0,
+                CreatedTime = new DateTime(2022, 09, 01)
+            };
+        }
+
+        public static async Task<Class> Load()
         {
             //  var a = await new ApiClient().GetStudents(0);
             // return a.ToList();
-
-            if (!File.Exists(Catalog.STU_FILE)) return new List<Student>();
-            var a = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
+            DirHelper.MakeExist(Catalog.CLASSES_DIR);
+            var list = Directory.GetFiles(Catalog.CLASSES_DIR, "*.json");
+            List<Student>? stu = new List<Student>();
+            if (list.Length == 0)
+            {
+                //OLD Mode
+                if (File.Exists(Catalog.STU_FILE))
+                {
+                    stu = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
+                    return CreateSimpleClass(stu);
+                }
+                else return new Class();
+            }
+            var a = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(list[0]));
             if (a != null)
             {
                 a.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
-                return a;
+                return CreateSimpleClass(a);
             }
-
-            return new List<Student>();
+            else return CreateSimpleClass();
         }
 
-        public static async Task<List<Student>> Save(this List<Student> students)
+        public static async Task<Class> Save(this List<Student> students)
         {
             students.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
             int i = 0;
@@ -164,21 +187,20 @@ namespace Cokee.ClassService.Helper
                 item.ID = i;
                 if (item.QQ != null && item.QQ.ToString().Length >= 5)
                     item.HeadPicUrl = $"https://q.qlogo.cn/g?b=qq&nk={item.QQ}&s=100";
-                else item.HeadPicUrl = "/Resources/head.jpg";
+                else item.HeadPicUrl = "default";
                 // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
                 //  Log.Information(a);
             }
 
-            if (!Directory.Exists(Catalog.CONFIG_DIR)) Directory.CreateDirectory(Catalog.CONFIG_DIR);
-            File.WriteAllText(Catalog.STU_FILE, JsonConvert.SerializeObject(students));
-            return students;
+            DirHelper.MakeExist(Catalog.CLASSES_DIR);
+            File.WriteAllText(Catalog.CLASSES_DIR + "\\0.json", JsonConvert.SerializeObject(CreateSimpleClass(students)));
+            return CreateSimpleClass(students);
         }
 
-        public static async Task<List<Student>> Random(RandomEventArgs args)
+        public static async Task<List<Student>> Random(Class c, RandomEventArgs args)
         {
             List<Student> randoms = new List<Student>();
-
-            List<Student> students = await Load();
+            List<Student> students = new List<Student>(c.Students);
             int i = 1;
 
             #region Easter

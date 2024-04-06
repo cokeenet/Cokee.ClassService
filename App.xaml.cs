@@ -31,10 +31,7 @@ namespace Cokee.ClassService
             try
             {
                 if (!Directory.Exists("D:\\")) Catalog.UpdatePath("C:\\");
-                if (!Directory.Exists(Catalog.CONFIG_DIR))
-                {
-                    Directory.CreateDirectory(Catalog.CONFIG_DIR);
-                }
+                DirHelper.MakeExist(Catalog.CONFIG_DIR);
             }
             catch (Exception ex)
             {

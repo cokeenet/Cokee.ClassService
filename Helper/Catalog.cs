@@ -29,6 +29,7 @@ namespace Cokee.ClassService.Helper
         public static string INK_DIR = @$"{CONFIG_DIR}\ink";
         public static string SCRSHOT_DIR = @$"{CONFIG_DIR}\ScreenShots";
         public static string SCHEDULE_FILE = @$"{CONFIG_DIR}\schedule.json";
+        public static string CLASSES_DIR = @$"{CONFIG_DIR}\Classes";
         public static string STU_FILE = @$"{CONFIG_DIR}\students.json";
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType;
@@ -142,7 +143,7 @@ namespace Cokee.ClassService.Helper
                     if (File.Exists(filePath) && isFullyDownloaded)
                     {
                         var a = new FileInfo(filePath);
-                        if (!Directory.Exists($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}")) Directory.CreateDirectory($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}");
+                        DirHelper.MakeExist($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}");
                         var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\{fileName}";
                         if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\1_{fileName}";
                         a.CopyTo(backupPath, true);

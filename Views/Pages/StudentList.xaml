@@ -7,15 +7,15 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            mc:Ignorable="d"  FontFamily="Lato"
-       d:DesignHeight="432"
-        d:DesignWidth="794"
+       Height="540"
+        Width="900"
       Title="StudentList">
     <Page.Resources>
         <local:VisibilityConverter x:Key="VisibilityConverter" />
         <local:LevelConverter x:Key="LevelConverter" />
     </Page.Resources>
     <Grid>
-        <Controls:TouchableScrollViewer>
+        <Controls:TouchableScrollViewer Margin="0,0,0,50">
             <ItemsControl x:Name="Students" d:ItemsSource="{d:SampleData ItemCount=56}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -37,15 +37,22 @@
                                     </Image.Clip>
                                 </Image>
                                 <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="14" Margin="5" HorizontalAlignment="Center" />
-                                <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" />
+                                <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" Foreground="Black" />
                             </Grid>
                         </ui:Card>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Controls:TouchableScrollViewer>
-
-        <Controls:RandomControl x:Name="randomcontrol" Background="{ui:ThemeResource}" Width="400" Height="300" Visibility="Collapsed" StartRandom="RandomStart" />
+        <StatusBar Grid.Column="1" VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
+            <StatusBarItem>
+                <TextBlock x:Name="className" d:Text="高一一班" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="stuCount" d:Text="共 56 名学生" />
+            </StatusBarItem>
+        </StatusBar>
+        <Controls:RandomControl x:Name="randomcontrol" Background="{ui:ThemeResource}" Width="400" Height="300" Visibility="Collapsed" />
         <Controls:RandomResult x:Name="randomres" Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:NewStudent Background="{ui:ThemeResource}" Width="500" Height="400" Visibility="Collapsed" />
         <Controls:StudentInfo x:Name="studentInfo" Background="{ui:ThemeResource}"  Width="500" Height="400" Visibility="Collapsed" DataContext="" />

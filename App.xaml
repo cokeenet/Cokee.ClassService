@@ -12,8 +12,8 @@
             <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
             <FontFamily x:Key="Lato">/Cokee.ClassService;component/Resources/#Lato-Regular</FontFamily>
             <ResourceDictionary.MergedDictionaries>
-                <inkore:ThemeResources />
-                <inkore:XamlControlsResources />
+                <ui:ThemesDictionary />
+                <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

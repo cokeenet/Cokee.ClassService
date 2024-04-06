@@ -31,16 +31,19 @@ namespace Cokee.ClassService.Views.Pages
             try
             {
                 InitializeComponent();
-                this.Loaded += async (a, b) =>
+                this.Loaded += async (c, b) =>
                 {
                     Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
                         StudentList_RandomEvent;
+                    randomcontrol.RandomResultControl = randomres;
                     studentInfo.EditStudent += StudentInfo_EditStudent;
-                    students = new ObservableCollection<Student>(await StudentExtensions.Load());
+                    var a = await StudentExtensions.Load();
+                    students = new ObservableCollection<Student>(a.Students);
                     if (students != null)
                     {
                         Students.ItemsSource = students;
-                        Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().stuCount.Text = $"共 {students.Count} 名学生";
+                        className.Text = $"{a.SchoolName} {a.Name} ID {a.ID}";
+                        stuCount.Text = $"共 {students.Count} 名学生";
                     }
                 };
                 this.Unloaded += (a, b) => SaveData();
@@ -59,12 +62,6 @@ namespace Cokee.ClassService.Views.Pages
             //students = new ObservableCollection<Student>();
             //Students.ItemsSource = students;
             Catalog.ShowInfo("数据已保存.");
-        }
-
-        private async void RandomStart(object sender, RandomEventArgs e)
-        {
-            randomres.ItemsSource = await StudentExtensions.Random(e);
-            Catalog.ToggleControlVisible(randomres);
         }
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)

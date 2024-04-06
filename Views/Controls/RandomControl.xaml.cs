@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 
@@ -13,8 +14,8 @@ namespace Cokee.ClassService.Views.Controls
     public partial class RandomControl : UserControl
     {
         public RandomEventArgs randomArgs = new RandomEventArgs();
-
-        public event EventHandler<RandomEventArgs>? StartRandom;
+        public RandomResult? RandomResultControl { get; set; }
+        // public event EventHandler<RandomEventArgs>? StartRandom;
 
         public RandomControl()
         {
@@ -105,11 +106,17 @@ namespace Cokee.ClassService.Views.Controls
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e) => randomArgs.AllowExist = true;
 
-        private void ConfirmBtn(object sender, RoutedEventArgs e)
+        private async void ConfirmBtn(object sender, RoutedEventArgs e)
         {
             Catalog.ToggleControlVisible(this);
-            StartRandom?.Invoke(this, randomArgs);
-            //if (Easter != 0) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
+            var a = await StudentExtensions.Random(await StudentExtensions.Load(), randomArgs);
+            if (RandomResultControl != null)
+            {
+                RandomResultControl.ItemsSource = a;
+                Catalog.ToggleControlVisible(RandomResultControl, true);
+            }
+            //StartRandom?.Invoke(this, randomArgs);
+            //if (randomArgs.Easter != Easter.None) { File.Create(Catalog.CONFIG_DIR + $"\\eggs\\{DateTime.Now.ToString("yyyy-MM-dd")}");Easter = 0; }
         }
 
         private void MLang_UC(object sender, RoutedEventArgs e) => randomArgs.AllowMLang = true;

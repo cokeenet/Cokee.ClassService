@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using IWshRuntimeLibrary;
+
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
@@ -35,6 +38,7 @@ namespace Cokee.ClassService.Helper
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hwnd, IntPtr parentHwnd);
+
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint msg, uint wParam, int lParam);
 
@@ -122,6 +126,27 @@ namespace Cokee.ClassService.Helper
 
     #endregion 开机自启
 
+    public static class DirHelper
+    {
+        public static bool MakeExist(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                    throw;
+                }
+            }
+            else return true;
+        }
+    }
+
     public static class FileSize
     {
         public static string Format(long bytes, string formatString = "{0:0.00}")
@@ -164,15 +189,15 @@ namespace Cokee.ClassService.Helper
     {
         public static bool HasPowerPointProcess()
         {
-             var processes = Process.GetProcessesByName("powerpnt").Length+Process.GetProcessesByName("wpp").Length+Process.GetProcessesByName("POWERPNT").Length;
-             if (processes >= 0)
-                    return true;
-             return false;
+            var processes = Process.GetProcessesByName("powerpnt").Length + Process.GetProcessesByName("wpp").Length + Process.GetProcessesByName("POWERPNT").Length;
+            if (processes >= 0)
+                return true;
+            return false;
         }
 
         public static bool HasWordProcess()
         {
-            var processes = Process.GetProcessesByName("WINWORD").Length+Process.GetProcessesByName("wps").Length+Process.GetProcessesByName("winword").Length;
+            var processes = Process.GetProcessesByName("WINWORD").Length + Process.GetProcessesByName("wps").Length + Process.GetProcessesByName("winword").Length;
             if (processes >= 0)
                 return true;
             return false;
@@ -180,11 +205,10 @@ namespace Cokee.ClassService.Helper
 
         public static bool HasExcelProcess()
         {
-            var processes = Process.GetProcessesByName("excel").Length+Process.GetProcessesByName("et").Length+Process.GetProcessesByName("EXCEL").Length;
+            var processes = Process.GetProcessesByName("excel").Length + Process.GetProcessesByName("et").Length + Process.GetProcessesByName("EXCEL").Length;
             if (processes >= 0)
                 return true;
             return false;
-
         }
 
         public static void TryKillWppProcess()

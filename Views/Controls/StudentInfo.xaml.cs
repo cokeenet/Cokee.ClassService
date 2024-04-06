@@ -12,6 +12,8 @@ using Cokee.ClassService.Views.Windows;
 
 using Microsoft.Win32;
 
+using Wpf.Ui.Designer;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -25,6 +27,7 @@ namespace Cokee.ClassService.Views.Controls
         public StudentInfo()
         {
             InitializeComponent();
+            if (DesignerHelper.IsInDesignMode) return;
             this.Loaded += (a, b) =>
             {
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += AddStuEvent;

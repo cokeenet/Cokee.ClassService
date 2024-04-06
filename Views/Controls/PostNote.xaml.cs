@@ -31,11 +31,11 @@ namespace Cokee.ClassService.Views.Controls
         public PostNote()
         {
             InitializeComponent();
-            if (!DesignerHelper.IsInDesignMode) IsVisibleChanged += async (a, b) =>
+            if (!DesignerHelper.IsInDesignMode) IsVisibleChanged += async (a, c) =>
             {
-                List<Student> students = new List<Student>();
+                var b = await StudentExtensions.Load();
+                List<Student> students = new List<Student>(b.Students);
                 List<string> str = new List<string>();
-                students = await StudentExtensions.Load();
                 foreach (var item in students)
                 {
                     str.Add(item.Name);

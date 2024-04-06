@@ -97,6 +97,7 @@ namespace Cokee.ClassService
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
             Catalog.GlobalSnackbarService = snackbarService;
+            rancor.RandomResultControl = ranres;
             snackbarService.SetSnackbarPresenter(snackbar);
             snackbarService.DefaultTimeOut = TimeSpan.FromSeconds(2);
             inkTool.inkCanvas = inkcanvas;
@@ -479,7 +480,8 @@ namespace Cokee.ClassService
         {
             await Dispatcher.InvokeAsync(new Action(async () =>
             {
-                List<Student> students = await StudentExtensions.Load();
+                var a = await StudentExtensions.Load();
+                List<Student> students = new List<Student>(a.Students);
                 Student? nearest = null;
                 int type = 0;
                 foreach (var person in students)
@@ -530,13 +532,6 @@ namespace Cokee.ClassService
         }
 
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
-
-        private async void RandomControl_StartRandom(object sender, RandomEventArgs e)
-        {
-            var a = await StudentExtensions.Random(e);
-            ranres.ItemsSource = a;
-            Catalog.ToggleControlVisible(ranres);
-        }
 
         private void CourseMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<CourseMgr>();
 

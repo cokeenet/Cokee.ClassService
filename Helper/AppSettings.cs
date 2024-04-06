@@ -53,7 +53,7 @@ namespace Cokee.ClassService.Helper
             try
             {
                 var dir = Catalog.SETTINGS_FILE.Split("config.json")[0];
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                DirHelper.MakeExist(dir);
                 if (!File.Exists(Catalog.SETTINGS_FILE)) SaveSettings(new AppSettings());
                 var content = File.ReadAllText(Catalog.SETTINGS_FILE);
                 return JsonSerializer.Deserialize<AppSettings>(content);
@@ -71,7 +71,7 @@ namespace Cokee.ClassService.Helper
 
             try
             {
-                if (!Directory.Exists(Path.GetDirectoryName(Catalog.SETTINGS_FILE))) Directory.CreateDirectory(Path.GetDirectoryName(Catalog.SETTINGS_FILE));
+                DirHelper.MakeExist(Path.GetDirectoryName(Catalog.SETTINGS_FILE));
                 File.WriteAllText(Catalog.SETTINGS_FILE, content);
                 Catalog.ShowInfo("数据已保存.");
             }
