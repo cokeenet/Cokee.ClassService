@@ -9,8 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 
 using Cokee.ClassService.Shared;
-
-using Newtonsoft.Json;
+using System.Text.Json;
 
 using Serilog;
 
@@ -163,12 +162,12 @@ namespace Cokee.ClassService.Helper
                 //OLD Mode
                 if (File.Exists(Catalog.STU_FILE))
                 {
-                    stu = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
+                    stu = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
                     return CreateSimpleClass(stu);
                 }
                 else return new Class();
             }
-            var a = JsonConvert.DeserializeObject<List<Student>>(File.ReadAllText(list[0]));
+            var a = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(list[0]));
             if (a != null)
             {
                 a.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
