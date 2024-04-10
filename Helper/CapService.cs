@@ -272,7 +272,7 @@ namespace Cokee.ClassService.Helper
 
         public void WriteInfo(string info)
         {
-            Log.Information($"Agent|{info}");
+            //Log.Information($"Agent|{info}");
             //Console.WriteLine(info);
             //var dir = @"D:\logs\v2";
             if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);

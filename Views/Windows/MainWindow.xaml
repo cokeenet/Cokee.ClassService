@@ -192,8 +192,8 @@
 
         <Controls:PostNote x:Name="postNote" Visibility="Collapsed" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <ui:InfoBar x:Name="infobar" VerticalAlignment="Top" HorizontalAlignment="Center" Message="当前焦点在CokeeClass上!" />
-        <Controls:RandomControl x:Name="rancor" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300" Visibility="Collapsed" />
-        <Controls:RandomResult x:Name="ranres" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="500" Visibility="Collapsed" />
+        <Controls:RandomControl x:Name="rancor" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="300" Visibility="Collapsed" />
+        <Controls:RandomResult x:Name="ranres" Background="{ui:ThemeResource}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="500" Width="Auto" Visibility="Collapsed" />
         <Controls:VolumeCard x:Name="volcd" Background="{ui:ThemeResource}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,300" Width="290" d:Visibility="Collapsed" />
         <Controls:CourseCard x:Name="courseCard"  Background="#B2333333" Visibility="Collapsed" d:Visibility="Visible" d:IsHidden="True" />
         <Grid x:Name="floatGrid" MouseLeftButtonDown="FloatGrid_MouseDown" MouseLeftButtonUp="FloatGrid_MouseUp" MouseMove="FloatGrid_MouseMove" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Focusable="False">
@@ -236,12 +236,12 @@
             </ui:Badge>
         </Grid>
         <Controls:TouchableScrollViewer x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed">
-            <StackPanel Background="{ui:ThemeResource}">
-                <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
-                <RichTextBox x:Name="richTextBox" Margin="5" />
+            <StackPanel Background="Black">
+                <TextBlock Text="Debug Log Output" Margin="5" />
+                <RichTextBox x:Name="richTextBox" Margin="5" Background="Black" />
             </StackPanel>
         </Controls:TouchableScrollViewer>
         <Controls:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" />
-        <ui:SnackbarPresenter x:Name="snackbar" Width="400" Margin="24,24,24,80" MaxHeight="300" VerticalAlignment="Bottom" />
+        <ui:SnackbarPresenter x:Name="snackbar" Margin="24,24,24,80" MaxHeight="300" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
     </Grid>
 </Window>

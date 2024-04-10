@@ -126,17 +126,7 @@ namespace Cokee.ClassService
             {
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-                richTextBox.TextChanged += (sender, e) =>
-                {
-                    if (richTextBox.Document.Blocks.Count > 100)
-                    {
-                        while (richTextBox.Document.Blocks.Count > 100)
-                        {
-                            richTextBox.Document = null;
-                        }
-                    }
-                };
-
+                richTextBox.IsDocumentEnabled = false;
                 DpiChanged += DisplaySettingsChanged;
                 SizeChanged += DisplaySettingsChanged;
                 secondTimer.Elapsed += SecondTimer_Elapsed;

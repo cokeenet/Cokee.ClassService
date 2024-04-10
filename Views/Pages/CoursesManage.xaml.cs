@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Cokee.ClassService.Helper;
+using Cokee.ClassService.Views.Windows;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
-using Cokee.ClassService.Helper;
-
 using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Pages
@@ -14,34 +12,63 @@ namespace Cokee.ClassService.Views.Pages
     {
         private Schedule schedule = Schedule.LoadFromJson();
         private ObservableCollection<Lesson> dayCourses = new ObservableCollection<Lesson>();
-
+        private int lastIndex = 0;
         public CoursesManage()
         {
             InitializeComponent();
             if (!DesignerHelper.IsInDesignMode) Loaded += (a, b) =>
             {
-                dayCourses = new ObservableCollection<Lesson>(schedule.Courses[0]);
-                courseControl.ItemsSource = dayCourses;
+                dayCourses = new ObservableCollection<Lesson>(schedule.Monday);
+                courseControl.DataContext = dayCourses;
+                
             };
         }
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
             Schedule.SaveToJson(schedule);
+            App.Current.Windows.Cast<CourseMgr>().FirstOrDefault().Close();
         }
 
         private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            schedule.Courses[comboBox.SelectedIndex] ??= new List<Lesson> { new Lesson() };
-            dayCourses = new ObservableCollection<Lesson>(schedule.Courses[comboBox.SelectedIndex]);
+            switch (comboBox.SelectedIndex)
+            {
+                case 0:
+                    courseControl.DataContext = new ObservableCollection<Lesson>(schedule.Monday);
+                    break;
+                case 1:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Tuesday);
+                    break;
+                case 2:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Wendesday);
+                    break;
+                case 3:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Thursday);
+                    break;
+                case 4:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Friday);
+                    break;
+                case 5:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Saturday);
+                    break;
+                case 6:
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Sunday);
+                    break;
+
+                default:
+                    break;
+            }
+            lastIndex= comboBox.SelectedIndex;
+
             if (courseControl != null && dayCourses != null) courseControl.ItemsSource = dayCourses;
         }
 
         private void AddCourse(object sender, RoutedEventArgs e)
         {
-            var a = new Course("1", comboBox.SelectedIndex);
+            var a = new Lesson("1");
             dayCourses.Add(a);
             courseControl.ItemsSource = dayCourses;
         }
@@ -92,6 +119,11 @@ namespace Cokee.ClassService.Views.Pages
                 }
             }
             courseControl.ItemsSource = dayCourses;
+        }
+
+        private void comboBox_Selected(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

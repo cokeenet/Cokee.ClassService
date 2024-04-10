@@ -14,8 +14,8 @@
     <ui:Card VerticalAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
@@ -77,7 +77,7 @@
                     </ui:Button>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Visible">
+            <Grid Grid.Column="1" Visibility="Collapsed">
                 <TextBlock Text="高级抽取" HorizontalAlignment="Center" FontSize="17" VerticalAlignment="Top" />
             </Grid>
         </Grid>

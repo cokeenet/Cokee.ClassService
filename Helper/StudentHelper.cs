@@ -1,20 +1,15 @@
-﻿using System;
+﻿using Cokee.ClassService.Shared;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-
-using Cokee.ClassService.Shared;
-using System.Text.Json;
-
-using Serilog;
-
 using Wpf.Ui.Controls;
-
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;
 
@@ -155,25 +150,25 @@ namespace Cokee.ClassService.Helper
             //  var a = await new ApiClient().GetStudents(0);
             // return a.ToList();
             DirHelper.MakeExist(Catalog.CLASSES_DIR);
-            var list = Directory.GetFiles(Catalog.CLASSES_DIR, "*.json");
+            //var list = Directory.GetFiles(Catalog.CLASSES_DIR, "*.json");
             List<Student>? stu = new List<Student>();
-            if (list.Length == 0)
+            //if (list.Length == 0)
+            //{
+            //OLD Mode
+            if (File.Exists(Catalog.STU_FILE))
             {
-                //OLD Mode
-                if (File.Exists(Catalog.STU_FILE))
-                {
-                    stu = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
-                    return CreateSimpleClass(stu);
-                }
-                else return new Class();
+                stu = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(Catalog.STU_FILE));
+                return CreateSimpleClass(stu);
             }
-            var a = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(list[0]));
-            if (a != null)
+            else return new Class();
+            //}
+            //var a = JsonSerializer.Deserialize<List<Student>>(File.ReadAllText(list[0]));
+            /*if (a != null)
             {
                 a.Sort((s1, s2) => s2.Role.CompareTo(s1.Role));
                 return CreateSimpleClass(a);
             }
-            else return CreateSimpleClass();
+            else return CreateSimpleClass();*/
         }
 
         public static async Task<Class> Save(this List<Student> students)
@@ -192,7 +187,7 @@ namespace Cokee.ClassService.Helper
             }
 
             DirHelper.MakeExist(Catalog.CLASSES_DIR);
-            File.WriteAllText(Catalog.CLASSES_DIR + "\\0.json", JsonConvert.SerializeObject(CreateSimpleClass(students)));
+            File.WriteAllText(Catalog.STU_FILE, JsonSerializer.Serialize(students));
             return CreateSimpleClass(students);
         }
 
