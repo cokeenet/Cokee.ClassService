@@ -224,7 +224,7 @@ namespace Cokee.ClassService.Views.Controls
                                 if (File.Exists($"{cpSubTo}\\{f.Name}")) continue;
                                 f.CopyTo($"{cpSubTo}\\{f.Name}");
                                 num++;
-                                backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)files.Length * 100), "v2"+subinfo.Name);
+                                backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2"+subinfo.Name);
                             }
                             Log.Information("Done.");
                         }
