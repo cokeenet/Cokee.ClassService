@@ -22,7 +22,7 @@ namespace Cokee.ClassService.Views.Controls
     {
         public string disk;
         private BackgroundWorker backgroundWorker1 = new BackgroundWorker();
-
+        private Stopwatch sw = new Stopwatch();
         public UsbCard()
         {
             InitializeComponent();
@@ -45,7 +45,13 @@ namespace Cokee.ClassService.Views.Controls
 
         private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
-            Catalog.ShowInfo($"Copied Done. Cancelled:{e.Cancelled}", $"Exception:{e.Error?.ToString()}");
+            sw.Stop();
+            if (e.Error != null)
+                Catalog.ShowInfo($"Worker threw Exception.", $"Exception:{e.Error.ToString()}");
+            else if (e.Cancelled)
+                Catalog.ShowInfo($"Worker Cancelled:{e.Cancelled}", $"Exception:{e.Error?.ToString()}");
+            else
+                Catalog.ShowInfo($"WorkerCompleted. Cancelled:{e.Cancelled}", $"Exception:{e.Error?.ToString()}");
             Catalog.UpdateProgress(100, false);
         }
 
@@ -178,13 +184,14 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (File.Exists(disk + "picDisk"))
             {
-                Catalog.ShowInfo($"BackgroundTask Started. Isbusy: {backgroundWorker1.IsBusy}");
                 copyDisk = disk;
                 if (backgroundWorker1.IsBusy != true)
                 {
                     backgroundWorker1.RunWorkerAsync();
+                    sw.Restart();
                 }
-                else backgroundWorker1.
+
+                Catalog.ShowInfo($"BackgroundTask Started. Isbusy: {backgroundWorker1.IsBusy}");
             }
             else Catalog.ShowInfo("nonTag");
         }
@@ -236,8 +243,8 @@ namespace Cokee.ClassService.Views.Controls
                 foreach (string file in files)
                 {
                     FileInfo f = new FileInfo(file);
-                    if (!File.Exists($"{cpTo}\\{f.Name}")) 
-                    f.CopyTo($"{cpTo}\\{f.Name}");
+                    if (!File.Exists($"{cpTo}\\{f.Name}"))
+                        f.CopyTo($"{cpTo}\\{f.Name}");
                     num1++;
                     // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
                     backgroundWorker1.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
