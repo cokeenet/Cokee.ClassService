@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cokee.ClassService.Helper;
+using Serilog;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -9,11 +11,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-
-using Cokee.ClassService.Helper;
-
-using Serilog;
-
 using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Controls
@@ -187,13 +184,14 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     backgroundWorker1.RunWorkerAsync();
                 }
+                else backgroundWorker1.
             }
             else Catalog.ShowInfo("nonTag");
         }
 
         private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
-            Catalog.UpdateProgress(e.ProgressPercentage, true,$"pic{e.UserState}");
+            Catalog.UpdateProgress(e.ProgressPercentage, true, $"pic{e.UserState}");
         }
 
         private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
@@ -201,18 +199,18 @@ namespace Cokee.ClassService.Views.Controls
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
             {
 
-                decimal num = 0;
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
                 var files = Directory.GetFiles(dir);
                 var dirs = Directory.GetDirectories(dir);
                 if (dirs != null)
                 {
-                    if(dirs.Length > 0 )
+                    if (dirs.Length > 0)
                     {
-                        foreach (string subdir in dirs) 
+                        foreach (string subdir in dirs)
                         {
                             var subinfo = new DirectoryInfo(subdir);
 
+                            decimal num = 0;
                             var cpSubTo = $"{copyDisk}\\CokeeDP\\Cache\\{dirinfo.Name}\\{subinfo.Name}";
                             DirHelper.MakeExist(cpSubTo);
                             var subfiles = Directory.GetFiles(subdir);
@@ -221,10 +219,10 @@ namespace Cokee.ClassService.Views.Controls
                             {
 
                                 FileInfo f = new FileInfo(item);
-                                if (File.Exists($"{cpSubTo}\\{f.Name}")) continue;
-                                f.CopyTo($"{cpSubTo}\\{f.Name}");
+                                if (!File.Exists($"{cpSubTo}\\{f.Name}"))
+                                    f.CopyTo($"{cpSubTo}\\{f.Name}");
                                 num++;
-                                backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2"+subinfo.Name);
+                                backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
                             }
                             Log.Information("Done.");
                         }
@@ -233,15 +231,16 @@ namespace Cokee.ClassService.Views.Controls
                 var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
                 DirHelper.MakeExist(cpTo);
 
+                decimal num1 = 0;
                 Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
                 foreach (string file in files)
                 {
                     FileInfo f = new FileInfo(file);
-                    if (File.Exists($"{cpTo}\\{f.Name}")) continue;
+                    if (!File.Exists($"{cpTo}\\{f.Name}")) 
                     f.CopyTo($"{cpTo}\\{f.Name}");
-                    num++;
-                   // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
-                    backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)files.Length * 100),dirinfo.Name);
+                    num1++;
+                    // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
+                    backgroundWorker1.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
                 }
                 Log.Information("Done.");
             }
