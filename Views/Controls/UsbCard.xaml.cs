@@ -47,11 +47,11 @@ namespace Cokee.ClassService.Views.Controls
         {
             sw.Stop();
             if (e.Error != null)
-                Catalog.ShowInfo($"Worker threw Exception.", $"Exception:{e.Error.ToString()}");
+                Catalog.ShowInfo($"Worker threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.ToString()}");
             else if (e.Cancelled)
-                Catalog.ShowInfo($"Worker Cancelled:{e.Cancelled}", $"Exception:{e.Error?.ToString()}");
+                Catalog.ShowInfo($"Worker Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
             else
-                Catalog.ShowInfo($"WorkerCompleted. Cancelled:{e.Cancelled}", $"Exception:{e.Error?.ToString()}");
+                Catalog.ShowInfo($"WorkerCompleted. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
             Catalog.UpdateProgress(100, false);
         }
 
