@@ -13,11 +13,9 @@ using AutoUpdaterDotNET;
 
 using Cokee.ClassService.Shared;
 
-using Serilog;
+using iNKORE.UI.WPF.Modern.Controls;
 
-using Wpf.Ui;
-using Wpf.Ui.Animations;
-using Wpf.Ui.Controls;
+using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
@@ -39,16 +37,20 @@ namespace Cokee.ClassService.Helper
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
-        public static SnackbarService GlobalSnackbarService;
 
         public static async void HandleException(Exception ex, string str = "")
         {
             string shortExpInfo = ex.ToString();
             if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                if (GlobalSnackbarService != null)
-                    GlobalSnackbarService.Show($"{str}发生错误", shortExpInfo, ControlAppearance.Danger, new SymbolIcon(SymbolRegular.Warning24), TimeSpan.FromSeconds(8));
+                if (MainWindow == null) return;
+                MainWindow.infobar.Visibility = Visibility.Visible;
+                MainWindow.infobar.Title = $"{str}发生错误";
+                MainWindow.infobar.Content = shortExpInfo;
+                MainWindow.infobar.Severity = InfoBarSeverity.Error;
+                await Task.Delay(3000);
+                MainWindow.infobar.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -105,17 +107,20 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static async void ShowInfo(string? title = "", string? content = "", ControlAppearance appearance = ControlAppearance.Light, SymbolRegular symbol = SymbolRegular.Info28)
+        public static async void ShowInfo(string? title = "", string? content = "", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 title ??= "";
                 content ??= "";
                 Log.Information($"Snack消息:{title} {content}");
-                if (GlobalSnackbarService != null)
-                {
-                    GlobalSnackbarService.Show(title, content, appearance, new SymbolIcon(symbol), TimeSpan.FromSeconds(3));
-                }
+                if (MainWindow == null) return;
+                MainWindow.infobar.Visibility = Visibility.Visible;
+                MainWindow.infobar.Title = title;
+                MainWindow.infobar.Content = content;
+                MainWindow.infobar.Severity = severity;
+                await Task.Delay(3000);
+                MainWindow.infobar.Visibility = Visibility.Collapsed;
             }, DispatcherPriority.Background);
         }
 
@@ -161,17 +166,17 @@ namespace Cokee.ClassService.Helper
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                MainWindow.progress.Progress = progress;
-                MainWindow.nameBadge.Content = $"{taskname}:{progress}%";
+                MainWindow.progress.Value = progress;
+                MainWindow.nameBlock.Text = $"{taskname}:{progress}%";
                 if (!isvisible || progress == 100)
                 {
                     MainWindow.progress.Visibility = Visibility.Collapsed;
-                    MainWindow.nameBadge.Visibility = Visibility.Collapsed;
+                    MainWindow.nameBlock.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     MainWindow.progress.Visibility = Visibility.Visible;
-                    MainWindow.nameBadge.Visibility = Visibility.Visible;
+                    MainWindow.nameBlock.Visibility = Visibility.Visible;
                 }
             }, DispatcherPriority.Background);
         }
@@ -218,7 +223,6 @@ namespace Cokee.ClassService.Helper
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;
-                    TransitionAnimationProvider.ApplyTransition(uIElement, Transition.FadeInWithSlide, 200);
                 }
                 else
                 {
