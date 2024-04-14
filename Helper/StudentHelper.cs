@@ -1,4 +1,5 @@
 ﻿using Cokee.ClassService.Shared;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +10,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+
 using Wpf.Ui.Controls;
+
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;
 
@@ -137,7 +140,7 @@ namespace Cokee.ClassService.Helper
             return new Class()
             {
                 Students = stu,
-                Name = "敏行八班",
+                Name = "高二八班",
                 SchoolName = "阜阳师范大学附属中学",
                 Grade = GradeType.High2,
                 ID = 0,

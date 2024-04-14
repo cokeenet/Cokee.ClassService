@@ -154,7 +154,7 @@ namespace Cokee.ClassService.Helper
                 {
                     HandleException(ex, "FileCopyTask");
                 }
-            });
+            }).Start();
         }
 
         public static async void UpdateProgress(int progress, bool isvisible = true, string? taskname = null)
