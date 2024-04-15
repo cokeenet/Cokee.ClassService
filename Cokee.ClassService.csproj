@@ -5,8 +5,8 @@
 		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.6.718.24105</AssemblyVersion>
-		<FileVersion>2.6.718.24105</FileVersion>
+		<AssemblyVersion>2.6.723.24105</AssemblyVersion>
+		<FileVersion>2.6.723.24105</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
@@ -105,7 +105,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.26.3" />
+		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.27" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Serilog" Version="4.0.0-dev-02122" />
