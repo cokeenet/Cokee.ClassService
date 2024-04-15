@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -26,7 +25,6 @@ namespace Cokee.ClassService.Views.Controls
         public UsbCard()
         {
             InitializeComponent();
-            if (DesignerHelper.IsInDesignMode) return;
             try
             {
                 backgroundWorker1.WorkerReportsProgress = true;
@@ -51,7 +49,7 @@ namespace Cokee.ClassService.Views.Controls
             else if (e.Cancelled)
                 Catalog.ShowInfo($"Worker Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
             else
-                Catalog.ShowInfo($"WorkerCompleted. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
+                Catalog.ShowInfo($"Worker Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
             Catalog.UpdateProgress(100, false);
         }
 

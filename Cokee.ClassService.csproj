@@ -101,10 +101,7 @@
 		<PackageReference Include="AForge.Video" Version="2.2.5" />
 		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
 		<PackageReference Include="Autoupdater.NET.Official" Version="1.8.5" />
-		<PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.3.1" />
 		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.27" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

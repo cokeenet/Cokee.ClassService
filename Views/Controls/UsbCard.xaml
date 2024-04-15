@@ -1,48 +1,52 @@
 ﻿<UserControl x:Class="Cokee.ClassService.Views.Controls.UsbCard"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" FontFamily="Lato" Visibility="Collapsed" d:Visibility="Visible">
-    <ui:Card
-              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="{ui:ThemeResource}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
+    <Border CornerRadius="8"
+              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="{ui:AcrylicBrush}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
               RenderTransformOrigin="0.5,0.5">
-        <ui:Card.RenderTransform>
+        <Border.RenderTransform>
             <TransformGroup>
                 <TranslateTransform x:Name="tranUsb" X="0" />
             </TransformGroup>
-        </ui:Card.RenderTransform>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+        </Border.RenderTransform>
+        <Grid Margin="15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <ui:SymbolIcon MouseRightButtonDown="SymbolIcon_MouseRightButtonDown"
+            <ui:FontIcon MouseRightButtonDown="SymbolIcon_MouseRightButtonDown"
                                 Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                FontSize="40" Symbol="UsbStick20" Grid.RowSpan="2" />
-            <ui:Button x:Name="open" HorizontalAlignment="Right"
-                  VerticalAlignment="Top" Background="White" BorderBrush="#6CBCEA" BorderThickness="1" Click="Open"
-                  Content="打开" Tag="" Foreground="Black" Grid.Column="2" Margin="5">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="HardDrive20" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="remove" HorizontalAlignment="Right"
-                 VerticalAlignment="Top" Background="White" BorderBrush="#6CBCEA" BorderThickness="1"
-                 Click="ExitUsbDrive" Content="弹出" Foreground="Black" Grid.Row="1" Grid.Column="2" Margin="5">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="UsbPlug20" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" Grid.Column="1" Margin="5" FontSize="14" MaxWidth="75" TextAlignment="Center" />
+                                FontSize="40" Icon="{x:Static ui:FluentSystemIcons.UsbStick_20_Regular}" Grid.RowSpan="2" />
+            
+            <ui:SimpleStackPanel Grid.Column="1" Spacing="15">
+            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" FontSize="14" MaxWidth="75"/>
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" Grid.Row="1" Grid.Column="1" Margin="5" FontSize="12" MaxWidth="75" TextAlignment="Center" />
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" />
+            </ui:SimpleStackPanel>
+            <ui:SimpleStackPanel Grid.Column="2" Spacing="5">
+                <Button x:Name="open" HorizontalAlignment="Right"
+                  VerticalAlignment="Top" Click="Open"
+                   Tag="" >
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.HardDrive_20_Regular}" />
+                        <TextBlock Text="打开"/>
+                    </ui:SimpleStackPanel>
+                </Button>
+                <Button x:Name="remove" HorizontalAlignment="Right"
+                 VerticalAlignment="Top" 
+                 Click="ExitUsbDrive" Grid.Row="1">
+
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.UsbPlug_20_Regular}" />
+                        <TextBlock Text="弹出"/>
+                    </ui:SimpleStackPanel>
+                </Button>
+            </ui:SimpleStackPanel>
         </Grid>
-    </ui:Card>
+    </Border>
 </UserControl>
