@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -27,6 +28,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             try
             {
+                if (DesignerHelper.IsInDesignMode) return;
                 backgroundWorker1.WorkerReportsProgress = true;
                 backgroundWorker1.WorkerSupportsCancellation = true;
                 backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
