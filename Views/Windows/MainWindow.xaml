@@ -184,7 +184,7 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Controls:TouchableScrollViewer MaxHeight="165" Content="{Binding ElementName=btnGrid}" />
+                    <ui:ScrollViewerEx MaxHeight="165" Content="{Binding ElementName=btnGrid}" />
                 </Grid>
             </Border>
         </Popup>
@@ -232,12 +232,12 @@
                 <TextBlock x:Name="time" Text="" TextAlignment="Center" Margin="5" d:Text="11:11:11" FontSize="14" />
             </Border>
         </Grid>
-        <Controls:TouchableScrollViewer x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed">
+        <ui:ScrollViewerEx x:Name="logview" Width="500" Height="300" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed">
             <StackPanel Background="{ui:AcrylicBrush}">
                 <TextBlock Text="Debug Log Output" Margin="5" />
                 <RichTextBox x:Name="richTextBox" Margin="5" />
             </StackPanel>
-        </Controls:TouchableScrollViewer>
+        </ui:ScrollViewerEx>
         <Controls:UsbCard x:Name="usbCard" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,200" d:Visibility="Visible" d:IsHidden="True" />
         <ui:InfoBar x:Name="infobar" Margin="24,24,24,80" MaxHeight="300" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
     </Grid>
