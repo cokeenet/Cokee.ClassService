@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using iNKORE.UI.WPF.Modern.Controls;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace Cokee.ClassService.Views.Controls
     /// <summary>
     /// 可触摸滚动的ScrollViewer控件
     /// </summary>
-    public class TouchableScrollViewer : ScrollViewer
+    public class TouchableScrollViewer : ScrollViewerEx
     {
         //触摸点的坐标
         private Point _startPosition;
