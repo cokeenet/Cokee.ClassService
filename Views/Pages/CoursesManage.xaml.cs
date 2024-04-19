@@ -1,10 +1,10 @@
 ﻿using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Pages
 {
@@ -16,7 +16,7 @@ namespace Cokee.ClassService.Views.Pages
         public CoursesManage()
         {
             InitializeComponent();
-            if (!DesignerHelper.IsInDesignMode) Loaded += (a, b) =>
+            if (!DesignerProperties.GetIsInDesignMode(this)) Loaded += (a, b) =>
             {
                 dayCourses = new ObservableCollection<Lesson>(schedule.Monday);
                 courseControl.DataContext = dayCourses;
