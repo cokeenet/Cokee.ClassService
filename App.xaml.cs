@@ -44,7 +44,6 @@ namespace Cokee.ClassService
             );
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            ApplicationAccentColorManager.ApplySystemAccent();
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 0)
             {
@@ -62,7 +61,7 @@ namespace Cokee.ClassService
             if (ex == null) ex = new Exception("Null异常。");
             Log.Error(ex, "AppDomain异常");
             Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序. | ");
-            Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
+            //Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
             Shutdown();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,13 +8,8 @@ using System.Windows.Ink;
 
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
-
+using iNKORE.UI.WPF.Modern.Controls;
 using Newtonsoft.Json;
-
-using Wpf.Ui.Controls;
-using Wpf.Ui.Designer;
-
-using Button = Wpf.Ui.Controls.Button;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Cokee.ClassService.Views.Controls
@@ -31,7 +27,7 @@ namespace Cokee.ClassService.Views.Controls
         public PostNote()
         {
             InitializeComponent();
-            if (!DesignerHelper.IsInDesignMode) IsVisibleChanged += async (a, c) =>
+            if (!DesignerAttribute.getis) IsVisibleChanged += async (a, c) =>
             {
                 var b = await StudentExtensions.Load();
                 List<Student> students = new List<Student>(b.Students);
@@ -44,7 +40,7 @@ namespace Cokee.ClassService.Views.Controls
                 IsEraser = false;
                 ink.Strokes.Clear();
                 atu.Text = null;
-                pen.Appearance = ControlAppearance.Primary;
+                pen.Style = Primary;
                 era.Appearance = ControlAppearance.Secondary;
             };
         }
@@ -94,7 +90,7 @@ namespace Cokee.ClassService.Views.Controls
             }
         }
 
-        private void Atu_sc(object sender, RoutedEventArgs e)
+        private void Atu_sc(AutoSuggestBox autoSuggestBox, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (!Directory.Exists(@$"{Catalog.INK_DIR}\backup"))
                 Directory.CreateDirectory(@$"{Catalog.INK_DIR}\backup");
