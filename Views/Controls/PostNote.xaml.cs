@@ -44,7 +44,7 @@ namespace Cokee.ClassService.Views.Controls
                 IsEraser = false;
                 ink.Strokes.Clear();
                 atu.Text = null;
-                pen.Appearance = ControlAppearance.Primary;
+                pen.Style = Accent;
                 era.Appearance = ControlAppearance.Secondary;
             };
         }
