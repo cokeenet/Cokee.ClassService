@@ -181,6 +181,9 @@
 		<Compile Update="Views\Windows\CourseMgr.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
+		<Compile Update="Views\Controls\Card.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 	</ItemGroup>
 
 	<Import Project="..\Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems" Label="Shared" />
