@@ -24,7 +24,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ui:Card Margin="10" VerticalAlignment="Stretch">
+                        <Border Margin="10" VerticalAlignment="Stretch" Style="{StaticResource Style_SectionBorderStyle}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -37,9 +37,9 @@
                                     </Image.Clip>
                                 </Image>
                                 <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="14" Margin="5" HorizontalAlignment="Center" />
-                                <ui:Badge Grid.Row="2" Content="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Appearance="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" Foreground="Black" />
+                                <TextBlock Grid.Row="2" Text="{Binding RoleStr}" FontSize="11" HorizontalAlignment="Center" Background="{Binding Role, Converter={StaticResource LevelConverter}}"  Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" Foreground="Black" />
                             </Grid>
-                        </ui:Card>
+                        </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

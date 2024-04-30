@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-using Wpf.Ui.Controls;
 
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;

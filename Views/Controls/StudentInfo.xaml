@@ -103,9 +103,17 @@
                             </Grid>
                         </Grid>
                     </Border>
-                    <ui:CardControl Grid.Row="3" Margin="10">
-
-                        <ui:CardControl.Icon>
+                    <Border Style="{StaticResource Style_SectionBorderStyle}">
+                        <Grid VerticalAlignment="Center" Margin="0,10,0,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
                             <ui:SymbolIcon Symbol="FoodCake24" />
                         </ui:CardControl.Icon>
                         <ui:CardControl.Header>
@@ -113,19 +121,14 @@
                         </ui:CardControl.Header>
                         <DatePicker MinWidth="100" SelectedDate="{Binding BirthDay,Mode=TwoWay}" />
                     </ui:CardControl>
-                    <ui:CardControl Grid.Row="4" Margin="10">
-                        <ui:CardControl.Icon>
-                            <ui:SymbolIcon Symbol="Chat48" />
-                        </ui:CardControl.Icon>
-                        <ui:CardControl.Header>
-                            <StackPanel VerticalAlignment="Center">
+                    <Grid Grid.Row="4" Margin="10">
+                       
+                            <ui:SymbolIcon Symbol="Chat48" 
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="QQ" />
-                                <TextBlock
+                                        <TextBlock
                         FontSize="12" Opacity="0.7" Text="将使用QQ头像" />
-                            </StackPanel>
-                        </ui:CardControl.Header>
-                        <ui:TextBox Text="{Binding QQ}" MinWidth="150" />
-                    </ui:CardControl>
+                                        <TextBox Text="{Binding QQ}" MinWidth="150" />
+                    </Grid>
                     <ui:CardControl Grid.Row="5" Margin="10">
 
                         <ui:CardControl.Icon>

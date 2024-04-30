@@ -1,7 +1,7 @@
 ﻿<Page x:Class="Cokee.ClassService.Views.Pages.FloatNotePage"
            xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+           xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -19,16 +19,17 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ui:Button x:Name="infBtn" Content="增加字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
-            <ui:Button.Icon>
-                <ui:SymbolIcon Symbol="FontIncrease24" />
-            </ui:Button.Icon>
-        </ui:Button>
-        <ui:Button x:Name="defBtn" Grid.Column="1" Content="减小字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+        <Button x:Name="infBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+            <ui:SimpleStackPanel Spacing="5" Orientation="Horizontal">
+                <ui:FontIcon Glyph="{x:Static ui:FluentSystemIcons.FontIncrease_24_Regular}" />
+                <TextBlock Text="增加字号"/>
+            </ui:SimpleStackPanel>
+        </Button>
+        <Button x:Name="defBtn" Grid.Column="1" Content="减小字号" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
             <ui:Button.Icon>
                 <ui:SymbolIcon Symbol="FontDecrease24" />
             </ui:Button.Icon>
-        </ui:Button>
+        </Button>
         <ui:TextBox Grid.Row="1" x:Name="title" Text="" AcceptsReturn="False" FontSize="22" Grid.ColumnSpan="3" Margin="5,0,5,0" />
         <ui:TextBox x:Name="content" Text="" Grid.Row="2" Margin="5" AcceptsReturn="True" FontSize="28" Grid.ColumnSpan="3" />
     </Grid>

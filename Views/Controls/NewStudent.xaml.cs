@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,8 +8,8 @@ using System.Windows.Controls;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
+using iNKORE.UI.WPF.Modern.Themes.DesignTime;
 
-using Wpf.Ui.Designer;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -20,7 +21,7 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
-            if (DesignerHelper.IsInDesignMode) return;
+            if (DesignerAttribute.) return;
             this.Loaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
             //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent -= (a, b) => Catalog.ToggleControlVisible(this);
         }
