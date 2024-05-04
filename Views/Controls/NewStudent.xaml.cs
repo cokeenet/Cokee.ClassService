@@ -21,14 +21,14 @@ namespace Cokee.ClassService.Views.Controls
         public NewStudent()
         {
             InitializeComponent();
-            if (DesignerAttribute.) return;
+            if (DesignerProperties.GetIsInDesignMode(this)) return;
             this.Loaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent += (a, b) => Catalog.ToggleControlVisible(this);
             //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddMuitlStuEvent -= (a, b) => Catalog.ToggleControlVisible(this);
         }
 
         private async void Confirm(object sender, RoutedEventArgs e)
         {
-            if (DesignerHelper.IsInDesignMode) return;
+            if (!DesignerProperties.GetIsInDesignMode(this)) return;
             string[] lines = stutb.Text.Split("\r");
             List<Student> students = new List<Student>();
             foreach (string line in lines)

@@ -1,128 +1,221 @@
-﻿<Window x:Class="SettingsPageExample.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-        xmlns:local="clr-namespace:SettingsPageExample"
-        mc:Ignorable="d"
-        ui:WindowHelper.UseModernWindowStyle="True"
-        ui:WindowHelper.SystemBackdropType="Mica"
-        Title="Settings" Height="450" Width="800">
+﻿<Window
+    Height="450"
+    Title="Settings"
+    Width="800"
+    mc:Ignorable="d"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    x:Class="SettingsPageExample.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SettingsPageExample"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <FrameworkElement.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="Expander" BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}">
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
-            <Style x:Key="Style_SectionBorderStyle" TargetType="Border">
-                <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}"/>
-                <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}"/>
-                <Setter Property="CornerRadius" Value="4"/>
-                <Setter Property="Padding" Value="15,0,20,0"/>
+            <Style TargetType="Border" x:Key="CardBorderStyle">
+                <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}" />
+                <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Padding" Value="15,0,20,0" />
             </Style>
 
-            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
 
             <Style TargetType="ui:FontIcon">
-                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontSize" Value="20" />
             </Style>
 
             <Style TargetType="ui:ToggleSwitch">
-                <Setter Property="MinWidth" Value="0"/>
+                <Setter Property="MinWidth" Value="0" />
             </Style>
 
         </ResourceDictionary>
     </FrameworkElement.Resources>
     <ui:ScrollViewerEx>
-        <ui:SimpleStackPanel Spacing="10" MaxWidth="960" Margin="40" VerticalAlignment="Center">
+        <ui:SimpleStackPanel
+            Margin="40"
+            MaxWidth="960"
+            Spacing="10"
+            VerticalAlignment="Center">
 
-            <TextBlock Text="Settings" FontSize="24" FontWeight="Bold"/>
+            <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Settings" />
 
-            <TextBlock Text="General" FontSize="16"/>
-            <Expander x:Name="Expander_Language" IsExpanded="True">
+            <TextBlock FontSize="16" Text="General" />
+            <Expander IsExpanded="True" x:Name="Expander_Language">
                 <Expander.Header>
-                    <Grid VerticalAlignment="Center" Margin="0,10,-10,10">
+                    <Grid Margin="0,10,-10,10" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
-                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.LocaleLanguage}" Grid.RowSpan="2" Margin="5,15,20,15"/>
-                        <TextBlock x:Name="TextBlock_Language" Text="Language" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
-                        <TextBlock x:Name="TextBlock_Language_Description" Text="The primary language that displays on the UI" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="0,2,20,5" Opacity="0.615" FontSize="12" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow"/>
+                        <ui:FontIcon
+                            Grid.RowSpan="2"
+                            Icon="{x:Static ui:SegoeFluentIcons.LocaleLanguage}"
+                            Margin="5,15,20,15" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,0,0,2"
+                            Text="Language"
+                            VerticalAlignment="Bottom"
+                            x:Name="TextBlock_Language" />
+                        <TextBlock
+                            FontSize="12"
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="0,2,20,5"
+                            Opacity="0.615"
+                            Text="The primary language that displays on the UI"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="WrapWithOverflow"
+                            VerticalAlignment="Top"
+                            x:Name="TextBlock_Language_Description" />
 
-                        <ComboBox x:Name="ComboBox_Language" DisplayMemberPath="Name" Grid.Column="2" Grid.RowSpan="2">
-                        </ComboBox>
+                        <ComboBox
+                            DisplayMemberPath="Name"
+                            Grid.Column="2"
+                            Grid.RowSpan="2"
+                            x:Name="ComboBox_Language" />
                     </Grid>
                 </Expander.Header>
 
                 <Grid Margin="5,0,5,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="TextBlock_Language_Author" Text="Author" Margin="0,5,0,5"/>
-                    <TextBlock x:Name="TextBlock_Language_Version" Text="Version" Grid.Row="1" Margin="0,5,0,5"/>
+                    <TextBlock
+                        Margin="0,5,0,5"
+                        Text="Author"
+                        x:Name="TextBlock_Language_Author" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="0,5,0,5"
+                        Text="Version"
+                        x:Name="TextBlock_Language_Version" />
 
-                    <TextBlock x:Name="TextBlock_Language_Author_Value" Text="NotYoojun.!" Margin="0,5,0,5" Grid.Column="1"/>
-                    <TextBlock x:Name="TextBlock_Language_Version_Value" Text="1.0.0" Grid.Row="1" Margin="0,5,0,5" Grid.Column="1"/>
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,5,0,5"
+                        Text="NotYoojun.!"
+                        x:Name="TextBlock_Language_Author_Value" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="0,5,0,5"
+                        Text="1.0.0"
+                        x:Name="TextBlock_Language_Version_Value" />
 
                 </Grid>
 
             </Expander>
-            <Border Style="{StaticResource Style_SectionBorderStyle}">
-                <Grid VerticalAlignment="Center" Margin="0,10,0,10">
+            <Border Style="{StaticResource CardBorderStyle}">
+                <Grid Margin="0,10,0,10" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
-                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Light}" Grid.RowSpan="2" Margin="5,15,20,15"/>
-                    <TextBlock x:Name="TextBlock_ThemeMode" Text="Theme mode" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
-                    <TextBlock x:Name="TextBlock_ThemeMode_Description" Text="Lorem ipsum dolor sit amet." Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="0,2,20,5" Opacity="0.615" FontSize="12" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow"/>
+                    <ui:FontIcon
+                        Grid.RowSpan="2"
+                        Icon="{x:Static ui:SegoeFluentIcons.Light}"
+                        Margin="5,15,20,15" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,0,0,2"
+                        Text="Theme mode"
+                        VerticalAlignment="Bottom"
+                        x:Name="TextBlock_ThemeMode" />
+                    <TextBlock
+                        FontSize="12"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="0,2,20,5"
+                        Opacity="0.615"
+                        Text="Lorem ipsum dolor sit amet."
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalAlignment="Top"
+                        x:Name="TextBlock_ThemeMode_Description" />
 
-                    <ComboBox x:Name="ComboBox_ThemeMode" Grid.Column="2" Grid.RowSpan="2" SelectedIndex="0">
-                        <ComboBoxItem x:Name="ComboBoxItem_ThemeMode_Default" Content="System Default"/>
-                        <ComboBoxItem x:Name="ComboBoxItem_ThemeMode_Light" Content="Light"/>
-                        <ComboBoxItem x:Name="ComboBoxItem_ThemeMode_Dark" Content="Dark"/>
+                    <ComboBox
+                        Grid.Column="2"
+                        Grid.RowSpan="2"
+                        SelectedIndex="0"
+                        x:Name="ComboBox_ThemeMode">
+                        <ComboBoxItem Content="System Default" x:Name="ComboBoxItem_ThemeMode_Default" />
+                        <ComboBoxItem Content="Light" x:Name="ComboBoxItem_ThemeMode_Light" />
+                        <ComboBoxItem Content="Dark" x:Name="ComboBoxItem_ThemeMode_Dark" />
                     </ComboBox>
                 </Grid>
             </Border>
 
-            <TextBlock Text="Advanced" FontSize="16" Margin="0,20,0,0"/>
-            <Border Style="{StaticResource Style_SectionBorderStyle}">
-                <Grid VerticalAlignment="Center" Margin="0,10,0,10">
+            <TextBlock
+                FontSize="16"
+                Margin="0,20,0,0"
+                Text="Advanced" />
+            <Border Style="{StaticResource CardBorderStyle}">
+                <Grid Margin="0,10,0,10" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Draw}" Grid.RowSpan="2" Margin="5,15,20,15"/>
-                    <TextBlock x:Name="TextBlock_StylusToDraw" Text="Draw with stylus" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
-                    <TextBlock x:Name="TextBlock_StylusToDraw_Description" Text="Draw with your stylus while using your fingers to move the viewport" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="0,2,20,5" Opacity="0.615" FontSize="12" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow"/>
+                    <ui:FontIcon
+                        Grid.RowSpan="2"
+                        Icon="{x:Static ui:SegoeFluentIcons.Draw}"
+                        Margin="5,15,20,15" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,0,0,2"
+                        Text="Draw with stylus"
+                        VerticalAlignment="Bottom"
+                        x:Name="TextBlock_StylusToDraw" />
+                    <TextBlock
+                        FontSize="12"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="0,2,20,5"
+                        Opacity="0.615"
+                        Text="Draw with your stylus while using your fingers to move the viewport"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalAlignment="Top"
+                        x:Name="TextBlock_StylusToDraw_Description" />
 
-                    <ui:ToggleSwitch x:Name="ToggleSwitch_StylusToDraw_Enabled" Grid.Column="2" Grid.RowSpan="2"/>
+                    <ui:ToggleSwitch
+                        Grid.Column="2"
+                        Grid.RowSpan="2"
+                        x:Name="ToggleSwitch_StylusToDraw_Enabled" />
                 </Grid>
             </Border>
         </ui:SimpleStackPanel>

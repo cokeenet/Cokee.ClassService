@@ -5,18 +5,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
 using Cokee.ClassService.Helper;
-
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-
+using Bugsnag;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sink.AppCenter;
-
-using Wpf.Ui.Appearance;
 
 namespace Cokee.ClassService
 {
@@ -25,6 +16,8 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class App : Application
     {
+        public static Client bugsnag = new Bugsnag.Client("dbeed1f3604f8067ee4a8c5c0c578ae3");
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -37,7 +30,6 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
-            AppCenter.Start("3f56f1de-dc29-4a8f-9350-81820e32da71", typeof(Analytics), typeof(Crashes));
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
@@ -50,7 +42,7 @@ namespace Cokee.ClassService
                 if (args.Contains("-scrsave")) Catalog.IsScrSave = true;
                 else if (!args.Contains("-m"))
                 {
-                    //if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
+                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 2) Shutdown();
                 }
             }
         }
@@ -59,17 +51,14 @@ namespace Cokee.ClassService
         {
             Exception? ex = e.ExceptionObject as Exception;
             if (ex == null) ex = new Exception("Null异常。");
-            Log.Error(ex, "AppDomain异常");
-            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序. | ");
-            //Process.Start(System.Windows.Forms.Application.ExecutablePath, "-m");
-            Shutdown();
+            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序.");
+            // Process.Start(System.Windows.Forms.Application.ExecutablePath);
+            Environment.Exit(ex.HResult);
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Log.Error(e.Exception, "发生错误");
             Catalog.HandleException(e.Exception);
-
             e.Handled = true;
         }
     }

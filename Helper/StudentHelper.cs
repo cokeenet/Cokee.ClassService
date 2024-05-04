@@ -10,8 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-
-
+using System.Windows.Media;
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;
 
@@ -46,18 +45,24 @@ namespace Cokee.ClassService.Helper
             switch (role)
             {
                 case 0:
-                    return ControlAppearance.Transparent;
+                    return Colors.Transparent;
+                    // return ControlAppearance.Transparent;
 
                 case 1:
-                    return ControlAppearance.Info;
+                    return Colors.CornflowerBlue;
+                    //return ControlAppearance.Info;
 
                 case 2:
-                    return ControlAppearance.Success;
+                    return Colors.ForestGreen;
+                    //return ControlAppearance.Success;
 
                 case 3:
-                    return ControlAppearance.Danger;
+                    return Colors.DarkRed;
+                    //return ControlAppearance.Danger;
 
-                default: return ControlAppearance.Info;
+                default: 
+                    return Colors.Transparent;
+                //return ControlAppearance.Info;
             }
         }
 
@@ -218,6 +223,8 @@ namespace Cokee.ClassService.Helper
             sw.Start();
             while (randoms.Count < args.Count)
             {
+                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
+
                 var a = students[new Random().Next(students.Count)];
                 if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || RandomEventArgs.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
                 if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
@@ -225,8 +232,7 @@ namespace Cokee.ClassService.Helper
                 if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
                 randoms.Add(a);
                 i++;
-                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
-            }
+                }
 
             #region easter
 

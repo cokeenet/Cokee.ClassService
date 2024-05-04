@@ -1,5 +1,7 @@
 ﻿using Cokee.ClassService.Helper;
+
 using Serilog;
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,12 +24,13 @@ namespace Cokee.ClassService.Views.Controls
         public string disk;
         private BackgroundWorker backgroundWorker1 = new BackgroundWorker();
         private Stopwatch sw = new Stopwatch();
+
         public UsbCard()
         {
             InitializeComponent();
             try
             {
-                if (DesignerAttribute.) return;
+                if (DesignerProperties.GetIsInDesignMode(this)) return;
                 backgroundWorker1.WorkerReportsProgress = true;
                 backgroundWorker1.WorkerSupportsCancellation = true;
                 backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
@@ -79,10 +82,16 @@ namespace Cokee.ClassService.Views.Controls
             {
                 Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
-                string volumeLabel = $"{t.VolumeLabel}({t.Name})";
 
                 disk = t.Name;
-                diskName.Text = volumeLabel;
+                try
+                {
+                    diskName.Text = $"{t.VolumeLabel}({t.Name})";
+                }
+                catch
+                {
+                    diskName.Text = "U盘(未知盘符)";
+                }
                 diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
 
                 if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
@@ -178,6 +187,7 @@ namespace Cokee.ClassService.Views.Controls
         );
 
         private string copyDisk;
+        private int copieditems = 0, copieddirs = 0;
 
         private void SymbolIcon_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -189,8 +199,11 @@ namespace Cokee.ClassService.Views.Controls
                     backgroundWorker1.RunWorkerAsync();
                     sw.Restart();
                 }
-
-                Catalog.ShowInfo($"BackgroundTask Started. Isbusy: {backgroundWorker1.IsBusy}");
+                else if (backgroundWorker1.IsBusy == true)
+                {
+                    backgroundWorker1.CancelAsync();
+                    Catalog.ShowInfo($"Try to stop.");
+                }
             }
             else Catalog.ShowInfo("nonTag");
         }
@@ -202,9 +215,11 @@ namespace Cokee.ClassService.Views.Controls
 
         private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
         {
+            Log.Information("BackgroundWorker Started.");
+            copieddirs = 0;
+            copieditems = 0;
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
             {
-
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
                 var files = Directory.GetFiles(dir);
                 var dirs = Directory.GetDirectories(dir);
@@ -215,7 +230,6 @@ namespace Cokee.ClassService.Views.Controls
                         foreach (string subdir in dirs)
                         {
                             var subinfo = new DirectoryInfo(subdir);
-
                             decimal num = 0;
                             var cpSubTo = $"{copyDisk}\\CokeeDP\\Cache\\{dirinfo.Name}\\{subinfo.Name}";
                             DirHelper.MakeExist(cpSubTo);
@@ -223,20 +237,20 @@ namespace Cokee.ClassService.Views.Controls
                             Log.Information($"Found v2 pic dir {subinfo.Name} with {subfiles.Length} pics.");
                             foreach (var item in subfiles)
                             {
-
                                 FileInfo f = new FileInfo(item);
                                 if (!File.Exists($"{cpSubTo}\\{f.Name}"))
                                     f.CopyTo($"{cpSubTo}\\{f.Name}");
+                                copieditems++;
                                 num++;
                                 backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
                             }
+                            copieddirs++;
                             Log.Information("Done.");
                         }
                     }
                 }
                 var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
                 DirHelper.MakeExist(cpTo);
-
                 decimal num1 = 0;
                 Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
                 foreach (string file in files)

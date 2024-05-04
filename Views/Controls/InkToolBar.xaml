@@ -1,61 +1,109 @@
 ﻿<UserControl
-             x:Class="Cokee.ClassService.Views.Controls.InkToolBar"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             mc:Ignorable="d"
-             Height="43" Width="Auto">
+    Height="43"
+    Width="Auto"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.InkToolBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
-        <SolidColorBrush x:Name="Wbbg" x:Key="WbBg" Color="#FF0E251D" />
+        <SolidColorBrush
+            Color="#FF0E251D"
+            x:Key="WbBg"
+            x:Name="Wbbg" />
     </UserControl.Resources>
-    <ui:Card x:Name="card" VerticalAlignment="Stretch" FontSize="16" Background="#01FFFFFF">
-        <Grid x:Name="mainGrid" Margin="-15">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
+    <Border
+        Background="#01FFFFFF"
+        VerticalAlignment="Stretch"
+        x:Name="card">
+        <Grid x:Name="mainGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
                 <ColumnDefinition MinWidth="84" />
-                <ColumnDefinition />
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition MinWidth="84" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition MinWidth="84" />
             </Grid.ColumnDefinitions>
-            <ui:Button x:Name="curBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="指针" Margin="5" Click="Button_Click" Tag="Cursor">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="Cursor24" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="penBtn"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Appearance="Primary"  Content="笔" Grid.Column="1" Margin="5" Click="Button_Click" Tag="Pen">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="Pen24" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="eraserBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="橡皮" Grid.Column="2" Margin="5" Click="Button_Click" Tag="Eraser"  MouseRightButtonDown="ClearScr">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="Eraser24" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="backBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="撤销" Grid.Column="3" Margin="5" Click="Button_Click" Tag="Back"  Visibility="Collapsed">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="ArrowStepBack20" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="moreBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="更多" Grid.Column="4" Margin="5" Click="Button_Click" Tag="More">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="MoreHorizontal48" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <ui:Button x:Name="exitBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="退出" Grid.Column="5" Margin="5" Click="Button_Click" Tag="Exit">
-                <ui:Button.Icon>
-                    <ui:SymbolIcon Symbol="ArrowExit20" Filled="True" />
-                </ui:Button.Icon>
-            </ui:Button>
-            <Popup x:Name="penMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=penBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True">
-                <ui:Card Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center">
+            <Button
+                Click="Button_Click"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Cursor"
+                VerticalAlignment="Stretch"
+                x:Name="curBtn">
+                <ui:IconAndText Content="指针" Icon="{x:Static ui:FluentSystemIcons.Cursor_24_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Pen"
+                VerticalAlignment="Stretch"
+                Style="{StaticResource AccentButtonStyle}"
+                x:Name="penBtn">
+                <ui:IconAndText Content="笔" Icon="{x:Static ui:FluentSystemIcons.Pen_24_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                MouseRightButtonDown="ClearScr"
+                Tag="Eraser"
+                VerticalAlignment="Stretch"
+                x:Name="eraserBtn">
+                <ui:IconAndText Content="橡皮" Icon="{x:Static ui:FluentSystemIcons.Eraser_24_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="3"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Back"
+                VerticalAlignment="Stretch"
+                Visibility="Collapsed"
+                x:Name="backBtn">
+                <ui:IconAndText Content="撤销" Icon="{x:Static ui:FluentSystemIcons.ArrowStepBack_20_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="4"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="More"
+                VerticalAlignment="Stretch"
+                x:Name="moreBtn">
+                <ui:IconAndText Content="更多" Icon="{x:Static ui:FluentSystemIcons.MoreHorizontal_48_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="5"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Exit"
+                VerticalAlignment="Stretch"
+                x:Name="exitBtn">
+                <ui:IconAndText Content="退出" Icon="{x:Static ui:FluentSystemIcons.ArrowExit_20_Filled}" />
+            </Button>
+            <Popup
+                AllowsTransparency="True"
+                Placement="Top"
+                PlacementTarget="{Binding ElementName=penBtn}"
+                PopupAnimation="Fade"
+                StaysOpen="False"
+                d:IsOpen="True"
+                x:Name="penMenu">
+                <Border
+                    Background="{ui:AcrylicBrush}"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,20"
+                    VerticalAlignment="Bottom"
+                    d:Visibility="Visible">
                     <Grid x:Name="colorGrid">
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -69,53 +117,165 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"  Text="色板" Margin="5" FontSize="16" />
-                        <StackPanel Grid.RowSpan="3" Grid.Row="1">
-                            <Slider x:Name="penSlider" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" Value="3.5" Maximum="15" Minimum="1" />
-                            <TextBlock Text="粗细" FontSize="12" Margin="5" />
+                        <TextBlock
+                            FontSize="16"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="0"
+                            Margin="5"
+                            Text="色板" />
+                        <StackPanel Grid.Row="1" Grid.RowSpan="3">
+                            <Slider
+                                HorizontalAlignment="Center"
+                                Maximum="15"
+                                Minimum="1"
+                                Orientation="Vertical"
+                                Value="3.5"
+                                ValueChanged="Slider_ValueChanged"
+                                VerticalAlignment="Center"
+                                x:Name="penSlider" />
+                            <TextBlock
+                                FontSize="12"
+                                Margin="5"
+                                Text="粗细" />
                         </StackPanel>
-                        <ui:Button Grid.Row="1" Background="Red" Margin="5" Width="50" Height="30" Grid.Column="1" Click="ColorBtn"  FontSize="17">
-                            <ui:Button.Icon>
-                                <ui:SymbolIcon Symbol="CheckmarkCircle48" />
-                            </ui:Button.Icon>
-                        </ui:Button>
-                        <ui:Button Grid.Row="2" Grid.Column="1" Background="CornflowerBlue" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="3" Grid.Column="1" Background="#FF306C00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="1" Grid.Column="2" Background="Black" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="2" Grid.Column="2" Background="#FF321EB5" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="3" Grid.Column="2" Background="#FF66D552" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="1" Grid.Column="3" Background="White" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" Foreground="Black" />
-                        <ui:Button Grid.Row="2" Grid.Column="3" Background="#FFFF8B00" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
-                        <ui:Button Grid.Row="3" Grid.Column="3" Background="#FF4EA1B7" Margin="5" Width="50" Height="30" Click="ColorBtn" FontSize="17" />
+                        <Button
+                            Background="Red"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Height="30"
+                            Margin="5"
+                            Width="50">
+                            <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.CheckmarkCircle_48_Regular}" />
+                        </Button>
+                        <Button
+                            Background="CornflowerBlue"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="#FF306C00"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="Black"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="2"
+                            Grid.Row="1"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="#FF321EB5"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="2"
+                            Grid.Row="2"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="#FF66D552"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="2"
+                            Grid.Row="3"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="White"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Foreground="Black"
+                            Grid.Column="3"
+                            Grid.Row="1"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="#FFFF8B00"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="3"
+                            Grid.Row="2"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
+                        <Button
+                            Background="#FF4EA1B7"
+                            Click="ColorBtn"
+                            FontSize="17"
+                            Grid.Column="3"
+                            Grid.Row="3"
+                            Height="30"
+                            Margin="5"
+                            Width="50" />
                     </Grid>
-                </ui:Card>
+                </Border>
             </Popup>
-            <Popup x:Name="moreMenu" d:IsOpen="True" PlacementTarget="{Binding ElementName=moreBtn}" Placement="Top" StaysOpen="False" PopupAnimation="Fade" AllowsTransparency="True" DataContext="{Binding appSettings}">
-                <ui:Card x:Name="moreCard" Background="{ui:ThemeResource}" Margin="0,0,0,20" VerticalAlignment="Bottom"  d:Visibility="Visible" HorizontalAlignment="Center" DataContext="{Binding AppSettings}">
+            <Popup
+                AllowsTransparency="True"
+                DataContext="{Binding appSettings}"
+                Placement="Top"
+                PlacementTarget="{Binding ElementName=moreBtn}"
+                PopupAnimation="Fade"
+                StaysOpen="False"
+                d:IsOpen="True"
+                x:Name="moreMenu">
+                <Border
+                    Background="{ui:AcrylicBrush}"
+                    DataContext="{Binding AppSettings}"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,20"
+                    VerticalAlignment="Bottom"
+                    d:Visibility="Visible"
+                    x:Name="moreCard">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="书写菜单" Margin="5" FontSize="16" />
+                        <TextBlock
+                            FontSize="16"
+                            Grid.Row="0"
+                            Margin="5"
+                            Text="书写菜单" />
                         <StackPanel Grid.Row="1">
-                            <ui:Button x:Name="redoBtn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="重做" Margin="5" Click="Button_Click" Tag="Redo">
-                                <ui:Button.Icon>
-                                    <ui:SymbolIcon Symbol="ArrowRedo48" />
-                                </ui:Button.Icon>
-                            </ui:Button>
-                            <ui:Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="选择" Margin="5" Click="Button_Click" Tag="Select">
-                                <ui:Button.Icon>
-                                    <ui:SymbolIcon Symbol="SelectObject24" />
-                                </ui:Button.Icon>
-                            </ui:Button>
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" />
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5" IsChecked="{Binding EraseByPointEnable,Mode=TwoWay}" />
-                            <ui:ToggleSwitch Click="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" IsChecked="{Binding EraseByPointEnable,Mode=TwoWay}" Visibility="Collapsed" />
+                            <Button
+                                Click="Button_Click"
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Tag="Redo"
+                                VerticalAlignment="Stretch"
+                                x:Name="redoBtn">
+                                <ui:IconAndText Content="重做" Icon="{x:Static ui:FluentSystemIcons.ArrowRedo_48_Regular}" />
+                            </Button>
+                            <Button
+                                Click="Button_Click"
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Tag="Select"
+                                VerticalAlignment="Stretch">
+
+                                <ui:IconAndText Content="选择" Icon="{x:Static ui:FluentSystemIcons.SelectObject_24_Regular}" />
+                            </Button>
+                            <!--<ui:ToggleSwitch IsEnabledChanged="OnToggleSwitch" Tex="白板" Tag="WhiteBoard" Margin="5" /><ui:ToggleSwitch IsEnabledChanged="OnToggleSwitch" Content="高级橡皮擦" Tag="EraseByShape" Margin="5" IsEnabled="{Binding EraseByPointEnable,Mode=TwoWay}" /><ui:ToggleSwitch IsEnabledChanged="OnToggleSwitch" Content="白板" Tag="WhiteBoard" Margin="5" IsEnabled="{Binding EraseByPointEnable,Mode=TwoWay}" Visibility="Collapsed" />-->
                         </StackPanel>
                     </Grid>
-                </ui:Card>
+                </Border>
             </Popup>
         </Grid>
-    </ui:Card>
+    </Border>
 </UserControl>

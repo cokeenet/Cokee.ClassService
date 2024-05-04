@@ -11,8 +11,6 @@ using Cokee.ClassService.Views.Windows;
 
 using Serilog;
 
-using Wpf.Ui.Controls;
-
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 
@@ -66,7 +64,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Card card = sender as Card;
+            Border card = sender as Border;
             if (card.Tag is Student && e.ChangedButton != MouseButton.Right)
             {
                 Catalog.ToggleControlVisible(studentInfo);
@@ -88,7 +86,7 @@ namespace Cokee.ClassService.Views.Pages
             if (RightClickCount >= 10)
             {
                 RightClickCount = 0;
-                Student stu = (sender as Card).Tag as Student;
+                Student stu = (sender as Border).Tag as Student;
                 if (MessageBox.Show("确定删除？", "确定删除？\n删除记录将保存.", MessageBoxButton.YesNoCancel) == System.Windows.MessageBoxResult.Yes)
                 {
                     Log.Warning($"Tried to DELETE Student {stu.Name} ID {stu.ID}");

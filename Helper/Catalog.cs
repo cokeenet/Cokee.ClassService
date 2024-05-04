@@ -40,17 +40,19 @@ namespace Cokee.ClassService.Helper
 
         public static async void HandleException(Exception ex, string str = "")
         {
+            Log.Error(ex, "发生错误");
+            App.bugsnag.Notify(ex);
             string shortExpInfo = ex.ToString();
             if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 if (MainWindow == null) return;
-                MainWindow.infobar.Visibility = Visibility.Visible;
+                MainWindow.infobar.IsOpen = true;
                 MainWindow.infobar.Title = $"{str}发生错误";
                 MainWindow.infobar.Content = shortExpInfo;
                 MainWindow.infobar.Severity = InfoBarSeverity.Error;
-                await Task.Delay(3000);
-                MainWindow.infobar.Visibility = Visibility.Collapsed;
+                await Task.Delay(5000);
+                MainWindow.infobar.IsOpen = false;
             });
         }
 
@@ -115,12 +117,12 @@ namespace Cokee.ClassService.Helper
                 content ??= "";
                 Log.Information($"Snack消息:{title} {content}");
                 if (MainWindow == null) return;
-                MainWindow.infobar.Visibility = Visibility.Visible;
+                MainWindow.infobar.IsOpen = true;
                 MainWindow.infobar.Title = title;
                 MainWindow.infobar.Content = content;
                 MainWindow.infobar.Severity = severity;
-                await Task.Delay(3000);
-                MainWindow.infobar.Visibility = Visibility.Collapsed;
+                await Task.Delay(5000);
+                MainWindow.infobar.IsOpen = false;
             }, DispatcherPriority.Background);
         }
 
@@ -223,6 +225,26 @@ namespace Cokee.ClassService.Helper
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;
+                    uIElement.Opacity = 0.0;
+                    var fadeOutAnimation = new DoubleAnimation
+                    {
+                        From = 0.0,
+                        To = 1.0,
+                        Duration = new Duration(TimeSpan.FromSeconds(0.2)) // 设置动画持续时间
+                    };
+                    // 创建一个淡出故事板，并将动画应用于控件的透明度属性
+                    var fadeItStoryboard = new Storyboard();
+                    fadeItStoryboard.Children.Add(fadeOutAnimation);
+                    Storyboard.SetTarget(fadeOutAnimation, uIElement);
+                    Storyboard.SetTargetProperty(fadeOutAnimation, new PropertyPath(UIElement.OpacityProperty));
+                    fadeItStoryboard.Completed += (a, b) =>
+                    {
+                        uIElement.Visibility = Visibility.Visible;
+                        uIElement.Opacity = 1.0;
+                    };
+
+                    // 启动淡出动画
+                    fadeItStoryboard.Begin();
                 }
                 else
                 {

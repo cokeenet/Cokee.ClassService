@@ -5,11 +5,11 @@
 		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.6.723.24105</AssemblyVersion>
-		<FileVersion>2.6.723.24105</FileVersion>
+		<AssemblyVersion>2.6.750.24125</AssemblyVersion>
+		<FileVersion>2.6.750.24125</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
-		<Copyright>Copyright ©2023 Cokee Technologies.</Copyright>
+		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
 		<Description>A Student Manage Software for your Classroom</Description>
 		<Authors>Cokee</Authors>
 		<Title>Cokee.ClassService</Title>
@@ -18,6 +18,8 @@
 		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<UseWindowsForms>True</UseWindowsForms>
 		<StartupObject>Cokee.ClassService.App</StartupObject>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -45,6 +47,14 @@
 		<None Remove="Resources\CardBackground\3.jpg" />
 		<None Remove="Resources\Lato.ttf" />
 		<None Remove="Resources\Segoe Fluent Icons.ttf" />
+		<Page Remove="Views\Controls\TimerControl.xaml" />
+		<None Include="Views\Controls\TimerControl.xaml" />
+		<Compile Remove="Views\Controls\TimerControl.xaml.cs" />
+		<None Include="Views\Controls\TimerControl.xaml.cs" />
+		<Page Remove="Views\Pages\QuickFixPage.xaml" />
+		<None Include="Views\Pages\QuickFixPage.xaml" />
+		<Compile Remove="Views\Pages\QuickFixPage.xaml.cs" />
+		<None Include="Views\Pages\QuickFixPage.xaml.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -101,12 +111,13 @@
 		<PackageReference Include="AForge.Video" Version="2.2.5" />
 		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
 		<PackageReference Include="Autoupdater.NET.Official" Version="1.8.5" />
-		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.3.1" />
-		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.27" />
+		<PackageReference Include="Bugsnag" Version="3.1.0" />
+		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.4" />
+		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.28" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Serilog" Version="4.0.0-dev-02122" />
-		<PackageReference Include="Serilog.Sink.AppCenter" Version="1.5.0" />
+		<PackageReference Include="Serilog.Sinks.Bugsnag" Version="1.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />

@@ -1,56 +1,65 @@
-﻿<ui:FluentWindow x:Class="Cokee.ClassService.Views.Windows.Sticky"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             Title="Sticky" Width="1150" Topmost="True" FontFamily="Lato" WindowStartupLocation="CenterScreen"
-             ExtendsContentIntoTitleBar="True" WindowBackdropType="Mica" WindowCornerPreference="Round"
+﻿<Window
+    FontFamily="Lato"
     Height="695"
-    mc:Ignorable="d">
-    <Grid>
+    Title="Sticky"
+    Topmost="True"
+    Width="1150"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    ui:ThemeManager.IsThemeAware="True"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    x:Class="Cokee.ClassService.Views.Windows.Sticky"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="3,3,3,3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <ui:TitleBar
-            Title="CokeeClass | 大学梦" Grid.Row="0" HorizontalAlignment="Stretch" CanMaximize="True"
-            ShowMaximize="True" ShowMinimize="True" />
-        <Grid Grid.Row="1" Margin="3,3,3,3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <ui:NavigationView  PaneDisplayMode="LeftFluent"
-               Grid.Column="0" Margin="6,0,6,0">
-                <ui:NavigationView.MenuItems>
-                    <ui:NavigationViewItem Content="添加" Click="NavigationItem_Click">
-                        <ui:NavigationViewItem.Icon>
-                            <ui:SymbolIcon Symbol="Add48" />
-                        </ui:NavigationViewItem.Icon>
-                    </ui:NavigationViewItem>
-                </ui:NavigationView.MenuItems>
-            </ui:NavigationView>
-            <local:TouchableScrollViewer x:Name="Sclview" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalScrollBarVisibility="Auto" Grid.Column="1" Margin="0">
-                <ItemsControl x:Name="Stickys" d:ItemsSource="{d:SampleData ItemCount=50}" VerticalAlignment="Center" ItemsSource="{Binding StickyItems}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="2" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:StickyNote DataContext="{Binding Name}" Margin="10" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </local:TouchableScrollViewer>
-            <StatusBar Grid.Column="1" VerticalAlignment="Bottom" Background="{ui:ThemeResource}">
-                <StatusBarItem x:Name="count" Content="共 -- 人" />
-            </StatusBar>
-        </Grid>
+        <ui:NavigationView Grid.Column="0" Margin="6,0,6,0">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="添加" MouseDown="NavigationItem_Click">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Add_48_Regular}" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
+        <local:ScrollViewerEx
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            HorizontalScrollBarVisibility="Auto"
+            Margin="0"
+            VerticalAlignment="Center"
+            x:Name="Sclview">
+            <ItemsControl
+                ItemsSource="{Binding StickyItems}"
+                VerticalAlignment="Center"
+                d:ItemsSource="{d:SampleData ItemCount=50}"
+                x:Name="Stickys">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:StickyNote DataContext="{Binding Name}" Margin="10" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </local:ScrollViewerEx>
+        <StatusBar
+            Background="{ui:ThemeResource}"
+            Grid.Column="1"
+            VerticalAlignment="Bottom">
+            <StatusBarItem Content="共 -- 人" x:Name="count" />
+        </StatusBar>
     </Grid>
-</ui:FluentWindow>
+</Window>

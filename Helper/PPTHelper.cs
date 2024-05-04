@@ -32,6 +32,10 @@ namespace Cokee.ClassService.Helper
             {
                 GetActiveObject(ref clsid, IntPtr.Zero, out obj);
             }
+            catch (COMException)
+            {
+                return null;
+            }
             catch
             {
                 return null;

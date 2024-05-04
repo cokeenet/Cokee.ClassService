@@ -2,15 +2,13 @@
 
 using Cokee.ClassService.Helper;
 
-using Wpf.Ui.Controls;
-
 namespace Cokee.ClassService.Views.Windows
 {
     /// <summary>
     /// CourseMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class Settings : FluentWindow
+    public partial class Settings : Window
     {
         public Settings()
         {

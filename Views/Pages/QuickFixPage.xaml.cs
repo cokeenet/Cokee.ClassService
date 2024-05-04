@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 using Cokee.ClassService.Helper;
 
-using Wpf.Ui.Controls;
+
 
 namespace Cokee.ClassService.Views.Pages
 {

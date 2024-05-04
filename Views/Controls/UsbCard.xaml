@@ -22,28 +22,28 @@
             <ui:FontIcon MouseRightButtonDown="SymbolIcon_MouseRightButtonDown"
                                 Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 FontSize="40" Icon="{x:Static ui:FluentSystemIcons.UsbStick_20_Regular}" Grid.RowSpan="2" />
-            
-            <ui:SimpleStackPanel Grid.Column="1" Spacing="15">
-            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" FontSize="14" MaxWidth="75"/>
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" />
-            </ui:SimpleStackPanel>
+            <Grid Grid.Column="1">
+            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" FontSize="14" MaxWidth="75" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" />
+
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" Margin="10" />
+            </Grid>
             <ui:SimpleStackPanel Grid.Column="2" Spacing="5">
                 <Button x:Name="open" HorizontalAlignment="Right"
                   VerticalAlignment="Top" Click="Open"
-                   Tag="" >
+                   Tag="">
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.HardDrive_20_Regular}" />
-                        <TextBlock Text="打开"/>
+                        <TextBlock Text="打开" />
                     </ui:SimpleStackPanel>
                 </Button>
                 <Button x:Name="remove" HorizontalAlignment="Right"
-                 VerticalAlignment="Top" 
+                 VerticalAlignment="Top"
                  Click="ExitUsbDrive" Grid.Row="1">
 
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.UsbPlug_20_Regular}" />
-                        <TextBlock Text="弹出"/>
+                        <TextBlock Text="弹出" />
                     </ui:SimpleStackPanel>
                 </Button>
             </ui:SimpleStackPanel>

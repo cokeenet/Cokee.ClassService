@@ -2,17 +2,18 @@
 using System.Collections;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Cokee.ClassService.Helper;
-using Wpf.Ui.Controls;
+
 
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
     /// 可触摸滚动的ScrollViewer控件
     /// </summary>
-    public class ToggleableCard : Card
+    public class ToggleableCard : Border
     {
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
         nameof(ItemsSource), typeof(IEnumerable), typeof(RandomResult), new PropertyMetadata(null));

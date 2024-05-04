@@ -1,39 +1,50 @@
-﻿<Application x:Class="Cokee.ClassService.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Cokee.ClassService"
-             StartupUri="/Views/Windows/MainWindow.xaml"
-             ShutdownMode="OnMainWindowClose"
-             xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
+﻿<Application
+    ShutdownMode="OnMainWindowClose"
+    StartupUri="/Views/Windows/MainWindow.xaml"
+    x:Class="Cokee.ClassService.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:local="clr-namespace:Cokee.ClassService"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
             <FontFamily x:Key="Lato">/Cokee.ClassService;component/Resources/#Lato-Regular</FontFamily>
-            
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="Lato" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Lato" />
+            </Style>
+            <!-- 定义一个隐式样式，将 FontFamily 设置为 "Lato" -->
+            <Style TargetType="ui:IconAndText">
+                <Setter Property="FontFamily" Value="Lato" />
+                <Setter Property="Margin" Value="1" />
+            </Style>
 
-                    <Style TargetType="Expander" BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    </Style>
-                    <Style x:Key="Style_SectionBorderStyle" TargetType="Border">
-                        <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}"/>
-                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}"/>
-                        <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}"/>
-                        <Setter Property="CornerRadius" Value="4"/>
-                        <Setter Property="Padding" Value="15,0,20,0"/>
-                    </Style>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style TargetType="Border" x:Key="CardBorderStyle">
+                <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}" />
+                <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Padding" Value="15,0,20,0" />
+            </Style>
 
-                    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}">
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                    </Style>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
 
-                    <Style TargetType="ui:FontIcon">
-                        <Setter Property="FontSize" Value="20"/>
-                    </Style>
+            <Style TargetType="ui:FontIcon">
+                <Setter Property="FontSize" Value="20" />
+            </Style>
 
             <Style TargetType="ui:ToggleSwitch">
-                <Setter Property="MinWidth" Value="0"/>
+                <Setter Property="MinWidth" Value="0" />
             </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources />

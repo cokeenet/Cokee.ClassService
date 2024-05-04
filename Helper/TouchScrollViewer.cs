@@ -10,7 +10,7 @@ namespace Cokee.ClassService.Views.Controls
     /// <summary>
     /// 可触摸滚动的ScrollViewer控件
     /// </summary>
-    public class TouchableScrollViewer : ScrollViewerEx
+    public class ScrollViewerEx : iNKORE.UI.WPF.Modern.Controls.ScrollViewerEx
     {
         //触摸点的坐标
         private Point _startPosition;
@@ -20,7 +20,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private double _startHorizontalOffset;
 
-        public TouchableScrollViewer()
+        public ScrollViewerEx()
         {
             TouchDown += TouchableScrollViewer_TouchDown;
             TouchUp += TouchableScrollViewer_TouchUp;

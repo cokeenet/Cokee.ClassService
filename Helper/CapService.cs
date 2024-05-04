@@ -10,8 +10,6 @@ using System.Timers;
 using AForge.Video;
 using AForge.Video.DirectShow;
 
-using Serilog;
-
 using Timer = System.Timers.Timer;
 
 namespace Cokee.ClassService.Helper
@@ -272,16 +270,20 @@ namespace Cokee.ClassService.Helper
 
         public void WriteInfo(string info)
         {
-            //Log.Information($"Agent|{info}");
-            //Console.WriteLine(info);
-            //var dir = @"D:\logs\v2";
-            if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
-            using (FileStream stream = new FileStream(configPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append))
+            try
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+                using (FileStream stream = new FileStream(configPath + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append))
                 {
-                    writer.WriteLine($"{DateTime.Now} | {info}");
+                    using (StreamWriter writer = new StreamWriter(stream))
+                    {
+                        writer.WriteLine($"{DateTime.Now} | {info}");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Catalog.HandleException(ex, "CapService");
             }
         }
 

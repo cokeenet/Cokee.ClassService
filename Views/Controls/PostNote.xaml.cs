@@ -8,8 +8,12 @@ using System.Windows.Ink;
 
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
+
+using iNKORE.UI.WPF.Modern;
 using iNKORE.UI.WPF.Modern.Controls;
+
 using Newtonsoft.Json;
+
 using MessageBox = System.Windows.MessageBox;
 
 namespace Cokee.ClassService.Views.Controls
@@ -27,7 +31,7 @@ namespace Cokee.ClassService.Views.Controls
         public PostNote()
         {
             InitializeComponent();
-            if (!DesignerAttribute.getis) IsVisibleChanged += async (a, c) =>
+            if (!DesignerProperties.GetIsInDesignMode(this)) IsVisibleChanged += async (a, c) =>
             {
                 var b = await StudentExtensions.Load();
                 List<Student> students = new List<Student>(b.Students);
@@ -40,8 +44,8 @@ namespace Cokee.ClassService.Views.Controls
                 IsEraser = false;
                 ink.Strokes.Clear();
                 atu.Text = null;
-                pen.Style = Primary;
-                era.Appearance = ControlAppearance.Secondary;
+                pen.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
+                era.Style = (Style)this.FindResource(ThemeKeys.DefaultButtonStyleKey);
             };
         }
 
@@ -52,8 +56,8 @@ namespace Cokee.ClassService.Views.Controls
                 IsEraser = false;
                 ink.EditingMode = InkCanvasEditingMode.Ink;
                 Button btn = sender as Button;
-                btn.Appearance = ControlAppearance.Primary;
-                era.Appearance = ControlAppearance.Secondary;
+                btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
+                era.Style = (Style)this.FindResource(ThemeKeys.DefaultButtonStyleKey);
             }
         }
 
@@ -85,8 +89,8 @@ namespace Cokee.ClassService.Views.Controls
                 IsEraser = true;
                 ink.EditingMode = InkCanvasEditingMode.EraseByStroke;
                 Button btn = sender as Button;
-                btn.Appearance = ControlAppearance.Primary;
-                pen.Appearance = ControlAppearance.Secondary;
+                btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
+                pen.Style = null;
             }
         }
 
@@ -94,9 +98,8 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (!Directory.Exists(@$"{Catalog.INK_DIR}\backup"))
                 Directory.CreateDirectory(@$"{Catalog.INK_DIR}\backup");
-            AutoSuggestBox atu = sender as AutoSuggestBox;
-            atu.Text = atu.Text.Trim();
-            stud = atu.Text.Trim();
+            autoSuggestBox.Text = autoSuggestBox.Text.Trim();
+            stud = autoSuggestBox.Text.Trim();
             if (File.Exists(@$"{Catalog.INK_DIR}\{stud}.ink"))
             {
                 FileStream fs = new FileStream(@$"{Catalog.INK_DIR}\{stud}.ink", FileMode.Open);
@@ -105,7 +108,7 @@ namespace Cokee.ClassService.Views.Controls
                 if (MessageBox.Show("文件已存在。确认覆盖？\n会把你之前写的备份哦。", "FileExist", System.Windows.MessageBoxButton.OKCancel) !=
                     System.Windows.MessageBoxResult.OK)
                 {
-                    atu.Text = "";
+                    autoSuggestBox.Text = "";
                     stud = "";
                     ink.Strokes.Clear();
                 }

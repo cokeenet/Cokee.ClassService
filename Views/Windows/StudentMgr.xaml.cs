@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Windows;
 
-using Wpf.Ui.Controls;
-
 namespace Cokee.ClassService.Views.Windows
 {
     /// <summary>
     /// StudentMgr.xaml 的交互逻辑
     /// </summary>
 
-    public partial class StudentMgr : FluentWindow
+    public partial class StudentMgr : Window
     {
         public event EventHandler<bool>? RandomEvent;
 

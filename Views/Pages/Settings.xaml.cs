@@ -7,11 +7,8 @@ using AutoUpdaterDotNET;
 
 using Cokee.ClassService.Helper;
 
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 using Application = System.Windows.Forms.Application;
-using Button = Wpf.Ui.Controls.Button;
 
 namespace Cokee.ClassService.Views.Pages
 {

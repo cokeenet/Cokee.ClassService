@@ -15,7 +15,6 @@ using Newtonsoft.Json.Linq;
 
 using Serilog;
 using Serilog.Events;
-using Serilog.Sink.AppCenter;
 
 using System;
 using System.Collections.Generic;
@@ -92,7 +91,6 @@ namespace Cokee.ClassService
                 .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.AppCenterSink(null, LogEventLevel.Error)
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
             rancor.RandomResultControl = ranres;
@@ -121,7 +119,6 @@ namespace Cokee.ClassService
             {
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
-                richTextBox.IsDocumentEnabled = false;
                 DpiChanged += DisplaySettingsChanged;
                 SizeChanged += DisplaySettingsChanged;
                 secondTimer.Elapsed += SecondTimer_Elapsed;
@@ -1362,15 +1359,15 @@ namespace Cokee.ClassService
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-            // inkTool.backBtn.Visibility = result;
-            //inkTool.backBtn.IsEnabled = status;
+            inkTool.backBtn.Visibility = result;
+            inkTool.backBtn.IsEnabled = status;
         }
 
         private void TimeMachine_OnRedoStateChanged(bool status)
         {
             var result = status ? Visibility.Visible : Visibility.Collapsed;
-            // inkTool.redoBtn.Visibility = result;
-            // inkTool.redoBtn.IsEnabled = status;
+            inkTool.redoBtn.Visibility = result;
+            inkTool.redoBtn.IsEnabled = status;
         }
 
         private void QuickFix(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,10 +10,9 @@ using System.Windows.Threading;
 
 using Cokee.ClassService.Helper;
 
-using Wpf.Ui.Controls;
-using Wpf.Ui.Designer;
-
-using Button = Wpf.Ui.Controls.Button;
+using iNKORE.UI.WPF.Modern;
+using iNKORE.UI.WPF.Modern.Common.IconKeys;
+using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -27,7 +27,7 @@ namespace Cokee.ClassService.Views.Controls
         public InkToolBar()
         {
             InitializeComponent();
-            if (!DesignerHelper.IsInDesignMode)
+            if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 if (inkCanvas != null)
                 {
@@ -107,7 +107,7 @@ namespace Cokee.ClassService.Views.Controls
 
                     case "Pen":
                         if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        else if (penBtn.Appearance == ControlAppearance.Primary) penMenu.IsOpen = true;
+                        else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) penMenu.IsOpen = true;
                         inkCanvas.IsEnabled = true;
                         isEraser = false;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
@@ -187,9 +187,9 @@ namespace Cokee.ClassService.Views.Controls
             {
                 foreach (Button button in mainGrid.Children.OfType<Button>())
                 {
-                    button.Appearance = ControlAppearance.Secondary;
+                    button.Style = (Style)this.FindResource(ThemeKeys.DefaultButtonStyleKey);
                 }
-                if (btn != null) btn.Appearance = ControlAppearance.Primary;
+                if (btn != null) btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
             }, DispatcherPriority.Normal);
         }
 
@@ -206,17 +206,17 @@ namespace Cokee.ClassService.Views.Controls
                     if (item is Button)
                     {
                         Button a = (Button)item;
-                        a.Icon = new SymbolIcon(SymbolRegular.Empty);
+                        a.Content = null;
                     }
                 }
-                button.Icon = new SymbolIcon(SymbolRegular.CheckmarkCircle48);
+                button.Content = FluentSystemIcons.CheckmarkCircle_48_Regular;
             }
         }
 
         private void OnToggleSwitch(object sender, RoutedEventArgs e)
         {
             ToggleSwitch toggle = sender as ToggleSwitch;
-            bool En = (bool)toggle.IsChecked;
+            bool En = (bool)toggle.IsEnabled;
             if (toggle != null)
             {
                 switch (toggle.Tag.ToString())

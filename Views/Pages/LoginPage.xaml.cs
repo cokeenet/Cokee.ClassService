@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Windows;
 using System;
 
-using Wpf.Ui.Controls;
+
 using System.Windows.Controls;
 
 namespace Cokee.ClassService.Views.Pages
