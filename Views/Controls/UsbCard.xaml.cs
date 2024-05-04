@@ -76,7 +76,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             DoubleAnimation anim2 = new DoubleAnimation(0, 368, TimeSpan.FromSeconds(1));
             DoubleAnimation anim1 = new DoubleAnimation(368, 0, TimeSpan.FromSeconds(1));
-            anim2.Completed += (a, b) => Catalog.ToggleControlVisible(this);
+            anim2.Completed += (a, b) => Visibility = Visibility.Collapsed;
             anim2.EasingFunction = Catalog.easingFunction;
             if (!isUnplug)
             {
@@ -87,14 +87,14 @@ namespace Cokee.ClassService.Views.Controls
                 try
                 {
                     diskName.Text = $"{t.VolumeLabel}({t.Name})";
+                    diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
+                    if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
                 }
                 catch
                 {
                     diskName.Text = "U盘(未知盘符)";
                 }
-                diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
 
-                if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
                 await Task.Delay(15000);
                 ShowUsbCard(true);
             }

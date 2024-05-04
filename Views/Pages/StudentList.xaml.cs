@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,7 +30,7 @@ namespace Cokee.ClassService.Views.Pages
             try
             {
                 InitializeComponent();
-                this.Loaded += async (c, b) =>
+                if (!DesignerProperties.GetIsInDesignMode(this)) this.Loaded += async (c, b) =>
                 {
                     Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
                         StudentList_RandomEvent;

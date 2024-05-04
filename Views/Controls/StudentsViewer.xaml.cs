@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Cokee.ClassService.Shared;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -40,9 +42,21 @@ namespace Cokee.ClassService.Views.Controls
             set { SetValue(ColumnsProperty, value); }
         }
 
+        public EventHandler<Student>? StudentClick, StudentRightClick;
+
         public StudentsViewer()
         {
             InitializeComponent();
+        }
+
+        private void Card_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            StudentClick?.Invoke(sender, (Student)((Border)sender).Tag);
+        }
+
+        private void Card_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            StudentRightClick?.Invoke(sender, (Student)((Border)sender).Tag);
         }
     }
 }

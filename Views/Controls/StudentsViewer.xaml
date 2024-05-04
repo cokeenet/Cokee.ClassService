@@ -28,7 +28,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="5" Style="{StaticResource CardBorderStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" Width="100" Height="130">
+                        <Border Margin="5" Style="{StaticResource CardBorderStyle}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Padding="0"
+                                MouseDown="Card_MouseDown"
+                                MouseRightButtonDown="Card_MouseRightButtonDown"
+                                Tag="{Binding}"
+                                Width="100" Height="130">
                             <Grid Margin="10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

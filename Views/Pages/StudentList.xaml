@@ -12,58 +12,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Page.Resources>
-        <local:VisibilityConverter x:Key="VisibilityConverter" />
-        <local:LevelConverter x:Key="LevelConverter" />
-        <local:HeadPicUrlConverter x:Key="HeadPicUrlConverter"/>
-    </Page.Resources>
     <Grid>
-        <Controls:ScrollViewerEx Margin="0,0,0,50">
-            <ItemsControl d:ItemsSource="{d:SampleData ItemCount=56}" x:Name="Students">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="7" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border
-                            Margin="10"
-                            MouseDown="Card_MouseDown"
-                            MouseRightButtonDown="Card_MouseRightButtonDown"
-                            Tag="{Binding}"
-                            VerticalAlignment="Stretch">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <ui:PersonPicture
-                                    Height="50"
-                                    ProfilePicture="{Binding HeadPicUrl, Converter={StaticResource HeadPicUrlConverter}}"
-                                    Width="50">
-                                </ui:PersonPicture>
-                                <TextBlock
-                                    FontSize="14"
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Center"
-                                    Margin="5"
-                                    Text="{Binding Name}" />
-                                <TextBlock
-                                    Background="{Binding Role, Converter={StaticResource LevelConverter}}"
-                                    FontSize="11"
-                                    Foreground="Black"
-                                    Grid.Row="2"
-                                    HorizontalAlignment="Center"
-                                    Text="{Binding RoleStr}"
-                                    Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Controls:ScrollViewerEx>
+        <Controls:StudentsViewer x:Name="Students" Margin="0,0,0,50" Columns="7" />
+
         <StatusBar
             Grid.Column="1"
             VerticalAlignment="Bottom">
@@ -75,19 +26,16 @@
             </StatusBarItem>
         </StatusBar>
         <Controls:RandomControl
-            Background="{ui:AcrylicBrush}"
             Height="300"
             Visibility="Collapsed"
             Width="400"
             x:Name="randomcontrol" />
         <Controls:RandomResult
-            Background="{ui:AcrylicBrush}"
             Height="400"
             Visibility="Collapsed"
             Width="500"
             x:Name="randomres" />
         <Controls:NewStudent
-            Background="{ui:AcrylicBrush}"
             Height="400"
             Visibility="Collapsed"
             Width="500" />
