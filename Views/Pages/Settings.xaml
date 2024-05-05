@@ -1,12 +1,13 @@
 ﻿<Page x:Name="SettingsPage"
     FontFamily="Lato"
     Title="Settings"
-    d:DesignHeight="620"
+    d:DesignHeight="900"
     d:DesignWidth="511"
     mc:Ignorable="d"
     x:Class="Cokee.ClassService.Views.Pages.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:pages="clr-namespace:Cokee.ClassService.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Cokee.ClassService.Helper"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,21 +26,21 @@
                     Icon="{x:Static ui:FluentSystemIcons.Image_32_Regular}"
                     Margin="5"
                     Title="悬浮球使用随机用户头像">
-                    <ui:ToggleSwitch IsEnabled="{Binding UseMemberAvatar,ElementName=SettingsPage,Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding UseMemberAvatar,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}},Mode=TwoWay}" />
                 </Controls:CardControl>
                 <Controls:CardControl
                     Description="自动备份桌面文件"
                     Icon="{x:Static ui:FluentSystemIcons.Folder_48_Regular}"
                     Margin="5"
                     Title="桌面文件监测器">
-                    <ui:ToggleSwitch IsEnabled="{Binding FileWatcherEnable,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding FileWatcherEnable,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
                 <Controls:CardControl
                     Description="可以只备份特定文件。e.g. *.* 或 *.pdf"
                     Icon="{x:Static ui:FluentSystemIcons.TextAddSpaceAfter_20_Regular}"
                     Margin="5"
                     Title="文件监测筛选器">
-                    <TextBox MinWidth="200" Text="{Binding FileWatcherFilter,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <TextBox MinWidth="200" Text="{Binding FileWatcherFilter,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
                 <TextBlock
                     FontSize="16"
@@ -50,21 +51,21 @@
                     Icon="{x:Static ui:FluentSystemIcons.People_28_Regular}"
                     Margin="5"
                     Title="多点触控">
-                    <ui:ToggleSwitch IsEnabled="{Binding MultiTouchEnable,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding MultiTouchEnable,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
                 <Controls:CardControl
                     Description="EraseByPoint"
                     Icon="{x:Static ui:FluentSystemIcons.Eraser_24_Regular}"
                     Margin="5"
                     Title="高级橡皮擦">
-                    <ui:ToggleSwitch IsEnabled="{Binding EraseByShapeEnable,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding EraseByShapeEnable,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
                 <Controls:CardControl
                     Description="禁用则使用旧的Popup弹出窗"
                     Icon="{x:Static ui:FluentSystemIcons.PlayingCards_20_Regular}"
                     Margin="5"
                     Title="侧边卡片样式">
-                    <ui:ToggleSwitch IsEnabled="{Binding SideCardEnable,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding SideCardEnable,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
                 <TextBlock
                     FontSize="16"
@@ -106,7 +107,7 @@
                     Icon="{x:Static ui:FluentSystemIcons.Tab_16_Regular}"
                     Margin="5"
                     Title="CokeeAgent">
-                    <ui:ToggleSwitch IsEnabled="{Binding AgentEnable,ElementName=SettingsPage, Mode=TwoWay}" />
+                    <ui:ToggleSwitch IsEnabled="{Binding AgentEnable, RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
                 </Controls:CardControl>
             </StackPanel>
         </Controls:ScrollViewerEx>
