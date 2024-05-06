@@ -26,7 +26,7 @@ namespace Cokee.ClassService.Views.Controls
         public StudentInfo()
         {
             InitializeComponent();
-            if (!DesignerProperties.GetIsInDesignMode(this)) return;
+            if (DesignerProperties.GetIsInDesignMode(this)) return;
             this.Loaded += (a, b) =>
             {
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += AddStuEvent;
