@@ -40,7 +40,7 @@
                     Icon="{x:Static ui:FluentSystemIcons.TextAddSpaceAfter_20_Regular}"
                     Margin="5"
                     Title="文件监测筛选器">
-                    <TextBox MinWidth="200" Text="{Binding FileWatcherFilter,RelativeSource={RelativeSource AncestorType={x:Type pages:Settings}}, Mode=TwoWay}" />
+                    <TextBox MinWidth="200" Text="{Binding DataContext.FileWatcherFilter, Mode=TwoWay}" VerticalAlignment="Center" />
                 </Controls:CardControl>
                 <TextBlock
                     FontSize="16"

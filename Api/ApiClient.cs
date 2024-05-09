@@ -23,7 +23,7 @@ namespace Cokee.ClassService.Helper
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("http://api.cokee.tech:15043/api/"); // API基地址
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3NDA1Mzk3OTgsImlzcyI6IkNva2VlIiwiYXVkIjoiQ29rZWVDbGFzc1NlcnZpY2UifQ.3Fda7QoBHWmfnPSN8kBnP4Va34TTub4E6eRaCVQUvCo");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Catalog.settings.LoginState);
         }
 
         /*public async Task<LoginResult> LoginAsync(string userName, string password)

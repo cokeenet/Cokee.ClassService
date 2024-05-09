@@ -3,10 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-using AutoUpdaterDotNET;
-
 using Cokee.ClassService.Helper;
-
 
 using Application = System.Windows.Forms.Application;
 

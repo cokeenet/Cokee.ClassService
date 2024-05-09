@@ -30,22 +30,27 @@ namespace Cokee.ClassService.Views.Pages
             try
             {
                 InitializeComponent();
-                if (!DesignerProperties.GetIsInDesignMode(this)) this.Loaded += async (c, b) =>
+                if (!DesignerProperties.GetIsInDesignMode(this))
                 {
-                    Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
-                        StudentList_RandomEvent;
-                    randomcontrol.RandomResultControl = randomres;
-                    studentInfo.EditStudent += StudentInfo_EditStudent;
-                    var a = await StudentExtensions.Load();
-                    students = new ObservableCollection<Student>(a.Students);
-                    if (students != null)
+                    this.Loaded += async (c, b) =>
                     {
-                        Students.ItemsSource = students;
-                        className.Text = $"{a.SchoolName} {a.Name} ID {a.ID}";
-                        stuCount.Text = $"共 {students.Count} 名学生";
-                    }
-                };
-                this.Unloaded += (a, b) => SaveData();
+                        Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
+                            StudentList_RandomEvent;
+                        randomcontrol.RandomResultControl = randomres;
+                        Students.StudentClick += Card_MouseDown;
+                        Students.StudentRightClick += Card_MouseRightButtonDown;
+                        studentInfo.EditStudent += StudentInfo_EditStudent;
+                        var a = await StudentExtensions.Load();
+                        students = new ObservableCollection<Student>(a.Students);
+                        if (students != null)
+                        {
+                            Students.ItemsSource = students;
+                            className.Text = $"{a.SchoolName} {a.Name} ID {a.ID}";
+                            stuCount.Text = $"共 {students.Count} 名学生";
+                        }
+                    };
+                    this.Unloaded += (a, b) => SaveData();
+                }
             }
             catch (Exception ex)
             {
@@ -63,14 +68,10 @@ namespace Cokee.ClassService.Views.Pages
             Catalog.ShowInfo("数据已保存.");
         }
 
-        private void Card_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Card_MouseDown(object? sender, Student e)
         {
-            Border card = sender as Border;
-            if (card.Tag is Student && e.ChangedButton != MouseButton.Right)
-            {
-                Catalog.ToggleControlVisible(studentInfo);
-                studentInfo.DataContext = card.Tag;
-            }
+            Catalog.ToggleControlVisible(studentInfo);
+            studentInfo.DataContext = e;
         }
 
         private void StudentInfo_EditStudent(object? sender, Student e)
@@ -81,17 +82,16 @@ namespace Cokee.ClassService.Views.Pages
             SaveData();
         }
 
-        private void Card_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void Card_MouseRightButtonDown(object? sender, Student e)
         {
             RightClickCount++;
             if (RightClickCount >= 10)
             {
                 RightClickCount = 0;
-                Student stu = (sender as Border).Tag as Student;
                 if (MessageBox.Show("确定删除？", "确定删除？\n删除记录将保存.", MessageBoxButton.YesNoCancel) == System.Windows.MessageBoxResult.Yes)
                 {
-                    Log.Warning($"Tried to DELETE Student {stu.Name} ID {stu.ID}");
-                    students.Remove(stu);
+                    Log.Warning($"Tried to DELETE Student {e.Name} ID {e.ID}");
+                    students.Remove(e);
                     SaveData();
                 }
             }

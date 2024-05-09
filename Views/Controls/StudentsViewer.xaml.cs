@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 using Cokee.ClassService.Shared;
 
@@ -51,7 +41,11 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Card_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            StudentClick?.Invoke(sender, (Student)((Border)sender).Tag);
+            Border card = sender as Border;
+            if (card.Tag is Student && e.ChangedButton != MouseButton.Right)
+            {
+                StudentClick?.Invoke(sender, (Student)((Border)sender).Tag);
+            }
         }
 
         private void Card_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

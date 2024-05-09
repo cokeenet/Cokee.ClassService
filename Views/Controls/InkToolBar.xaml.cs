@@ -106,8 +106,8 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Pen":
-                        if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) penMenu.IsOpen = true;
+                        // if (penMenu.IsOpen) penMenu.IsOpen = false;
+                        //else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) penMenu.IsOpen = true;
                         inkCanvas.IsEnabled = true;
                         isEraser = false;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;

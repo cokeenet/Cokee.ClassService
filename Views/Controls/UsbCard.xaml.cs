@@ -78,11 +78,11 @@ namespace Cokee.ClassService.Views.Controls
             DoubleAnimation anim1 = new DoubleAnimation(368, 0, TimeSpan.FromSeconds(1));
             anim2.Completed += (a, b) => Visibility = Visibility.Collapsed;
             anim2.EasingFunction = Catalog.easingFunction;
+            anim2.EasingFunction = Catalog.easingFunction;
             if (!isUnplug)
             {
                 Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim1);
-
                 disk = t.Name;
                 try
                 {
@@ -100,6 +100,7 @@ namespace Cokee.ClassService.Views.Controls
             }
             else if (isUnplug)
             {
+                Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
                 await Task.Delay(1000);
                 Visibility = Visibility.Collapsed;

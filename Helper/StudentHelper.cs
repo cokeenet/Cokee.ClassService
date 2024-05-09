@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;
 
@@ -46,23 +47,23 @@ namespace Cokee.ClassService.Helper
             {
                 case 0:
                     return Colors.Transparent;
-                    // return ControlAppearance.Transparent;
+                // return ControlAppearance.Transparent;
 
                 case 1:
                     return Colors.CornflowerBlue;
-                    //return ControlAppearance.Info;
+                //return ControlAppearance.Info;
 
                 case 2:
                     return Colors.ForestGreen;
-                    //return ControlAppearance.Success;
+                //return ControlAppearance.Success;
 
                 case 3:
                     return Colors.DarkRed;
-                    //return ControlAppearance.Danger;
+                //return ControlAppearance.Danger;
 
-                default: 
+                default:
                     return Colors.Transparent;
-                //return ControlAppearance.Info;
+                    //return ControlAppearance.Info;
             }
         }
 
@@ -116,7 +117,6 @@ namespace Cokee.ClassService.Helper
 
     public class RandomEventArgs
     {
-        public static List<Student> RandomHistory = new List<Student>();
         public int Count = 1;
         public bool AllowMLang = true, AllowExist;
         public SexCombo SexLimit = SexCombo.None;
@@ -139,6 +139,8 @@ namespace Cokee.ClassService.Helper
 
     public static class StudentExtensions
     {
+        public static List<Student> RandomHistory = new List<Student>();
+
         public static Class CreateSimpleClass(List<Student>? stu = null)
         {
             return new Class()
@@ -226,13 +228,13 @@ namespace Cokee.ClassService.Helper
                 if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
 
                 var a = students[new Random().Next(students.Count)];
-                if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || RandomEventArgs.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
+                if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || StudentExtensions.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
                 if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
                 if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
                 if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
                 randoms.Add(a);
                 i++;
-                }
+            }
 
             #region easter
 
@@ -246,8 +248,8 @@ namespace Cokee.ClassService.Helper
             #endregion easter
 
             //randoms = Catalog.RandomizeList(randoms);
-            RandomEventArgs.RandomHistory = RandomEventArgs.RandomHistory.Union(randoms).ToList();
-            if (RandomEventArgs.RandomHistory.Count >= students.Count) RandomEventArgs.RandomHistory.Clear();
+            StudentExtensions.RandomHistory = StudentExtensions.RandomHistory.Union(randoms).ToList();
+            if (StudentExtensions.RandomHistory.Count >= students.Count) StudentExtensions.RandomHistory.Clear();
 
             return randoms;
         }

@@ -22,7 +22,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             IsVisibleChanged += (a, b) =>
             {
-                cf.Content = $"不重复(已抽{RandomEventArgs.RandomHistory.Count}个)";
+                cf.Content = $"不重复(已抽{StudentExtensions.RandomHistory.Count}个)";
                 title.FontSize = 18;
                 title.FontWeight = FontWeights.Normal;
                 randomArgs.Easter = Easter.None;
@@ -123,7 +123,7 @@ namespace Cokee.ClassService.Views.Controls
 
         private void Cf_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            RandomEventArgs.RandomHistory.Clear();
+            StudentExtensions.RandomHistory.Clear();
             cf.Content = "不重复(已抽0个)";
             Catalog.ShowInfo("清除成功");
         }

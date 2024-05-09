@@ -1,5 +1,6 @@
 ﻿using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Windows;
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Cokee.ClassService.Views.Pages
         private Schedule schedule = Schedule.LoadFromJson();
         private ObservableCollection<Lesson> dayCourses = new ObservableCollection<Lesson>();
         private int lastIndex = 0;
+
         public CoursesManage()
         {
             InitializeComponent();
@@ -20,7 +22,6 @@ namespace Cokee.ClassService.Views.Pages
             {
                 dayCourses = new ObservableCollection<Lesson>(schedule.Monday);
                 courseControl.DataContext = dayCourses;
-                
             };
         }
 
@@ -37,23 +38,29 @@ namespace Cokee.ClassService.Views.Pages
             switch (comboBox.SelectedIndex)
             {
                 case 0:
-                    courseControl.DataContext = new ObservableCollection<Lesson>(schedule.Monday);
+                    dayCourses = new ObservableCollection<Lesson>(schedule.Monday);
                     break;
+
                 case 1:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Tuesday);
                     break;
+
                 case 2:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Wendesday);
                     break;
+
                 case 3:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Thursday);
                     break;
+
                 case 4:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Friday);
                     break;
+
                 case 5:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Saturday);
                     break;
+
                 case 6:
                     dayCourses = new ObservableCollection<Lesson>(schedule.Sunday);
                     break;
@@ -61,7 +68,7 @@ namespace Cokee.ClassService.Views.Pages
                 default:
                     break;
             }
-            lastIndex= comboBox.SelectedIndex;
+            lastIndex = comboBox.SelectedIndex;
 
             if (courseControl != null && dayCourses != null) courseControl.ItemsSource = dayCourses;
         }
@@ -123,7 +130,6 @@ namespace Cokee.ClassService.Views.Pages
 
         private void comboBox_Selected(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

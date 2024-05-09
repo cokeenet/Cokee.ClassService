@@ -13,18 +13,23 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
-        <Controls:StudentsViewer x:Name="Students" Margin="0,0,0,50" Columns="7" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Controls:StudentsViewer x:Name="Students" Columns="7"
+                d:ItemsSource="{d:SampleData ItemCount=61}" />
 
-        <StatusBar
-            Grid.Column="1"
-            VerticalAlignment="Bottom">
-            <StatusBarItem>
-                <TextBlock d:Text="高一一班" x:Name="className" />
-            </StatusBarItem>
-            <StatusBarItem>
-                <TextBlock d:Text="共 56 名学生" x:Name="stuCount" />
-            </StatusBarItem>
-        </StatusBar>
+            <StatusBar Grid.Row="1" Margin="5">
+                <StatusBarItem>
+                    <TextBlock d:Text="高一一班" x:Name="className" />
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock d:Text="共 56 名学生" x:Name="stuCount" HorizontalAlignment="Left" />
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
         <Controls:RandomControl
             Height="300"
             Visibility="Collapsed"
@@ -37,6 +42,7 @@
             x:Name="randomres" />
         <Controls:NewStudent
             Height="400"
+            Background="{ui:ThemeResource SystemColorButtonFaceColor}"
             Visibility="Collapsed"
             Width="500" />
         <Controls:StudentInfo

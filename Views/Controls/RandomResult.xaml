@@ -15,9 +15,10 @@
         <helper:LevelConverter x:Key="LevelConverter" />
         <helper:HeadPicUrlConverter x:Key="HeadPicUrlConverter" />
     </UserControl.Resources>
-    <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
+    <Border VerticalAlignment="Stretch" Style="{StaticResource ThemeBackground}">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -29,13 +30,21 @@
                 Text="抽取结果"
                 VerticalAlignment="Center"
                 x:Name="title" />
-            <local:ScrollViewerEx Grid.Row="1" Margin="5">
+            <TextBlock
+                FontSize="14"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="5"
+                Text="{Binding ItemsSource.Length, StringFormat=共 \{0\} 人}"
+                VerticalAlignment="Top"
+                d:Text="共 111 人" />
+            <local:ScrollViewerEx Grid.Row="2" Margin="5">
                 <local:StudentsViewer ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}" Columns="4" />
             </local:ScrollViewerEx>
             <Button
                 Click="Confirm"
-                Grid.Row="2" Margin="15"
-                Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch">
+                Grid.Row="3" Margin="15"
+                Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                 <ui:IconAndText Content="确认" Icon="{x:Static ui:FluentSystemIcons.Checkmark_48_Regular}" />
             </Button>
         </Grid>

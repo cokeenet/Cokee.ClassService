@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
-using AutoUpdaterDotNET;
+//using AutoUpdaterDotNET;
 
 using Cokee.ClassService.Shared;
 
@@ -32,7 +32,7 @@ namespace Cokee.ClassService.Helper
         public static string SETTINGS_FILE = @$"{CONFIG_DIR}\config.json";
         public static int WindowType;
         public static bool IsScrSave = false;
-        public static IEasingFunction easingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut };
+        public static IEasingFunction easingFunction = new BackEase { EasingMode = EasingMode.EaseInOut };
         public static AppSettings settings = AppSettingsExtensions.LoadSettings();
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static User? user = null;
@@ -49,7 +49,7 @@ namespace Cokee.ClassService.Helper
                 if (MainWindow == null) return;
                 MainWindow.infobar.IsOpen = true;
                 MainWindow.infobar.Title = $"{str}发生错误";
-                MainWindow.infobar.Content = shortExpInfo;
+                MainWindow.infobar.Message = shortExpInfo;
                 MainWindow.infobar.Severity = InfoBarSeverity.Error;
                 await Task.Delay(5000);
                 MainWindow.infobar.IsOpen = false;
@@ -86,11 +86,11 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                AutoUpdater.ShowSkipButton = false;
+                /*AutoUpdater.ShowSkipButton = false;
                 AutoUpdater.ShowRemindLaterButton = true;
                 AutoUpdater.RemindLaterAt = 5;
                 AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
-                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");*/
             }
             catch
             {
@@ -109,18 +109,16 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static async void ShowInfo(string? title = "", string? content = "", InfoBarSeverity severity = InfoBarSeverity.Informational)
+        public static async void ShowInfo(string? title = "", string content = null, InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                title ??= "";
-                content ??= "";
                 Log.Information($"Snack消息:{title} {content}");
                 if (MainWindow == null) return;
-                MainWindow.infobar.IsOpen = true;
                 MainWindow.infobar.Title = title;
-                MainWindow.infobar.Content = content;
+                MainWindow.infobar.Message = content;
                 MainWindow.infobar.Severity = severity;
+                MainWindow.infobar.IsOpen = true;
                 await Task.Delay(5000);
                 MainWindow.infobar.IsOpen = false;
             }, DispatcherPriority.Background);
@@ -169,16 +167,16 @@ namespace Cokee.ClassService.Helper
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.progress.Value = progress;
-                MainWindow.nameBlock.Text = $"{taskname}:{progress}%";
+                MainWindow.tipsText.Text = $"{taskname}:{progress}%";
                 if (!isvisible || progress == 100)
                 {
-                    MainWindow.progress.Visibility = Visibility.Collapsed;
-                    MainWindow.nameBlock.Visibility = Visibility.Collapsed;
+                    MainWindow.progress.IsActive = false;
+                    MainWindow.tipsBorder.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
-                    MainWindow.progress.Visibility = Visibility.Visible;
-                    MainWindow.nameBlock.Visibility = Visibility.Visible;
+                    MainWindow.progress.IsActive = true;
+                    MainWindow.tipsBorder.Visibility = Visibility.Visible;
                 }
             }, DispatcherPriority.Background);
         }

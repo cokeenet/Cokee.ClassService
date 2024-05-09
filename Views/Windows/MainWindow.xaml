@@ -34,7 +34,6 @@
 
         <Grid x:Name="inkGrid">
             <InkCanvas
-                EditingMode="Ink"
                 Focusable="False"
                 IsEnabled="False"
                 x:Name="inkcanvas">
@@ -62,9 +61,8 @@
                 Visibility="Collapsed"
                 d:Visibility="Visible"
                 x:Name="pptControls">
-                <Border
-                Background="#4C484848"
-                    Focusable="False"
+                <Border ui:ThemeManager.RequestedTheme="Dark"
+                    Focusable="False" Style="{StaticResource CardBorderStyle}" Padding="0"
                     HorizontalAlignment="Left">
                     <Grid Focusable="False" Margin="5">
                         <Grid.RowDefinitions>
@@ -84,7 +82,7 @@
                         <TextBlock
                             Focusable="False"
                             FontSize="17"
-                            Grid.Row="1"
+                            Grid.Row="1" Foreground="White"
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
@@ -102,9 +100,8 @@
                         </Button>
                     </Grid>
                 </Border>
-                <Border
-                Background="#4C484848"
-                    Focusable="False"
+                <Border ui:ThemeManager.RequestedTheme="Dark"
+                    Focusable="False" Style="{StaticResource CardBorderStyle}" Padding="0"
                     HorizontalAlignment="Right">
                     <Grid Focusable="False" Margin="5">
                         <Grid.RowDefinitions>
@@ -122,7 +119,7 @@
                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.ArrowUp_48_Regular}" />
                         </Button>
                         <TextBlock
-                            Focusable="False"
+                            Focusable="False" Foreground="White"
                             FontSize="16"
                             Grid.Row="1"
                             HorizontalAlignment="Stretch"
@@ -194,7 +191,7 @@
                                 Click="ShowRandom"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch">
-                                <ui:IconAndText Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_24_Regular}" />
+                                <ui:IconAndText Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_20_Regular}" />
                             </Button>
                             <Button
                                 Click="StuMgr"
@@ -329,7 +326,6 @@
             Visibility="Collapsed"
             x:Name="postNote" />
         <Controls:RandomControl
-            Background="{ui:AcrylicBrush}"
             Height="300"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -378,7 +374,7 @@
                     <TranslateTransform X="-10" Y="-100" x:Name="transT" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <Border
+            <Border x:Name="tipsBorder"
                 Background="AntiqueWhite"
                 CornerRadius="5"
                 HorizontalAlignment="Center"
@@ -389,7 +385,7 @@
                     FontSize="11"
                     Margin="5"
                     d:Text="0000"
-                    x:Name="nameBlock" />
+                    x:Name="tipsText" />
             </Border>
 
             <ui:PersonPicture
@@ -411,10 +407,11 @@
             <ui:ProgressRing
                 Grid.Row="1"
                 Height="80"
-                Value="0"
-                Visibility="Collapsed"
                 Width="80"
-                x:Name="progress" />
+                x:Name="progress"
+                IsIndeterminate="False"
+                StrokeThickness="2"
+                IsActive="False" />
 
             <Grid
                 Grid.Row="1"
@@ -435,9 +432,7 @@
                     Width="15"
                     x:Name="icon" />
             </Grid>
-            <Border
-                Background="AntiqueWhite"
-                CornerRadius="5"
+            <Border Style="{StaticResource CardBorderStyle}" Padding="0"
                 Grid.Row="2"
                 Margin="3">
                 <TextBlock
@@ -449,18 +444,26 @@
                     x:Name="time" />
             </Border>
         </Grid>
-        <ui:ScrollViewerEx
+        <Border
+            ui:ThemeManager.RequestedTheme="Dark"
+            Style="{StaticResource ThemeBackground}"
             Height="300"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Visibility="Collapsed"
-            Width="500"
+            Width="500" Margin="5" Padding="5"
             x:Name="logview">
-            <StackPanel Background="{ui:AcrylicBrush}">
-                <TextBlock Margin="5" Text="Debug Log Output" />
-                <RichTextBox Margin="5" x:Name="richTextBox" />
-            </StackPanel>
-        </ui:ScrollViewerEx>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
+                <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
+                    <RichTextBox x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
+                </Controls:ScrollViewerEx>
+            </Grid>
+        </Border>
         <Controls:UsbCard
             HorizontalAlignment="Right"
             Margin="0,0,10,200"
@@ -468,10 +471,8 @@
             d:IsHidden="True"
             d:Visibility="Visible"
             x:Name="usbCard" />
-        <ui:InfoBar
-            HorizontalAlignment="Center"
-            MaxHeight="300" IsOpen="True"
+        <ui:InfoBar Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
             VerticalAlignment="Bottom"
-            x:Name="infobar" Margin="0,0,0,100" />
+            x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" HorizontalAlignment="Center" MaxWidth="400" MaxHeight="400" />
     </Grid>
 </Window>

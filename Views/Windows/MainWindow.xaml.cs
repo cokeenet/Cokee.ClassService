@@ -1,6 +1,4 @@
-﻿using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Helper;
+﻿using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
 
@@ -130,7 +128,6 @@ namespace Cokee.ClassService
                 CheckOfficeTask = new Task(CheckOffice);
                 if (!Catalog.IsScrSave)
                 {
-                    AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                     hwndSource.AddHook(usbCard.WndProc);
                     if (Catalog.settings.AgentEnable) IntiAgent();
@@ -139,8 +136,8 @@ namespace Cokee.ClassService
                 }
                 else
                 {
-                    nameBlock.Visibility = Visibility.Visible;
-                    nameBlock.Text = "屏保模式";
+                    tipsText.Visibility = Visibility.Visible;
+                    tipsText.Text = "屏保模式";
                 }
 
                 if (Catalog.settings.MultiTouchEnable)
@@ -559,7 +556,7 @@ namespace Cokee.ClassService
                 }
 
                 var savePath =
-                    $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now:yyyy-MM-dd}\{DateTime.Now:HH-mm-ss)}.png";
+                    $@"{Catalog.SCRSHOT_DIR}\{DateTime.Now:yyyy-MM-dd}\{DateTime.Now:HH-mm-ss}.png";
                 if (!Directory.Exists(Path.GetDirectoryName(savePath)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(savePath));

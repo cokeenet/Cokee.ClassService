@@ -19,7 +19,7 @@
         <local:ScrollViewerEx d:Height="420">
             <ItemsControl
                 ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}"
-                d:ItemsSource="{d:SampleData ItemCount=1}"
+                d:ItemsSource="{d:SampleData ItemCount=61}"
                 x:Name="Students" Margin="5">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
