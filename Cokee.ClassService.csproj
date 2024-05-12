@@ -106,6 +106,7 @@
 		<PackageReference Include="AForge.Imaging" Version="2.2.5" />
 		<PackageReference Include="AForge.Video" Version="2.2.5" />
 		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
+		<PackageReference Include="Autoupdater.NET.Official" Version="1.8.6" />
 		<PackageReference Include="Bugsnag" Version="3.1.0" />
 		<PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
 		  <PrivateAssets>all</PrivateAssets>

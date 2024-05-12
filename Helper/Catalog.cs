@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
+using AutoUpdaterDotNET;
+
 //using AutoUpdaterDotNET;
 
 using Cokee.ClassService.Shared;
@@ -82,11 +84,11 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                /*AutoUpdater.ShowSkipButton = false;
+                AutoUpdater.ShowSkipButton = false;
                 AutoUpdater.ShowRemindLaterButton = true;
-                AutoUpdater.RemindLaterAt = 5;
+                AutoUpdater.RemindLaterAt = 15;
                 AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
-                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");*/
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
             }
             catch
             {
