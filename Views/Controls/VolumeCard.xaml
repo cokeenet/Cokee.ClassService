@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border x:Name="audioCard" Style="{StaticResource CardBorderStyle}">
+    <Border x:Name="audioCard" Background="{ui:AcrylicBrush}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8">
         <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -20,14 +20,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Speaker2_24_Regular}" Margin="5" />
+            <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Speaker2_24_Regular}" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <ComboBox
                 Grid.Column="1"
                 Margin="5"
                 MaxWidth="220"
                 SelectionChanged="spk_SelectionChanged"
-                Text="扬声器"
-                VerticalAlignment="Stretch"
+                VerticalAlignment="Center"
                 x:Name="spk">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -40,7 +39,7 @@
                 Margin="5"
                 MaxWidth="40"
                 Text="--%"
-                x:Name="vol" />
+                x:Name="vol" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <Slider
                 Grid.Column="1"
                 Grid.Row="1"
@@ -48,7 +47,7 @@
                 Maximum="100"
                 MinWidth="200"
                 ValueChanged="SliderChanged"
-                x:Name="slider" />
+                x:Name="slider" VerticalAlignment="Center" />
             <Button
                 Click="Button_Click"
                 Grid.Column="1"

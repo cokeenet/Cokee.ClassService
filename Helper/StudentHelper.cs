@@ -1,4 +1,6 @@
-﻿using Cokee.ClassService.Shared;
+﻿using Bugsnag.Payload;
+
+using Cokee.ClassService.Shared;
 
 using System;
 using System.Collections.Generic;
@@ -120,20 +122,18 @@ namespace Cokee.ClassService.Helper
         public int Count = 1;
         public bool AllowMLang = true, AllowExist;
         public SexCombo SexLimit = SexCombo.None;
-        public Easter Easter = Easter.None;
 
-        public RandomEventArgs(int num = 1, bool allowMLang = true, bool allowExist = false, SexCombo sexLimit = SexCombo.None, Easter easter = Easter.None)
+        public RandomEventArgs(int num = 1, bool allowMLang = true, bool allowExist = false, SexCombo sexLimit = SexCombo.None)
         {
             Count = num;
             AllowMLang = allowMLang;
             AllowExist = allowExist;
             SexLimit = sexLimit;
-            Easter = easter;
         }
 
         public override string ToString()
         {
-            return $"Count{Count}|MLang{AllowMLang}|Exist{AllowExist}|Sex{SexLimit}|Easter{Easter}";
+            return $"Count{Count}|MLang{AllowMLang}|Exist{AllowExist}|Sex{SexLimit}";
         }
     }
 
@@ -194,41 +194,27 @@ namespace Cokee.ClassService.Helper
                 // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
                 //  Log.Information(a);
             }
-
+            App.bugsnag.Breadcrumbs.Leave($"Saved students list.");
             DirHelper.MakeExist(Catalog.CLASSES_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonSerializer.Serialize(students));
             return CreateSimpleClass(students);
         }
 
-        public static async Task<List<Student>> Random(Class c, RandomEventArgs args)
+        public static async Task<List<Student>> GetRandom(Class c, RandomEventArgs args)
         {
             List<Student> randoms = new List<Student>();
             List<Student> students = new List<Student>(c.Students);
             int i = 1;
-
-            #region Easter
-
-            /*try
-            {
-                if (Easter == "1")
-                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("6Zer5a6d5oCh"))));
-                else if (Easter == "2")
-                    randoms.Add(students.Find(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS"))));
-            }
-            catch (Exception)
-            {
-            }*/
-
-            #endregion Easter
-
+            Random random = new Random();
             Stopwatch sw = new Stopwatch();
             sw.Start();
             while (randoms.Count < args.Count)
             {
-                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo("抽取超时."); break; }
+                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo($"抽取超时.({sw.Elapsed.TotalSeconds}s)"); break; }
 
-                var a = students[new Random().Next(students.Count)];
-                if (!args.AllowExist && (randoms.Exists(f => f.Name == a.Name) || StudentExtensions.RandomHistory.Exists(f => f.Name == a.Name)) && args.Count <= students.Count) continue;
+                var a = students[random.Next(students.Count)];
+                if (!args.AllowExist && randoms.Exists(f => f.Name == a.Name)) continue;
+                if (!args.AllowExist && RandomHistory.Exists(f => f.Name == a.Name)) continue;
                 if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
                 if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
                 if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
@@ -236,21 +222,10 @@ namespace Cokee.ClassService.Helper
                 i++;
             }
 
-            #region easter
-
-            /*if (Easter == "1")
-            {
-                randoms.RemoveAll(t => t.Name == Encoding.UTF8.GetString(Convert.FromBase64String("57+f5pix6IiS")));
-                Easter = "0";
-                goto ranStart;
-            }*/
-
-            #endregion easter
-
             //randoms = Catalog.RandomizeList(randoms);
             StudentExtensions.RandomHistory = StudentExtensions.RandomHistory.Union(randoms).ToList();
             if (StudentExtensions.RandomHistory.Count >= students.Count) StudentExtensions.RandomHistory.Clear();
-
+            App.bugsnag.Breadcrumbs.Leave($"Random:{args.ToString()}");
             return randoms;
         }
     }

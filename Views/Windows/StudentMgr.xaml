@@ -23,22 +23,11 @@
         </Grid.ColumnDefinitions>
 
         <ui:SimpleStackPanel Grid.Column="0" Margin="6,0,6,0">
-            <ui:AppBarButton MouseDown="ClassSetting">
-                <ui:IconAndText Content="班级设置" Orientation="Vertical" Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" />
-            </ui:AppBarButton>
-            <ui:NavigationViewItemSeparator />
-            <ui:AppBarButton MouseDown="Random">
-                <ui:IconAndText Content="随机抽取" Orientation="Vertical" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_48_Regular}" />
-            </ui:AppBarButton>
-            <ui:AppBarButton  MouseDown="AddStu">
-                <ui:IconAndText Orientation="Vertical" Content="添加学生" Icon="{x:Static ui:FluentSystemIcons.Add_48_Regular}" />
-            </ui:AppBarButton>
-            <ui:AppBarButton  MouseDown="AddMuitlStu">
-                <ui:IconAndText Orientation="Vertical" Content="批量添加" Icon="{x:Static ui:FluentSystemIcons.AddSubtractCircle_48_Regular}" />
-            </ui:AppBarButton>
-            <ui:AppBarButton>
-                <ui:IconAndText Content="关于" Orientation="Vertical" Icon="{x:Static ui:FluentSystemIcons.Info_12_Regular}" />
-            </ui:AppBarButton>
+            <ui:AppBarButton Click="Random" Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_48_Regular}" />
+            <ui:AppBarSeparator />
+            <ui:AppBarButton Click="AddStu" Content="添加学生" Icon="{x:Static ui:FluentSystemIcons.Add_48_Regular}" />
+            <ui:AppBarButton Click="AddMuitlStu" Content="批量添加" Icon="{x:Static ui:FluentSystemIcons.AddSubtractCircle_48_Regular}" />
+            <ui:AppBarButton Click="ClassSetting" Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" Content="班级设置" />
         </ui:SimpleStackPanel>
         <Border
                 CornerRadius="8,0,0,0"

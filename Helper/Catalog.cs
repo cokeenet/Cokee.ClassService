@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -40,19 +41,14 @@ namespace Cokee.ClassService.Helper
 
         public static async void HandleException(Exception ex, string str = "")
         {
-            Log.Error(ex, "发生错误");
-            App.bugsnag.Notify(ex);
-            string shortExpInfo = ex.ToString();
-            if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
+                Log.Error(ex, "发生错误");
+                App.bugsnag.Notify(ex);
+                string shortExpInfo = ex.ToString();
+                if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
                 if (MainWindow == null) return;
-                MainWindow.infobar.IsOpen = true;
-                MainWindow.infobar.Title = $"{str}发生错误";
-                MainWindow.infobar.Message = shortExpInfo;
-                MainWindow.infobar.Severity = InfoBarSeverity.Error;
-                await Task.Delay(5000);
-                MainWindow.infobar.IsOpen = false;
+                ShowInfo($"{str}发生错误", shortExpInfo, InfoBarSeverity.Error);
             });
         }
 
@@ -109,7 +105,7 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static async void ShowInfo(string? title = "", string content = null, InfoBarSeverity severity = InfoBarSeverity.Informational)
+        public static async void ShowInfo(string? title = "", string content = "  ", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
@@ -118,9 +114,16 @@ namespace Cokee.ClassService.Helper
                 MainWindow.infobar.Title = title;
                 MainWindow.infobar.Message = content;
                 MainWindow.infobar.Severity = severity;
+                DoubleAnimation anim2 = new DoubleAnimation(0, MainWindow.infobar.ActualHeight + 200, TimeSpan.FromSeconds(1));
+                DoubleAnimation anim1 = new DoubleAnimation(MainWindow.infobar.ActualHeight + 200, 0, TimeSpan.FromSeconds(1));
+                anim2.Completed += (a, b) => MainWindow.infobar.IsOpen = false;
+                anim1.EasingFunction = Catalog.easingFunction;
+                anim2.EasingFunction = Catalog.easingFunction;
                 MainWindow.infobar.IsOpen = true;
+                MainWindow.infobarTran.BeginAnimation(TranslateTransform.YProperty, anim1);
                 await Task.Delay(5000);
-                MainWindow.infobar.IsOpen = false;
+                MainWindow.infobar.IsOpen = true;
+                MainWindow.infobarTran.BeginAnimation(TranslateTransform.YProperty, anim2);
             }, DispatcherPriority.Background);
         }
 

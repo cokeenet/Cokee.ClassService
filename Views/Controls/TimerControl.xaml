@@ -9,22 +9,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border VerticalAlignment="Stretch">
+    <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
 
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label
-                Content="计时器"
-                FontSize="18"
+            <TextBlock
+                Text="计时器"
+                FontSize="16"
+                Margin="15"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" />
             <Grid Grid.Row="1">
-                <ui:ProgressRing Height="200" Width="300" />
+                <ui:ProgressRing Height="300" Width="300" IsIndeterminate="False" Visibility="Collapsed" />
+                <ui:TimePicker HorizontalAlignment="Center" VerticalAlignment="Center" PickerVisibility="All" HourPlaceholderText="小时" MinutePlaceholderText="分钟" SelectedDateTimeChanged="TimePicker_SelectedDateTimeChanged" SecondPlaceholderText="秒" />
             </Grid>
             <Grid Grid.Row="3" Margin="5">
                 <Grid.ColumnDefinitions>
@@ -33,25 +35,20 @@
                 </Grid.ColumnDefinitions>
                 <Button
                     Click="ConfirmBtn"
-                    Content="确认抽取"
                     HorizontalAlignment="Stretch"
                     Margin="10"
                     Style="{DynamicResource AccentButtonStyle}"
                     VerticalAlignment="Stretch">
-
-                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Checkmark_48_Regular}" />
-
+                    <ui:IconAndText Content="启动" Icon="{x:Static ui:FluentSystemIcons.Checkmark_48_Regular}" />
                 </Button>
                 <Button
                     Click="CancelBtn"
-                    Content="取消"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
                     Margin="10"
                     VerticalAlignment="Stretch">
 
-                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Dismiss48" />
-
+                    <ui:IconAndText Content="关闭" Icon="{x:Static ui:FluentSystemIcons.Dismiss_48_Regular}" />
                 </Button>
             </Grid>
         </Grid>

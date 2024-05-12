@@ -60,7 +60,7 @@ namespace Cokee.ClassService
     {
         private bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
-
+        public Schedule schedule;
         private CapService service;
 
         //private event EventHandler<bool>? RandomEvent;
@@ -74,10 +74,6 @@ namespace Cokee.ClassService
         public FileSystemWatcher desktopWatcher = new FileSystemWatcher(
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
 
-        private StrokeCollection[] strokes = new StrokeCollection[101];
-        public int page;
-
-        private Schedule schedule = Schedule.LoadFromJson();
         private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         private Task CheckOfficeTask;
 
@@ -85,12 +81,6 @@ namespace Cokee.ClassService
         {
             InitializeComponent();
             Catalog.MainWindow = this;
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
-                    outputTemplate:
-                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
-                .CreateLogger();
             rancor.RandomResultControl = ranres;
             inkTool.inkCanvas = inkcanvas;
             VerStr.Text =
@@ -113,8 +103,21 @@ namespace Cokee.ClassService
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            App.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
+                schedule = await ScheduleExt.LoadFromJsonAsync();
+                Log.Logger = new LoggerConfiguration()
+                .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
+                    outputTemplate:
+                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
+                .CreateLogger();
+                Log.Logger = new LoggerConfiguration()
+                .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
+                    outputTemplate:
+                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
+                .CreateLogger();
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
@@ -126,6 +129,7 @@ namespace Cokee.ClassService
                 longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
 
                 CheckOfficeTask = new Task(CheckOffice);
+
                 if (!Catalog.IsScrSave)
                 {
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
@@ -172,9 +176,9 @@ namespace Cokee.ClassService
             Catalog.ToggleControlVisible(logview);
         }
 
-        public void IntiFileWatcher()
+        public async void IntiFileWatcher()
         {
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 Catalog.ShowInfo("FileWatcher初始化", $"类型 {desktopWatcher.NotifyFilter} 作用路径 {desktopWatcher.Path}");
                 desktopWatcher.NotifyFilter = NotifyFilters.LastWrite;
@@ -190,9 +194,9 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void DesktopWatcher_Changed(object sender, FileSystemEventArgs e)
+        private async void DesktopWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.InvokeAsync(new Action(() =>
             {
                 if (!e.Name.Contains(".lnk") && !e.Name.Contains(".tmp") && !e.Name.Contains("~$") &&
                     e.Name.Contains("."))
@@ -229,8 +233,8 @@ namespace Cokee.ClassService
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
                 //longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
-                var status = Schedule.GetNowCourse(schedule);
-                if (status.nowStatus == CourseNowStatus.EndOfLesson || status.nowStatus == CourseNowStatus.Upcoming)
+                var status = schedule.GetNowCourse();
+                if (status.NowStatus == CourseNowStatus.EndOfLesson || status.NowStatus == CourseNowStatus.Upcoming)
                 {
                     courseCard.Show(status);
                     StartAnimation(10, 3600);
@@ -239,8 +243,7 @@ namespace Cokee.ClassService
                 if (Catalog.settings.OfficeFunctionEnable)
                 {
                     if (CheckOfficeTask.Status == TaskStatus.Created) CheckOfficeTask.Start();
-                    if (CheckOfficeTask.IsCompleted || CheckOfficeTask.Status == TaskStatus.Canceled ||
-                        CheckOfficeTask.Status == TaskStatus.Faulted)
+                    if (CheckOfficeTask.IsCompleted || CheckOfficeTask.Status == TaskStatus.Canceled || CheckOfficeTask.Status == TaskStatus.Faulted)
                     {
                         //Log.Information($"CheckOfficeTask Status:{CheckOfficeTask.Status}");
                         CheckOfficeTask = new Task(CheckOffice);
@@ -262,14 +265,25 @@ namespace Cokee.ClassService
                     $"https://opendata.baidu.com/api.php?tn=wisetpl&format=json&resource_id=39043&query={DateTime.Now.Year}年{DateTime.Now.Month}月");
                 var dt = JsonConvert.DeserializeObject<JObject>(json);
                 var fes = "";
+                var longTime = "";
+                var suit = "";
+                var avoid = "";
                 if (dt != null)
                     foreach (var item in dt["data"][0]["almanac"])
                     {
-                        if (item["month"].ToString() == DateTime.Now.Month.ToString() &&
-                            item["day"].ToString() == DateTime.Now.Day.ToString()) fes = item["term"].ToString();
+                        if (item["month"].ToString() == DateTime.Now.Month.ToString() && item["day"].ToString() == DateTime.Now.Day.ToString())
+                        {
+                            fes = item["term"].ToString();
+                            longTime = $"{item["gzYear"]}{item["animal"]}年 {item["lMonth"]}月{item["lDate"]}";
+                            suit = $"今日宜:{item["suit"]}";
+                            avoid = $"今日不宜:{item["avoid"]}";
+                        }
                     }
 
                 longDate.Text = $"{DateTime.Now:yyyy年MM月dd日 ddd} {fes}";
+                longCHNDate.Text = longTime; //甲辰年(龙年)己巳月丙子日
+                c1.Text = suit;
+                c2.Text = avoid; exp.Visibility = Visibility.Visible;
                 sw.Stop();
                 Log.Information($"获取节假日信息用时:{sw.Elapsed.TotalSeconds}s");
             }, DispatcherPriority.Background);
@@ -414,6 +428,8 @@ namespace Cokee.ClassService
                 StartAnimation();
                 isDragging = false;
                 floatGrid.ReleaseMouseCapture();
+                var status = schedule.GetNowCourse();
+                courseCard.Show(status);
                 // Catalog.ShowInfo(floatStopwatch.ElapsedMilliseconds.ToString());
                 if (floatStopwatch.ElapsedMilliseconds > 200) return;
                 if (Catalog.settings.SideCardEnable) ToggleCard();
@@ -453,7 +469,7 @@ namespace Cokee.ClassService
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Log.Information("Program Closed");
+            Log.Information($"Program Closed {e.ToString()}");
         }
 
         public async void CheckBirthDay()
@@ -730,7 +746,7 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                page = 0;
+                //page = 0;
                 ClearStrokes(true);
                 pptControls.Visibility = Visibility.Collapsed;
                 Catalog.SetWindowStyle(1);
@@ -748,7 +764,7 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (!inkTool.isPPT) return;
-                page = Wn.View.CurrentShowPosition;
+                //page = Wn.View.CurrentShowPosition;
                 ClearStrokes(true);
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
@@ -760,7 +776,7 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                page = 0;
+                //page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo($"尝试释放 PPT 对象");
@@ -792,7 +808,7 @@ namespace Cokee.ClassService
                 pptControls.Visibility = Visibility.Visible;
                 pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
                 pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                page = Wn.View.CurrentShowPosition;
+                //page = Wn.View.CurrentShowPosition;
                 if (pptApplication.Presentations.Count >= 1)
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
@@ -1375,6 +1391,22 @@ namespace Cokee.ClassService
         private void UsbDebug(object sender, MouseButtonEventArgs e)
         {
             usbCard.EnumDrive();
+        }
+
+        private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!Catalog.settings.AgentEnable)
+            {
+                Catalog.settings.AgentEnable = true;
+                IntiAgent();
+                slogan.Foreground = new SolidColorBrush(Colors.Yellow);
+            }
+            else
+            {
+                Catalog.settings.AgentEnable = false;
+                slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
+                if (service != null) service?.Dispose();
+            }
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)

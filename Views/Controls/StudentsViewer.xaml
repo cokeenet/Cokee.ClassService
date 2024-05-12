@@ -15,20 +15,18 @@
         <helper:HeadPicUrlConverter x:Key="HeadPicUrlConverter" />
     </UserControl.Resources>
     <Grid>
-
-        <local:ScrollViewerEx d:Height="420">
-            <ItemsControl
+        <ItemsControl
                 ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}"
-                d:ItemsSource="{d:SampleData ItemCount=61}"
+                d:ItemsSource="{d:SampleData ItemCount=11}"
                 x:Name="Students" Margin="5">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding Columns, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}" d:Columns="4" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="5" Style="{StaticResource CardBorderStyle}"
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Columns, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}" d:Columns="4" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="5" Style="{StaticResource CardBorderStyle}"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Padding="0"
@@ -36,34 +34,33 @@
                                 MouseRightButtonDown="Card_MouseRightButtonDown"
                                 Tag="{Binding}"
                                 Width="100" Height="130">
-                            <Grid Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <ui:PersonPicture
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ui:PersonPicture
                                         Height="50"
                                         ProfilePicture="{Binding HeadPicUrl,Converter={StaticResource HeadPicUrlConverter}}"
                                         Width="50" />
-                                <TextBlock
+                            <TextBlock
                                     FontSize="14"
                                     Grid.Row="1"
                                     HorizontalAlignment="Center"
                                     Margin="5"
                                     Text="{Binding Name}" />
-                                <TextBlock
+                            <TextBlock
                                     Background="{Binding Role, Converter={StaticResource LevelConverter}}"
                                     FontSize="12"
                                     Grid.Row="2"
                                     HorizontalAlignment="Center"
                                     Text="{Binding RoleStr}"
                                     Visibility="{Binding RoleStr, Converter={StaticResource VisibilityConverter}}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </local:ScrollViewerEx>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

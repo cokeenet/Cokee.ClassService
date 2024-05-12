@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Cokee.ClassService.Helper;
 
+using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -27,9 +27,9 @@ namespace Cokee.ClassService.Views.Controls
         public void Toggle()
         {
             DoubleAnimation doubleAnimation = new DoubleAnimation(ActualWidth, 0, TimeSpan.FromSeconds(1))
-                {
-                    EasingFunction = Catalog.easingFunction
-                };
+            {
+                EasingFunction = Catalog.easingFunction
+            };
             doubleAnimation.Completed += async (a, b) =>
             {
                 await Task.Delay(TimeSpan.FromSeconds(10));

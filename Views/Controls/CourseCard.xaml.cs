@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -22,31 +23,31 @@ namespace Cokee.ClassService.Views.Controls
         {
             Visibility = Visibility.Visible;
 
-            switch (status.nowStatus)
+            switch (status.NowStatus)
             {
                 case CourseNowStatus.EndOfLesson:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")} 下课辣";
-                    subtitle.Text = $"下一节: {status.next.Name}";
+                    subtitle.Text = $"下一节: {status.Next.Name}";
                     break;
 
                 case CourseNowStatus.Upcoming:
-                    title.Text = $"{DateTime.Now.ToString("hh:mm")} {status.now.Name} 上课辣";
-                    subtitle.Text = $"下课时间 {status.now.EndTime.ToString("hh:mm")}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} {status.Now.Name} 上课辣";
+                    subtitle.Text = $"下课时间 {status.Now.EndTime?.ToString("hh:mm")}";
                     break;
 
                 case CourseNowStatus.OnBreak:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Text = $"课间休息 下一节: {status.next.Name}";
+                    subtitle.Text = $"课间休息 下一节: {status.Next.Name}";
                     break;
 
                 case CourseNowStatus.InProgress:
-                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{status.now.Name}";
+                    title.Text = $"{DateTime.Now.ToString("hh:mm")} 当前课程:{status.Now.Name}";
                     subtitle.Text = "pupupu";
                     break;
 
                 case CourseNowStatus.NoCoursesScheduled:
                     title.Text = $"{DateTime.Now.ToString("hh:mm")}";
-                    subtitle.Text = "今天没有课了嗷";
+                    subtitle.Text = "没课了";
                     break;
             }
             if (!needHide)

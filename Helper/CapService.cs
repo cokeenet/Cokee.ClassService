@@ -53,16 +53,17 @@ namespace Cokee.ClassService.Helper
             //Console.ReadKey(); //debug
         }
 
-        protected void OnStop()
+        public void Stop()
         {
             CapTimer.Stop();
+            ClearTimer.Stop();
             WriteInfo("Service stopped");
-            //Environment.Exit(0);
         }
 
         public void Dispose()
         {
-            GC.Collect();
+            Stop();
+            GC.SuppressFinalize(this);
         }
 
         public void SetTimer(Timer a, ElapsedEventHandler handler, bool dontstart = false)

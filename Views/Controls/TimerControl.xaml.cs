@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+
 using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Controls
@@ -14,12 +15,14 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
         }
 
-
         private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
         private void ConfirmBtn(object sender, RoutedEventArgs e)
         {
+        }
 
+        private void TimePicker_SelectedDateTimeChanged(object sender, RoutedPropertyChangedEventArgs<System.DateTime?> e)
+        {
         }
     }
 }

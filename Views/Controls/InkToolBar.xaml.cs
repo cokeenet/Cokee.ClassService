@@ -106,8 +106,8 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Pen":
-                        // if (penMenu.IsOpen) penMenu.IsOpen = false;
-                        //else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) penMenu.IsOpen = true;
+                        if (colorFlyout.IsOpen) colorFlyout.Hide();
+                        else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) colorFlyout.ShowAt(penBtn);
                         inkCanvas.IsEnabled = true;
                         isEraser = false;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
@@ -120,7 +120,8 @@ namespace Cokee.ClassService.Views.Controls
                         inkCanvas.IsEnabled = true;
                         isEraser = true;
                         if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
-                        inkCanvas.EditingMode = !Catalog.settings.EraseByPointEnable ? InkCanvasEditingMode.EraseByStroke : InkCanvasEditingMode.EraseByPoint;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        //inkCanvas.EditingMode = !Catalog.settings.EraseByPointEnable ? InkCanvasEditingMode.EraseByStroke : InkCanvasEditingMode.EraseByPoint;
                         break;
 
                     case "Back":
@@ -155,7 +156,7 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "More":
-                        moreMenu.IsOpen = !moreMenu.IsOpen;
+                        //moreMenu.IsOpen = !moreMenu.IsOpen;
                         break;
 
                     case "Select":
@@ -209,7 +210,7 @@ namespace Cokee.ClassService.Views.Controls
                         a.Content = null;
                     }
                 }
-                button.Content = FluentSystemIcons.CheckmarkCircle_48_Regular;
+                button.Content = new FontIcon(FluentSystemIcons.CheckmarkCircle_48_Regular);
             }
         }
 
@@ -222,8 +223,8 @@ namespace Cokee.ClassService.Views.Controls
                 switch (toggle.Tag.ToString())
                 {
                     case "WhiteBoard":
-                        SolidColorBrush s1 = new SolidColorBrush(Color.FromRgb(0x0E, 0x25, 0x1D));
-                        SolidColorBrush s2 = new SolidColorBrush(Colors.White);
+                        SolidColorBrush s1 = new(Color.FromRgb(0x0E, 0x25, 0x1D));
+                        SolidColorBrush s2 = new(Colors.White);
                         s1.Opacity = 1;
                         s2.Opacity = 0.01;
                         if (En) { inkCanvas.Background = s1; isWhiteBoard = true; }

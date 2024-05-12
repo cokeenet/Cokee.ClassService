@@ -22,7 +22,7 @@ namespace Cokee.ClassService.Views.Controls
     public partial class UsbCard : UserControl
     {
         public string disk;
-        private BackgroundWorker backgroundWorker1 = new BackgroundWorker();
+        private BackgroundWorker picBackgroundWorker = new BackgroundWorker();
         private Stopwatch sw = new Stopwatch();
 
         public UsbCard()
@@ -31,11 +31,11 @@ namespace Cokee.ClassService.Views.Controls
             try
             {
                 if (DesignerProperties.GetIsInDesignMode(this)) return;
-                backgroundWorker1.WorkerReportsProgress = true;
-                backgroundWorker1.WorkerSupportsCancellation = true;
-                backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
-                backgroundWorker1.ProgressChanged += BackgroundWorker1_ProgressChanged;
-                backgroundWorker1.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
+                picBackgroundWorker.WorkerReportsProgress = true;
+                picBackgroundWorker.WorkerSupportsCancellation = true;
+                picBackgroundWorker.DoWork += BackgroundWorker1_DoWork;
+                picBackgroundWorker.ProgressChanged += BackgroundWorker1_ProgressChanged;
+                picBackgroundWorker.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
                 if (Catalog.IsScrSave) return;
                 EnumDrive();
             }
@@ -43,18 +43,6 @@ namespace Cokee.ClassService.Views.Controls
             {
                 Catalog.HandleException(ex, "UsbCard");
             }
-        }
-
-        private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
-        {
-            sw.Stop();
-            if (e.Error != null)
-                Catalog.ShowInfo($"Worker threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.ToString()}");
-            else if (e.Cancelled)
-                Catalog.ShowInfo($"Worker Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
-            else
-                Catalog.ShowInfo($"Worker Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
-            Catalog.UpdateProgress(100, false);
         }
 
         public void EnumDrive()
@@ -100,6 +88,7 @@ namespace Cokee.ClassService.Views.Controls
             }
             else if (isUnplug)
             {
+                if (Visibility == Visibility.Collapsed) return;
                 Visibility = Visibility.Visible;
                 tranUsb.BeginAnimation(TranslateTransform.XProperty, anim2);
                 await Task.Delay(1000);
@@ -195,14 +184,14 @@ namespace Cokee.ClassService.Views.Controls
             if (File.Exists(disk + "picDisk"))
             {
                 copyDisk = disk;
-                if (backgroundWorker1.IsBusy != true)
+                if (picBackgroundWorker.IsBusy != true)
                 {
-                    backgroundWorker1.RunWorkerAsync();
+                    picBackgroundWorker.RunWorkerAsync();
                     sw.Restart();
                 }
-                else if (backgroundWorker1.IsBusy == true)
+                else if (picBackgroundWorker.IsBusy == true)
                 {
-                    backgroundWorker1.CancelAsync();
+                    picBackgroundWorker.CancelAsync();
                     Catalog.ShowInfo($"Try to stop.");
                 }
             }
@@ -211,12 +200,24 @@ namespace Cokee.ClassService.Views.Controls
 
         private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
-            Catalog.UpdateProgress(e.ProgressPercentage, true, $"pic{e.UserState}");
+            Catalog.UpdateProgress(e.ProgressPercentage, true, $"log{e.UserState}");
+        }
+
+        private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            sw.Stop();
+            if (e.Error != null)
+                Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.ToString()}");
+            else if (e.Cancelled)
+                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
+            else
+                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
+            Catalog.UpdateProgress(100, false);
         }
 
         private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
         {
-            Log.Information("BackgroundWorker Started.");
+            Log.Information("正在生成程序Debug日志");
             copieddirs = 0;
             copieditems = 0;
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
@@ -243,7 +244,7 @@ namespace Cokee.ClassService.Views.Controls
                                     f.CopyTo($"{cpSubTo}\\{f.Name}");
                                 copieditems++;
                                 num++;
-                                backgroundWorker1.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
+                                picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
                             }
                             copieddirs++;
                             Log.Information("Done.");
@@ -261,9 +262,10 @@ namespace Cokee.ClassService.Views.Controls
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num1++;
                     // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
-                    backgroundWorker1.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
                 }
                 Log.Information("Done.");
+                e.Result = $"{copieddirs} dirs,{copieditems} items";
             }
         }
     }

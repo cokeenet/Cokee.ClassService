@@ -30,6 +30,7 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
+            bugsnag.SessionTracking.CreateSession();
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }

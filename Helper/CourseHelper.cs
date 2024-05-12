@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 using Newtonsoft.Json;
@@ -34,139 +36,108 @@ namespace Cokee.ClassService.Helper
 
     public class Lesson
     {
-        public string Name { get; set; } = "";
-        public TimeSpan StartTime { get; set; } = TimeSpan.Zero;
-        public TimeSpan EndTime { get; set; } = TimeSpan.Zero;
+        public string Name { get; set; }
+        public TimeSpan? StartTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
 
         [JsonIgnore]
-        public bool IsChecked { get; set; } = false;
+        public bool IsChecked { get; set; }
 
-        public Lesson(string name = "")
+        public Lesson()
         {
-            Name = name;
         }
     }
 
     public class Schedule
     {
-        public List<Lesson> Monday = new List<Lesson>();
-        public List<Lesson> Tuesday = new List<Lesson>();
-        public List<Lesson> Wendesday = new List<Lesson>();
-        public List<Lesson> Thursday = new List<Lesson>();
-        public List<Lesson> Friday = new List<Lesson>();
-        public List<Lesson> Saturday = new List<Lesson>();
-        public List<Lesson> Sunday = new List<Lesson>();
-        public List<Lesson> LessonList = new List<Lesson>();
+        // 使用 Dictionary 存储每天的课程
+        public Dictionary<DayOfWeek, List<Lesson>> LessonsByDay { get; } = new Dictionary<DayOfWeek, List<Lesson>>();
 
-        public static void SaveToJson(Schedule schedule)
+        public IEnumerable<Lesson> Lessons => LessonsByDay.Values.SelectMany(x => x);
+
+        public List<Lesson> this[DayOfWeek day]
         {
-            var json = JsonConvert.SerializeObject(schedule, Formatting.Indented);
-            File.WriteAllText(Catalog.SCHEDULE_FILE, json);
+            get => LessonsByDay.GetValueOrDefault(day, new List<Lesson>());
+            set => LessonsByDay[day] = value;
         }
 
-        // 从 JSON 文件加载 Schedule 对象
-        public static Schedule LoadFromJson()
+        public Schedule()
         {
-            if (!File.Exists(Catalog.SCHEDULE_FILE)) return new Schedule();
-            var json = File.ReadAllText(Catalog.SCHEDULE_FILE);
-            var a = JsonConvert.DeserializeObject<Schedule>(json);
-            if (a != null) return a;
+            // 使用构造函数初始化，而不是 foreach 循环
+            LessonsByDay = Enum.GetValues(typeof(DayOfWeek))
+                              .Cast<DayOfWeek>()
+                              .ToDictionary(day => day, day => new List<Lesson>());
+        }
+    }
+
+    public static class ScheduleExt
+    {
+        // 使用异步方法保存到JSON文件
+        public static async Task SaveToJsonAsync(this Schedule schedule)
+        {
+            if (schedule == null) return;
+            var json = JsonConvert.SerializeObject(schedule, Formatting.Indented);
+            await File.WriteAllTextAsync(Catalog.SCHEDULE_FILE, json);
+        }
+
+        // 加载JSON文件的异步方法
+        public static async Task<Schedule> LoadFromJsonAsync()
+        {
+            if (File.Exists(Catalog.SCHEDULE_FILE))
+            {
+                var json = await File.ReadAllTextAsync(Catalog.SCHEDULE_FILE);
+                return JsonConvert.DeserializeObject<Schedule>(json) ?? new Schedule();
+            }
             return new Schedule();
         }
 
-        public static string GetShortTimeStr(DateTime t)
-        {
-            if (t.Hour == 17) if (t.Minute is >= 18 and <= 22) return "";
-            return DateTime.Now.ToString("HH:mm");
-        }
+        // 同步方法作为异步方法的包装，以保持向后兼容
+        // public static void SaveToJson(this Schedule schedule) => SaveToJsonAsync(schedule).GetAwaiter().GetResult();
 
-        public static CourseStatus GetNowCourse(Schedule schedule)
+        //public static Schedule LoadFromJson() => LoadFromJsonAsync().GetAwaiter().GetResult();
+
+        public static CourseStatus GetNowCourse(this Schedule schedule)
         {
-            Lesson? course = null, nextCourse = null;
-            DateTime now = DateTime.Now;
+            if (schedule == null || schedule.LessonsByDay == null)
+                return new CourseStatus(CourseNowStatus.NoCoursesScheduled);
+
+            DayOfWeek today = DayOfWeek.Monday; // 假设今天是星期一，实际应使用 DateTime.Now.DayOfWeek
+            List<Lesson> coursesToday = schedule[today];
+
+            var now = DateTime.Now;
+            Lesson? currentCourse = null;
+            Lesson? upcomingCourse = null;
             CourseNowStatus status = CourseNowStatus.NoCoursesScheduled;
-            List<Lesson>? coursesToday = new List<Lesson>();
-            if (schedule == null) return new CourseStatus(status);
-            switch (now.DayOfWeek)
+
+            foreach (var lesson in coursesToday)
             {
-                case DayOfWeek.Sunday:
-                    coursesToday = schedule.Sunday;
-                    break;
-
-                case DayOfWeek.Monday:
-                    coursesToday = schedule.Monday;
-                    break;
-
-                case DayOfWeek.Tuesday:
-                    coursesToday = schedule.Tuesday; ;
-                    break;
-
-                case DayOfWeek.Wednesday:
-                    coursesToday = schedule.Wendesday;
-                    break;
-
-                case DayOfWeek.Thursday:
-                    coursesToday = schedule.Thursday;
-                    break;
-
-                case DayOfWeek.Friday:
-                    coursesToday = schedule.Friday;
-                    break;
-
-                case DayOfWeek.Saturday:
-                    coursesToday = schedule.Saturday;
-                    break;
-
-                default:
-                    break;
-            }
-            if (coursesToday != null)
-            // 遍历课程列表，查找当前时间所在的课程
-            {
-                foreach (var c in coursesToday)
+                if (now.TimeOfDay >= lesson.StartTime && now.TimeOfDay <= lesson.EndTime)
                 {
-                    if (now.TimeOfDay >= c.StartTime && now.TimeOfDay <= c.EndTime)
+                    currentCourse = lesson;
+                    status = CourseNowStatus.InProgress;
+                    break;
+                }
+                else if (now.TimeOfDay < lesson.StartTime && status == CourseNowStatus.NoCoursesScheduled)
+                {
+                    if (upcomingCourse == null && lesson.StartTime > now.TimeOfDay)
                     {
-                        course = c; // 找到当前课程
-                        nextCourse = coursesToday[coursesToday.IndexOf(c) + 1];
-                        if (now.TimeOfDay == c.StartTime)
-                        {
-                            status = CourseNowStatus.Upcoming; // 上课时间点
-                        }
-                        else if (now.TimeOfDay == c.EndTime)
-                        {
-                            status = CourseNowStatus.EndOfLesson; // 下课时间点
-                        }
-                        else
-                        {
-                            status = CourseNowStatus.InProgress; // 正在上课
-                        }
-                    }
-                    else if (now.TimeOfDay < c.StartTime)
-                    {
-                        status = CourseNowStatus.OnBreak; // 正在休息
+                        upcomingCourse = lesson;
+                        status = CourseNowStatus.Upcoming;
                     }
                 }
-                // 如果没有当前课程，则返回没有课程了
-                return new CourseStatus(status, course, nextCourse);
             }
-            status = CourseNowStatus.NoCoursesScheduled;
-            return new CourseStatus(status);
+
+            // 如果当前没有课程，且找到了下一节课，则当前状态为课间休息
+            if (status == CourseNowStatus.NoCoursesScheduled && upcomingCourse != null)
+            {
+                status = CourseNowStatus.OnBreak;
+            }
+
+            return new CourseStatus(status, currentCourse, upcomingCourse);
         }
     }
 
-    public class CourseStatus
-    {
-        public CourseNowStatus nowStatus;
-        public Lesson? now, next;
-
-        public CourseStatus(CourseNowStatus nowStatus, Lesson? now = null, Lesson? next = null)
-        {
-            this.nowStatus = nowStatus;
-            this.now = now;
-            this.next = next;
-        }
-    }
+    public record CourseStatus(CourseNowStatus NowStatus, Lesson? Now = null, Lesson? Next = null);
 
     public enum CourseNowStatus
     {

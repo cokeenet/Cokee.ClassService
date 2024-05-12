@@ -18,9 +18,10 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Controls:StudentsViewer x:Name="Students" Columns="7"
+            <Controls:ScrollViewerEx>
+                <Controls:StudentsViewer x:Name="Students" Columns="7"
                 d:ItemsSource="{d:SampleData ItemCount=61}" />
-
+            </Controls:ScrollViewerEx>
             <StatusBar Grid.Row="1" Margin="5">
                 <StatusBarItem>
                     <TextBlock d:Text="高一一班" x:Name="className" />

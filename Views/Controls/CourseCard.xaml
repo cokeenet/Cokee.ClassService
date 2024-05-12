@@ -14,7 +14,7 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.RenderTransform>
-        <TranslateTransform X="330" x:Name="transT" />
+        <TranslateTransform X="330" x:Name="transT" d:X="0" />
     </UserControl.RenderTransform>
     <Border Style="{StaticResource CardBorderStyle}" VerticalAlignment="Stretch">
         <Grid VerticalAlignment="Top">
@@ -28,7 +28,7 @@
             <TextBlock
                 FontSize="24"
                 HorizontalAlignment="Left"
-                Margin="5"
+                Margin="0,15,0,15"
                 VerticalAlignment="Center"
                 d:Text="22:00 下一节:没课了"
                 x:Name="title" />
@@ -36,7 +36,7 @@
                 FontSize="18"
                 Grid.Row="1"
                 HorizontalAlignment="Left"
-                Margin="5"
+                Margin="0,15,0,15"
                 d:Text="本节课程:语文课 结束"
                 x:Name="subtitle" />
         </Grid>

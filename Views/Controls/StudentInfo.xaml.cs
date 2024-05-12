@@ -31,6 +31,7 @@ namespace Cokee.ClassService.Views.Controls
             {
                 Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent += AddStuEvent;
             };
+            this.IsVisibleChanged += (a, b) => scrollviewer?.ScrollToHome();
             //this.Unloaded += (a, b) => Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().AddStuEvent -= AddStuEvent;
         }
 
@@ -43,10 +44,14 @@ namespace Cokee.ClassService.Views.Controls
         private void Confirm(object sender, RoutedEventArgs e)
         {
             Catalog.ToggleControlVisible(this);
-            if (DataContext != null) EditStudent.Invoke(this, DataContext as Student);
+            if (DataContext != null) EditStudent?.Invoke(this, DataContext as Student);
         }
 
-        private void Cancel(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = null;
+            Catalog.ToggleControlVisible(this);
+        }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
