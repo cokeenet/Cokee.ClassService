@@ -127,9 +127,8 @@ namespace Cokee.ClassService
                 picTimer.Elapsed += PicTimer_Elapsed;
                 picTimer.Start();
                 longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
-
+                if (Catalog.settings.AgentEnable) slogan.Foreground = new SolidColorBrush(Colors.Yellow);
                 CheckOfficeTask = new Task(CheckOffice);
-
                 if (!Catalog.IsScrSave)
                 {
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
