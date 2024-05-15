@@ -463,19 +463,40 @@
             Height="300"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Visibility="Collapsed"
+            Visibility="Visible"
             Width="500" Margin="5" Padding="5"
             x:Name="logview">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
-                <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
-                    <RichTextBox x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
-                </Controls:ScrollViewerEx>
-            </Grid>
+            <TabControl>
+                <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Text_12_Regular}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
+                        <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
+                            <RichTextBox x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
+                        </Controls:ScrollViewerEx>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="DirMgr"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" />
+                        <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
+                                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
+                            </Button>
+                            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="2">
+                                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
+                            </Button>
+                        </ui:SimpleStackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
         </Border>
         <Controls:UsbCard
             HorizontalAlignment="Right"

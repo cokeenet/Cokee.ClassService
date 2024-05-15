@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -1406,6 +1405,12 @@ namespace Cokee.ClassService
                 slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
                 if (service != null) service?.Dispose();
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            if (btn.Tag.ToString())
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
