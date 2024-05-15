@@ -463,7 +463,8 @@
             Height="300"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Visibility="Visible"
+            Visibility="Collapsed"
+            d:Visibility="Visible"
             Width="500" Margin="5" Padding="5"
             x:Name="logview">
             <TabControl>

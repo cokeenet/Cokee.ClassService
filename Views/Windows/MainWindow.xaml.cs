@@ -525,6 +525,65 @@ namespace Cokee.ClassService
             Catalog.ToggleControlVisible(volcd);
         }
 
+        private void QuickFix(object sender, RoutedEventArgs e)
+        {
+            Catalog.CreateWindow<UserLogin>();
+        }
+
+        private void UsbDebug(object sender, MouseButtonEventArgs e)
+        {
+            usbCard.EnumDrive();
+        }
+
+        private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!Catalog.settings.AgentEnable)
+            {
+                Catalog.settings.AgentEnable = true;
+                IntiAgent();
+                slogan.Foreground = new SolidColorBrush(Colors.Yellow);
+            }
+            else
+            {
+                Catalog.settings.AgentEnable = false;
+                slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
+                if (service != null) service?.Dispose();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (Button)sender;
+            switch (btn.Tag.ToString())
+            {
+                case "1":
+                    List<string> dirs = new List<string>();
+                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
+                    {
+                        var dir = str.Replace("D:\\CokeeDP\\Cache\\", "");
+                        if (dir != "2024") dirs.Add(dir);
+                    }
+                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache\\2024"))
+                    {
+                        var dir = str.Replace("D:\\CokeeDP\\Cache\\2024\\", "");
+                        dirs.Add($"v2:{dir}");
+                    }
+                    dirlist.ItemsSource = dirs;
+                    break;
+
+                case "2":
+                    string? a = dirlist.SelectedValue?.ToString();
+                    if (!string.IsNullOrEmpty(a))
+                    {
+                        if (a.StartsWith("v2:"))
+                            Directory.Delete($"D:\\CokeeDP\\Cache\\2024\\{a.Split(":")[1]}", true);
+                        else Directory.Delete($"D:\\CokeeDP\\Cache\\{a}", true);
+                        Catalog.ShowInfo($"Deleted dir {a}.");
+                    }
+                    break;
+            }
+        }
+
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
 
         private void CourseMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<CourseMgr>();
@@ -561,7 +620,7 @@ namespace Cokee.ClassService
             {
                 cardPopup.IsOpen = false;
                 if (sideCard.Visibility != Visibility.Collapsed) ToggleCard();
-                Rectangle rc = SystemInformation.VirtualScreen;
+                Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
                 var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
 
                 using (Graphics memoryGrahics = Graphics.FromImage(bitmap))
@@ -1379,38 +1438,6 @@ namespace Cokee.ClassService
             var result = status ? Visibility.Visible : Visibility.Collapsed;
             inkTool.redoBtn.Visibility = result;
             inkTool.redoBtn.IsEnabled = status;
-        }
-
-        private void QuickFix(object sender, RoutedEventArgs e)
-        {
-            Catalog.CreateWindow<UserLogin>();
-        }
-
-        private void UsbDebug(object sender, MouseButtonEventArgs e)
-        {
-            usbCard.EnumDrive();
-        }
-
-        private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!Catalog.settings.AgentEnable)
-            {
-                Catalog.settings.AgentEnable = true;
-                IntiAgent();
-                slogan.Foreground = new SolidColorBrush(Colors.Yellow);
-            }
-            else
-            {
-                Catalog.settings.AgentEnable = false;
-                slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
-                if (service != null) service?.Dispose();
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var btn = (Button)sender;
-            if (btn.Tag.ToString())
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
