@@ -60,7 +60,7 @@ namespace Cokee.ClassService
         private bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
         public Schedule schedule;
-        private CapService service;
+        //private CapService service;
 
         //private event EventHandler<bool>? RandomEvent;
         private Timer secondTimer = new Timer(1000);
@@ -96,8 +96,8 @@ namespace Cokee.ClassService
 
         public void IntiAgent()
         {
-            service = new CapService();
-            service.Start();
+            //service = new CapService();
+            //service.Start();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -537,7 +537,7 @@ namespace Cokee.ClassService
 
         private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!Catalog.settings.AgentEnable)
+            /*if (!Catalog.settings.AgentEnable)
             {
                 Catalog.settings.AgentEnable = true;
                 IntiAgent();
@@ -548,7 +548,7 @@ namespace Cokee.ClassService
                 Catalog.settings.AgentEnable = false;
                 slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
                 if (service != null) service?.Dispose();
-            }
+            }*/
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

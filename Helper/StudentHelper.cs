@@ -146,8 +146,8 @@ namespace Cokee.ClassService.Helper
             return new Class()
             {
                 Students = stu,
-                Name = "高二八班",
-                SchoolName = "阜阳师范大学附属中学",
+                Name = "",
+                SchoolName = "阜阳师范大学教育集团",
                 Grade = GradeType.High2,
                 ID = 0,
                 CreatedTime = new DateTime(2022, 09, 01)
