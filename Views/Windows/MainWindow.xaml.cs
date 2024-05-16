@@ -60,11 +60,8 @@ namespace Cokee.ClassService
         private bool isDragging;
         private Point startPoint, _mouseDownControlPosition;
         public Schedule schedule;
-        //private CapService service;
-
-        //private event EventHandler<bool>? RandomEvent;
+        private CapService service;
         private Timer secondTimer = new Timer(1000);
-
         private Timer picTimer = new Timer(120000);
         public MsPpt.Application? pptApplication;
         public MsWord.Application? wordApplication;
@@ -96,8 +93,8 @@ namespace Cokee.ClassService
 
         public void IntiAgent()
         {
-            //service = new CapService();
-            //service.Start();
+            service = new CapService();
+            service.Start();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -537,7 +534,7 @@ namespace Cokee.ClassService
 
         private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            /*if (!Catalog.settings.AgentEnable)
+            if (!Catalog.settings.AgentEnable)
             {
                 Catalog.settings.AgentEnable = true;
                 IntiAgent();
@@ -548,7 +545,7 @@ namespace Cokee.ClassService
                 Catalog.settings.AgentEnable = false;
                 slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
                 if (service != null) service?.Dispose();
-            }*/
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -687,6 +684,9 @@ namespace Cokee.ClassService
             }
         }
 
+        private DateTime lastOfficeErrorTime;
+        private int lastOfficeErrorCount = 0;
+
         private void CheckOffice()
         {
             try
@@ -795,7 +795,23 @@ namespace Cokee.ClassService
             }
             catch (Exception ex)
             {
-                Catalog.HandleException(ex, "COM对象线程");
+                if (ex.ToString().Contains("CO_E_CLASSSTRING"))
+                {
+                    Catalog.ShowInfo("Office未安装或COM对象未注册", "无法使用PPT批注及Office功能，已自动关闭。", InfoBarSeverity.Warning);
+                    Catalog.settings.OfficeFunctionEnable = false;
+                    Catalog.settings.Save();
+                    return;
+                }
+                lastOfficeErrorCount++;
+                if (lastOfficeErrorCount >= 15 && DateTime.Now.Subtract(lastOfficeErrorTime).Minutes <= 10)
+                {
+                    Catalog.ShowInfo("Office功能错误过多", "已自动关闭Office功能，无法正常使用PPT批注", InfoBarSeverity.Warning);
+                    Catalog.settings.OfficeFunctionEnable = false;
+                    Catalog.settings.Save();
+                    return;
+                }
+                lastOfficeErrorTime = DateTime.Now;
+                Catalog.HandleException(ex, "Office功能");
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
+
 using Microsoft.Office.Interop.PowerPoint;
 
 namespace Cokee.ClassService.Helper
@@ -26,7 +27,14 @@ namespace Cokee.ClassService.Helper
             //            catch
             catch
             {
-                CLSIDFromProgID(progID, out clsid);
+                try
+                {
+                    CLSIDFromProgID(progID, out clsid);
+                }
+                catch
+                {
+                    return null;
+                }
             }
             try
             {

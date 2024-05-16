@@ -34,7 +34,7 @@ namespace Cokee.ClassService.Views.Pages
 
         public void SaveData()
         {
-            Catalog.settings.SaveSettings();
+            Catalog.settings.Save();
         }
 
         private void CheckUpdate(object sender, RoutedEventArgs e)

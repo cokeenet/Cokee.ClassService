@@ -15,7 +15,7 @@ namespace Cokee.ClassService.Views.Windows
             InitializeComponent();
             Closing += (a, b) =>
             {
-                Catalog.settings.SaveSettings();
+                Catalog.settings.Save();
             };
         }
     }

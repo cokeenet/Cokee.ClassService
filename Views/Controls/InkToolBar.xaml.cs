@@ -235,12 +235,12 @@ namespace Cokee.ClassService.Views.Controls
                         if (En)
                         {
                             Catalog.settings.EraseByPointEnable = true;
-                            Catalog.settings.SaveSettings();
+                            Catalog.settings.Save();
                         }
                         else
                         {
                             Catalog.settings.EraseByPointEnable = false;
-                            Catalog.settings.SaveSettings();
+                            Catalog.settings.Save();
                         }
                         break;
                 }

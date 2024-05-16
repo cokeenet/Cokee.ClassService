@@ -47,7 +47,7 @@
                         <ui:FontIcon FontSize="20" Margin="5,15,20,15" Icon="{x:Static ui:FluentSystemIcons.Folder_48_Regular}" />
                         <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <TextBlock FontSize="14" Margin="0,0,0,2" Text="桌面文件监测器" VerticalAlignment="Bottom" />
-                            <TextBlock FontSize="12" Margin="0,2,20,5" Opacity="0.615" Text="自动备份桌面文件" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
+                            <TextBlock FontSize="12" Margin="0,2,20,5" Opacity="0.615" Text="自动备份桌面文件，如开启Office功能则备份Office文件" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
                         </StackPanel>
                         <ui:ToggleSwitch Grid.Column="2" IsOn="{Binding FileWatcherEnable, Mode=TwoWay}" />
                     </Grid>
@@ -79,8 +79,8 @@
                         </Grid.ColumnDefinitions>
                         <ui:FontIcon FontSize="20" Margin="5,15,20,15" Icon="{x:Static ui:FluentSystemIcons.Presenter_24_Regular}" />
                         <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock FontSize="14" Margin="0,0,0,2" Text="幻灯片批注" VerticalAlignment="Bottom" />
-                            <TextBlock FontSize="12" Margin="0,2,20,5" Opacity="0.615" Text="关闭后无法自动备份Office文件" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
+                            <TextBlock FontSize="14" Margin="0,0,0,2" Text="Office幻灯片批注" VerticalAlignment="Bottom" />
+                            <TextBlock FontSize="12" Margin="0,2,20,5" Opacity="0.615" Text="关闭后无法自动备份Office文件及使用PPT批注" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
                         </StackPanel>
                         <ui:ToggleSwitch Grid.Column="2" IsOn="{Binding OfficeFunctionEnable, Mode=TwoWay}" />
                     </Grid>

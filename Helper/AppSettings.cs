@@ -7,8 +7,6 @@ using Cokee.ClassService.Shared;
 
 using Serilog;
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-
 namespace Cokee.ClassService.Helper
 {
     public class AppSettings
@@ -18,7 +16,7 @@ namespace Cokee.ClassService.Helper
         public bool EraseByPointEnable { get; set; } = true;
         public bool UseMemberAvatar { get; set; }
         public bool SideCardEnable { get; set; } = true;
-        public bool AgentEnable { get; set; } = true;
+        public bool AgentEnable { get; set; } = false;
         public string LoginState { get; set; }
         public string FileWatcherFilter { get; set; } = "*.*";
 
@@ -54,7 +52,7 @@ namespace Cokee.ClassService.Helper
             {
                 var dir = Catalog.SETTINGS_FILE.Split("config.json")[0];
                 DirHelper.MakeExist(dir);
-                if (!File.Exists(Catalog.SETTINGS_FILE)) SaveSettings(new AppSettings());
+                if (!File.Exists(Catalog.SETTINGS_FILE)) Save(new AppSettings());
                 var content = File.ReadAllText(Catalog.SETTINGS_FILE);
                 return JsonSerializer.Deserialize<AppSettings>(content);
             }
@@ -65,7 +63,7 @@ namespace Cokee.ClassService.Helper
             }
         }
 
-        public static void SaveSettings(this AppSettings settings)
+        public static void Save(this AppSettings settings)
         {
             var content = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
 
