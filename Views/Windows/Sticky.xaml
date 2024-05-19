@@ -21,16 +21,13 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        <ui:NavigationView Grid.Column="0" Margin="6,0,6,0">
-            <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="添加" MouseDown="NavigationItem_Click">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Add_48_Regular}" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-            </ui:NavigationView.MenuItems>
-        </ui:NavigationView>
+        <ui:AppBarElementContainer>
+            <ui:AppBarButton Label="      添加">
+                <ui:AppBarButton.Icon>
+                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}" />
+                </ui:AppBarButton.Icon>
+            </ui:AppBarButton>
+        </ui:AppBarElementContainer>
         <local:ScrollViewerEx
             Grid.Column="1"
             HorizontalAlignment="Center"
@@ -56,7 +53,6 @@
             </ItemsControl>
         </local:ScrollViewerEx>
         <StatusBar
-            Background="{ui:ThemeResource}"
             Grid.Column="1"
             VerticalAlignment="Bottom">
             <StatusBarItem Content="共 -- 人" x:Name="count" />

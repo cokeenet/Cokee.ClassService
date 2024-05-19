@@ -6,6 +6,8 @@ using System.Windows.Input;
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 
+using iNKORE.UI.WPF.Modern.Controls;
+
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
@@ -46,19 +48,18 @@ namespace Cokee.ClassService.Views.Controls
 
         private void CancelBtn(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(this);
 
-        private void numbox_TC(object sender, TextChangedEventArgs e)
+        private void numbox_TC(NumberBox sender, NumberBoxValueChangedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
+            if (sender != null)
             {
                 try
                 {
-                    var a = Convert.ToInt32(textBox.Text);
+                    var a = Convert.ToInt32(sender.Text);
                     if (a is >= 0 and <= 999) randomArgs.Count = a;
                 }
                 catch (Exception)
                 {
-                    textBox.Text = "1";
+                    sender.Text = "1";
                     randomArgs.Count = 1;
                 }
             }

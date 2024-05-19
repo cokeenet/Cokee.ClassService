@@ -34,6 +34,11 @@ namespace Cokee.ClassService.Helper
             configPath = disk + configPath;
             path = disk + path;
             WriteInfo($"Service started");
+            if(!IsEnabled){
+                WriteInfo($"Service not enabled.");
+                Dispose();
+                return;
+            }
             try
             {
                 res = Convert.ToInt32(ReadTxtConfig("res", "2"));
@@ -56,6 +61,7 @@ namespace Cokee.ClassService.Helper
 
         public void Stop()
         {
+            if(captureDevice.IsRunning)captureDevice.Stop();
             CapTimer.Stop();
             ClearTimer.Stop();
             WriteInfo("Service stopped");
@@ -285,7 +291,7 @@ namespace Cokee.ClassService.Helper
             }
             catch (Exception ex)
             {
-                Catalog.HandleException(ex, "CapService");
+                //Catalog.HandleException(ex, "CapService");
             }
         }
 

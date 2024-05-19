@@ -32,7 +32,7 @@
                         Stretch="UniformToFill"
                         x:Name="headCardBg" />
                 </Border.Background>
-                <Grid>
+                <Grid Margin="15">
                     <TextBlock
                         FontSize="28"
                         FontWeight="Thin"

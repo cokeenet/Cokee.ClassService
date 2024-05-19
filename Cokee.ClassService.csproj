@@ -5,8 +5,8 @@
 		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.7.835.24136</AssemblyVersion>
-		<FileVersion>2.7.835.24136</FileVersion>
+		<AssemblyVersion>2.7.840.24140</AssemblyVersion>
+		<FileVersion>2.7.840.24140</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -113,6 +113,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.5" />
+		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
 		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.28" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

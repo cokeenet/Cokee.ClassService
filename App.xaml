@@ -10,12 +10,8 @@
         <ResourceDictionary>
 
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
-            <FontFamily x:Key="Cairo-Regular">/Cokee.ClassService;component/Resources/#Cairo-Regular</FontFamily>
             <FontFamily x:Key="Lato">/Cokee.ClassService;component/Resources/#Lato-Regular</FontFamily>
 
-            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Static ui:ThemeKeys.BaseTextBlockStyleKey}}">
-                <Setter Property="FontFamily" Value="Lato" />
-            </Style>
             <!-- 定义一个隐式样式，将 FontFamily 设置为 "Lato" -->
             <Style TargetType="ui:IconAndText">
                 <Setter Property="FontFamily" Value="Lato" />
@@ -36,10 +32,6 @@
             <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
-            </Style>
-
-            <Style TargetType="ui:FontIcon">
-                <Setter Property="FontSize" Value="20" />
             </Style>
 
             <Style TargetType="ui:ToggleSwitch">

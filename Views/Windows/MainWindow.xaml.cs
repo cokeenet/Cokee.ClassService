@@ -284,7 +284,7 @@ namespace Cokee.ClassService
             }, DispatcherPriority.Background);
         }
 
-        public async void ToggleCard(bool isForceShow = false)
+        public async void ToggleCard(bool fasthide = false)
         {
             await Dispatcher.InvokeAsync(new Action(() =>
             {
@@ -293,7 +293,17 @@ namespace Cokee.ClassService
                 anim2.Completed += (a, b) => sideCard.Visibility = Visibility.Collapsed;
                 anim1.EasingFunction = Catalog.easingFunction;
                 anim2.EasingFunction = Catalog.easingFunction;
-                if (sideCard.Visibility == Visibility.Collapsed || isForceShow)
+                if (fasthide)
+                {
+                    cardtran.X = 300;
+                    sideCard.Visibility = Visibility.Collapsed;
+                }
+                else if (sideCard.Visibility == Visibility.Visible)
+                {
+                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
+                    //transT.Y = -100;
+                }
+                else 
                 {
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
@@ -313,11 +323,7 @@ namespace Cokee.ClassService
                     };
                     //transT.Y = 0;
                 }
-                else
-                {
-                    cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
-                    //transT.Y = -100;
-                }
+                
             }), DispatcherPriority.Background);
         }
 
@@ -616,9 +622,9 @@ namespace Cokee.ClassService
             await Dispatcher.InvokeAsync(new Action(() =>
             {
                 cardPopup.IsOpen = false;
-                if (sideCard.Visibility != Visibility.Collapsed) ToggleCard();
+                if (sideCard.Visibility != Visibility.Collapsed) ToggleCard(true);
                 Rectangle rc = System.Windows.Forms.SystemInformation.VirtualScreen;
-                var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
+                var bitmap = new Bitmap(rc.Width, rc.Height);
 
                 using (Graphics memoryGrahics = Graphics.FromImage(bitmap))
                 {
