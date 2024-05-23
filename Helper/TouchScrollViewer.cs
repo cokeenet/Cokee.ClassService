@@ -29,12 +29,7 @@ namespace Cokee.ClassService.Views.Controls
         private void TouchableScrollViewer_TouchDown(object sender, TouchEventArgs e)
         {
             TouchPoint point = e.GetTouchPoint(this);
-            HitTestResult hitTestResult = VisualTreeHelper.HitTest(this, point.Position);
-            //MessageBox.Show(hitTestResult.VisualHit.ToString());
-            if (hitTestResult.VisualHit is ScrollBar)
-            {
-                return;
-            }
+
             //添加触摸移动监听
             TouchMove -= TouchableScrollViewer_TouchMove;
             TouchMove += TouchableScrollViewer_TouchMove;
@@ -59,12 +54,7 @@ namespace Cokee.ClassService.Views.Controls
             //获取相对于ScrollViewer的触摸点位置
             TouchPoint endPoint = e.GetTouchPoint(this);
 
-            HitTestResult hitTestResult = VisualTreeHelper.HitTest(this, endPoint.Position);
-            //MessageBox.Show(hitTestResult.VisualHit.ToString());
-            if (hitTestResult.VisualHit is ScrollBar)
-            {
-                return;
-            }
+
             //计算相对位置
             double diffOffsetY = endPoint.Position.Y - _startPosition.Y;
             double diffOffsetX = endPoint.Position.X - _startPosition.X;

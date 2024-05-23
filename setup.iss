@@ -28,7 +28,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=CokeeClassSetup
-SetupIconFile=I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\head.ico
+;SetupIconFile=D:\CokeeTech\CokeeClass\publish\head.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -39,7 +39,7 @@ Name: "armenian"; MessagesFile: "compiler:Languages\Armenian.isl"
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "bulgarian"; MessagesFile: "compiler:Languages\Bulgarian.isl"
 Name: "catalan"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+;Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 Name: "corsican"; MessagesFile: "compiler:Languages\Corsican.isl"
 Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "danish"; MessagesFile: "compiler:Languages\Danish.isl"
@@ -66,12 +66,12 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\Cokee.ClassService.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\Cokee.ClassService.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\Cokee.ClassService.dll.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\Cokee.ClassService.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "I:\WorkProjects\source\repos\Cokee.ClassService\Cokee.ClassService\publish\WebView2Loader.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\Cokee.ClassService.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\Cokee.ClassService.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\Cokee.ClassService.dll.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\Cokee.ClassService.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\CokeeTech\CokeeClass\publish\WebView2Loader.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

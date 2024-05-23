@@ -41,7 +41,7 @@ namespace Cokee.ClassService.Helper
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
 
-        public static async void HandleException(Exception ex, string str = "")
+        public static async void HandleException(Exception ex, string str = "",bool isSlient=false)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
@@ -49,7 +49,7 @@ namespace Cokee.ClassService.Helper
                 App.bugsnag.Notify(ex);
                 string shortExpInfo = ex.ToString();
                 if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
-                if (MainWindow == null) return;
+                if (MainWindow == null||isSlient) return;
                 ShowInfo($"{str}发生错误", shortExpInfo, InfoBarSeverity.Error);
             });
         }
