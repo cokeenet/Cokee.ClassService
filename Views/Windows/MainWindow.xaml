@@ -477,10 +477,15 @@
                 </TabItem>
                 <TabItem Header="DirMgr"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        <TextBlock/>
                         <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" />
                         <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
