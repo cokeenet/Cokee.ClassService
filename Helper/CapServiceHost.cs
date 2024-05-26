@@ -11,7 +11,8 @@ namespace Cokee.ClassService.Helper
     {
         public string Name { get; set; }
         public string Path { get; set; }
-        public int version { get; set; }
+        public int Version { get; set; }
+        public int Files { get; set; }
     }
 
     public class CapServiceHost
@@ -55,6 +56,48 @@ namespace Cokee.ClassService.Helper
 
         public List<PicDirectoryInfo> EnumPicDirs()
         {
+            List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
+            foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
+            {
+                DirectoryInfo dirinfo = new DirectoryInfo(dir);
+                var dirs = Directory.GetDirectories(dir);
+                list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
+
+                if (dirs?.Length > 0)
+                {
+                    foreach (string subdir in dirs)
+                    {
+                        DirectoryInfo subdirinfo = new DirectoryInfo(dir);
+                        list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
+                    }
+                }
+            }
+            return list;
+        }
+
+        private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
+        {
+            Catalog.UpdateProgress(e.ProgressPercentage, true, $"log{e.UserState}");
+        }
+
+        private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            sw.Stop();
+            if (e.Error != null)
+                Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
+            else if (e.Cancelled)
+                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
+            else
+                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
+            Catalog.UpdateProgress(100, false);
+        }
+
+        private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            string? copyDisk = (string?)e.Argument;
+            Log.Information($"PicBackgroundWorker Started.");
+            copieddirs = 0;
+            copieditems = 0;
             foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
@@ -65,80 +108,43 @@ namespace Cokee.ClassService.Helper
                     if (dirs.Length > 0)
                     {
                         foreach (string subdir in dirs)
-                        { }
-                    }
-                }
-
-                private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
-                {
-                    Catalog.UpdateProgress(e.ProgressPercentage, true, $"log{e.UserState}");
-                }
-
-                private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
-                {
-                    sw.Stop();
-                    if (e.Error != null)
-                        Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
-                    else if (e.Cancelled)
-                        Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
-                    else
-                        Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
-                    Catalog.UpdateProgress(100, false);
-                }
-
-                private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
-                {
-                    string? copyDisk = (string?)e.Argument;
-                    Log.Information($"PicBackgroundWorker Started.");
-                    copieddirs = 0;
-                    copieditems = 0;
-                    foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
-                    {
-                        DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                        var files = Directory.GetFiles(dir);
-                        var dirs = Directory.GetDirectories(dir);
-                        if (dirs != null)
                         {
-                            if (dirs.Length > 0)
+                            var subinfo = new DirectoryInfo(subdir);
+                            decimal num = 0;
+                            var cpSubTo = $"{copyDisk}\\CokeeDP\\Cache\\{dirinfo.Name}\\{subinfo.Name}";
+                            DirHelper.MakeExist(cpSubTo);
+                            var subfiles = Directory.GetFiles(subdir);
+                            Log.Information($"Found v2 pic dir {subinfo.Name} with {subfiles.Length} pics.");
+                            foreach (var item in subfiles)
                             {
-                                foreach (string subdir in dirs)
-                                {
-                                    var subinfo = new DirectoryInfo(subdir);
-                                    decimal num = 0;
-                                    var cpSubTo = $"{copyDisk}\\CokeeDP\\Cache\\{dirinfo.Name}\\{subinfo.Name}";
-                                    DirHelper.MakeExist(cpSubTo);
-                                    var subfiles = Directory.GetFiles(subdir);
-                                    Log.Information($"Found v2 pic dir {subinfo.Name} with {subfiles.Length} pics.");
-                                    foreach (var item in subfiles)
-                                    {
-                                        FileInfo f = new FileInfo(item);
-                                        if (!File.Exists($"{cpSubTo}\\{f.Name}"))
-                                            f.CopyTo($"{cpSubTo}\\{f.Name}");
-                                        copieditems++;
-                                        num++;
-                                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
-                                    }
-                                    copieddirs++;
-                                    Log.Information("Done.");
-                                }
+                                FileInfo f = new FileInfo(item);
+                                if (!File.Exists($"{cpSubTo}\\{f.Name}"))
+                                    f.CopyTo($"{cpSubTo}\\{f.Name}");
+                                copieditems++;
+                                num++;
+                                picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
                             }
+                            copieddirs++;
+                            Log.Information("Done.");
                         }
-                        var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
-                        DirHelper.MakeExist(cpTo);
-                        decimal num1 = 0;
-                        Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
-                        foreach (string file in files)
-                        {
-                            FileInfo f = new FileInfo(file);
-                            if (!File.Exists($"{cpTo}\\{f.Name}"))
-                                f.CopyTo($"{cpTo}\\{f.Name}");
-                            num1++;
-                            // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
-                            picBackgroundWorker.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
-                        }
-                        Log.Information("Done.");
-                        e.Result = $"{copieddirs} dirs,{copieditems} items";
                     }
                 }
+                var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
+                DirHelper.MakeExist(cpTo);
+                decimal num1 = 0;
+                Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
+                foreach (string file in files)
+                {
+                    FileInfo f = new FileInfo(file);
+                    if (!File.Exists($"{cpTo}\\{f.Name}"))
+                        f.CopyTo($"{cpTo}\\{f.Name}");
+                    num1++;
+                    // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
+                }
+                Log.Information("Done.");
+                e.Result = $"{copieddirs} dirs,{copieditems} items";
             }
         }
+    }
+}
