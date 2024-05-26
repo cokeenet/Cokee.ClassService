@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using IWshRuntimeLibrary;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -98,42 +99,14 @@ namespace Cokee.ClassService.Helper
             Log.Information($"PicBackgroundWorker Started.");
             copieddirs = 0;
             copieditems = 0;
-            foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
+            foreach (var item in EnumPicDirs())
             {
-                DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                var files = Directory.GetFiles(dir);
-                var dirs = Directory.GetDirectories(dir);
-                if (dirs != null)
-                {
-                    if (dirs.Length > 0)
-                    {
-                        foreach (string subdir in dirs)
-                        {
-                            var subinfo = new DirectoryInfo(subdir);
-                            decimal num = 0;
-                            var cpSubTo = $"{copyDisk}\\CokeeDP\\Cache\\{dirinfo.Name}\\{subinfo.Name}";
-                            DirHelper.MakeExist(cpSubTo);
-                            var subfiles = Directory.GetFiles(subdir);
-                            Log.Information($"Found v2 pic dir {subinfo.Name} with {subfiles.Length} pics.");
-                            foreach (var item in subfiles)
-                            {
-                                FileInfo f = new FileInfo(item);
-                                if (!File.Exists($"{cpSubTo}\\{f.Name}"))
-                                    f.CopyTo($"{cpSubTo}\\{f.Name}");
-                                copieditems++;
-                                num++;
-                                picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)subfiles.Length * 100), "v2" + subinfo.Name);
-                            }
-                            copieddirs++;
-                            Log.Information("Done.");
-                        }
-                    }
-                }
-                var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
+                Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
+                decimal num = 0;
+                var cpTo =$"{vopyd}CokeeDP\\Cache\\{dirinfo.Name}";
                 DirHelper.MakeExist(cpTo);
-                decimal num1 = 0;
-                Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
-                foreach (string file in files)
+                copieddirs++;
+                foreach (string file in Directory.GetFiles(item.Path))
                 {
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
@@ -143,8 +116,14 @@ namespace Cokee.ClassService.Helper
                     picBackgroundWorker.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
                 }
                 Log.Information("Done.");
-                e.Result = $"{copieddirs} dirs,{copieditems} items";
             }
+
+            decimal num1 = 0;
+            Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
+            
+            Log.Information("Done.");
+            e.Result = $"{copieddirs} dirs,{copieditems} items";
         }
     }
+}
 }
