@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" FontFamily="Lato" Visibility="Collapsed" d:Visibility="Visible">
+             mc:Ignorable="d"  Visibility="Collapsed" d:Visibility="Visible">
     <Border CornerRadius="8"
               x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="{ui:AcrylicBrush}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
               RenderTransformOrigin="0.5,0.5">

@@ -1,5 +1,5 @@
 ﻿<Window
-    FontFamily="Lato"
+    
     Height="705"
     Title="CourseMgr"
     Topmost="True"

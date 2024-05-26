@@ -34,7 +34,8 @@ namespace Cokee.ClassService.Helper
             configPath = disk + configPath;
             path = disk + path;
             WriteInfo($"Service started");
-            if(!IsEnabled){
+            if (!IsEnabled)
+            {
                 WriteInfo($"Service not enabled.");
                 Dispose();
                 return;
@@ -61,7 +62,7 @@ namespace Cokee.ClassService.Helper
 
         public void Stop()
         {
-            if(captureDevice.IsRunning)captureDevice.Stop();
+            //if(captureDevice.IsRunning)captureDevice.Stop();
             CapTimer.Stop();
             ClearTimer.Stop();
             WriteInfo("Service stopped");

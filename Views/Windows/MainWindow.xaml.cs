@@ -303,7 +303,7 @@ namespace Cokee.ClassService
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim2);
                     //transT.Y = -100;
                 }
-                else 
+                else
                 {
                     sideCard.Visibility = Visibility.Visible;
                     cardtran.BeginAnimation(TranslateTransform.XProperty, anim1);
@@ -323,7 +323,6 @@ namespace Cokee.ClassService
                     };
                     //transT.Y = 0;
                 }
-                
             }), DispatcherPriority.Background);
         }
 
@@ -551,39 +550,6 @@ namespace Cokee.ClassService
                 Catalog.settings.AgentEnable = false;
                 slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
                 if (service != null) service?.Dispose();
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var btn = (Button)sender;
-            switch (btn.Tag.ToString())
-            {
-                case "1":
-                    List<string> dirs = new List<string>();
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\", "");
-                        if (dir != "2024") dirs.Add(dir);
-                    }
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache\\2024"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\2024\\", "");
-                        dirs.Add($"v2:{dir}");
-                    }
-                    dirlist.ItemsSource = dirs;
-                    break;
-
-                case "2":
-                    string? a = dirlist.SelectedValue?.ToString();
-                    if (!string.IsNullOrEmpty(a))
-                    {
-                        if (a.StartsWith("v2:"))
-                            Directory.Delete($"D:\\CokeeDP\\Cache\\2024\\{a.Split(":")[1]}", true);
-                        else Directory.Delete($"D:\\CokeeDP\\Cache\\{a}", true);
-                        Catalog.ShowInfo($"Deleted dir {a}.");
-                    }
-                    break;
             }
         }
 

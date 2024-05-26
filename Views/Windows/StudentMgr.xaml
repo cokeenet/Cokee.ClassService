@@ -1,5 +1,5 @@
 ﻿<Window
-    FontFamily="Lato"
+    
     Height="625"
     Title="CokeeClass | 学生管理"
     Topmost="True"

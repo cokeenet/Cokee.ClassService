@@ -2,11 +2,11 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
+		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.7.840.24140</AssemblyVersion>
-		<FileVersion>2.7.840.24140</FileVersion>
+		<AssemblyVersion>2.7.845.24160</AssemblyVersion>
+		<FileVersion>2.7.845.24160</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -47,10 +47,6 @@
 		<None Remove="Resources\CardBackground\3.jpg" />
 		<None Remove="Resources\Lato.ttf" />
 		<None Remove="Resources\Segoe Fluent Icons.ttf" />
-		<Page Remove="Views\Pages\QuickFixPage.xaml" />
-		<None Include="Views\Pages\QuickFixPage.xaml" />
-		<Compile Remove="Views\Pages\QuickFixPage.xaml.cs" />
-		<None Include="Views\Pages\QuickFixPage.xaml.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
