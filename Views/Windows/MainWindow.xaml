@@ -160,7 +160,7 @@
             </Border.Background>
 
             <Border.RenderTransform>
-                <TranslateTransform X="300" d:X="300" x:Name="cardtran" />
+                <TranslateTransform X="300" d:X="0" x:Name="cardtran" />
             </Border.RenderTransform>
             <ui:SimpleStackPanel
                 Background="Transparent"
@@ -314,7 +314,7 @@
                             FontSize="19"
                             HorizontalAlignment="Right"
                             Text="🥰"
-                            VerticalAlignment="Center" />
+                            VerticalAlignment="Center" MouseRightButtonDown="Debug_RightBtn" />
                     </Grid>
                 </ui:SimpleStackPanel>
             </ui:SimpleStackPanel>
@@ -350,7 +350,6 @@
             Width="Auto"
             x:Name="ranres" />
         <Controls:VolumeCard
-            Background="{ui:AcrylicBrush}"
             HorizontalAlignment="Right"
             Margin="0,0,10,300"
             VerticalAlignment="Bottom"
@@ -476,26 +475,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="DirMgr"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock/>
-                        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" />
-                        <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
-                                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
-                            </Button>
-                            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="2">
-                                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
-                            </Button>
-                        </ui:SimpleStackPanel>
-                    </Grid>
+                    <ui:Frame Source="/Views/Pages/Debug.xaml" />
                 </TabItem>
             </TabControl>
         </Border>
