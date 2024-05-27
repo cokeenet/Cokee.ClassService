@@ -103,7 +103,16 @@ namespace Cokee.ClassService.Helper
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
                 decimal num = 0;
-                var cpTo =$"{vopyd}CokeeDP\\Cache\\{dirinfo.Name}";
+                string cpTo;
+                switch (item.Version)
+                {
+                    case 1:
+                        cpTo= $"{copyDisk}CokeeDP\\Cache\\{item.Name}";
+                        break;
+                        case 2:
+                        cpTo = $"{copyDisk}CokeeDP\\Cache\\2024\\{item.Name}";
+                        break;
+                }
                 DirHelper.MakeExist(cpTo);
                 copieddirs++;
                 foreach (string file in Directory.GetFiles(item.Path))

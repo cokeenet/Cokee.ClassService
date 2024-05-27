@@ -34,18 +34,7 @@ namespace Cokee.ClassService.Views.Pages
             switch (btn.Tag.ToString())
             {
                 case "1":
-                    List<string> dirs = new List<string>();
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\", "");
-                        if (dir != "2024") dirs.Add(dir);
-                    }
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache\\2024"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\2024\\", "");
-                        dirs.Add($"v2:{dir}");
-                    }
-                    dirlist.ItemsSource = dirs;
+                   dirlist.ItemsSource = Catalog.;
                     break;
 
                 case "2":
