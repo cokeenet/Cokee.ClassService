@@ -27,7 +27,6 @@ namespace Cokee.ClassService.Helper
         public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public Stopwatch sw = new Stopwatch();
-
         public void Start()
         {
             if (!Directory.Exists(disk)) disk = @"C:\";

@@ -34,7 +34,7 @@ namespace Cokee.ClassService.Views.Pages
             switch (btn.Tag.ToString())
             {
                 case "1":
-                   dirlist.ItemsSource = Catalog.;
+                   dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs();
                     break;
 
                 case "2":

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
 {
@@ -103,7 +104,7 @@ namespace Cokee.ClassService.Helper
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
                 decimal num = 0;
-                string cpTo;
+                string? cpTo=null;
                 switch (item.Version)
                 {
                     case 1:
@@ -120,19 +121,15 @@ namespace Cokee.ClassService.Helper
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
                         f.CopyTo($"{cpTo}\\{f.Name}");
-                    num1++;
-                    // Log.Information($"{dirinfo.Name}:{num}/{files.Length}");
-                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num1 / (decimal)files.Length * 100), dirinfo.Name);
+                    num++;
+                   picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
                 }
                 Log.Information("Done.");
             }
 
-            decimal num1 = 0;
-            Log.Information($"Found v1 pic dir {dirinfo.Name} with {files.Length} pics.");
             
             Log.Information("Done.");
             e.Result = $"{copieddirs} dirs,{copieditems} items";
         }
     }
-}
 }

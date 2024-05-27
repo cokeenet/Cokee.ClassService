@@ -128,7 +128,7 @@ namespace Cokee.ClassService.Helper
 
     public static class DirHelper
     {
-        public static bool MakeExist(string path)
+        public static bool MakeExist(string? path)
         {
             if (!Directory.Exists(path))
             {
