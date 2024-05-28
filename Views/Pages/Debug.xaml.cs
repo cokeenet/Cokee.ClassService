@@ -49,5 +49,10 @@ namespace Cokee.ClassService.Views.Pages
                     break;
             }
         }
+
+        private void diskComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

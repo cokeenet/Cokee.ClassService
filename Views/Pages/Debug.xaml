@@ -19,8 +19,26 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ComboBox Margin="5" x:Name="diskComboBox" />
-        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1" />
+        <ComboBox Margin="5" x:Name="diskComboBox" SelectionChanged="diskComboBox_SelectionChanged"/>
+        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Name}" Margin="2" FontSize="12"/>
+                        <TextBlock Text="{Binding Version}" Grid.Row="1" Margin="2" FontSize="11"/>
+                        <Label Content="{Binding Files}" ContentStringFormat=" {0} filesrrid.Row="1" Margin="2" Grid.Column="1" FontSize="11"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
