@@ -37,7 +37,7 @@ namespace Cokee.ClassService.Helper
         {
             if (!string.IsNullOrEmpty(copydisk))
             {
-                if (!Directory.Exists(copydisk)&& File.Exists(copydisk + "picDisk"))
+                if (Directory.Exists(copydisk)&& File.Exists(copydisk + "picDisk"))
                 {
                     picBackgroundWorker.RunWorkerAsync(copydisk);
                 }
