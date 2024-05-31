@@ -1,5 +1,5 @@
 ﻿<Window
-    FontFamily="Lato"
+    FontFamily="HarmonyOS_Sans"
     Height="505"
     Title="CokeeClass | FloatNote"
     Topmost="True"

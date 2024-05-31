@@ -1,5 +1,5 @@
 ﻿<Page
-    FontFamily="Lato"
+    FontFamily="HarmonyOS_Sans"
     Height="540"
     Title="StudentList"
     Width="900"

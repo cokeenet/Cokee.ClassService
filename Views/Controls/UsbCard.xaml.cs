@@ -173,17 +173,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             if (File.Exists(disk + "picDisk"))
             {
-                copyDisk = disk;
-                if (picBackgroundWorker.IsBusy != true)
-                {
-                    picBackgroundWorker.RunWorkerAsync();
-                    sw.Restart();
-                }
-                else if (picBackgroundWorker.IsBusy == true)
-                {
-                    picBackgroundWorker.CancelAsync();
-                    Catalog.ShowInfo($"Try to stop.");
-                }
+                Catalog.CapServiceHost.StartTask(disk);
             }
             else Catalog.ShowInfo("nonTag");
         }

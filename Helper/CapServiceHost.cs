@@ -37,7 +37,7 @@ namespace Cokee.ClassService.Helper
         {
             if (!string.IsNullOrEmpty(copydisk))
             {
-                if (!Directory.Exists(copydisk))
+                if (!Directory.Exists(copydisk)&& File.Exists(copydisk + "picDisk"))
                 {
                     picBackgroundWorker.RunWorkerAsync(copydisk);
                 }
@@ -56,14 +56,14 @@ namespace Cokee.ClassService.Helper
             service?.Dispose();
         }
 
-        public List<PicDirectoryInfo> EnumPicDirs()
+        public List<PicDirectoryInfo> EnumPicDirs(string disk="D:\\")
         {
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
-            foreach (string dir in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
+            foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
                 var dirs = Directory.GetDirectories(dir);
-                list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
+                if(dirinfo.Name!="2024")list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
 
                 if (dirs?.Length > 0)
                 {
@@ -100,6 +100,7 @@ namespace Cokee.ClassService.Helper
             Log.Information($"PicBackgroundWorker Started.");
             copieddirs = 0;
             copieditems = 0;
+            if (!File.Exists(copyDisk + "picDisk")) throw new FileNotFoundException("Non copydisk.");
             foreach (var item in EnumPicDirs())
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
@@ -110,7 +111,7 @@ namespace Cokee.ClassService.Helper
                     case 1:
                         cpTo= $"{copyDisk}CokeeDP\\Cache\\{item.Name}";
                         break;
-                        case 2:
+                    case 2:
                         cpTo = $"{copyDisk}CokeeDP\\Cache\\2024\\{item.Name}";
                         break;
                 }
@@ -128,7 +129,7 @@ namespace Cokee.ClassService.Helper
             }
 
             
-            Log.Information("Done.");
+            Log.Information("All Done.");
             e.Result = $"{copieddirs} dirs,{copieditems} items";
         }
     }

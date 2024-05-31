@@ -33,26 +33,31 @@ namespace Cokee.ClassService.Views.Pages
             var btn = (Button)sender;
             switch (btn.Tag.ToString())
             {
+                case "0":
+                    DriveInfo[] s = DriveInfo.GetDrives();
+                    diskComboBox.ItemsSource = s; 
+                    break;
                 case "1":
-                   dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs();
+                    var d = (DriveInfo)diskComboBox.SelectedItem;
+
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
                     break;
 
                 case "2":
-                    string? a = dirlist.SelectedValue?.ToString();
-                    if (!string.IsNullOrEmpty(a))
-                    {
-                        if (a.StartsWith("v2:"))
-                            Directory.Delete($"D:\\CokeeDP\\Cache\\2024\\{a.Split(":")[1]}", true);
-                        else Directory.Delete($"D:\\CokeeDP\\Cache\\{a}", true);
-                        Catalog.ShowInfo($"Deleted dir {a}.");
-                    }
+                    var item = (PicDirectoryInfo)dirlist.SelectedItem;
+                    Directory.Delete(item.Path, true);
+                        Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs();
+                    break;
+                case "3":
+                    var x = (DriveInfo)diskComboBox.SelectedItem;
+
+                    Catalog.CapServiceHost.StartTask(x.Name);
                     break;
             }
         }
 
-        private void diskComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+       
+        
     }
 }
