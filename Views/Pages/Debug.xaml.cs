@@ -45,9 +45,11 @@ namespace Cokee.ClassService.Views.Pages
 
                 case "2":
                     var item = (PicDirectoryInfo)dirlist.SelectedItem;
+                    var di = (DriveInfo)diskComboBox.SelectedItem;
+
                     Directory.Delete(item.Path, true);
                         Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
-                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs();
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
                     break;
                 case "3":
                     var x = (DriveInfo)diskComboBox.SelectedItem;

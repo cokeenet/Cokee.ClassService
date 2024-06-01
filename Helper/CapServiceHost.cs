@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +36,7 @@ namespace Cokee.ClassService.Helper
         {
             if (!string.IsNullOrEmpty(copydisk))
             {
-                if (Directory.Exists(copydisk)&& File.Exists(copydisk + "picDisk"))
+                if (Directory.Exists(copydisk) && File.Exists(copydisk + "picDisk"))
                 {
                     picBackgroundWorker.RunWorkerAsync(copydisk);
                 }
@@ -56,14 +55,14 @@ namespace Cokee.ClassService.Helper
             service?.Dispose();
         }
 
-        public List<PicDirectoryInfo> EnumPicDirs(string disk="D:\\")
+        public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
         {
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
+                if (!dirinfo.Name.Contains("-")) list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
                 var dirs = Directory.GetDirectories(dir);
-                if(dirinfo.Name!="2024")list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
 
                 if (dirs?.Length > 0)
                 {
@@ -105,30 +104,30 @@ namespace Cokee.ClassService.Helper
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
                 decimal num = 0;
-                string? cpTo=null;
+                string? cpTo = null;
                 switch (item.Version)
                 {
                     case 1:
-                        cpTo= $"{copyDisk}CokeeDP\\Cache\\{item.Name}";
+                        cpTo = $"{copyDisk}CokeeDP\\Cache\\{item.Name}";
                         break;
                     case 2:
                         cpTo = $"{copyDisk}CokeeDP\\Cache\\2024\\{item.Name}";
                         break;
                 }
                 DirHelper.MakeExist(cpTo);
-                copieddirs++;
+                copieddirs++; num = 0;
                 foreach (string file in Directory.GetFiles(item.Path))
                 {
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
-                   picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
                 }
                 Log.Information("Done.");
             }
 
-            
+
             Log.Information("All Done.");
             e.Result = $"{copieddirs} dirs,{copieditems} items";
         }

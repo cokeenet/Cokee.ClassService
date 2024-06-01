@@ -50,7 +50,7 @@
         </ListBox>
         <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="0">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Dishwasher_24_Regular}" Content="Search Disks" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="Search Disks" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
@@ -59,7 +59,7 @@
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="taskstart" />
             </Button>
         </ui:SimpleStackPanel>
     </Grid>
