@@ -70,7 +70,7 @@ namespace Cokee.ClassService.Helper
                     foreach (string subdir in dirs)
                     {
                         DirectoryInfo subdirinfo = new DirectoryInfo(dir);
-                        list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
+                        if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
                     }
                 }
             }
@@ -116,7 +116,7 @@ namespace Cokee.ClassService.Helper
                         break;
                 }
                 DirHelper.MakeExist(cpTo);
-                copieddirs++;
+                copieddirs++; num = 0;
                 foreach (string file in Directory.GetFiles(item.Path))
                 {
                     FileInfo f = new FileInfo(file);
