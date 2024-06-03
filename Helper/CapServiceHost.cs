@@ -61,15 +61,16 @@ namespace Cokee.ClassService.Helper
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                if (!dirinfo.Name.Contains("-")) list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
+                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
                 var dirs = Directory.GetDirectories(dir);
 
                 if (dirs?.Length > 0)
                 {
                     foreach (string subdir in dirs)
                     {
-                        DirectoryInfo subdirinfo = new DirectoryInfo(dir);
-                        list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
+                        DirectoryInfo subdirinfo = new DirectoryInfo(subdir);
+                        if (dirinfo.Name != "2024")
+                            list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
                     }
                 }
             }
@@ -115,15 +116,16 @@ namespace Cokee.ClassService.Helper
                         break;
                 }
                 DirHelper.MakeExist(cpTo);
-                copieddirs++; num = 0;
+                 num = 1;
                 foreach (string file in Directory.GetFiles(item.Path))
                 {
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
+                    copieditems++;
                     picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
-                }
+                }copieddirs++;
                 Log.Information("Done.");
             }
 
