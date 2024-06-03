@@ -69,7 +69,7 @@ namespace Cokee.ClassService.Helper
                     foreach (string subdir in dirs)
                     {
                         DirectoryInfo subdirinfo = new DirectoryInfo(subdir);
-                        if (dirinfo.Name != "2024")
+                        if (subdirinfo.Name != "2024")
                             list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
                     }
                 }

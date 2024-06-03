@@ -16,6 +16,7 @@ namespace Cokee.ClassService.Helper
 {
     public class CapService : IDisposable
     {
+        //public EventHandler?
         private bool IsEnabled = true;
         private string disk = "D:\\";
         private int camIndex, res;
