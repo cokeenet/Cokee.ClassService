@@ -4,10 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"  Visibility="Collapsed" d:Visibility="Visible">
-    <Border CornerRadius="8"
-              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch" Background="{ui:AcrylicBrush}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2"
-              RenderTransformOrigin="0.5,0.5">
+             mc:Ignorable="d" FontFamily="HarmonyOS_Sans" Visibility="Collapsed" d:Visibility="Visible">
+    <Border CornerRadius="8" Style="{StaticResource ThemeBackground}" Padding="0"
+              x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch">
         <Border.RenderTransform>
             <TransformGroup>
                 <TranslateTransform x:Name="tranUsb" X="0" />
@@ -15,7 +14,7 @@
         </Border.RenderTransform>
         <Grid Margin="15">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
@@ -23,11 +22,11 @@
                                 Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 FontSize="40" Icon="{x:Static ui:FluentSystemIcons.UsbStick_20_Regular}" Grid.RowSpan="2" />
 
-            <Grid Grid.Column="1">
-            <TextBlock  x:Name="diskName"  Text="U盘(?:\)" FontSize="14" MaxWidth="75" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" />
+            <ui:SimpleStackPanel Grid.Column="1">
+            <TextBlock  x:Name="diskName"  Text="本地磁盘(?:\)" FontSize="14" MaxWidth="75" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" />
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" Margin="10" />
-            </Grid>
+            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" Margin="10" FontSize="11"/>
+            </ui:SimpleStackPanel>
             <ui:SimpleStackPanel Grid.Column="2" Spacing="5">
                 <Button x:Name="open" HorizontalAlignment="Right"
                   VerticalAlignment="Top" Click="Open"

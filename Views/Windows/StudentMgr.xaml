@@ -1,5 +1,5 @@
 ﻿<Window
-    
+    FontFamily="HarmonyOS_Sans"
     Height="625"
     Title="CokeeClass | 学生管理"
     Topmost="True"
@@ -22,12 +22,20 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ui:SimpleStackPanel Grid.Column="0" Margin="6,0,6,0">
-            <ui:AppBarButton Click="Random" Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_48_Regular}" />
+        <ui:SimpleStackPanel Grid.Column="0" Margin="6,0,6,0" Spacing="20">
+            <Button Click="Random">
+                <ui:IconAndText Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_48_Regular}" />
+            </Button>
             <ui:AppBarSeparator />
-            <ui:AppBarButton Click="AddStu" Content="添加学生" Icon="{x:Static ui:FluentSystemIcons.Add_48_Regular}" />
-            <ui:AppBarButton Click="AddMuitlStu" Content="批量添加" Icon="{x:Static ui:FluentSystemIcons.AddSubtractCircle_48_Regular}" />
-            <ui:AppBarButton Click="ClassSetting" Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" Content="班级设置" />
+            <Button Click="AddStu">
+                <ui:IconAndText Content="添加学生" Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}" />
+            </Button>
+            <Button Click="AddMuitlStu">
+                <ui:IconAndText Content="批量添加" Icon="{x:Static ui:FluentSystemIcons.AddSubtractCircle_48_Regular}" />
+            </Button>
+            <Button Click="ClassSetting">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" Content="班级设置" />
+            </Button>
         </ui:SimpleStackPanel>
         <Border
                 CornerRadius="8,0,0,0"

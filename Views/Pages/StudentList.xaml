@@ -1,5 +1,6 @@
 ﻿<Page
-    
+
+    FontFamily="HarmonyOS_Sans"
     Height="540"
     Title="StudentList"
     Width="900"
@@ -41,7 +42,7 @@
             Visibility="Collapsed"
             Width="500"
             x:Name="randomres" />
-        <Controls:NewStudent
+        <Controls:NewStudent x:Name="newstu"
             Height="400"
             Background="{ui:ThemeResource SystemColorButtonFaceColor}"
             Visibility="Collapsed"

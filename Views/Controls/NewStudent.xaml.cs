@@ -15,7 +15,9 @@ namespace Cokee.ClassService.Views.Controls
     /// NewStudent.xaml 的交互逻辑
     /// </summary>
     public partial class NewStudent : UserControl
+
     {
+        public EventHandler<List<Student>>? StudentsChanged;
         public NewStudent()
         {
             InitializeComponent();
@@ -25,8 +27,8 @@ namespace Cokee.ClassService.Views.Controls
 
         private async void Confirm(object sender, RoutedEventArgs e)
         {
-            if (!DesignerProperties.GetIsInDesignMode(this)) return;
-            string[] lines = stutb.Text.Split("\r");
+            //if (!DesignerProperties.GetIsInDesignMode(this)) return;
+            string[] lines = stutb.Text.Split(Environment.NewLine);
             List<Student> students = new List<Student>();
             foreach (string line in lines)
             {
@@ -40,7 +42,9 @@ namespace Cokee.ClassService.Views.Controls
                 DateTime.TryParse(values[2], out dt);
                 students.Add(new Student { Name = name, Sex = sex, BirthDay = dt });
             }
-            await StudentExtensions.Save(students);
+            //Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault()?.Close();
+            //await StudentExtensions.Save(students);
+            StudentsChanged?.Invoke(this,students);
             Catalog.ToggleControlVisible(this);
         }
 

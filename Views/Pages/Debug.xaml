@@ -19,14 +19,47 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ComboBox Margin="5" x:Name="diskComboBox" />
-        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1" />
+        <ComboBox Margin="5" d:ItemsSource="{d:SampleData ItemCount=10}" x:Name="diskComboBox">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <ui:SimpleStackPanel>
+                    <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding VolumeLabel}" />
+                    </ui:SimpleStackPanel>
+            </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Name}" Margin="2" FontSize="12" />
+                        <TextBlock Text="{Binding Version}" Grid.Row="1" Margin="2" FontSize="11" />
+                        <Label Content="{Binding Files}" Grid.Row="1" Margin="2" Grid.Column="1" FontSize="11" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
+            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="0">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="Search Disks" />
+            </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="2">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
+            </Button>
+            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="taskstart" />
             </Button>
         </ui:SimpleStackPanel>
     </Grid>

@@ -33,30 +33,30 @@ namespace Cokee.ClassService.Views.Pages
             var btn = (Button)sender;
             switch (btn.Tag.ToString())
             {
+                case "0":
+                    DriveInfo[] s = DriveInfo.GetDrives();
+                    diskComboBox.ItemsSource = s;
+                    break;
+
                 case "1":
-                    List<string> dirs = new List<string>();
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\", "");
-                        if (dir != "2024") dirs.Add(dir);
-                    }
-                    foreach (string str in Directory.GetDirectories("D:\\CokeeDP\\Cache\\2024"))
-                    {
-                        var dir = str.Replace("D:\\CokeeDP\\Cache\\2024\\", "");
-                        dirs.Add($"v2:{dir}");
-                    }
-                    dirlist.ItemsSource = dirs;
+                    var d = (DriveInfo)diskComboBox.SelectedItem;
+
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
                     break;
 
                 case "2":
-                    string? a = dirlist.SelectedValue?.ToString();
-                    if (!string.IsNullOrEmpty(a))
-                    {
-                        if (a.StartsWith("v2:"))
-                            Directory.Delete($"D:\\CokeeDP\\Cache\\2024\\{a.Split(":")[1]}", true);
-                        else Directory.Delete($"D:\\CokeeDP\\Cache\\{a}", true);
-                        Catalog.ShowInfo($"Deleted dir {a}.");
-                    }
+                    var item = (PicDirectoryInfo)dirlist.SelectedItem;
+                    var di = (DriveInfo)diskComboBox.SelectedItem;
+
+                    Directory.Delete(item.Path, true);
+                        Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
+                    break;
+
+                case "3":
+                    var x = (DriveInfo)diskComboBox.SelectedItem;
+
+                    Catalog.CapServiceHost.StartTask(x.Name);
                     break;
             }
         }

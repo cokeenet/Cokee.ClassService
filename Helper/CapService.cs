@@ -16,6 +16,7 @@ namespace Cokee.ClassService.Helper
 {
     public class CapService : IDisposable
     {
+        //public EventHandler?
         private bool IsEnabled = true;
         private string disk = "D:\\";
         private int camIndex, res;
@@ -27,7 +28,6 @@ namespace Cokee.ClassService.Helper
         public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public Stopwatch sw = new Stopwatch();
-
         public void Start()
         {
             if (!Directory.Exists(disk)) disk = @"C:\";

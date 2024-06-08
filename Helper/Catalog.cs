@@ -40,7 +40,7 @@ namespace Cokee.ClassService.Helper
         public static MainWindow? MainWindow = Application.Current.MainWindow as MainWindow;
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
-
+        public static CapServiceHost CapServiceHost = new CapServiceHost();
         public static async void HandleException(Exception ex, string str = "",bool isSlient=false)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>

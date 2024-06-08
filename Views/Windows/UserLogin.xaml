@@ -1,5 +1,5 @@
 ﻿<Window
-    
+    FontFamily="HarmonyOS_Sans"
     Height="705"
     Title="CourseMgr"
     Topmost="True"

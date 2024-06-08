@@ -37,6 +37,11 @@ namespace Cokee.ClassService.Views.Pages
                         Application.Current.Windows.OfType<StudentMgr>().FirstOrDefault().RandomEvent +=
                             StudentList_RandomEvent;
                         randomcontrol.RandomResultControl = randomres;
+                        newstu.StudentsChanged += (a, b) => {
+                            students = new ObservableCollection<Student>(b);
+                            Students.ItemsSource = students;
+                            SaveData();
+                        };
                         Students.StudentClick += Card_MouseDown;
                         Students.StudentRightClick += Card_MouseRightButtonDown;
                         studentInfo.EditStudent += StudentInfo_EditStudent;

@@ -1,5 +1,5 @@
 ﻿<Page
-    
+    FontFamily="HarmonyOS_Sans"
     Height="600"
     Title="LoginPage"
     Width="500"
@@ -93,7 +93,6 @@
                 VerticalAlignment="Center">
 
                 <ui:IconAndText Content="登录" Icon="{x:Static ui:FluentSystemIcons.Key_24_Regular}" />
-
             </Button>
         </Grid>
     </Border>

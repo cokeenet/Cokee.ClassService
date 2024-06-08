@@ -5,6 +5,8 @@
 		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
+		<AssemblyVersion>2.7.844.24147</AssemblyVersion>
+		<FileVersion>2.7.844.24147</FileVersion>
 		<AssemblyVersion>2.7.845.24160</AssemblyVersion>
 		<FileVersion>2.7.845.24160</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
@@ -45,6 +47,7 @@
 		<None Remove="Resources\CardBackground\1.jpg" />
 		<None Remove="Resources\CardBackground\2.jpg" />
 		<None Remove="Resources\CardBackground\3.jpg" />
+		<None Remove="Resources\HarmonyOS_Sans_SC_Regular.ttf" />
 		<None Remove="Resources\Lato.ttf" />
 		<None Remove="Resources\Segoe Fluent Icons.ttf" />
 	</ItemGroup>
@@ -148,6 +151,7 @@
 		<Content Include="head.ico" />
 		<Resource Include="Resources\bg1.png" />
 		<EmbeddedResource Include="Resources\Lato.ttf" />
+		<EmbeddedResource Include="Resources\HarmonyOS_Sans_SC_Regular.ttf" />
 		<Resource Include="Resources\bg1.jpg" />
 		<Resource Include="Resources\bg2.png" />
 		<Resource Include="Resources\CardBackground\1.jpg" />

@@ -130,5 +130,13 @@ namespace Cokee.ClassService.Views.Controls
             cf.Content = "不重复(已抽0个)";
             Catalog.ShowInfo("清除成功");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            StudentExtensions.RandomHistory.Clear();
+            stus.ItemsSource = StudentExtensions.RandomHistory;
+            cf.Content = "不重复(已抽0个)";
+            Catalog.ShowInfo("清除成功");
+        }
     }
 }
