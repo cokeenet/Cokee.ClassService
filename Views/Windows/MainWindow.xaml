@@ -64,7 +64,7 @@
                 <Border
                     Focusable="False" Style="{StaticResource CardBorderStyle}" Padding="0"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Grid Focusable="False" Margin="5">
+                    <Grid Focusable="False" Margin="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -103,7 +103,7 @@
                 <Border
                     Focusable="False" Style="{StaticResource CardBorderStyle}" Padding="0"
                     HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Grid Focusable="False" Margin="5">
+                    <Grid Focusable="False" Margin="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -160,7 +160,7 @@
             </Border.Background>
 
             <Border.RenderTransform>
-                <TranslateTransform X="300" d:X="0" x:Name="cardtran" />
+                <TranslateTransform X="300" d:X="300" x:Name="cardtran" />
             </Border.RenderTransform>
             <ui:SimpleStackPanel
                 Background="Transparent"
@@ -452,7 +452,6 @@
             </Border>
         </Grid>
         <Border
-            ui:ThemeManager.RequestedTheme="Dark"
             Style="{StaticResource ThemeBackground}"
             Height="300"
             HorizontalAlignment="Right"
@@ -468,9 +467,9 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Debug Log Output" Margin="5" Foreground="White" />
+                        <TextBlock Text="Debug Log Output" Margin="5" />
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
-                            <RichTextBox x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
+                            <RichTextBox ui:ThemeManager.RequestedTheme="Dark" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>
                     </Grid>
                 </TabItem>
@@ -488,7 +487,7 @@
             x:Name="usbCard" />
         <ui:InfoBar Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
             VerticalAlignment="Bottom"
-            x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" HorizontalAlignment="Center" MaxWidth="450" MaxHeight="400">
+            x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" IsClosable="False" HorizontalAlignment="Center" MaxWidth="450" MaxHeight="400">
             <ui:InfoBar.RenderTransform>
                 <TranslateTransform x:Name="infobarTran" />
             </ui:InfoBar.RenderTransform>
