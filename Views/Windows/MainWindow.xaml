@@ -153,7 +153,7 @@
 
             <Border.Background>
                 <ImageBrush
-                    ImageSource="/Resources/CardBackground/3.jpg"
+                    ImageSource="/Resources/bg1.jpg"
                     Opacity="1"
                     Stretch="UniformToFill"
                     TileMode="None" />
@@ -167,24 +167,34 @@
                 Margin="15"
                 Spacing="5">
                 <ui:SimpleStackPanel VerticalAlignment="Top">
-                    <TextBlock
+                    <TextBlock Foreground="White"
                         FontFamily="HarmonyOS_Sans"
                         FontSize="30"
                         Margin="0,0,0,5"
                         Text="--:--"
                         d:Text="21:03:03"
-                        x:Name="time1" />
-                    <TextBlock
+                        x:Name="time1" >
+                        <TextBlock.Effect>
+                            <DropShadowEffect Opacity="0.3"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock Foreground="White"
                         FontFamily="HarmonyOS_Sans"
                         FontSize="16"
                         Text="-----"
                         d:Text="2024年 周六 不知道什么节"
-                        x:Name="longDate" />
-                    <TextBlock
+                        x:Name="longDate" >
+                        <TextBlock.Effect>
+                            <DropShadowEffect Opacity="0.3"/>
+                        </TextBlock.Effect></TextBlock>
+                    <TextBlock Foreground="White"
                         FontFamily="HarmonyOS_Sans"
                         FontSize="14" Margin="0,5,0,5"
                         d:Text="甲辰年(龙年)己巳月丙子日"
-                        x:Name="longCHNDate" />
+                        x:Name="longCHNDate" >
+                        <TextBlock.Effect>
+                            <DropShadowEffect Opacity="0.3"/>
+                        </TextBlock.Effect></TextBlock>
                 </ui:SimpleStackPanel>
                 <ui:SimpleStackPanel>
                     <Grid x:Name="btnGrid">
@@ -303,18 +313,27 @@
                             Foreground="White"
                             Margin="5" FontSize="14"
                             Text="CokeeClass 版本1.0.1111"
-                            x:Name="VerStr" />
+                            x:Name="VerStr" >
+                            <TextBlock.Effect>
+                                <DropShadowEffect Opacity="0.3"/>
+                            </TextBlock.Effect></TextBlock>
                         <TextBlock MouseRightButtonDown="Grid_MouseRightButtonDown"
                             Foreground="Goldenrod"
                             Grid.Row="1" x:Name="slogan"
                             Margin="5" FontSize="14"
                             Text="CokeeTech 秋坂科技">
-                        </TextBlock>
+                            <TextBlock.Effect>
+                                <DropShadowEffect Opacity="0.3"/>
+                            </TextBlock.Effect></TextBlock>
                         <emoji:EmojiedTextBlock
                             FontSize="19"
                             HorizontalAlignment="Right"
                             Text="🥰"
-                            VerticalAlignment="Center" MouseRightButtonDown="Debug_RightBtn" />
+                            VerticalAlignment="Center" MouseRightButtonDown="Debug_RightBtn" >
+                            <emoji:EmojiedTextBlock.Effect>
+                                <DropShadowEffect Opacity="0.3"/>
+                            </emoji:EmojiedTextBlock.Effect>
+                        </emoji:EmojiedTextBlock>
                     </Grid>
                 </ui:SimpleStackPanel>
             </ui:SimpleStackPanel>

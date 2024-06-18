@@ -63,7 +63,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            DriveInfo[] s = DriveInfo.GetDrives().SelectMany(x=>x.DriveType==DriveType.Fixed);
+            DriveInfo[] s = DriveInfo.GetDrives();
             diskComboBox.ItemsSource = s;
         }
     }

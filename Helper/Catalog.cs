@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Threading;
 
 using AutoUpdaterDotNET;
@@ -225,6 +226,10 @@ namespace Cokee.ClassService.Helper
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
+                if(uIElement.Effect == null) 
+                { 
+                    uIElement.Effect=new DropShadowEffect() { Opacity = 0.1 };
+                }
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;

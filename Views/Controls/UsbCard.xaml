@@ -5,31 +5,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" FontFamily="HarmonyOS_Sans" Visibility="Collapsed" d:Visibility="Visible">
-    <Border CornerRadius="8" Style="{StaticResource ThemeBackground}" Padding="0"
+    <Border  BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8" Style="{StaticResource ThemeBackground}" Padding="0"
               x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch">
         <Border.RenderTransform>
             <TransformGroup>
                 <TranslateTransform x:Name="tranUsb" X="0" />
             </TransformGroup>
         </Border.RenderTransform>
-        <Grid Margin="15">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <ui:FontIcon MouseRightButtonDown="SymbolIcon_MouseRightButtonDown"
-                                Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 FontSize="40" Icon="{x:Static ui:FluentSystemIcons.UsbStick_20_Regular}" Grid.RowSpan="2" />
 
-            <ui:SimpleStackPanel Grid.Column="1">
-            <TextBlock  x:Name="diskName"  Text="本地磁盘(?:\)" FontSize="14" MaxWidth="75" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" />
+            <ui:SimpleStackPanel Grid.Column="1" Margin="5,10,10,10" HorizontalAlignment="Center">
+                <TextBlock  x:Name="diskName"  Text="本地磁盘(?:\)" FontSize="14" MaxWidth="175" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" />
 
-            <TextBlock x:Name="diskInfo" Text="---GB/---GB" VerticalAlignment="Bottom" Margin="10" FontSize="11"/>
+                <TextBlock x:Name="diskInfo" Text="---GB/---GB"  Margin="5" FontSize="11" />
             </ui:SimpleStackPanel>
-            <ui:SimpleStackPanel Grid.Column="2" Spacing="5">
+            <ui:SimpleStackPanel Grid.Column="2" Margin="5">
                 <Button x:Name="open" HorizontalAlignment="Right"
-                  VerticalAlignment="Top" Click="Open"
+                  VerticalAlignment="Top" Click="Open" Margin="5"
                    Tag="">
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.HardDrive_20_Regular}" />
@@ -37,7 +37,7 @@
                     </ui:SimpleStackPanel>
                 </Button>
                 <Button x:Name="remove" HorizontalAlignment="Right"
-                 VerticalAlignment="Top"
+                 VerticalAlignment="Top" Margin="5"
                  Click="ExitUsbDrive" Grid.Row="1">
 
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">

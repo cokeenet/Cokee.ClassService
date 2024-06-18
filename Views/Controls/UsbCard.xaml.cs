@@ -177,5 +177,10 @@ namespace Cokee.ClassService.Views.Controls
             }
             else Catalog.ShowInfo("nonTag");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
