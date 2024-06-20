@@ -488,7 +488,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Debug Log Output" Margin="5" />
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
-                            <RichTextBox ui:ThemeManager.RequestedTheme="Dark" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
+                            <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>
                     </Grid>
                 </TabItem>
