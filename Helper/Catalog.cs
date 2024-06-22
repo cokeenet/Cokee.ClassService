@@ -10,8 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
-using AutoUpdaterDotNET;
-
 //using AutoUpdaterDotNET;
 
 using Cokee.ClassService.Shared;
@@ -41,7 +39,8 @@ namespace Cokee.ClassService.Helper
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
         public static CapServiceHost CapServiceHost = new CapServiceHost();
-        public static async void HandleException(Exception ex, string str = "",bool isSlient=false)
+
+        public static async void HandleException(Exception ex, string str = "", bool isSlient = false)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
@@ -49,7 +48,7 @@ namespace Cokee.ClassService.Helper
                 App.bugsnag.Notify(ex);
                 string shortExpInfo = ex.ToString();
                 if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
-                if (MainWindow == null||isSlient) return;
+                if (MainWindow == null || isSlient) return;
                 ShowInfo($"{str}发生错误", shortExpInfo, InfoBarSeverity.Error);
             });
         }
@@ -84,11 +83,11 @@ namespace Cokee.ClassService.Helper
         {
             try
             {
-                AutoUpdater.ShowSkipButton = false;
+                /*AutoUpdater.ShowSkipButton = false;
                 AutoUpdater.ShowRemindLaterButton = true;
                 AutoUpdater.RemindLaterAt = 15;
                 AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Minutes;
-                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");
+                AutoUpdater.Start("https://gitee.com/cokee/classservice/raw/master/class_update.xml");*/
             }
             catch
             {
@@ -99,35 +98,89 @@ namespace Cokee.ClassService.Helper
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
            {
-               if (MainWindow != null)
-               {
-                   if (MainWindow.inkTool.isPPT && MainWindow.pptApplication != null && MainWindow.pptApplication.SlideShowWindows[1] != null) MainWindow.pptApplication.SlideShowWindows[1].View.Exit();
-                   //mainWindow.IconAnimation(true);
-               }
            });
         }
 
-        public static async void ShowInfo(string? title = "", string content = "  ", InfoBarSeverity severity = InfoBarSeverity.Informational)
+        public static void ShowInfo(string? title = "", string content = "", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
-            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                Log.Information($"Snack消息:{title} {content}");
                 if (MainWindow == null) return;
-                MainWindow.infobar.Title = title;
-                MainWindow.infobar.Message = content;
-                MainWindow.infobar.Severity = severity;
-                DoubleAnimation anim2 = new DoubleAnimation(0, MainWindow.infobar.ActualHeight + 200, TimeSpan.FromSeconds(1));
-                DoubleAnimation anim1 = new DoubleAnimation(MainWindow.infobar.ActualHeight + 200, 0, TimeSpan.FromSeconds(1));
-                anim2.Completed += (a, b) => MainWindow.infobar.IsOpen = false;
-                anim1.EasingFunction = Catalog.easingFunction;
-                anim2.EasingFunction = Catalog.easingFunction;
-                MainWindow.infobar.IsOpen = true;
-                MainWindow.infobarTran.BeginAnimation(TranslateTransform.YProperty, anim1);
-                await Task.Delay(5000);
-                MainWindow.infobar.IsOpen = true;
-                MainWindow.infobarTran.BeginAnimation(TranslateTransform.YProperty, anim2);
+                // Ensure the message queue is initialized
+                if (infoMessageQueue == null)
+                {
+                    infoMessageQueue = new Queue<(string Title, string Content, InfoBarSeverity Severity)>();
+                }
+
+                // Add the new message to the queue
+                infoMessageQueue.Enqueue((title, content, severity));
+
+                // Process the first message in the queue if InfoBar is closed
+                if (!MainWindow.infobar.IsOpen)
+                {
+                    ShowNextMessage();
+                }
             }, DispatcherPriority.Background);
         }
+
+        private static async void ShowNextMessage()
+        {
+            if (infoMessageQueue.Count > 0)
+            {
+                var (title, content, severity) = infoMessageQueue.Peek(); // Get the first message without removing it
+                if (MainWindow == null) return;
+
+                // Show the message
+                var infobar = MainWindow.infobar;
+                var infobarTran = MainWindow.infobarTran;
+
+                infobar.Title = title;
+                infobar.Message = content;
+                infobar.Severity = severity;
+                infobar.IsOpen = true;
+                Log.Information($"Snack消息:{title} {content}");
+                // Start the show animation
+                DoubleAnimation showAnim = new DoubleAnimation(
+                    0,
+                    infobar.ActualHeight,
+                    TimeSpan.FromSeconds(1),
+                    FillBehavior.HoldEnd);
+                showAnim.EasingFunction = Catalog.easingFunction;
+                infobarTran.BeginAnimation(TranslateTransform.YProperty, showAnim);
+
+                // After the delay, hide the message and process the next one
+                await Task.Delay(5000);
+                HideCurrentMessageAndProcessNext();
+            }
+        }
+
+        private static void HideCurrentMessageAndProcessNext()
+        {
+            if (infoMessageQueue.Any())
+            {
+                if (MainWindow == null) return;
+
+                var infobar = MainWindow.infobar;
+                var infobarTran = MainWindow.infobarTran;
+
+                // Start the hide animation
+                DoubleAnimation hideAnim = new DoubleAnimation(
+                    infobar.ActualHeight,
+                    0,
+                    TimeSpan.FromSeconds(1),
+                    FillBehavior.Stop);
+                hideAnim.EasingFunction = Catalog.easingFunction;
+                hideAnim.Completed += (a, b) =>
+                {
+                    infobar.IsOpen = false;
+                    infoMessageQueue.Dequeue(); // Remove the message from the queue
+                    ShowNextMessage(); // Process the next message
+                };
+                infobarTran?.BeginAnimation(TranslateTransform.YProperty, hideAnim);
+            }
+        }
+
+        private static Queue<(string Title, string Content, InfoBarSeverity Severity)> infoMessageQueue;
 
         public static async void CreateWindow<T>(bool allowMulti = false) where T : Window, new()
         {

@@ -5,10 +5,8 @@
 		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.7.844.24147</AssemblyVersion>
-		<FileVersion>2.7.844.24147</FileVersion>
-		<AssemblyVersion>2.7.845.24160</AssemblyVersion>
-		<FileVersion>2.7.845.24160</FileVersion>
+		<AssemblyVersion>2.7.851.24164</AssemblyVersion>
+		<FileVersion>2.7.851.24164</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -105,7 +103,6 @@
 		<PackageReference Include="AForge.Imaging" Version="2.2.5" />
 		<PackageReference Include="AForge.Video" Version="2.2.5" />
 		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
-		<PackageReference Include="Autoupdater.NET.Official" Version="1.8.6" />
 		<PackageReference Include="Bugsnag" Version="3.1.0" />
 		<PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
 		  <PrivateAssets>all</PrivateAssets>
@@ -114,6 +111,7 @@
 		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.5" />
 		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
 		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.28" />
+		<PackageReference Include="Makaretu.Dns.Multicast.New" Version="0.31.0" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Serilog" Version="4.0.0-dev-02122" />

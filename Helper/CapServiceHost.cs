@@ -1,12 +1,12 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using File = System.IO.File;
 
 using Serilog;
+
+using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
 {
@@ -118,9 +118,8 @@ namespace Cokee.ClassService.Helper
                         cpTo = $"{copyDisk}CokeeDP\\Cache\\2024\\{item.Name}";
                         break;
                 }
-                            var cpTo = copyDisk + $"CokeeDP\\Cache\\{dirinfo.Name}";
                 DirHelper.MakeExist(cpTo);
-                 num = 1;
+                num = 1;
                 foreach (string file in Directory.GetFiles(item.Path))
                 {
                     FileInfo f = new FileInfo(file);
@@ -129,9 +128,10 @@ namespace Cokee.ClassService.Helper
                     num++;
                     copieditems++;
                     picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
-                }copieddirs++;
+                }
+                copieddirs++;
                 Log.Information("Done.");
-                            e.Result = $"{copieddirs} dirs,{copieditems} items";
+                e.Result = $"{copieddirs} dirs,{copieditems} items";
             }
 
             Log.Information("All Done.");

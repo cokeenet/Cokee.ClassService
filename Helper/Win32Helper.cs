@@ -80,10 +80,11 @@ namespace Cokee.ClassService.Helper
         /// </summary>
         /// <param name="exeName">程序名称</param>
         /// <returns></returns>
-        public static bool StartAutomaticallyCreate(string exeName)
+        public static bool CreateAutoBoot()
         {
             try
             {
+                string exeName = "CokeeClass";
                 WshShell shell = new WshShell();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
                 //设置快捷方式的目标所在的位置(源程序完整路径)
@@ -109,12 +110,27 @@ namespace Cokee.ClassService.Helper
         /// </summary>
         /// <param name="exeName">程序名称</param>
         /// <returns></returns>
-        public static bool StartAutomaticallyDel(string exeName)
+        public static bool DeleteAutoBootLnk()
         {
             try
             {
+                string exeName = "CokeeClass";
                 File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
                 return true;
+            }
+            catch
+            {
+            }
+
+            return false;
+        }
+
+        public static bool GetAutoBootStatus()
+        {
+            try
+            {
+                string exeName = "CokeeClass";
+                return File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
             }
             catch
             {

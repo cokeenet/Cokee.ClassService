@@ -5,7 +5,10 @@ using System.Windows.Controls;
 
 using Cokee.ClassService.Helper;
 
+using iNKORE.UI.WPF.Modern.Controls;
+
 using Application = System.Windows.Forms.Application;
+using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace Cokee.ClassService.Views.Pages
 {
@@ -23,6 +26,7 @@ namespace Cokee.ClassService.Views.Pages
                 IsVisibleChanged += (a, b) =>
                 {
                     DataContext = Catalog.settings;
+                    AutoBootToggleSwitch.IsOn = Win32Helper.GetAutoBootStatus();
                     if (!(bool)b.NewValue) SaveData();
                 };
             }
@@ -68,6 +72,16 @@ namespace Cokee.ClassService.Views.Pages
                     Catalog.ReleaseComObject(mainWindow.pptApplication, "PPT");
                     mainWindow.pptApplication = null;
                     break;
+            }
+        }
+
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (!toggleSwitch.IsOn) Win32Helper.DeleteAutoBootLnk();
+                else Win32Helper.CreateAutoBoot();
             }
         }
     }

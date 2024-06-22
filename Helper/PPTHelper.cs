@@ -72,26 +72,6 @@ namespace Cokee.ClassService.Helper
         [SecurityCritical]  // auto-generated
         private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out Object ppunk);
     }
-
-    internal class PPTHelper
-    {
-        [DllImport("ole32.dll")]
-        public static extern int GetActiveObject(ref Guid rclsid, IntPtr pvReserved, out object ppunk);
-
-        public static Application? GetObj()
-        {
-            Guid clsid = new Guid("91493441-5A91-11CF-8700-00AA0060263B");  // PowerPoint.Application 的 CLSID
-
-            int hr = GetActiveObject(ref clsid, IntPtr.Zero, out var activeObject);
-
-            if (hr == 0)  // S_OK
-            {
-                return (Application)activeObject;
-            }
-
-            return null;
-        }
-    }
 }
 
 /*public static class SyntacticSugar

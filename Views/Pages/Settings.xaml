@@ -1,4 +1,4 @@
-﻿<Page
+﻿<ui:Page
     DataContext="{Binding AppSettings}"
     FontFamily="HarmonyOS_Sans"
     Title="Settings"
@@ -124,7 +124,22 @@
                         <ui:IconAndText Content="释放PPT对象" Icon="{x:Static ui:FluentSystemIcons.Delete_48_Regular}" />
                     </Button>
                 </StackPanel>
+                <Border Style="{StaticResource CardBorderStyle}" Margin="5">
+                    <Grid Margin="0,10,0,10" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ui:FontIcon FontSize="20" Margin="5,15,20,15" Icon="{x:Static ui:FluentSystemIcons.FlashAuto_24_Regular}" />
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock FontSize="14" Margin="0,0,0,2" Text="开机自启" VerticalAlignment="Bottom" />
+                            <TextBlock FontSize="12" Margin="0,2,20,5" Opacity="0.615" Text="不建议关闭" TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="2" x:Name="AutoBootToggleSwitch" IsEnabled="False" Toggled="ToggleSwitch_Toggled" />
+                    </Grid>
+                </Border>
             </StackPanel>
         </Controls:ScrollViewerEx>
     </Grid>
-</Page>
+</ui:Page>

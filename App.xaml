@@ -10,7 +10,6 @@
         <ResourceDictionary>
 
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
-            <FontFamily x:Key="Lato">/Cokee.ClassService;component/Resources/#Lato-Regular</FontFamily>
             <FontFamily x:Key="HarmonyOS_Sans">/Cokee.ClassService;component/Resources/#HarmonyOS_Sans_SC_Regular</FontFamily>
 
             <!-- 定义一个隐式样式，将 FontFamily 设置为 "HarmonyOS_Sans" -->
@@ -22,42 +21,42 @@
                 <Setter Property="Margin" Value="1" />
             </Style>
 
-                    <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    </Style>
-                    <Style TargetType="Border" x:Key="CardBorderStyle">
-                        <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}" />
-                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}" />
-                        <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}" />
-                        <Setter Property="CornerRadius" Value="4" />
-                        <Setter Property="Padding" Value="15,0,20,0" />
-                    </Style>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style TargetType="Border" x:Key="CardBorderStyle">
+                <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBackgroundKey}}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderBrushKey}}" />
+                <Setter Property="BorderThickness" Value="{DynamicResource {x:Static ui:ThemeKeys.ExpanderHeaderBorderThicknessKey}}" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Padding" Value="15,0,20,0" />
+            </Style>
 
-                    <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    </Style>
+            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
 
-                    <Style TargetType="ui:ToggleSwitch">
-                        <Setter Property="MinWidth" Value="0" />
-                    </Style>
-                    <Style x:Key="ThemeBackground" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
-                        <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}" />
-                    </Style>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ui:ThemeResources CanBeAccessedAcrossThreads="False">
+            <Style TargetType="ui:ToggleSwitch">
+                <Setter Property="MinWidth" Value="0" />
+            </Style>
+            <Style x:Key="ThemeBackground" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+                <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}" />
+            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemeResources CanBeAccessedAcrossThreads="False">
 
-                            <ui:ThemeResources.ThemeDictionaries>
-                                <ResourceDictionary x:Key="Light">
-                                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#FFEDEDED" />
-                                </ResourceDictionary>
-                                <ResourceDictionary x:Key="Dark">
-                                    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#FF202020" />
-                                </ResourceDictionary>
-                            </ui:ThemeResources.ThemeDictionaries>
-                        </ui:ThemeResources>
-                        <ui:XamlControlsResources />
-                    </ResourceDictionary.MergedDictionaries>
+                    <ui:ThemeResources.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#FFEDEDED" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Dark">
+                            <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#FF202020" />
+                        </ResourceDictionary>
+                    </ui:ThemeResources.ThemeDictionaries>
+                </ui:ThemeResources>
+                <ui:XamlControlsResources />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

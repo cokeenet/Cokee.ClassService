@@ -17,11 +17,10 @@
     <Grid>
         <ItemsControl
                 ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}"
-                d:ItemsSource="{d:SampleData ItemCount=11}"
                 x:Name="Students" Margin="5">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Columns, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}" d:Columns="1" />
+                    <UniformGrid Columns="{Binding Columns, RelativeSource={RelativeSource AncestorType={x:Type local:StudentsViewer}}}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

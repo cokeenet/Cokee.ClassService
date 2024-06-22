@@ -163,7 +163,6 @@
                 <TranslateTransform X="300" d:X="0" x:Name="cardtran" />
             </Border.RenderTransform>
             <ui:SimpleStackPanel
-                Background="Transparent"
                 Margin="15"
                 Spacing="5">
                 <ui:SimpleStackPanel VerticalAlignment="Top">

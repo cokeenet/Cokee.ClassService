@@ -135,7 +135,7 @@ namespace Cokee.ClassService.Views.Controls
                         }
                         catch (Exception ex)
                         {
-                            Catalog.HandleException(ex);
+                            Catalog.HandleException(ex, "TimeMachine");
                         }
                         break;
 
@@ -151,7 +151,7 @@ namespace Cokee.ClassService.Views.Controls
                         }
                         catch (Exception ex)
                         {
-                            Catalog.HandleException(ex);
+                            Catalog.HandleException(ex, "TimeMachine");
                         }
                         break;
 
@@ -166,7 +166,11 @@ namespace Cokee.ClassService.Views.Controls
 
                     case "Exit":
                         ReleaseInk();
-                        Catalog.ExitPPTShow();
+                        if (Catalog.MainWindow != null)
+                        {
+                            if (Catalog.MainWindow.inkTool.isPPT && Catalog.MainWindow.pptApplication != null && Catalog.MainWindow.pptApplication.SlideShowWindows[1] != null) Catalog.MainWindow.pptApplication.SlideShowWindows[1].View.Exit();
+                            //mainWindow.IconAnimation(true);
+                        }
                         Catalog.SetWindowStyle(1);
                         break;
                 }
@@ -177,7 +181,7 @@ namespace Cokee.ClassService.Views.Controls
         {
             inkCanvas.IsEnabled = false;
             isEraser = false;
-            Catalog.MainWindow.ClearStrokes(true);
+            Catalog.MainWindow?.ClearStrokes(true);
             inkCanvas.Background.Opacity = 0;
             Visibility = Visibility.Collapsed;
         }
