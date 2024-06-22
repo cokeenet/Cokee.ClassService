@@ -1,5 +1,4 @@
 ﻿<UserControl
-    Height="43"
     Width="Auto"
     mc:Ignorable="d"
     x:Class="Cokee.ClassService.Views.Controls.InkToolBar"

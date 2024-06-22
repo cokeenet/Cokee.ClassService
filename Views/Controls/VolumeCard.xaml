@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border x:Name="audioCard" Background="{ui:AcrylicBrush}" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8">
+    <Border x:Name="audioCard" Style="{StaticResource ThemeBackground}" Padding="0" BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8">
         <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

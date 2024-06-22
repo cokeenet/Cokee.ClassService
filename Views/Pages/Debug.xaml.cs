@@ -60,5 +60,11 @@ namespace Cokee.ClassService.Views.Pages
                     break;
             }
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            DriveInfo[] s = DriveInfo.GetDrives();
+            diskComboBox.ItemsSource = s;
+        }
     }
 }
