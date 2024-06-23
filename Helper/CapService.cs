@@ -18,6 +18,7 @@ namespace Cokee.ClassService.Helper
     {
         //public EventHandler?
         private bool IsEnabled = true;
+
         private string disk = "D:\\";
         private int camIndex, res;
         private string copyPath = null;
@@ -28,6 +29,7 @@ namespace Cokee.ClassService.Helper
         public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public Stopwatch sw = new Stopwatch();
+
         public void Start()
         {
             if (!Directory.Exists(disk)) disk = @"C:\";
@@ -252,7 +254,7 @@ namespace Cokee.ClassService.Helper
                         item.Delete(true);
                         continue;
                     }
-                    if (CountLength >= 10000)
+                    if (CountLength >= 15000)
                     {
                         WriteInfo($"Dir: {item.Name} Space: {CountLength}M. MUST!!DELETE!!!");
                         item.Delete(true);

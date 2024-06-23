@@ -279,10 +279,10 @@ namespace Cokee.ClassService.Helper
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                if(uIElement.Effect == null) 
-                { 
-                    uIElement.Effect=new DropShadowEffect() { Opacity = 0.1 };
-                }
+                //if(uIElement.Effect == null)
+                //{
+                //    uIElement.Effect=new DropShadowEffect() { Opacity = 0.1 };
+                //}
                 if (uIElement.Visibility == Visibility.Collapsed || IsForceShow)
                 {
                     uIElement.Visibility = Visibility.Visible;
