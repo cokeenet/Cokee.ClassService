@@ -310,8 +310,8 @@
                             Visibility="Collapsed" Padding="0" FontSize="14"
                             d:Visibility="Visible">
                             <ui:SimpleStackPanel Spacing="5" Margin="10">
-                                <TextBlock x:Name="c1" d:Text="今日宜:结婚.会亲友.打扫.买衣服.动土.祈福.安床.架马.祭祀.修造.放水.起基.成人礼.伐木.收养子女.开光.求子.上梁.竖柱.作梁.合帐" FontSize="13" MaxWidth="200" />
-                                <TextBlock x:Name="c2" d:Text="今日不宜:搬家.理发.搬新房.安门.作灶.开光" FontSize="13" MaxWidth="200" />
+                                <TextBlock x:Name="c1" d:Text="今日宜:结婚.会亲友.打扫.买衣服.动土.祈福.安床.架马.祭祀.修造.放水.起基.成人礼.伐木.收养子女.开光.求子.上梁.竖柱.作梁.合帐" FontSize="13" MaxWidth="200" Foreground="White" />
+                                <TextBlock x:Name="c2" d:Text="今日不宜:搬家.理发.搬新房.安门.作灶.开光" FontSize="13" MaxWidth="200" Foreground="White" />
                             </ui:SimpleStackPanel>
                         </Expander>
                     </ui:SimpleStackPanel>
@@ -496,11 +496,14 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="Debug Log Output" Margin="5" />
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
                             <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>
+                        <Button Content="Exit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="Button_Click" Grid.Row="2"/>
+                
                     </Grid>
                 </TabItem>
                 <TabItem Header="DirMgr"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">

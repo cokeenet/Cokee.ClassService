@@ -36,6 +36,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -44,7 +45,8 @@
                         <TextBlock Text="{Binding Name}" Margin="2" FontSize="12" />
                         <TextBlock Text="{Binding Version}" Grid.Row="1" Margin="2" FontSize="11" />
                         <Label Content="{Binding Files}" Grid.Row="1" Margin="2" Grid.Column="1" FontSize="11" />
-                    </Grid>
+                        <Label Content="{Binding FilesLength}" Grid.Row="1" Margin="2" Grid.Column="2" FontSize="11" />
+                    </Grid> 
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

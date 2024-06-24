@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-
-using Serilog;
-
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
@@ -16,6 +14,7 @@ namespace Cokee.ClassService.Helper
         public string Path { get; set; }
         public int Version { get; set; }
         public int Files { get; set; }
+        public string FilesLength { get; set; }
     }
 
     public class CapServiceHost
@@ -56,14 +55,23 @@ namespace Cokee.ClassService.Helper
             service?.Stop();
             service?.Dispose();
         }
-
+        public string CalcDirBytes(string path)
+        {
+            DirectoryInfo dirinfo = new DirectoryInfo(path);
+            long count=0;
+            foreach (var item in dirinfo.GetFiles())
+            {
+                count += item.Length;
+            }
+            return FileSize.Format(count);
+        }
         public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
         {
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length });
+                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length,FilesLength=CalcDirBytes(dir) });
                 var dirs = Directory.GetDirectories(dir);
 
                 if (dirs?.Length > 0)
@@ -72,7 +80,7 @@ namespace Cokee.ClassService.Helper
                     {
                         DirectoryInfo subdirinfo = new DirectoryInfo(subdir);
                         if (subdirinfo.Name != "2024")
-                            list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length });
+                            list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length, FilesLength = CalcDirBytes(subdir) });
                     }
                 }
             }
@@ -127,7 +135,7 @@ namespace Cokee.ClassService.Helper
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
                     copieditems++;
-                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), item.Name);
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), $"v{item.Version}{item.Name}");
                 }
                 copieddirs++;
                 Log.Information("Done.");
