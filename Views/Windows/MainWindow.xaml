@@ -497,12 +497,14 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="Debug Log Output" Margin="5" />
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
                             <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>
-                        <Button Content="Exit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="Button_Click" Grid.Row="2"/>
+                        <TextBlock x:Name="progressStr" Text="ETA:00:00:00 Rest 0 files with 0 dirs." Grid.Row="2" Margin="5"/>
+                        <Button Content="Exit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="Button_Click" Grid.Row="3"/>
                 
                     </Grid>
                 </TabItem>

@@ -221,12 +221,13 @@ namespace Cokee.ClassService.Helper
             }).Start();
         }
 
-        public static async void UpdateProgress(int progress, bool isvisible = true, string? taskname = null)
+        public static async void UpdateProgress(int progress, bool isvisible = true, TaskInfo? info=null)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.progress.Value = progress;
-                MainWindow.tipsText.Text = $"{taskname}:{progress}%";
+                MainWindow.progressStr = $"ETA:{info?.ETA} Rest {info?.RestFiles} files with {info?.TotalFiles} files.";
+                MainWindow.tipsText.Text = $"v{info?.Version}{info?.NowName}:{progress}%";
                 if (!isvisible || progress == 100)
                 {
                     MainWindow.progress.IsActive = false;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
@@ -15,6 +16,16 @@ namespace Cokee.ClassService.Helper
         public int Version { get; set; }
         public int Files { get; set; }
         public string FilesLength { get; set; }
+    }
+    public class TaskInfo
+    {
+        public string NowName { get; set; }
+        public string Persent { get; set; }
+        public int Version { get; set; }
+        public int TotalFiles { get; set; }
+        public int RestFiles { get; set; }
+        public int Speed { get; set; }
+        public string ETA { get; set; }
     }
 
     public class CapServiceHost
@@ -65,7 +76,7 @@ namespace Cokee.ClassService.Helper
             }
             return FileSize.Format(count);
         }
-        public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
+        public async Task<List<PicDirectoryInfo>> EnumPicDirs(string disk = "D:\\")
         {
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
@@ -89,7 +100,7 @@ namespace Cokee.ClassService.Helper
 
         private void BackgroundWorker1_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
-            Catalog.UpdateProgress(e.ProgressPercentage, true, $"log{e.UserState}");
+            Catalog.UpdateProgress(e.ProgressPercentage, true, (TaskInfo?)e.UserState);
         }
 
         private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
@@ -104,14 +115,15 @@ namespace Cokee.ClassService.Helper
             Catalog.UpdateProgress(100, false);
         }
 
-        private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
+        private async void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
         {
             string? copyDisk = (string?)e.Argument;
+            sw.Start();
             Log.Information($"PicBackgroundWorker Started.");
             copieddirs = 0;
             copieditems = 0;
             if (!File.Exists(copyDisk + "picDisk")) throw new FileNotFoundException("Non copydisk.");
-            foreach (var item in EnumPicDirs())
+            foreach (var item in await EnumPicDirs())
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
                 decimal num = 0;
@@ -135,7 +147,7 @@ namespace Cokee.ClassService.Helper
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
                     copieditems++;
-                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), $"v{item.Version}{item.Name}");
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo { NowName});
                 }
                 copieddirs++;
                 Log.Information("Done.");

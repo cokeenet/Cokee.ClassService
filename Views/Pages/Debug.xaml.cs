@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cokee.ClassService.Helper;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using Cokee.ClassService.Helper;
 
 namespace Cokee.ClassService.Views.Pages
 {
@@ -28,7 +16,7 @@ namespace Cokee.ClassService.Views.Pages
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var btn = (Button)sender;
             switch (btn.Tag.ToString())
@@ -47,10 +35,13 @@ namespace Cokee.ClassService.Views.Pages
                 case "2":
                     var item = (PicDirectoryInfo)dirlist.SelectedItem;
                     var di = (DriveInfo)diskComboBox.SelectedItem;
-
-                    Directory.Delete(item.Path, true);
+                    new Task(() =>
+                    {
+                        Directory.Delete(item.Path, true);
                         Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
-                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
+                    }).Start();
+
+                    dirlist.ItemsSource = await Catalog.CapServiceHost.EnumPicDirs(di.Name);
                     break;
 
                 case "3":
