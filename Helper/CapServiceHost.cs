@@ -20,12 +20,22 @@ namespace Cokee.ClassService.Helper
     public class TaskInfo
     {
         public string NowName { get; set; }
-        public string Persent { get; set; }
+        public int Persent { get; set; }
         public int Version { get; set; }
         public int TotalFiles { get; set; }
         public int RestFiles { get; set; }
         public int Speed { get; set; }
         public string ETA { get; set; }
+        public TaskInfo(PicDirectoryInfo info,int copiedFiles, int speedpersec, string eTA)
+        {
+            NowName = info.Name;
+            Persent = Convert.ToInt32(copiedFiles / (decimal)info.Files * 100);
+            Version = info.Version;
+            TotalFiles = info.Files;
+            RestFiles = info.Files-copiedFiles;
+            Speed = speedpersec;
+            ETA = eTA;
+        }
     }
 
     public class CapServiceHost
@@ -147,7 +157,7 @@ namespace Cokee.ClassService.Helper
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
                     copieditems++;
-                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo { NowName});
+                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item));
                 }
                 copieddirs++;
                 Log.Information("Done.");
