@@ -20,12 +20,22 @@ namespace Cokee.ClassService.Helper
     public class TaskInfo
     {
         public string NowName { get; set; }
-        public string Persent { get; set; }
+        public int Persent { get; set; }
         public int Version { get; set; }
         public int TotalFiles { get; set; }
         public int RestFiles { get; set; }
         public int Speed { get; set; }
         public string ETA { get; set; }
+        public TaskInfo(PicDirectoryInfo info, int copiedFiles, int speedpersec)
+        {
+            NowName = info.Name;
+            Persent = Convert.ToInt32(copiedFiles / (decimal)info.Files * 100);
+            Version = info.Version;
+            TotalFiles = info.Files;
+            RestFiles = info.Files - copiedFiles;
+            Speed = speedpersec; if (Speed <= 0) Speed = 1;
+            ETA = TimeSpan.FromMilliseconds((RestFiles / Speed) * 1000).ToString();
+        }
     }
 
     public class CapServiceHost
@@ -69,7 +79,7 @@ namespace Cokee.ClassService.Helper
         public string CalcDirBytes(string path)
         {
             DirectoryInfo dirinfo = new DirectoryInfo(path);
-            long count=0;
+            long count = 0;
             foreach (var item in dirinfo.GetFiles())
             {
                 count += item.Length;
@@ -82,7 +92,7 @@ namespace Cokee.ClassService.Helper
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length,FilesLength=CalcDirBytes(dir) });
+                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length, FilesLength = CalcDirBytes(dir) });
                 var dirs = Directory.GetDirectories(dir);
 
                 if (dirs?.Length > 0)
@@ -147,7 +157,15 @@ namespace Cokee.ClassService.Helper
                         f.CopyTo($"{cpTo}\\{f.Name}");
                     num++;
                     copieditems++;
-                    picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo { NowName});
+                    try
+                    {
+                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, copieditems / sw.Elapsed.Seconds));
+
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 copieddirs++;
                 Log.Information("Done.");

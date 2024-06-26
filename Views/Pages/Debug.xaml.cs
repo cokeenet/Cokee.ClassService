@@ -29,7 +29,7 @@ namespace Cokee.ClassService.Views.Pages
                 case "1":
                     var d = (DriveInfo)diskComboBox.SelectedItem;
 
-                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
+                    dirlist.ItemsSource =await Catalog.CapServiceHost.EnumPicDirs(d.Name);
                     break;
 
                 case "2":

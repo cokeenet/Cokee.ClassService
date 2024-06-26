@@ -226,8 +226,8 @@ namespace Cokee.ClassService.Helper
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.progress.Value = progress;
-                MainWindow.progressStr = $"ETA:{info?.ETA} Rest {info?.RestFiles} files with {info?.TotalFiles} files.";
-                MainWindow.tipsText.Text = $"v{info?.Version}{info?.NowName}:{progress}%";
+                MainWindow.progressStr.Text = $"ETA:{info?.ETA} Rest {info?.RestFiles} files with {info?.TotalFiles} files.";
+                MainWindow.tipsText.Text = $"logv{info?.Version}{info?.NowName}:{progress}%";
                 if (!isvisible || progress == 100)
                 {
                     MainWindow.progress.IsActive = false;
