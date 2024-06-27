@@ -136,7 +136,7 @@ namespace Cokee.ClassService.Helper
             foreach (var item in await EnumPicDirs())
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
-                decimal num = 0;
+                decimal num = 0;int existed = 0;
                 string? cpTo = null;
                 switch (item.Version)
                 {
@@ -154,12 +154,12 @@ namespace Cokee.ClassService.Helper
                 {
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
-                        f.CopyTo($"{cpTo}\\{f.Name}");
+                        f.CopyTo($"{cpTo}\\{f.Name}");else existed++;
                     num++;
                     copieditems++;
                     try
                     {
-                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, copieditems / sw.Elapsed.Seconds));
+                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / sw.Elapsed.Seconds));
 
                     }
                     catch

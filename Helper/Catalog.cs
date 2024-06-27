@@ -102,7 +102,7 @@ namespace Cokee.ClassService.Helper
            });
         }
 
-        public static void ShowInfo(string? title = "", string content = "", InfoBarSeverity severity = InfoBarSeverity.Informational)
+        public static void ShowInfo(string? title = "", string content = "  ", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
             Application.Current.Dispatcher.InvokeAsync(() =>
             {
@@ -226,7 +226,7 @@ namespace Cokee.ClassService.Helper
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.progress.Value = progress;
-                MainWindow.progressStr.Text = $"ETA:{info?.ETA} Rest {info?.RestFiles} files with {info?.TotalFiles} files.";
+                MainWindow.progressStr.Text = $"ETA:{info?.ETA} Speed {info?.Speed} PerSec Rest {info?.RestFiles} files with {info?.TotalFiles} files.";
                 MainWindow.tipsText.Text = $"logv{info?.Version}{info?.NowName}:{progress}%";
                 if (!isvisible || progress == 100)
                 {
