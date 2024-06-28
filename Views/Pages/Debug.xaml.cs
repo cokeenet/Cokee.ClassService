@@ -16,7 +16,7 @@ namespace Cokee.ClassService.Views.Pages
             InitializeComponent();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             var btn = (Button)sender;
             switch (btn.Tag.ToString())
@@ -29,7 +29,8 @@ namespace Cokee.ClassService.Views.Pages
                 case "1":
                     var d = (DriveInfo)diskComboBox.SelectedItem;
 
-                    dirlist.ItemsSource =await Catalog.CapServiceHost.EnumPicDirs(d.Name);
+                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
+
                     break;
 
                 case "2":
@@ -39,9 +40,9 @@ namespace Cokee.ClassService.Views.Pages
                     {
                         Directory.Delete(item.Path, true);
                         Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
+                        dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
                     }).Start();
 
-                    dirlist.ItemsSource = await Catalog.CapServiceHost.EnumPicDirs(di.Name);
                     break;
 
                 case "3":

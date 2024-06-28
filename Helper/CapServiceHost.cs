@@ -86,8 +86,9 @@ namespace Cokee.ClassService.Helper
             }
             return FileSize.Format(count);
         }
-        public async Task<List<PicDirectoryInfo>> EnumPicDirs(string disk = "D:\\")
+        public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
         {
+            
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
@@ -116,6 +117,7 @@ namespace Cokee.ClassService.Helper
         private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             sw.Stop();
+            
             if (e.Error != null)
                 Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
             else if (e.Cancelled)
@@ -123,18 +125,19 @@ namespace Cokee.ClassService.Helper
             else
                 Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.TotalMinutes}min)", $"Result:{e.Result?.ToString()}");
             Catalog.UpdateProgress(100, false);
+            sw.Reset();
         }
         int existed = 0;
-        private async void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
+        private void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
         {
             string? copyDisk = (string?)e.Argument;
-            sw.Start();
+            sw.Restart();
             Log.Information($"PicBackgroundWorker Started.");
             copieddirs = 0;
             existed = 0;
             copieditems = 0;
             if (!File.Exists(copyDisk + "picDisk")) throw new FileNotFoundException("Non copydisk.");
-            foreach (var item in await EnumPicDirs())
+            foreach (var item in EnumPicDirs())
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
                 decimal num = 0;
@@ -158,10 +161,12 @@ namespace Cokee.ClassService.Helper
                         f.CopyTo($"{cpTo}\\{f.Name}");else existed++;
                     num++;
                     copieditems++;
+                    var time = (int)sw.Elapsed.TotalSeconds;
                     try
                     {
-                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / (int)sw.Elapsed.TotalSeconds));
-
+                        if (existed >= copieditems) existed = 0;
+                        if (time <= 0) time = 1;
+                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / time));
                     }
                     catch
                     {
