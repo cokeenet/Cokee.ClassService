@@ -90,7 +90,7 @@ namespace Cokee.ClassService.Views.Controls
                 ink.EditingMode = InkCanvasEditingMode.EraseByStroke;
                 Button btn = sender as Button;
                 btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
-                pen.Style = null;
+                pen.Style = (Style)this.FindResource(ThemeKeys.DefaultButtonStyleKey);
             }
         }
 

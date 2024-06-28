@@ -548,7 +548,7 @@ namespace Cokee.ClassService
             }
         }
 
-        private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.ToggleControlVisible(rancor);
+        private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.CreateWindow<RandomWindow>();
 
         private void CourseMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<CourseMgr>();
 
