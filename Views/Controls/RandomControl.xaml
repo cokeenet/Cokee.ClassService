@@ -14,7 +14,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <!--  W430 H300  -->
-    <Border VerticalAlignment="Stretch" Style="{StaticResource ThemeBackground}">
+    <Border HorizontalAlignment="Center">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

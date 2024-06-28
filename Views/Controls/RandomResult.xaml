@@ -15,7 +15,7 @@
         <helper:LevelConverter x:Key="LevelConverter" />
         <helper:HeadPicUrlConverter x:Key="HeadPicUrlConverter" />
     </UserControl.Resources>
-    <Border VerticalAlignment="Stretch" Style="{StaticResource ThemeBackground}">
+    <Border VerticalAlignment="Stretch" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

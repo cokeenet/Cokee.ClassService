@@ -117,26 +117,27 @@ namespace Cokee.ClassService.Helper
         {
             sw.Stop();
             if (e.Error != null)
-                Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
+                Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
             else if (e.Cancelled)
-                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.Seconds}s)", $"Exception:{e.Error?.ToString()}");
+                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error?.ToString()}");
             else
-                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.Seconds}s)", $"Result:{e.Result?.ToString()}");
+                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.TotalMinutes}min)", $"Result:{e.Result?.ToString()}");
             Catalog.UpdateProgress(100, false);
         }
-
+        int existed = 0;
         private async void BackgroundWorker1_DoWork(object? sender, DoWorkEventArgs e)
         {
             string? copyDisk = (string?)e.Argument;
             sw.Start();
             Log.Information($"PicBackgroundWorker Started.");
             copieddirs = 0;
+            existed = 0;
             copieditems = 0;
             if (!File.Exists(copyDisk + "picDisk")) throw new FileNotFoundException("Non copydisk.");
             foreach (var item in await EnumPicDirs())
             {
                 Log.Information($"Found v{item.Version} pic dir {item.Name} with {item.Files} pics.");
-                decimal num = 0;int existed = 0;
+                decimal num = 0;
                 string? cpTo = null;
                 switch (item.Version)
                 {
@@ -159,7 +160,7 @@ namespace Cokee.ClassService.Helper
                     copieditems++;
                     try
                     {
-                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / sw.Elapsed.Seconds));
+                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / (int)sw.Elapsed.TotalSeconds));
 
                     }
                     catch

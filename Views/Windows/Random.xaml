@@ -1,9 +1,7 @@
 ﻿<Window
     FontFamily="HarmonyOS_Sans"
-    
     Title="CokeeClass | 随机抽取"
     Topmost="True"
-    
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"
     ui:ThemeManager.IsThemeAware="True"
@@ -16,13 +14,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
     <Grid Margin="3,3,3,3">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Controls:RandomResult x:Name="res" Visibility="Collapsed"/>
-        <Controls:RandomControl x:Name="rac"/>
+        <Controls:RandomResult x:Name="res" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Controls:RandomControl x:Name="rac" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Window>
