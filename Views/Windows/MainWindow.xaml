@@ -508,7 +508,7 @@
                 
                     </Grid>
                 </TabItem>
-                <TabItem Header="DirMgr"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
+                <TabItem Header="TaskPanel"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
                     <ui:Frame Source="/Views/Pages/Debug.xaml" />
                 </TabItem>
             </TabControl>
