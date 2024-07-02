@@ -76,6 +76,14 @@ namespace Cokee.ClassService.Helper
             service?.Stop();
             service?.Dispose();
         }
+        public void DoCapAction()
+        {
+            service?.CapAction();
+        }
+        public DateTime? GetLastCapTime()
+        {
+            return service?.lastCapTime;
+        }
         public string CalcDirBytes(string path)
         {
             DirectoryInfo dirinfo = new DirectoryInfo(path);

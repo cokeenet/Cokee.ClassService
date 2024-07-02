@@ -6,16 +6,17 @@
       xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
       xmlns:local="clr-namespace:Cokee.ClassService.Views.Pages"
       mc:Ignorable="d"
-      d:DesignHeight="256" d:DesignWidth="488"
+      d:DesignHeight="256" d:DesignWidth="510"
       Loaded="Page_Loaded"
       Title="Debug">
 
-    <Grid>
+    <Grid VerticalAlignment="Bottom">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -29,7 +30,7 @@
             </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1">
+        <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1" Margin="5" SelectionChanged="selectdir">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -50,19 +51,28 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ui:SimpleStackPanel Grid.Column="1" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
+        <ui:SimpleStackPanel Grid.Column="1" Margin="5" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="0">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="Search Disks" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search All Dirs" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search Dir" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="2">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="taskstart" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.CalendarWeekStart_28_Regular}" Content="taskstart" />
             </Button>
+        </ui:SimpleStackPanel>
+        <ui:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="LightGreen">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.LockClosed_32_Regular}" Content="Toggle" />
+            </Button>
+            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="5">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.PersonRunning_20_Regular}" Content="Do Cap" />
+            </Button>
+            <TextBlock x:Name="captime" MouseMove="captime_MouseMove" Text="LastActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </ui:SimpleStackPanel>
     </Grid>
 </Page>

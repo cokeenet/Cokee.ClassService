@@ -16,8 +16,8 @@ namespace Cokee.ClassService.Helper
 {
     public class CapService : IDisposable
     {
-        //public EventHandler?
-        private bool IsEnabled = true;
+        public EventHandler? CapEvent;
+        private readonly bool IsEnabled = true;
 
         private string disk = "D:\\";
         private int camIndex, res;
@@ -56,7 +56,7 @@ namespace Cokee.ClassService.Helper
             SetTimer(ClearTimer, ClearTimer_Elapsed);
             if (copyPath != null) WriteInfo("CopyPath Loaded.");
             else WriteInfo("Failed to load copyPath.");
-            copyPath = "C:\\Users\\seewo\\OneDrive - Cokee Technologies";
+            //copyPath = "C:\\Users\\seewo\\OneDrive - Cokee Technologies";
             CapAction();
             new Task(CleanOutdated).Start();
             //Console.ReadKey(); //debug
@@ -234,6 +234,10 @@ namespace Cokee.ClassService.Helper
                 WriteInfo($"Year {DateTime.Now.Year}: Found {a.Length} Data Dirs.");
                 foreach (var item in a)
                 {
+                    if (File.Exists($"{item.FullName}\\.lock"))
+                    {
+                        WriteInfo("Detected Locked Flag.Skip.");
+                    }
                     DateTime b;
                     long CountLength = 0;
                     if (DateTime.TryParse(item.Name, out b))
@@ -254,7 +258,7 @@ namespace Cokee.ClassService.Helper
                         item.Delete(true);
                         continue;
                     }
-                    if (CountLength >= 15000)
+                    if (CountLength >= 19000)
                     {
                         WriteInfo($"Dir: {item.Name} Space: {CountLength}M. MUST!!DELETE!!!");
                         item.Delete(true);

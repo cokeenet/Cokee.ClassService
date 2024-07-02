@@ -488,7 +488,7 @@
             VerticalAlignment="Bottom"
             Visibility="Collapsed"
             d:Visibility="Visible"
-            Width="500" Margin="5" Padding="5"
+            Width="520" Margin="5" Padding="5"
             x:Name="logview">
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
                 <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}">
