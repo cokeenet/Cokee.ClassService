@@ -79,6 +79,8 @@ namespace Cokee.ClassService.Helper
         }
         public void DoCapAction()
         {
+            if(service == null)
+            service.isfast = true;
             service?.CapAction();
         }
         public DateTime? GetLastCapTime()
