@@ -25,7 +25,7 @@ namespace Cokee.ClassService.Helper
         private VideoCaptureDevice captureDevice;
         private Timer CapTimer = new Timer(10 * 1000);
         private Timer ClearTimer = new Timer(72 * 60 * 60 * 1000);
-        public bool debugDesktop = false, isCls = false;
+        public bool debugDesktop = false, isCls = false,isfast=false;
         public DateTime? lastCapTime = null;
         private string path = "CokeeDP\\Cache", configPath = "logs\\v2";
         public Stopwatch sw = new Stopwatch();
@@ -176,8 +176,9 @@ namespace Cokee.ClassService.Helper
                 {
                     var a = DateTime.Now.Subtract(lastCapTime.Value);
                     if (a.TotalMilliseconds < CapTimer.Interval)
-                    { /*WriteInfo($"[CapEvent]Too fast to cap. Skip. Countdown:{a.Seconds}s Timer:{CapTimer.Interval}ms");*/
-                        return;
+                    {
+                        if (!isfast) return;
+                        else isfast = false;
                     }
                 }
                 Bitmap bitmap;
@@ -237,6 +238,7 @@ namespace Cokee.ClassService.Helper
                     if (File.Exists($"{item.FullName}\\.lock"))
                     {
                         WriteInfo("Detected Locked Flag.Skip.");
+                        continue;
                     }
                     DateTime b;
                     long CountLength = 0;

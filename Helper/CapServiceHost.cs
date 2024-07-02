@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
@@ -73,12 +72,14 @@ namespace Cokee.ClassService.Helper
 
         public void StopAgent()
         {
-            service?.Stop();
+
             service?.Dispose();
             service = null;
         }
         public void DoCapAction()
         {
+            if (service == null)
+                service.isfast = true;
             service?.CapAction();
         }
         public DateTime? GetLastCapTime()
@@ -97,7 +98,7 @@ namespace Cokee.ClassService.Helper
         }
         public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
         {
-            
+
             List<PicDirectoryInfo> list = new List<PicDirectoryInfo>();
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
@@ -126,7 +127,7 @@ namespace Cokee.ClassService.Helper
         private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             sw.Stop();
-            
+
             if (e.Error != null)
                 Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
             else if (e.Cancelled)
@@ -167,7 +168,8 @@ namespace Cokee.ClassService.Helper
                 {
                     FileInfo f = new FileInfo(file);
                     if (!File.Exists($"{cpTo}\\{f.Name}"))
-                        f.CopyTo($"{cpTo}\\{f.Name}");else existed++;
+                        f.CopyTo($"{cpTo}\\{f.Name}");
+                    else existed++;
                     num++;
                     copieditems++;
                     var time = (int)sw.Elapsed.TotalSeconds;
@@ -175,7 +177,7 @@ namespace Cokee.ClassService.Helper
                     {
                         if (existed >= copieditems) existed = 0;
                         if (time <= 0) time = 1;
-                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems-existed) / time));
+                        picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems - existed) / time));
                     }
                     catch
                     {
