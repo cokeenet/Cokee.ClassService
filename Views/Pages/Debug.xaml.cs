@@ -116,7 +116,7 @@ namespace Cokee.ClassService.Views.Pages
         {
             Dispatcher.BeginInvoke(() =>
             {
-                captime.Text = $"LastActTime:{Catalog.CapServiceHost.GetLastCapTime()}";
+                captime.Text = $"ActTime:{Catalog.CapServiceHost.GetLastCapTime()?.ToString("HH:mm:ss")}";
             });
         }
     }

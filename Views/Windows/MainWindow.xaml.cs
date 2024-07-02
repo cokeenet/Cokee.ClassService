@@ -91,12 +91,7 @@ namespace Cokee.ClassService
             UpdateLayout();
         }
 
-        public void IntiAgent()
-        {
-            service = new CapService();
-            service.Start();
-        }
-
+        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             App.Current.Dispatcher.BeginInvoke(new Action(async () =>
@@ -124,7 +119,7 @@ namespace Cokee.ClassService
                 {
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                     hwndSource.AddHook(usbCard.WndProc);
-                    if (Catalog.settings.AgentEnable) IntiAgent();
+                    if (Catalog.settings.AgentEnable) Catalog.CapServiceHost.StartAgent();  
                     if (Catalog.settings.FileWatcherEnable) IntiFileWatcher();
                     Catalog.CheckUpdate();
                 }
@@ -537,15 +532,16 @@ namespace Cokee.ClassService
             if (!Catalog.settings.AgentEnable)
             {
                 Catalog.settings.AgentEnable = true;
-                IntiAgent();
+                Catalog.CapServiceHost.StartAgent();
                 slogan.Foreground = new SolidColorBrush(Colors.Yellow);
             }
             else
             {
                 Catalog.settings.AgentEnable = false;
                 slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
-                if (service != null) service?.Dispose();
+                Catalog.CapServiceHost.StopAgent();
             }
+            Catalog.settings.Save();
         }
 
         private void ShowRandom(object sender, RoutedEventArgs e) => Catalog.CreateWindow<RandomWindow>();

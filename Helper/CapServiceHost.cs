@@ -75,6 +75,7 @@ namespace Cokee.ClassService.Helper
         {
             service?.Stop();
             service?.Dispose();
+            service = null;
         }
         public void DoCapAction()
         {
