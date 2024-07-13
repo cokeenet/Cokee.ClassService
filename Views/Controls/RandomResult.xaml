@@ -39,7 +39,7 @@
                 VerticalAlignment="Top"
                 d:Text="共 111 人" />
             <local:ScrollViewerEx Grid.Row="2" Margin="5">
-                <local:StudentsViewer ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}" Columns="4" />
+                <local:StudentsViewer ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}" Columns="4" d:ItemsSource="{d:SampleData}"/>
             </local:ScrollViewerEx>
             <Button
                 Click="Confirm"

@@ -21,8 +21,7 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.BeginInvoke(() =>
-            {
+            
                 var btn = (Button)sender;
                 switch (btn.Tag.ToString())
                 {
@@ -80,7 +79,6 @@ namespace Cokee.ClassService.Views.Pages
                         Catalog.CapServiceHost.DoCapAction();
                         break;
                 }
-            });
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

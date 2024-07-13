@@ -125,8 +125,13 @@
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
-                            d:Text="111/111"
-                            x:Name="pptPage1" />
+                            x:Name="pptPage1">
+                            <Run Text="11111" FontSize="12"/>
+                            <LineBreak/>
+                            <Run Text="/" FontSize="8"/>
+                            <LineBreak/>
+                            <Run Text="11111" FontSize="12"/>
+                        </TextBlock>
                         <Button
                             Click="PptDown"
                             Focusable="False"
@@ -290,7 +295,7 @@
                         <Button Click="MonitorOff" HorizontalAlignment="Right">
                             <ui:IconAndText Content="休眠" Icon="{x:Static ui:FluentSystemIcons.Power_28_Regular}" />
                         </Button>
-                        <ui:InfoBar
+                        <ui:InfoBar ui:ThemeManager.RequestedTheme="Light"
                             IsClosable="False"
                             IsOpen="False"
                             Severity="Success"

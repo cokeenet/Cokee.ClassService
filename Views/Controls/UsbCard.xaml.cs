@@ -44,7 +44,7 @@ namespace Cokee.ClassService.Views.Controls
             DriveInfo[] s = DriveInfo.GetDrives();
             s.Any(t =>
             {
-                if (t.DriveType == DriveType.Removable)
+                if (t.DriveType == DriveType.Removable||File.Exists(t.Name + "picDisk"))
                 {
                     ShowUsbCard(false, t);
                     return true;
