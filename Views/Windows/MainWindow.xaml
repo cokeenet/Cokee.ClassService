@@ -529,7 +529,7 @@
             VerticalAlignment="Bottom"
             x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" IsClosable="False" HorizontalAlignment="Center" MaxWidth="450" MaxHeight="400">
             <ui:InfoBar.RenderTransform>
-                <TranslateTransform x:Name="infobarTran" />
+                <TranslateTransform x:Name="infobarTran" d:Y="100"/>
             </ui:InfoBar.RenderTransform>
         </ui:InfoBar>
     </Grid>

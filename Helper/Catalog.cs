@@ -1,4 +1,9 @@
-﻿using System;
+﻿//using AutoUpdaterDotNET;
+
+using Cokee.ClassService.Shared;
+using iNKORE.UI.WPF.Modern.Controls;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,16 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using System.Windows.Threading;
-
-//using AutoUpdaterDotNET;
-
-using Cokee.ClassService.Shared;
-
-using iNKORE.UI.WPF.Modern.Controls;
-
-using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
@@ -95,13 +91,18 @@ namespace Cokee.ClassService.Helper
             }
         }
 
-        public static async void ExitPPTShow()
-        {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
-           {
-           });
-        }
 
+        public static void MoveTo(Point point)
+        {
+            DoubleAnimation showAnim = new DoubleAnimation(
+                    infobar.ActualHeight + 100,
+                    0,
+                    TimeSpan.FromSeconds(1),
+                    FillBehavior.HoldEnd);
+            showAnim.EasingFunction = Catalog.easingFunction;
+            infobarTran.BeginAnimation(TranslateTransform.YProperty, showAnim);
+
+        }
         public static void ShowInfo(string? title = "", string content = "  ", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
             Application.Current.Dispatcher.InvokeAsync(() =>
@@ -142,15 +143,15 @@ namespace Cokee.ClassService.Helper
                 Log.Information($"Snack消息:{title} {content}");
                 // Start the show animation
                 DoubleAnimation showAnim = new DoubleAnimation(
+                    infobar.ActualHeight + 100,
                     0,
-                    infobar.ActualHeight,
                     TimeSpan.FromSeconds(1),
                     FillBehavior.HoldEnd);
                 showAnim.EasingFunction = Catalog.easingFunction;
                 infobarTran.BeginAnimation(TranslateTransform.YProperty, showAnim);
 
                 // After the delay, hide the message and process the next one
-                await Task.Delay(5000);
+                await Task.Delay(3000);
                 HideCurrentMessageAndProcessNext();
             }
         }
@@ -166,8 +167,8 @@ namespace Cokee.ClassService.Helper
 
                 // Start the hide animation
                 DoubleAnimation hideAnim = new DoubleAnimation(
-                    infobar.ActualHeight,
                     0,
+                    infobar.ActualHeight+100,
                     TimeSpan.FromSeconds(1),
                     FillBehavior.Stop);
                 hideAnim.EasingFunction = Catalog.easingFunction;
@@ -221,7 +222,7 @@ namespace Cokee.ClassService.Helper
             }).Start();
         }
 
-        public static async void UpdateProgress(int progress, bool isvisible = true, TaskInfo? info=null)
+        public static async void UpdateProgress(int progress, bool isvisible = true, TaskInfo? info = null)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
