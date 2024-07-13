@@ -1,4 +1,7 @@
 ﻿<Window
+    MaxWidth="550"
+    MinWidth="390"
+    MaxHeight="500"
     FontFamily="HarmonyOS_Sans"
     Title="CokeeClass | 随机抽取"
     Topmost="True"
@@ -13,9 +16,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Margin="3,3,3,3">
-        <Controls:RandomResult x:Name="res" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Controls:RandomControl x:Name="rac" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+    <Grid Margin="5">
+        <Controls:RandomResult x:Name="res" IsVisibleChanged="IsVisibleChanged"  d:Visibility="Collapsed" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Controls:RandomControl x:Name="rac" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
     </Grid>
 </Window>

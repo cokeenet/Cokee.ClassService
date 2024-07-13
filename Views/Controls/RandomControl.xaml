@@ -1,5 +1,7 @@
 ﻿<UserControl
     Height="300"
+    MaxWidth="750"
+    MinWidth="390"
     Width="Auto"
     mc:Ignorable="d"
     x:Class="Cokee.ClassService.Views.Controls.RandomControl"
@@ -127,7 +129,7 @@
                     </Button>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Visible" Margin="5" HorizontalAlignment="Center">
+            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Collapsed" Margin="5" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto"/>
@@ -139,7 +141,7 @@
                 <Button Content="清除已抽取" Grid.Row="1" Click="Button_Click" HorizontalAlignment="Center"/>
 
                 <local:ScrollViewerEx Grid.Row="2" Margin="5">
-<local:StudentsViewer x:Name="stus" Columns="3" />
+                    <local:StudentsViewer x:Name="stus" Columns="3" d:ItemsSource="{d:SampleData}"/>
                 </local:ScrollViewerEx>
             </Grid>
         </Grid>
