@@ -11,7 +11,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
-        <Grid>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -19,7 +19,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label x:Name="name" />
-            <InkCanvas
+            <InkCanvas Margin="5"
                 Background="Black"
                 EditingMode="Ink"
                 Grid.Row="1"

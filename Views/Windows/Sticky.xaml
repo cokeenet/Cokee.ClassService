@@ -21,13 +21,9 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ui:AppBarElementContainer>
-            <ui:AppBarButton Label="      添加">
-                <ui:AppBarButton.Icon>
-                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}" />
-                </ui:AppBarButton.Icon>
-            </ui:AppBarButton>
-        </ui:AppBarElementContainer>
+        <Button VerticalAlignment="Top">
+            <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}" Content="添加" Orientation="Vertical" />
+        </Button>
         <local:ScrollViewerEx
             Grid.Column="1"
             HorizontalAlignment="Center"
@@ -35,7 +31,7 @@
             Margin="0"
             VerticalAlignment="Center"
             x:Name="Sclview">
-            <ItemsControl
+            <ItemsControl ui:ScrollViewerHelper.AutoHideScrollBars="False"
                 ItemsSource="{Binding StickyItems}"
                 VerticalAlignment="Center"
                 d:ItemsSource="{d:SampleData ItemCount=50}"
@@ -47,7 +43,13 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:StickyNote DataContext="{Binding Name}" Margin="10" />
+                        <local:StickyNote DataContext="{Binding Name}" Margin="10" RenderTransformOrigin="0.5,0.5">
+                            <local:StickyNote.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                                </TransformGroup>
+                            </local:StickyNote.RenderTransform>
+                        </local:StickyNote>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

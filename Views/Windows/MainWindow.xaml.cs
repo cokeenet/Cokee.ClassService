@@ -91,7 +91,6 @@ namespace Cokee.ClassService
             UpdateLayout();
         }
 
-        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             App.Current.Dispatcher.BeginInvoke(new Action(async () =>
@@ -103,7 +102,7 @@ namespace Cokee.ClassService
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
-                
+
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
@@ -119,7 +118,7 @@ namespace Cokee.ClassService
                 {
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
                     hwndSource.AddHook(usbCard.WndProc);
-                    if (Catalog.settings.AgentEnable) Catalog.CapServiceHost.StartAgent();  
+                    if (Catalog.settings.AgentEnable) Catalog.CapServiceHost.StartAgent();
                     if (Catalog.settings.FileWatcherEnable) IntiFileWatcher();
                     Catalog.CheckUpdate();
                 }
@@ -538,7 +537,7 @@ namespace Cokee.ClassService
             else
             {
                 Catalog.settings.AgentEnable = false;
-                slogan.Foreground = new SolidColorBrush(Colors.Goldenrod);
+                slogan.Foreground = new SolidColorBrush(Colors.Tomato);
                 Catalog.CapServiceHost.StopAgent();
             }
             Catalog.settings.Save();

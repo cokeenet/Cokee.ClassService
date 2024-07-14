@@ -24,10 +24,10 @@
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <ui:SimpleStackPanel>
-                    <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Name}" />
                         <TextBlock Text="{Binding VolumeLabel}" />
                     </ui:SimpleStackPanel>
-            </DataTemplate>
+                </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
         <ListBox x:Name="dirlist" d:ItemsSource="{d:SampleData ItemCount=10}" Grid.Row="1" Margin="5" SelectionChanged="selectdir">
@@ -47,7 +47,7 @@
                         <TextBlock Text="{Binding Version}" Grid.Row="1" Margin="2" FontSize="11" />
                         <Label Content="{Binding Files}" Grid.Row="1" Margin="2" Grid.Column="1" FontSize="11" />
                         <Label Content="{Binding FilesLength}" Grid.Row="1" Margin="2" Grid.Column="2" FontSize="11" />
-                    </Grid> 
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -66,13 +66,13 @@
             </Button>
         </ui:SimpleStackPanel>
         <ui:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="LightGreen">
+            <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="OrangeRed">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.LockClosed_32_Regular}" Content="Toggle" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="5">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.PersonRunning_20_Regular}" Content="Do Cap" />
             </Button>
-            <TextBlock x:Name="captime" MouseMove="captime_MouseMove" Text="LastActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="captime" MouseMove="Captime_MouseMove" Text="LastActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         </ui:SimpleStackPanel>
     </Grid>
 </Page>

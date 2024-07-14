@@ -81,13 +81,17 @@
                         </Button>
                         <TextBlock FontFamily="HarmonyOS_Sans"
                             Focusable="False"
-                            FontSize="17"
                             Grid.Row="1"
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
-                            d:Text="11/11"
-                            x:Name="pptPage" />
+                            x:Name="pptPage">
+                            <Run Text="11" FontSize="12" x:Name="NowPageText" />
+                            <LineBreak />
+                            <Run Text="————" FontSize="8" />
+                            <LineBreak />
+                            <Run Text="123" FontSize="12" x:Name="TotalPageText" />
+                        </TextBlock>
                         <Button
                             Click="PptDown"
                             Focusable="False"
@@ -120,17 +124,16 @@
                         </Button>
                         <TextBlock FontFamily="HarmonyOS_Sans"
                             Focusable="False"
-                            FontSize="16"
                             Grid.Row="1"
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
                             x:Name="pptPage1">
-                            <Run Text="11111" FontSize="12"/>
-                            <LineBreak/>
-                            <Run Text="/" FontSize="8"/>
-                            <LineBreak/>
-                            <Run Text="11111" FontSize="12"/>
+                            <Run Text="{Binding Text, ElementName=NowPageText,Mode=OneWay}" FontSize="12" />
+                            <LineBreak />
+                            <Run Text="————" FontSize="8" />
+                            <LineBreak />
+                            <Run Text="{Binding Text, ElementName=TotalPageText,Mode=OneWay}" FontSize="12" />
                         </TextBlock>
                         <Button
                             Click="PptDown"
@@ -165,11 +168,11 @@
                     </VisualBrush.Transform>
                     <VisualBrush.Visual>
                         <Image
-    Source="/Resources/bg1.jpg"
+    Source="/Resources/CardBackGround/1.png"
     Opacity="1"
-    Stretch="UniformToFill">
+    Stretch="Uniform">
                             <Image.Effect>
-                                <BlurEffect Radius="50" />
+                                <BlurEffect Radius="1" />
                             </Image.Effect>
                         </Image>
                     </VisualBrush.Visual>
@@ -244,9 +247,12 @@
                                 VerticalAlignment="Stretch">
                                 <ui:IconAndText Content="截图" Icon="{x:Static ui:FluentSystemIcons.Screenshot_24_Regular}" />
                             </Button>
+                            <Button Click="MonitorOff" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <ui:IconAndText Content="休眠" Icon="{x:Static ui:FluentSystemIcons.Power_28_Regular}" />
+                            </Button>
                             <Button
                                 Click="CourseMgr"
-                                HorizontalAlignment="Stretch"
+                                HorizontalAlignment="Stretch" Visibility="Collapsed"
                                 VerticalAlignment="Stretch">
                                 <ui:IconAndText Content="课程管理" Icon="{x:Static ui:FluentSystemIcons.List_28_Regular}" />
                             </Button>
@@ -292,9 +298,6 @@
                         </ui:SimpleStackPanel>
                     </Grid>
                     <ui:SimpleStackPanel Spacing="5">
-                        <Button Click="MonitorOff" HorizontalAlignment="Right">
-                            <ui:IconAndText Content="休眠" Icon="{x:Static ui:FluentSystemIcons.Power_28_Regular}" />
-                        </Button>
                         <ui:InfoBar ui:ThemeManager.RequestedTheme="Light"
                             IsClosable="False"
                             IsOpen="False"
@@ -305,7 +308,7 @@
                         <Border ui:ThemeManager.RequestedTheme="Light"
                             Style="{StaticResource CardBorderStyle}"
                             Visibility="Collapsed" Padding="0"
-                            d:Visibility="Visible">
+                            d:Visibility="Collapsed">
                             <ui:SimpleStackPanel Spacing="5" Margin="10">
                                 <TextBlock d:Text="本节课程:语文 11:30-12:40" FontSize="13" />
                                 <TextBlock d:Text="下节课程:语文 11:30-12:40" FontSize="13" />
@@ -314,7 +317,7 @@
                         <Expander x:Name="exp" Header="万年历"
                             Visibility="Collapsed" Padding="0" FontSize="14"
                             d:Visibility="Visible">
-                            <ui:SimpleStackPanel Spacing="5" Margin="10">
+                            <ui:SimpleStackPanel Margin="10">
                                 <TextBlock x:Name="c1" d:Text="今日宜:结婚.会亲友.打扫.买衣服.动土.祈福.安床.架马.祭祀.修造.放水.起基.成人礼.伐木.收养子女.开光.求子.上梁.竖柱.作梁.合帐" FontSize="13" MaxWidth="200" Foreground="White" />
                                 <TextBlock x:Name="c2" d:Text="今日不宜:搬家.理发.搬新房.安门.作灶.开光" FontSize="13" MaxWidth="200" Foreground="White" />
                             </ui:SimpleStackPanel>
@@ -334,7 +337,7 @@
                                 <DropShadowEffect Opacity="0.3" />
                             </TextBlock.Effect></TextBlock>
                         <TextBlock MouseRightButtonDown="Grid_MouseRightButtonDown"
-                            Foreground="Goldenrod"
+                            Foreground="Tomato"
                             Grid.Row="1" x:Name="slogan"
                             Margin="5" FontSize="14"
                             Text="CokeeTech 秋坂科技">
@@ -495,6 +498,9 @@
             d:Visibility="Visible"
             Width="520" Margin="5" Padding="5"
             x:Name="logview">
+            <Border.Background>
+                <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" />
+            </Border.Background>
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
                 <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}">
                     <Grid>
@@ -508,9 +514,8 @@
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
                             <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>
-                        <TextBlock x:Name="progressStr" Text="ETA:00:00:00 Rest 0 files with 0 dirs." Grid.Row="2" Margin="5"/>
-                        <Button Content="Exit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="Button_Click" Grid.Row="3"/>
-                
+                        <TextBlock x:Name="progressStr" Text="ETA:00:00:00 Rest 0 files with 0 dirs." Grid.Row="2" Margin="5" />
+                        <Button Content="Exit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Click="Button_Click" Grid.Row="3" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="TaskPanel"  ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.Cut_24_Regular}">
@@ -529,7 +534,7 @@
             VerticalAlignment="Bottom"
             x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" IsClosable="False" HorizontalAlignment="Center" MaxWidth="450" MaxHeight="400">
             <ui:InfoBar.RenderTransform>
-                <TranslateTransform x:Name="infobarTran" d:Y="100"/>
+                <TranslateTransform x:Name="infobarTran" />
             </ui:InfoBar.RenderTransform>
         </ui:InfoBar>
     </Grid>
