@@ -2,7 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Interop;
 
 using IWshRuntimeLibrary;
 
@@ -73,6 +74,22 @@ namespace Cokee.ClassService.Helper
             }, IntPtr.Zero);
         }
 
+        public static void SetToolWindow(Window window)
+        {
+            const int WS_EX_TOOLWINDOW = 0x80;
+            // 获取窗口句柄
+            IntPtr hwnd = new WindowInteropHelper(window).Handle;
+
+            // 获取当前窗口样式
+            int currentStyle = Win32Helper.GetWindowLong(hwnd, -20); // -20 表示 GWL_EXSTYLE
+
+            // 设置窗口样式，去掉 WS_EX_APPWINDOW，添加 WS_EX_TOOLWINDOW
+            int newStyle = (currentStyle & ~0x00000040) | WS_EX_TOOLWINDOW;
+
+            // 更新窗口样式
+            Win32Helper.SetWindowLong(hwnd, -20, newStyle);
+        }
+
         #region 开机自启
 
         /// <summary>
@@ -88,7 +105,7 @@ namespace Cokee.ClassService.Helper
                 WshShell shell = new WshShell();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + exeName + ".lnk");
                 //设置快捷方式的目标所在的位置(源程序完整路径)
-                shortcut.TargetPath = Application.ExecutablePath;
+                shortcut.TargetPath = System.Windows.Forms.Application.ExecutablePath;
                 //应用程序的工作目录
                 //当用户没有指定一个具体的目录时，快捷方式的目标应用程序将使用该属性所指定的目录来装载或保存文件。
                 shortcut.WorkingDirectory = Environment.CurrentDirectory;

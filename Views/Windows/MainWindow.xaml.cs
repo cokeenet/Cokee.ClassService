@@ -102,6 +102,7 @@ namespace Cokee.ClassService
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
+                new BackgroundWindow().Show();
 
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
@@ -135,7 +136,6 @@ namespace Cokee.ClassService
                     inkcanvas.StylusUp += MainWindow_StylusUp;
                     inkcanvas.TouchDown += MainWindow_TouchDown;
                 }
-
                 inkcanvas.StrokeCollected += inkcanvas_StrokeCollected;
                 timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
                 timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
@@ -518,7 +518,9 @@ namespace Cokee.ClassService
 
         private void QuickFix(object sender, RoutedEventArgs e)
         {
-            Catalog.CreateWindow<UserLogin>();
+            new BackgroundWindow().Show();
+
+            // Catalog.CreateWindow<UserLogin>();
         }
 
         private void UsbDebug(object sender, MouseButtonEventArgs e)

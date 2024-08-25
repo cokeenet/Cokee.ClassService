@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
       xmlns:local="clr-namespace:Cokee.ClassService.Views.Pages"
       mc:Ignorable="d"
       d:DesignHeight="256" d:DesignWidth="510"
@@ -23,10 +24,10 @@
         <ComboBox Margin="5" d:ItemsSource="{d:SampleData ItemCount=10}" x:Name="diskComboBox">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <ui:SimpleStackPanel>
+                    <uix:SimpleStackPanel>
                         <TextBlock Text="{Binding Name}" />
                         <TextBlock Text="{Binding VolumeLabel}" />
-                    </ui:SimpleStackPanel>
+                    </uix:SimpleStackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
@@ -51,7 +52,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ui:SimpleStackPanel Grid.Column="1" Margin="5" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
+        <uix:SimpleStackPanel Grid.Column="1" Margin="5" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="0">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="Search Disks" />
             </Button>
@@ -64,8 +65,8 @@
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.CalendarWeekStart_28_Regular}" Content="taskstart" />
             </Button>
-        </ui:SimpleStackPanel>
-        <ui:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        </uix:SimpleStackPanel>
+        <uix:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="OrangeRed">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.LockClosed_32_Regular}" Content="Toggle" />
             </Button>
@@ -73,6 +74,6 @@
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.PersonRunning_20_Regular}" Content="Do Cap" />
             </Button>
             <TextBlock x:Name="captime" MouseMove="Captime_MouseMove" Text="LastActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        </ui:SimpleStackPanel>
+        </uix:SimpleStackPanel>
     </Grid>
 </Page>

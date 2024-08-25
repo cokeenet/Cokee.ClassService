@@ -3,6 +3,7 @@
              xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" FontFamily="HarmonyOS_Sans" Visibility="Collapsed" d:Visibility="Visible">
     <Border  BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8" Style="{StaticResource ThemeBackground}" Padding="0"
@@ -22,30 +23,30 @@
                                 Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 FontSize="40" Icon="{x:Static ui:FluentSystemIcons.UsbStick_20_Regular}" Grid.RowSpan="2" />
 
-            <ui:SimpleStackPanel Grid.Column="1" Margin="5,10,10,10" HorizontalAlignment="Center">
+            <uix:SimpleStackPanel Grid.Column="1" Margin="5,10,10,10" HorizontalAlignment="Center">
                 <TextBlock  x:Name="diskName"  Text="本地磁盘(?:\)" FontSize="14" MaxWidth="175" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" />
 
                 <TextBlock x:Name="diskInfo" Text="---GB/---GB"  Margin="5" FontSize="11" />
-            </ui:SimpleStackPanel>
-            <ui:SimpleStackPanel Grid.Column="2" Margin="5">
+            </uix:SimpleStackPanel>
+            <uix:SimpleStackPanel Grid.Column="2" Margin="5">
                 <Button x:Name="open" HorizontalAlignment="Right"
                   VerticalAlignment="Top" Click="Open" Margin="5"
                    Tag="">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
+                    <uix:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.HardDrive_20_Regular}" />
                         <TextBlock Text="打开" />
-                    </ui:SimpleStackPanel>
+                    </uix:SimpleStackPanel>
                 </Button>
                 <Button x:Name="remove" HorizontalAlignment="Right"
                  VerticalAlignment="Top" Margin="5"
                  Click="ExitUsbDrive" Grid.Row="1">
 
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
+                    <uix:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.UsbPlug_20_Regular}" />
                         <TextBlock Text="弹出" />
-                    </ui:SimpleStackPanel>
+                    </uix:SimpleStackPanel>
                 </Button>
-            </ui:SimpleStackPanel>
+            </uix:SimpleStackPanel>
         </Grid>
     </Border>
 </UserControl>

@@ -14,6 +14,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Margin="3,3,3,3">
@@ -22,7 +23,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ui:SimpleStackPanel Grid.Column="0" Margin="6,0,6,0" Spacing="20">
+        <uix:SimpleStackPanel Grid.Column="0" Margin="6,0,6,0" Spacing="20">
             <Button Click="Random">
                 <ui:IconAndText Content="随机抽取" Icon="{x:Static ui:FluentSystemIcons.ArrowShuffle_48_Regular}" />
             </Button>
@@ -36,7 +37,7 @@
             <Button Click="ClassSetting">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" Content="班级设置" />
             </Button>
-        </ui:SimpleStackPanel>
+        </uix:SimpleStackPanel>
         <Border
                 CornerRadius="8,0,0,0"
                 Grid.Column="1"

@@ -1,5 +1,4 @@
 ﻿//using AutoUpdaterDotNET;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +14,8 @@ using System.Windows.Threading;
 using Cokee.ClassService.Shared;
 
 using iNKORE.UI.WPF.Modern.Controls;
+
+using Sentry;
 
 using Serilog;
 
@@ -45,7 +46,7 @@ namespace Cokee.ClassService.Helper
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 Log.Error(ex, "发生错误");
-                App.bugsnag.Notify(ex);
+                SentrySdk.CaptureException(ex);
                 string shortExpInfo = ex.ToString();
                 if (shortExpInfo.Length >= 201) shortExpInfo = string.Concat(ex.ToString().Substring(0, 200), "...");
                 if (MainWindow == null || isSlient) return;

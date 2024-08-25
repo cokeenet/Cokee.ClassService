@@ -29,6 +29,7 @@
     xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid Focusable="False" x:Name="MainGrid">
 
@@ -182,10 +183,10 @@
             <Border.RenderTransform>
                 <TranslateTransform X="300" d:X="300" x:Name="cardtran" />
             </Border.RenderTransform>
-            <ui:SimpleStackPanel
+            <uix:SimpleStackPanel
                 Margin="15"
                 Spacing="5">
-                <ui:SimpleStackPanel VerticalAlignment="Top">
+                <uix:SimpleStackPanel VerticalAlignment="Top">
                     <TextBlock Foreground="White"
                         FontFamily="HarmonyOS_Sans"
                         FontSize="30"
@@ -214,14 +215,14 @@
                         <TextBlock.Effect>
                             <DropShadowEffect Opacity="0.3" />
                         </TextBlock.Effect></TextBlock>
-                </ui:SimpleStackPanel>
-                <ui:SimpleStackPanel>
+                </uix:SimpleStackPanel>
+                <uix:SimpleStackPanel>
                     <Grid x:Name="btnGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <ui:SimpleStackPanel Margin="5" Spacing="5">
+                        <uix:SimpleStackPanel Margin="5" Spacing="5">
                             <Button
                                 Click="ShowRandom"
                                 HorizontalAlignment="Stretch"
@@ -256,8 +257,8 @@
                                 VerticalAlignment="Stretch">
                                 <ui:IconAndText Content="课程管理" Icon="{x:Static ui:FluentSystemIcons.List_28_Regular}" />
                             </Button>
-                        </ui:SimpleStackPanel>
-                        <ui:SimpleStackPanel
+                        </uix:SimpleStackPanel>
+                        <uix:SimpleStackPanel
                             Grid.Column="1"
                             Margin="5"
                             Spacing="5">
@@ -295,9 +296,9 @@
                                 VerticalAlignment="Stretch">
                                 <ui:IconAndText Content="设置" Icon="{x:Static ui:FluentSystemIcons.Settings_32_Regular}" />
                             </Button>
-                        </ui:SimpleStackPanel>
+                        </uix:SimpleStackPanel>
                     </Grid>
-                    <ui:SimpleStackPanel Spacing="5">
+                    <uix:SimpleStackPanel Spacing="5">
                         <ui:InfoBar ui:ThemeManager.RequestedTheme="Light"
                             IsClosable="False"
                             IsOpen="False"
@@ -309,20 +310,20 @@
                             Style="{StaticResource CardBorderStyle}"
                             Visibility="Collapsed" Padding="0"
                             d:Visibility="Collapsed">
-                            <ui:SimpleStackPanel Spacing="5" Margin="10">
+                            <uix:SimpleStackPanel Spacing="5" Margin="10">
                                 <TextBlock d:Text="本节课程:语文 11:30-12:40" FontSize="13" />
                                 <TextBlock d:Text="下节课程:语文 11:30-12:40" FontSize="13" />
-                            </ui:SimpleStackPanel>
+                            </uix:SimpleStackPanel>
                         </Border>
                         <Expander x:Name="exp" Header="万年历"
                             Visibility="Collapsed" Padding="0" FontSize="14"
                             d:Visibility="Visible">
-                            <ui:SimpleStackPanel Margin="10">
+                            <uix:SimpleStackPanel Margin="10">
                                 <TextBlock x:Name="c1" d:Text="今日宜:结婚.会亲友.打扫.买衣服.动土.祈福.安床.架马.祭祀.修造.放水.起基.成人礼.伐木.收养子女.开光.求子.上梁.竖柱.作梁.合帐" FontSize="13" MaxWidth="200" Foreground="White" />
                                 <TextBlock x:Name="c2" d:Text="今日不宜:搬家.理发.搬新房.安门.作灶.开光" FontSize="13" MaxWidth="200" Foreground="White" />
-                            </ui:SimpleStackPanel>
+                            </uix:SimpleStackPanel>
                         </Expander>
-                    </ui:SimpleStackPanel>
+                    </uix:SimpleStackPanel>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -354,8 +355,8 @@
                             </emoji:EmojiedTextBlock.Effect>
                         </emoji:EmojiedTextBlock>
                     </Grid>
-                </ui:SimpleStackPanel>
-            </ui:SimpleStackPanel>
+                </uix:SimpleStackPanel>
+            </uix:SimpleStackPanel>
         </Border>
         <Popup
             AllowsTransparency="True"
@@ -502,7 +503,7 @@
                 <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" />
             </Border.Background>
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
-                <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}">
+                <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}" Background="{x:Null}" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

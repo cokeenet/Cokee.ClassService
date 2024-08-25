@@ -1,6 +1,4 @@
-﻿using Bugsnag.Payload;
-
-using Cokee.ClassService.Shared;
+﻿using Cokee.ClassService.Shared;
 
 using System;
 using System.Collections.Generic;
@@ -194,7 +192,6 @@ namespace Cokee.ClassService.Helper
                 // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
                 //  Log.Information(a);
             }
-            App.bugsnag.Breadcrumbs.Leave($"Saved students list.");
             DirHelper.MakeExist(Catalog.CLASSES_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonSerializer.Serialize(students));
             return CreateSimpleClass(students);
@@ -225,7 +222,7 @@ namespace Cokee.ClassService.Helper
             //randoms = Catalog.RandomizeList(randoms);
             StudentExtensions.RandomHistory = StudentExtensions.RandomHistory.Union(randoms).ToList();
             if (StudentExtensions.RandomHistory.Count >= students.Count) StudentExtensions.RandomHistory.Clear();
-            App.bugsnag.Breadcrumbs.Leave($"Random:{args.ToString()}");
+            /// App.bugsnag.Breadcrumbs.Leave($"Random:{args.ToString()}");
             return randoms;
         }
     }
