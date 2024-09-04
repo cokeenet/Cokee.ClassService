@@ -1,7 +1,7 @@
 ﻿<Window
     FontFamily="HarmonyOS_Sans"
     Height="505"
-    Title="CokeeClass | FloatNote"
+    Title="猫圈圈 | FloatNote"
     Topmost="True"
     Width="525"
     WindowStartupLocation="CenterScreen"

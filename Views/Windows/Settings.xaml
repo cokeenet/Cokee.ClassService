@@ -1,7 +1,7 @@
 ﻿<Window
     FontFamily="HarmonyOS_Sans"
     Height="705"
-    Title="CokeeClass | 设置"
+    Title="猫圈圈 | 设置"
     Width="525"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"

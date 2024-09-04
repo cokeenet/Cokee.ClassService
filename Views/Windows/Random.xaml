@@ -3,7 +3,7 @@
     MinWidth="390"
     MaxHeight="500"
     FontFamily="HarmonyOS_Sans"
-    Title="CokeeClass | 随机抽取"
+    Title="猫圈圈 | 随机抽取"
     Topmost="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"

@@ -27,7 +27,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid Focusable="False" x:Name="MainGrid">
         <Border>
-            <TextBlock Text="SB" FontSize="99"/>
         </Border>
     </Grid>
 </Window>
