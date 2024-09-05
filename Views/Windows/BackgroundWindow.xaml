@@ -26,7 +26,10 @@
     xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid Focusable="False" x:Name="MainGrid">
-        <Border>
+        <Border Style="{StaticResource CardBorderStyle}">
+            <Grid>
+                <TextBlock Text="1111"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>

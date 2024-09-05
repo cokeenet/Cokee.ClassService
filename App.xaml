@@ -10,7 +10,7 @@
         <ResourceDictionary>
 
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
-            <FontFamily x:Key="HarmonyOS_Sans">/Cokee.ClassService;component/Resources/#HarmonyOS_Sans</FontFamily>
+            <FontFamily x:Key="HarmonyOS_Sans">pack://application:,,,/;component/Fonts/#HarmonyOS_Sans</FontFamily>
 
             <!-- 定义一个隐式样式，将 FontFamily 设置为 "HarmonyOS_Sans" -->
             <Style TargetType="ui:IconAndText">
@@ -40,7 +40,7 @@
                 <Setter Property="Background" Value="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}" />
             </Style>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemeResources>
+                <ui:ThemeResources CanBeAccessedAcrossThreads="True">
 
                     <ui:ThemeResources.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">

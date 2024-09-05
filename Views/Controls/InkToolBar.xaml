@@ -7,12 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf">
-    <UserControl.Resources>
-        <SolidColorBrush
-            Color="#FF0E251D"
-            x:Key="WbBg"
-            x:Name="Wbbg" />
-    </UserControl.Resources>
+    
     <Border ui:ThemeManager.RequestedTheme="Default"
         VerticalAlignment="Stretch"
         x:Name="card" Style="{StaticResource CardBorderStyle}" Padding="0">

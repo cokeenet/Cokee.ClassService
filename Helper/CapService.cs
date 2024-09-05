@@ -17,7 +17,7 @@ namespace Cokee.ClassService.Helper
     public class CapService : IDisposable
     {
         public EventHandler? CapEvent;
-        private readonly bool IsEnabled = true;
+        private static bool IsEnabled = true;
 
         private string disk = "D:\\";
         private int camIndex, res;

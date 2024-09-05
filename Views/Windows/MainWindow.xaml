@@ -61,7 +61,7 @@
                 Visibility="Collapsed"
                 d:Visibility="Visible"
                 x:Name="pptControls">
-                <TextBlock FontFamily="HarmonyOS_Sans" VerticalAlignment="Top" HorizontalAlignment="Left" Focusable="False" Text="{Binding Text, ElementName=VerStr}" FontSize="28" FontWeight="Bold" Foreground="#7F808080" />
+                <TextBlock  VerticalAlignment="Top" HorizontalAlignment="Left" Focusable="False" Text="{Binding Text, ElementName=VerStr}" FontSize="28" FontWeight="Bold" Foreground="#7F808080" />
                 <Border
                     Focusable="False" Style="{StaticResource CardBorderStyle}" Padding="0"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -248,9 +248,6 @@
                                 VerticalAlignment="Stretch">
                                 <ui:IconAndText Content="截图" Icon="{x:Static ui:FluentSystemIcons.Screenshot_24_Regular}" />
                             </Button>
-                            <Button Click="MonitorOff" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <ui:IconAndText Content="休眠" Icon="{x:Static ui:FluentSystemIcons.Power_28_Regular}" />
-                            </Button>
                             <Button
                                 Click="CourseMgr"
                                 HorizontalAlignment="Stretch" Visibility="Collapsed"
@@ -279,7 +276,7 @@
                                 Click="ShowStickys"
                                 HorizontalAlignment="Stretch"
                                 MouseRightButtonDown="PostNote"
-                                VerticalAlignment="Stretch">
+                                VerticalAlignment="Stretch" Visibility="Collapsed">
                                 <ui:IconAndText Content="大学梦" Icon="{x:Static ui:FluentSystemIcons.Notebook_32_Regular}" />
                             </Button>
                             <Button
@@ -298,6 +295,9 @@
                             </Button>
                         </uix:SimpleStackPanel>
                     </Grid>
+                    <Button Click="MonitorOff" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="32" Width="104" Visibility="Collapsed">
+                        <ui:IconAndText Content="休眠" Icon="{x:Static ui:FluentSystemIcons.Power_28_Regular}" />
+                    </Button>
                     <uix:SimpleStackPanel Spacing="5">
                         <ui:InfoBar ui:ThemeManager.RequestedTheme="Light"
                             IsClosable="False"

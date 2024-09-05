@@ -774,6 +774,9 @@ namespace Cokee.ClassService
                     Catalog.settings.Save();
                     return;
                 }
+                Catalog.ReleaseComObject(Catalog.MainWindow.wordApplication);
+                Catalog.ReleaseComObject(Catalog.MainWindow.pptApplication);
+                Catalog.ReleaseComObject(Catalog.MainWindow.excelApplication);
                 lastOfficeErrorTime = DateTime.Now;
                 Catalog.HandleException(ex, "Office功能");
             }
@@ -803,8 +806,8 @@ namespace Cokee.ClassService
                 if (!inkTool.isPPT) return;
                 //page = Wn.View.CurrentShowPosition;
                 ClearStrokes(true);
-                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                NowPageText.Text = Wn.View.CurrentShowPosition.ToString();
+                TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
                 //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
             }), DispatcherPriority.Normal);
         }
@@ -843,10 +846,10 @@ namespace Cokee.ClassService
                 inkTool.SetCursorMode(0);
                 inkcanvas.Background.Opacity = 0;
                 pptControls.Visibility = Visibility.Visible;
-                pptPage.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
-                pptPage1.Text = $"{Wn.View.CurrentShowPosition}/{Wn.Presentation.Slides.Count}";
+                NowPageText.Text = Wn.View.CurrentShowPosition.ToString();
+                TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
                 //page = Wn.View.CurrentShowPosition;
-                if (pptApplication.Presentations.Count >= 1)
+                if (pptApplication?.Presentations.Count >= 1)
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                     {
