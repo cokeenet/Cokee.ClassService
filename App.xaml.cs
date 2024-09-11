@@ -37,7 +37,7 @@ namespace Cokee.ClassService
                 // Tells which project in Sentry to send events to:
                 o.Dsn = "https://4a520052947bfc810435d96ee91ad2b9@o4507629156630528.ingest.us.sentry.io/4507629162725376";
                 // When configuring for the first time, to see what the SDK is doing:
-                o.Debug = true;
+                o.Debug = false;
                 // Set TracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
                 // We recommend adjusting this value in production.
                 o.TracesSampleRate = 1.0;

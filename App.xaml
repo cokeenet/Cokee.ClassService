@@ -1,6 +1,6 @@
 ﻿<Application
     ShutdownMode="OnMainWindowClose"
-    StartupUri="/Views/Windows/MainWindow.xaml"
+    StartupUri="/Views/Windows/BackgroundWindow.xaml"
     x:Class="Cokee.ClassService.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:local="clr-namespace:Cokee.ClassService"
@@ -8,15 +8,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
-
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="HarmonyOS_Sans">pack://application:,,,/;component/Fonts/#HarmonyOS_Sans</FontFamily>
-
-            <!-- 定义一个隐式样式，将 FontFamily 设置为 "HarmonyOS_Sans" -->
             <Style TargetType="ui:IconAndText">
                 <Setter Property="Margin" Value="1" />
             </Style>
-
             <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
@@ -27,11 +23,7 @@
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="Padding" Value="15,0,20,0" />
             </Style>
-
-            <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}" TargetType="ComboBox">
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-            </Style>
+            
 
             <Style TargetType="ui:ToggleSwitch">
                 <Setter Property="MinWidth" Value="0" />
