@@ -32,7 +32,7 @@ namespace Cokee.ClassService
             {
                 Catalog.HandleException(ex);
             }
-            SentrySdk.Init(o =>
+            /*SentrySdk.Init(o =>
             {
                 // Tells which project in Sentry to send events to:
                 o.Dsn = "https://4a520052947bfc810435d96ee91ad2b9@o4507629156630528.ingest.us.sentry.io/4507629162725376";
@@ -54,7 +54,7 @@ namespace Cokee.ClassService
                     // prefer profiling to start asynchronously
                     TimeSpan.FromMilliseconds(500)
                 ));
-            });
+            });*/
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }
@@ -67,7 +67,7 @@ namespace Cokee.ClassService
                 if (args.Contains("-scrsave")) Catalog.IsScrSave = true;
                 else if (!args.Contains("-m"))
                 {
-                    if (Process.GetProcessesByName("Cokee.ClassService").Length >= 3) Shutdown();
+                    //if (Process.GetProcessesByName("Cokee.ClassService").Length >= 3) Shutdown();
                 }
             }
         }
