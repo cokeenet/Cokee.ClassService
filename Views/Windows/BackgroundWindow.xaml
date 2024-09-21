@@ -1,4 +1,5 @@
 ﻿<Window
+    AllowsTransparency="True"
     Background="{x:Null}"
     Focusable="False"
     FontSize="16"
@@ -11,10 +12,7 @@
     WindowStartupLocation="Manual"
     WindowState="Maximized"
     WindowStyle="None"
-    ui:WindowHelper.UseModernWindowStyle="True"
-    ui:WindowHelper.SystemBackdropType="Mica"
     mc:Ignorable="d"
-    ui:ThemeManager.IsThemeAware="True"
     x:Class="Cokee.ClassService.BackgroundWindow"
     xmlns:emoji="http://schemas.inkore.net/lib/ui/wpf/emojis"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -28,7 +26,8 @@
     <Grid Focusable="False" x:Name="MainGrid">
         <Border>
             <Grid>
-                <Frame Source="/Views/Controls/RandomControl.xaml"/>
+                <Image Source="/Resources/head.jpg"/>
+                <ui:ProgressRing/>
             </Grid>
         </Border>
     </Grid>

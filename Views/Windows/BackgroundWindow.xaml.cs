@@ -65,8 +65,12 @@ namespace Cokee.ClassService
             Catalog.ShowInfo(Win32Helper.programHandle.ToString());
         }
 
-        private void DisplaySettingsChanged(object? sender, EventArgs e)
+        private void DisplaySettingsChanged(object? sender=null, EventArgs? e=null)
         {
+            this.Width = SystemParameters.WorkArea.Width;
+            this.Height = SystemParameters.WorkArea.Height;
+            this.Top = 0;
+            this.Left = 0;
             UpdateLayout();
         }
 
@@ -74,6 +78,7 @@ namespace Cokee.ClassService
         {
             App.Current.Dispatcher.BeginInvoke(new Action(async () =>
             {
+                DisplaySettingsChanged();
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
                 SizeChanged += DisplaySettingsChanged;

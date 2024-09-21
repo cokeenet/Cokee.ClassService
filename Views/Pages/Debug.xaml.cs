@@ -85,18 +85,14 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.BeginInvoke(() =>
-            {
                 DriveInfo[] s = DriveInfo.GetDrives();
                 diskComboBox.ItemsSource = s;
                 diskComboBox.SelectedItem = s.LastOrDefault();
-            });
+           
         }
 
         private void selectdir(object sender, SelectionChangedEventArgs e)
         {
-            App.Current.Dispatcher.BeginInvoke(() =>
-            {
                 var o = (PicDirectoryInfo)dirlist.SelectedItem;
                 if (o is null) return;
                 if (!File.Exists($"{o.Path}\\.lock"))
@@ -107,15 +103,12 @@ namespace Cokee.ClassService.Views.Pages
                 {
                     lockbtn.Background = new SolidColorBrush(Colors.OrangeRed);
                 }
-            });
         }
 
         private void Captime_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            Dispatcher.BeginInvoke(() =>
-            {
                 captime.Text = $"ActTime:{Catalog.CapServiceHost.GetLastCapTime()?.ToString("HH:mm:ss")}";
-            });
+           
         }
     }
 }
