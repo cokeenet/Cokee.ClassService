@@ -46,15 +46,15 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="{Binding Name}" Margin="2" FontSize="12" />
                         <TextBlock Text="{Binding Version}" Grid.Row="1" Margin="2" FontSize="11" />
-                        <Label Content="{Binding Files}" Grid.Row="1" Margin="2" Grid.Column="1" FontSize="11" />
-                        <Label Content="{Binding FilesLength}" Grid.Row="1" Margin="2" Grid.Column="2" FontSize="11" />
+                        <TextBlock Text="{Binding Files}" Grid.Row="1" Margin="2" Grid.Column="1" FontSize="11" />
+                        <TextBlock Text="{Binding FilesLength}" Grid.Row="1" Margin="2" Grid.Column="2" FontSize="11" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <uix:SimpleStackPanel Grid.Column="1" Margin="5" Spacing="15" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="0">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="Search Disks" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.DataBarHorizontal_20_Regular}" Content="List Disks" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="1">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Search_16_Regular}" Content="Search Dir" />
@@ -63,7 +63,7 @@
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.CalendarWeekStart_28_Regular}" Content="taskstart" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Open_12_Filled}" Content="StartTask" />
             </Button>
         </uix:SimpleStackPanel>
         <uix:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -73,7 +73,7 @@
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="5">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.PersonRunning_20_Regular}" Content="Do Cap" />
             </Button>
-            <TextBlock x:Name="captime" MouseMove="Captime_MouseMove" Text="LastActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            <TextBlock x:Name="captime" MouseMove="Captime_MouseMove" Text="ActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         </uix:SimpleStackPanel>
     </Grid>
 </Page>

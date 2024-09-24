@@ -129,7 +129,7 @@
                     </Button>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Collapsed" Margin="5" HorizontalAlignment="Center">
+            <Grid Grid.Column="1" Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=advBtn}" d:Visibility="Visible" Margin="5" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
