@@ -237,7 +237,7 @@ namespace Cokee.ClassService.Helper
                 {
                     if (File.Exists($"{item.FullName}\\.lock"))
                     {
-                        WriteInfo("Detected Locked Flag.Skip.");
+                        WriteInfo($"{item.FullName}:Detected Locked Flag.Skip.");
                         continue;
                     }
                     DateTime b;

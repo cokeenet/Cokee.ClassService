@@ -26,15 +26,20 @@ namespace Cokee.ClassService.Views.Pages
             switch (btn.Tag.ToString())
             {
                 case "0":
-                    DriveInfo[] s = DriveInfo.GetDrives();
-                    diskComboBox.ItemsSource = s;
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        DriveInfo[] s = DriveInfo.GetDrives();
+                        diskComboBox.ItemsSource = s;
+                    });
                     break;
 
                 case "1":
-                    var d = (DriveInfo)diskComboBox.SelectedItem;
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        var d = (DriveInfo)diskComboBox.SelectedItem;
 
-                    dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
-
+                        dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
+                    });
                     break;
 
                 case "2":
@@ -44,9 +49,12 @@ namespace Cokee.ClassService.Views.Pages
                     {
                         try
                         {
-                            Directory.Delete(item.Path, true);
-                            Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
-                            dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
+                            App.Current.Dispatcher.Invoke(() =>
+                            {
+                                Directory.Delete(item.Path, true);
+                                Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
+                                dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
+                            });
                         }
                         catch (Exception ex)
                         {
@@ -63,17 +71,20 @@ namespace Cokee.ClassService.Views.Pages
                     break;
 
                 case "4":
-                    var o = (PicDirectoryInfo)dirlist.SelectedItem;
-                    if (File.Exists($"{o.Path}\\.lock"))
+                    App.Current.Dispatcher.Invoke(() =>
                     {
-                        lockbtn.Background = new SolidColorBrush(Colors.Green);
-                        File.Delete($"{o.Path}\\.lock");
-                    }
-                    else
-                    {
-                        File.Create($"{o.Path}\\.lock");
-                        lockbtn.Background = new SolidColorBrush(Colors.OrangeRed);
-                    }
+                        var o = (PicDirectoryInfo)dirlist.SelectedItem;
+                        if (File.Exists($"{o.Path}\\.lock"))
+                        {
+                            lockbtn.Background = new SolidColorBrush(Colors.Green);
+                            File.Delete($"{o.Path}\\.lock");
+                        }
+                        else
+                        {
+                            File.Create($"{o.Path}\\.lock");
+                            lockbtn.Background = new SolidColorBrush(Colors.OrangeRed);
+                        }
+                    });
                     Catalog.ShowInfo($"Locked:{File.Exists($"{o.Path}\\.lock")}");
                     break;
 
@@ -85,14 +96,18 @@ namespace Cokee.ClassService.Views.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 DriveInfo[] s = DriveInfo.GetDrives();
                 diskComboBox.ItemsSource = s;
                 diskComboBox.SelectedItem = s.LastOrDefault();
-           
+            });
         }
 
         private void selectdir(object sender, SelectionChangedEventArgs e)
         {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 var o = (PicDirectoryInfo)dirlist.SelectedItem;
                 if (o is null) return;
                 if (!File.Exists($"{o.Path}\\.lock"))
@@ -103,12 +118,15 @@ namespace Cokee.ClassService.Views.Pages
                 {
                     lockbtn.Background = new SolidColorBrush(Colors.OrangeRed);
                 }
+            });
         }
 
         private void Captime_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 captime.Text = $"ActTime:{Catalog.CapServiceHost.GetLastCapTime()?.ToString("HH:mm:ss")}";
-           
+            });
         }
     }
 }

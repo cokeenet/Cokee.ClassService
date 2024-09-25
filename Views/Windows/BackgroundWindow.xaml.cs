@@ -62,13 +62,13 @@ namespace Cokee.ClassService
             InitializeComponent();
             Win32Helper.SendMsgToProgman();
             Win32Helper.SetParent(new WindowInteropHelper(this).Handle, Win32Helper.programHandle);
-            Catalog.ShowInfo(Win32Helper.programHandle.ToString());
+            //Catalog.ShowInfo(Win32Helper.programHandle.ToString());
         }
 
         private void DisplaySettingsChanged(object? sender=null, EventArgs? e=null)
         {
-            this.Width = SystemParameters.WorkArea.Width;
-            this.Height = SystemParameters.WorkArea.Height;
+            this.Width = SystemParameters.FullPrimaryScreenWidth;
+            this.Height = SystemParameters.FullPrimaryScreenHeight;
             this.Top = 0;
             this.Left = 0;
             UpdateLayout();
@@ -103,14 +103,14 @@ namespace Cokee.ClassService
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Log.Information($"Program Closed {e.ToString()}");
+            Log.Information($"BgWun Closed {e.ToString()}");
         }
 
-        protected override void OnSourceInitialized(EventArgs e)
+       /* protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
             Win32Helper.SetToolWindow(this);
-        }
+        }*/
 
         private void BackWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
