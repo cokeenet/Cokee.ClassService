@@ -1,5 +1,4 @@
 ﻿<Window
-    AllowsTransparency="True"
     Background="{x:Null}"
     Focusable="False"
     FontSize="16"
@@ -23,12 +22,13 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="1920" Height="1080">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>
     <Grid Focusable="False" x:Name="MainGrid">
         <Border>
-            <Grid>
-                <Image Source="/Resources/head.jpg"/>
-                <ui:ProgressRing/>
-            </Grid>
+            <Grid/>
         </Border>
     </Grid>
 </Window>

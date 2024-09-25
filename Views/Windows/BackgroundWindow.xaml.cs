@@ -62,7 +62,7 @@ namespace Cokee.ClassService
             InitializeComponent();
             Win32Helper.SendMsgToProgman();
             Win32Helper.SetParent(new WindowInteropHelper(this).Handle, Win32Helper.programHandle);
-            Catalog.ShowInfo(Win32Helper.programHandle.ToString());
+            //Catalog.ShowInfo(Win32Helper.programHandle.ToString());
         }
 
         private void DisplaySettingsChanged(object? sender=null, EventArgs? e=null)
