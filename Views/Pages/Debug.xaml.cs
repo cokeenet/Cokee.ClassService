@@ -76,17 +76,17 @@ namespace Cokee.ClassService.Views.Pages
                         var o = (PicDirectoryInfo)dirlist.SelectedItem;
                         if (File.Exists($"{o.Path}\\.lock"))
                         {
-                            lockbtn.Background = new SolidColorBrush(Colors.Green);
+                            lockbtn.Background = new SolidColorBrush(Colors.Teal);
                             File.Delete($"{o.Path}\\.lock");
                         }
                         else
                         {
                             File.Create($"{o.Path}\\.lock");
-                            lockbtn.Background = new SolidColorBrush(Colors.OrangeRed);
+                            lockbtn.Background = new SolidColorBrush(Colors.Tomato);
+                            Catalog.ShowInfo($"Locked:{File.Exists($"{o.Path}\\.lock")}");
                         }
-                    });
-                    Catalog.ShowInfo($"Locked:{File.Exists($"{o.Path}\\.lock")}");
-                    break;
+
+                    }); break;
 
                 case "5":
                     Catalog.CapServiceHost.DoCapAction();

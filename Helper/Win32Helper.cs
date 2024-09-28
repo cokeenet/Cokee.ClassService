@@ -72,37 +72,7 @@ namespace Cokee.ClassService.Helper
                 return true;
             }, IntPtr.Zero);
         }
-        /// <summary>
-        /// 设置点击穿透到后面透明的窗口
-        /// </summary>
-        public void SetTransparentHitThrough()
-        {
-            if (_dwmEnabled)
-            {
-                Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
-                    (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | (long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
-            }
-            else
-            {
-                Background = Brushes.Transparent;
-            }
-        }
-
-        /// <summary>
-        /// 设置点击命中，不会穿透到后面的窗口
-        /// </summary>
-        public void SetTransparentNotHitThrough()
-        {
-            if (_dwmEnabled)
-            {
-                SetWindowLong(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
-                    (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & ~(long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
-            }
-            else
-            {
-                Background = BrushCreator.GetOrCreate("#0100000");
-            }
-        }
+       
         public static void SetToolWindow(Window window)
         {
             const int WS_EX_TOOLWINDOW = 0x80;
@@ -216,53 +186,7 @@ namespace Cokee.ClassService.Helper
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DwmIsCompositionEnabled();
     }
-    public class HwndTarget : CompositionTarget
-    {
-        /// <summary>
-        /// The HwndTarget needs to see all windows messages so that
-        /// it can appropriately react to them.
-        /// </summary>
-        internal IntPtr HandleMessage(WindowMessage msg, IntPtr wparam, IntPtr lparam)
-        {
-            switch (msg)
-            {
-                // 忽略其他代码
-                case WindowMessage.WM_STYLECHANGING:
-                    unsafe
-                    {
-                        NativeMethods.STYLESTRUCT* styleStruct = (NativeMethods.STYLESTRUCT*)lparam;
 
-                        if ((int)wparam == NativeMethods.GWL_EXSTYLE)
-                        {
-                            // 这里的 UsesPerPixelOpacity 属性就是由 AllowsTransparency 决定的
-                            if (UsesPerPixelOpacity)
-                            {
-                                // We need layered composition to accomplish per-pixel opacity.
-                                //
-                                styleStruct->styleNew |= NativeMethods.WS_EX_LAYERED;
-                            }
-                            else
-                            {
-                                // No properties that require layered composition exist.
-                                // Make sure the layered bit is off.
-                                //
-                                // Note: this prevents an external program from making
-                                // us system-layered (if we are a top-level window).
-                                //
-                                // If we are a child window, we still can't stop our
-                                // parent from being made system-layered, and we will
-                                // end up leaving visual artifacts on the screen under
-                                // WindowsXP.
-                                //
-                                styleStruct->styleNew &= (~NativeMethods.WS_EX_LAYERED);
-                            }
-                        }
-                    }
-
-                    break;
-            }
-        }
-    }
     public static class FileSize
     {
         public static string Format(long bytes, string formatString = "{0:0.00}")
