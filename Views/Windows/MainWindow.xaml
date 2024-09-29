@@ -1,4 +1,4 @@
-﻿<Window
+﻿<Window AllowsTransparency="True"
     Background="{x:Null}"
     Closed="Window_Closed"
     Closing="Window_Closing"
@@ -30,9 +30,7 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1" />
-    </WindowChrome.WindowChrome>
+ 
     <Grid Focusable="False" x:Name="MainGrid">
 
         <Grid x:Name="inkGrid">
