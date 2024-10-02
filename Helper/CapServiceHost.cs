@@ -1,9 +1,11 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+
+using Serilog;
+
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
@@ -59,9 +61,16 @@ namespace Cokee.ClassService.Helper
             {
                 if (Directory.Exists(copydisk) && File.Exists(copydisk + "picDisk"))
                 {
-                    picBackgroundWorker.RunWorkerAsync(copydisk);
+                    if (picBackgroundWorker.IsBusy) Catalog.ShowInfo("Task Already running.");
+                    else picBackgroundWorker.RunWorkerAsync(copydisk);
                 }
             }
+        }
+        public void CancleTask()
+        {
+            if (picBackgroundWorker.IsBusy) { Catalog.ShowInfo("Try to cancel task.");picBackgroundWorker.CancelAsync(); }
+            else Catalog.ShowInfo("Task Not running now.");
+
         }
 
         public void StartAgent()
@@ -72,7 +81,6 @@ namespace Cokee.ClassService.Helper
 
         public void StopAgent()
         {
-
             service?.Dispose();
             service = null;
         }
@@ -86,16 +94,7 @@ namespace Cokee.ClassService.Helper
         {
             return service?.lastCapTime;
         }
-        public string CalcDirBytes(string path)
-        {
-            DirectoryInfo dirinfo = new DirectoryInfo(path);
-            long count = 0;
-            foreach (var item in dirinfo.GetFiles())
-            {
-                count += item.Length;
-            }
-            return FileSize.Format(count);
-        }
+
         public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
         {
 
@@ -103,7 +102,7 @@ namespace Cokee.ClassService.Helper
             foreach (string dir in Directory.GetDirectories($"{disk}CokeeDP\\Cache"))
             {
                 DirectoryInfo dirinfo = new DirectoryInfo(dir);
-                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length, FilesLength = CalcDirBytes(dir) });
+                if (dirinfo.Name != "2024") list.Add(new PicDirectoryInfo { Path = dir, Name = dirinfo.Name, Version = 1, Files = dirinfo.GetFiles().Length, FilesLength = FileSystemHelper.DirHelper.CalcDirBytes(dir) });
                 var dirs = Directory.GetDirectories(dir);
 
                 if (dirs?.Length > 0)
@@ -112,7 +111,7 @@ namespace Cokee.ClassService.Helper
                     {
                         DirectoryInfo subdirinfo = new DirectoryInfo(subdir);
                         if (subdirinfo.Name != "2024")
-                            list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length, FilesLength = CalcDirBytes(subdir) });
+                            list.Add(new PicDirectoryInfo { Path = subdir, Name = subdirinfo.Name, Version = 2, Files = subdirinfo.GetFiles().Length, FilesLength = FileSystemHelper.DirHelper.CalcDirBytes(subdir) });
                     }
                 }
             }
@@ -123,17 +122,16 @@ namespace Cokee.ClassService.Helper
         {
             Catalog.UpdateProgress(e.ProgressPercentage, true, (TaskInfo?)e.UserState);
         }
-
         private void BackgroundWorker1_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             sw.Stop();
 
             if (e.Error != null)
-                Catalog.ShowInfo($"Debug日志 threw Exception. ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error.Message}{e.Error?.ToString()}");
+                Catalog.HandleException(e.Error, $"Debug日志({sw.Elapsed.TotalMinutes:F2}min)");
             else if (e.Cancelled)
-                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.TotalMinutes}min)", $"Exception:{e.Error?.ToString()}");
+                Catalog.ShowInfo($"Debug日志 Cancelled:{e.Cancelled} ({sw.Elapsed.TotalMinutes:F2}min)", $"Result:{e.Result?.ToString()}");
             else
-                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.TotalMinutes}min)", $"Result:{e.Result?.ToString()}");
+                Catalog.ShowInfo($"Debug日志 Completed. ({sw.Elapsed.TotalMinutes:F2}min)", $"Result:{e.Result?.ToString()}");
             Catalog.UpdateProgress(100, false);
             sw.Reset();
         }
@@ -162,7 +160,7 @@ namespace Cokee.ClassService.Helper
                         cpTo = $"{copyDisk}CokeeDP\\Cache\\2024\\{item.Name}";
                         break;
                 }
-                DirHelper.MakeExist(cpTo);
+                FileSystemHelper.DirHelper.MakeExist(cpTo);
                 num = 1;
                 foreach (string file in Directory.GetFiles(item.Path))
                 {
@@ -173,24 +171,22 @@ namespace Cokee.ClassService.Helper
                     num++;
                     copieditems++;
                     var time = (int)sw.Elapsed.TotalSeconds;
+                    if (existed >= copieditems) existed = 0;
+                    if (time <= 0) time = 1;
                     try
                     {
-                        if (existed >= copieditems) existed = 0;
-                        if (time <= 0) time = 1;
                         picBackgroundWorker.ReportProgress(Convert.ToInt32(num / (decimal)item.Files * 100), new TaskInfo(item, (int)num, (copieditems - existed) / time));
                     }
-                    catch
-                    {
-
-                    }
+                    catch { }
+                    if (e.Cancel) break;
                 }
+                if (e.Cancel) break;
                 copieddirs++;
                 Log.Information("Done.");
-                e.Result = $"{copieddirs} dirs,{copieditems} items";
+                e.Result = $"{copieddirs} dirs,copied {copieditems - existed} items";
             }
-
-            Log.Information("All Done.");
-            e.Result = $"{copieddirs} dirs,{copieditems} items";
+            Log.Information($"All Done. IsCancelled:{e.Cancel}");
+            e.Result = $"{copieddirs} dirs,copied {copieditems - existed} items";
         }
     }
 }

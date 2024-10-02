@@ -39,6 +39,10 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+using Windows.ApplicationModel.Store;
+
+using static Vanara.PInvoke.Shell32;
+
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -103,7 +107,6 @@ namespace Cokee.ClassService
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
                 //new BackgroundWindow().Show();
-
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
@@ -1427,7 +1430,6 @@ namespace Cokee.ClassService
         {
             Catalog.ToggleControlVisible(logview);
         }
-
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
         {
             if (_currentCommitType == CommitReason.CodeInput || _currentCommitType == CommitReason.ShapeDrawing) return;

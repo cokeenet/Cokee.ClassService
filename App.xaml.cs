@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
 using Cokee.ClassService.Helper;
-
+using Lierda.WPFHelper;
 using Sentry;
 using Sentry.Profiling;
-
-using Serilog;
 
 namespace Cokee.ClassService
 {
@@ -20,19 +16,21 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class App : Application
     {
+        LierdaCracker cracker = new LierdaCracker();
         protected override void OnStartup(StartupEventArgs e)
         {
+            cracker.Cracker();
             base.OnStartup(e);
             try
             {
                 if (!Directory.Exists("D:\\")) Catalog.UpdatePath("C:\\");
-                DirHelper.MakeExist(Catalog.CONFIG_DIR);
+                FileSystemHelper.DirHelper.MakeExist(Catalog.CONFIG_DIR);
             }
             catch (Exception ex)
             {
                 Catalog.HandleException(ex);
             }
-            /*SentrySdk.Init(o =>
+            SentrySdk.Init(o =>
             {
                 // Tells which project in Sentry to send events to:
                 o.Dsn = "https://4a520052947bfc810435d96ee91ad2b9@o4507629156630528.ingest.us.sentry.io/4507629162725376";
@@ -54,7 +52,7 @@ namespace Cokee.ClassService
                     // prefer profiling to start asynchronously
                     TimeSpan.FromMilliseconds(500)
                 ));
-            });*/
+            });
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),
                 new FrameworkPropertyMetadata { DefaultValue = 120 }

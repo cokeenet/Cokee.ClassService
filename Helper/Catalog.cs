@@ -204,7 +204,7 @@ namespace Cokee.ClassService.Helper
                     if (File.Exists(filePath) && isFullyDownloaded)
                     {
                         var a = new FileInfo(filePath);
-                        DirHelper.MakeExist($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}");
+                        FileSystemHelper.DirHelper.MakeExist($"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}");
                         var backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\{fileName}";
                         if (File.Exists(backupPath) && new FileInfo(backupPath).Length != a.Length) backupPath = $"{BACKUP_FILE_DIR}\\{DateTime.Now:yyyy-MM}\\1_{fileName}";
                         a.CopyTo(backupPath, true);
