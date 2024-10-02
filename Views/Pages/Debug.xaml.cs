@@ -66,7 +66,6 @@ namespace Cokee.ClassService.Views.Pages
 
                 case "3":
                     var x = (DriveInfo)diskComboBox.SelectedItem;
-
                     Catalog.CapServiceHost.StartTask(x.Name);
                     break;
 
@@ -90,6 +89,9 @@ namespace Cokee.ClassService.Views.Pages
 
                 case "5":
                     Catalog.CapServiceHost.DoCapAction();
+                    break;
+                case "6":
+                    Catalog.CapServiceHost.CancleTask();
                     break;
             }
         }

@@ -63,11 +63,14 @@
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Delete_12_Regular}" Content="Delete Dir" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="3">
-                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Open_12_Filled}" Content="StartTask" />
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Play_24_Regular}" Content="StartTask" />
             </Button>
         </uix:SimpleStackPanel>
         <uix:SimpleStackPanel Grid.Column="2" Spacing="15" Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="OrangeRed">
+            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="6">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.CalendarCancel_16_Filled}" Content="Cancel Task" />
+            </Button>
+            <Button x:Name="lockbtn" HorizontalAlignment="Center" Click="Button_Click" Tag="4" Background="Tomato">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.LockClosed_32_Regular}" Content="Toggle" />
             </Button>
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="5">
