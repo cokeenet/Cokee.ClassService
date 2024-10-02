@@ -156,7 +156,7 @@ namespace Cokee.ClassService.Helper
         {
             //  var a = await new ApiClient().GetStudents(0);
             // return a.ToList();
-            DirHelper.MakeExist(Catalog.CLASSES_DIR);
+            FileSystemHelper.DirHelper.MakeExist(Catalog.CLASSES_DIR);
             //var list = Directory.GetFiles(Catalog.CLASSES_DIR, "*.json");
             List<Student>? stu = new List<Student>();
             //if (list.Length == 0)
@@ -192,7 +192,7 @@ namespace Cokee.ClassService.Helper
                 // var a = await new ApiClient().CreateStudentAsync(JsonConvert.SerializeObject(item));
                 //  Log.Information(a);
             }
-            DirHelper.MakeExist(Catalog.CLASSES_DIR);
+            FileSystemHelper.DirHelper.MakeExist(Catalog.CLASSES_DIR);
             File.WriteAllText(Catalog.STU_FILE, JsonSerializer.Serialize(students));
             return CreateSimpleClass(students);
         }

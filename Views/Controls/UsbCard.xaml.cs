@@ -68,7 +68,7 @@ namespace Cokee.ClassService.Views.Controls
                 try
                 {
                     diskName.Text = $"{t.VolumeLabel}({t.Name})";
-                    diskInfo.Text = $"{FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSize.Format(t.TotalSize, "{0:0.0}")}";
+                    diskInfo.Text = $"{FileSystemHelper.FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSystemHelper.FileSize.Format(t.TotalSize, "{0:0.0}")}";
                     if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
                 }
                 catch
@@ -107,6 +107,7 @@ namespace Cokee.ClassService.Views.Controls
                             DriveInfo[] s = DriveInfo.GetDrives();
                             s.Any(t =>
                             {
+                                if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
                                 if (t.DriveType == DriveType.Removable)
                                 {
                                     ShowUsbCard(false, t);

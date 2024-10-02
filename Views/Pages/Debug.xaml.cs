@@ -91,6 +91,9 @@ namespace Cokee.ClassService.Views.Pages
                 case "5":
                     Catalog.CapServiceHost.DoCapAction();
                     break;
+                case "6":
+                    Catalog.CapServiceHost.CancleTask();
+                    break;
             }
         }
 
