@@ -1,8 +1,4 @@
-﻿using Cokee.ClassService.Helper;
-
-using Serilog;
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +9,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+
+using Cokee.ClassService.Helper;
+
+using Serilog;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -67,13 +67,18 @@ namespace Cokee.ClassService.Views.Controls
                 disk = t.Name;
                 try
                 {
-                    diskName.Text = $"{t.VolumeLabel}({t.Name})";
-                    diskInfo.Text = $"{FileSystemHelper.FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSystemHelper.FileSize.Format(t.TotalSize, "{0:0.0}")}";
+                    Log.Verbose("Show the inserted disk info.");
                     if (File.Exists(disk + "picDisk") && File.Exists(disk + "autoCopy")) SymbolIcon_MouseRightButtonDown(null, null);
+                    var diskLabel = t.VolumeLabel;
+                    if (string.IsNullOrWhiteSpace(diskLabel)) diskLabel = "没名字的磁盘";
+                    diskName.Text = $"{diskLabel}({t.Name})";
+                    diskInfo.Text = $"{FileSystemHelper.FileSize.Format(t.TotalFreeSpace, "{0:0.0}")}/{FileSystemHelper.FileSize.Format(t.TotalSize, "{0:0.0}")}";
+                    diskExtraInfo.Text = $"类型{t.DriveType.ToString()} 格式{t.DriveFormat}";
                 }
-                catch
+                catch (Exception ex)
                 {
                     diskName.Text = "U盘(未知盘符)";
+                    Catalog.HandleException(ex);
                 }
 
                 await Task.Delay(15000);
