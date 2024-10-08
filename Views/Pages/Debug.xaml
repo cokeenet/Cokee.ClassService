@@ -76,6 +76,9 @@
             <Button HorizontalAlignment="Center" Click="Button_Click" Tag="5">
                 <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.PersonRunning_20_Regular}" Content="Do Cap" />
             </Button>
+            <Button HorizontalAlignment="Center" Click="Button_Click" Tag="6">
+                <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.CalendarCancel_24_Regular}" Content="Cancel Task" />
+            </Button>
             <TextBlock x:Name="captime" MouseMove="Captime_MouseMove" Text="ActTime:00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         </uix:SimpleStackPanel>
     </Grid>
