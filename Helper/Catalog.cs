@@ -118,7 +118,7 @@ namespace Cokee.ClassService.Helper
                 {
                     ShowNextMessage();
                 }
-                else HideCurrentMessageAndProcessNext();
+                //else HideCurrentMessageAndProcessNext();
             }, DispatcherPriority.Background);
         }
 
@@ -126,7 +126,7 @@ namespace Cokee.ClassService.Helper
         {
             if (infoMessageQueue.Count > 0)
             {
-                var (title, content, severity) = infoMessageQueue.Dequeue(); // Get the first message without removing it
+                var (title, content, severity) = infoMessageQueue.Peek(); // Get the first message without removing it
                 if (MainWindow == null) return;
 
                 // Show the message
@@ -172,7 +172,7 @@ namespace Cokee.ClassService.Helper
                 hideAnim.Completed += (a, b) =>
                 {
                     infobar.IsOpen = false;
-                    //infoMessageQueue.Dequeue(); // Remove the message from the queue
+                    infoMessageQueue.Dequeue(); // Remove the message from the queue
                     ShowNextMessage(); // Process the next message
                 };
                 infobarTran?.BeginAnimation(TranslateTransform.YProperty, hideAnim);

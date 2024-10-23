@@ -57,6 +57,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class BackgroundWindow : Window
     {
+        public Timer secTimer=new Timer(1000);
         public BackgroundWindow()
         {
             InitializeComponent();
@@ -82,6 +83,8 @@ namespace Cokee.ClassService
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
                 SizeChanged += DisplaySettingsChanged;
+                secTimer.Elapsed += SecondTimer_Elapsed;
+                secTimer.Start();
             }), DispatcherPriority.Normal);
         }
 

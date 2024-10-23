@@ -24,8 +24,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="1920" Height="1080">
 
     <Grid Focusable="False" x:Name="MainGrid">
-        <Border HorizontalAlignment="Right" VerticalAlignment="Top">
-            <TextBlock Text="111"/>
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource CardBorderStyle}">
+            <TextBlock Text="111" x:Name="Time"/>
+            <TextBlock Text="111" x:Name="longTime"/>
+            <TextBlock Text="111" x:Name="Countdown"/>
         </Border>
     </Grid>
 </Window>
