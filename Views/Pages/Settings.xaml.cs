@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Cokee.ClassService.Helper;
+using iNKORE.UI.WPF.Modern.Controls;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-
-using Cokee.ClassService.Helper;
-
-using iNKORE.UI.WPF.Modern.Controls;
-
 using Application = System.Windows.Forms.Application;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
@@ -26,7 +23,11 @@ namespace Cokee.ClassService.Views.Pages
                 IsVisibleChanged += (a, b) =>
                 {
                     DataContext = Catalog.settings;
-                    AutoBootToggleSwitch.IsOn = Win32Helper.GetAutoBootStatus();
+                    if (Win32Helper.GetAutoBootStatus())
+                    {
+                        AutoBootToggleSwitch.IsEnabled = false;
+                        AutoBootToggleSwitch.IsOn = true;
+                    }
                     if (!(bool)b.NewValue) SaveData();
                 };
             }
@@ -81,7 +82,25 @@ namespace Cokee.ClassService.Views.Pages
             if (toggleSwitch != null)
             {
                 if (!toggleSwitch.IsOn) Win32Helper.DeleteAutoBootLnk();
-                else Win32Helper.CreateAutoBoot();
+                else
+                {
+                    AutoBootToggleSwitch.IsEnabled = false;
+                    Win32Helper.CreateAutoBoot();
+                }
+            }
+        }
+
+        private void DesktopWinToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (!toggleSwitch.IsOn) Win32Helper.DeleteAutoBootLnk();
+                else
+                {
+                    AutoBootToggleSwitch.IsEnabled = false;
+                    Win32Helper.CreateAutoBoot();
+                }
             }
         }
     }

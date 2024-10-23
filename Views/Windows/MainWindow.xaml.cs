@@ -106,7 +106,8 @@ namespace Cokee.ClassService
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
-                //new BackgroundWindow().Show();
+                if(Catalog.settings.DesktopBgWin)
+                    new BackgroundWindow().Show();
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;

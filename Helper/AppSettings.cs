@@ -18,6 +18,9 @@ namespace Cokee.ClassService.Helper
         public bool SideCardEnable { get; set; } = true;
         public bool AgentEnable { get; set; } = false;
         public string LoginState { get; set; }
+        public DateTime CountDownDate { get; set; }
+        public string CountDownName { get; set; }
+        public bool DesktopBgWin { get; set; } = true;
         public string FileWatcherFilter { get; set; } = "*.*";
 
         [JsonIgnore]
