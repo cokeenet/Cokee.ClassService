@@ -82,25 +82,7 @@ namespace Cokee.ClassService.Views.Pages
             if (toggleSwitch != null)
             {
                 if (!toggleSwitch.IsOn) Win32Helper.DeleteAutoBootLnk();
-                else
-                {
-                    AutoBootToggleSwitch.IsEnabled = false;
-                    Win32Helper.CreateAutoBoot();
-                }
-            }
-        }
-
-        private void DesktopWinToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
-            {
-                if (!toggleSwitch.IsOn) Win32Helper.DeleteAutoBootLnk();
-                else
-                {
-                    AutoBootToggleSwitch.IsEnabled = false;
-                    Win32Helper.CreateAutoBoot();
-                }
+                else Win32Helper.CreateAutoBoot();
             }
         }
     }
