@@ -684,7 +684,7 @@ namespace Cokee.ClassService
                         {
                             foreach (MsPpt.Presentation pres in pptApplication.Presentations)
                             {
-                                Catalog.BackupFile(pres.FullName, pres.Name, pres.IsFullyDownloaded);
+                                Catalog.BackupFile(pres.FullName, pres.Name);
                             }
                         }
                     }
@@ -857,7 +857,7 @@ namespace Cokee.ClassService
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
                     {
-                        Catalog.BackupFile(Pres.FullName, Pres.Name, Pres.IsFullyDownloaded);
+                        Catalog.BackupFile(Pres.FullName, Pres.Name);
                     }
                 }
             }), DispatcherPriority.Background);

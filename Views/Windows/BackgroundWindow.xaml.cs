@@ -20,7 +20,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class BackgroundWindow : Window
     {
-        public Timer secTimer = new Timer(1000);
+        public Timer secTimer =new Timer(1000);
         public BackgroundWindow()
         {
             InitializeComponent();

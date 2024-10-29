@@ -3,7 +3,7 @@
 
 #define MyAppName "CokeeClass √®»¶»¶"      
 #define MyAppEName "CokeeClass"
-#define MyAppVersion "2.9.265.24225"
+#define MyAppVersion "2.9.365.24225"
 #define MyAppPublisher "CokeeTech «Ô€‡ø∆ºº"
 #define MyAppURL "https://cokee.tech/class"
 #define MyAppExeName "Cokee.ClassService.exe"
