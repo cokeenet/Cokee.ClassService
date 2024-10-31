@@ -1,0 +1,77 @@
+﻿<UserControl
+    Height="430"
+    Width="500"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.PostNote"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label x:Name="name" />
+            <InkCanvas Margin="5"
+                Background="Black"
+                EditingMode="Ink"
+                Grid.Row="1"
+                Height="300"
+                Width="470"
+                x:Name="ink">
+                <InkCanvas.DefaultDrawingAttributes>
+                    <DrawingAttributes
+                        Color="White"
+                        Height="4.00314960629921"
+                        Width="4.00314960629921" />
+                </InkCanvas.DefaultDrawingAttributes>
+            </InkCanvas>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Click="Pen"
+                    HorizontalAlignment="Stretch"
+                    Margin="5"
+                    Style="{StaticResource AccentButtonStyle}"
+                    VerticalAlignment="Stretch"
+                    x:Name="pen">
+                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Pen_48_Regular}" />
+                </Button>
+                <Button
+                    Click="Eraser"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="5"
+                    VerticalAlignment="Stretch"
+                    x:Name="era">
+                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Eraser_24_Regular}" />
+                </Button>
+                <Button
+                    Click="save"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    Margin="5"
+                    VerticalAlignment="Stretch">
+                    <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Save_24_Regular}" />
+                </Button>
+            </Grid>
+            <ui:AutoSuggestBox
+                Grid.Row="3"
+                Margin="5"
+                PlaceholderText="Input name here"
+                TextChanged="Atu_sc"
+                x:Name="atu" />
+        </Grid>
+    </Border>
+</UserControl>

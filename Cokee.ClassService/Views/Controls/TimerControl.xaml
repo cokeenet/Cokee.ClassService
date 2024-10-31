@@ -1,0 +1,56 @@
+﻿<UserControl
+    Height="400"
+    Width="400"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.TimerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Text="计时器"
+                FontSize="16"
+                Margin="15"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <Grid Grid.Row="1">
+                <ui:ProgressRing Height="300" Width="300" IsIndeterminate="False" Visibility="Collapsed" />
+                <ui:TimePicker HorizontalAlignment="Center" VerticalAlignment="Center" PickerVisibility="All" HourPlaceholderText="小时" MinutePlaceholderText="分钟" SelectedDateTimeChanged="TimePicker_SelectedDateTimeChanged" SecondPlaceholderText="秒" />
+            </Grid>
+            <Grid Grid.Row="3" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Click="ConfirmBtn"
+                    HorizontalAlignment="Stretch"
+                    Margin="10"
+                    Style="{DynamicResource AccentButtonStyle}"
+                    VerticalAlignment="Stretch">
+                    <ui:IconAndText Content="启动" Icon="{x:Static ui:FluentSystemIcons.Checkmark_48_Regular}" />
+                </Button>
+                <Button
+                    Click="CancelBtn"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="10"
+                    VerticalAlignment="Stretch">
+
+                    <ui:IconAndText Content="关闭" Icon="{x:Static ui:FluentSystemIcons.Dismiss_48_Regular}" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

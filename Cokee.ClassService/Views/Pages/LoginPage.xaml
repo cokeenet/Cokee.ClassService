@@ -1,0 +1,99 @@
+﻿<Page
+    FontFamily="HarmonyOS_Sans"
+    Height="600"
+    Title="LoginPage"
+    Width="500"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border VerticalAlignment="Stretch">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border
+                Height="250"
+                Margin="5"
+                Style="{StaticResource CardBorderStyle}"
+                VerticalAlignment="Stretch">
+                <Border.Background>
+                    <ImageBrush
+                        ImageSource="/Resources/CardBackground/3.jpg"
+                        Stretch="UniformToFill"
+                        x:Name="headCardBg" />
+                </Border.Background>
+                <Grid Margin="15">
+                    <TextBlock
+                        FontSize="28"
+                        FontWeight="Thin"
+                        Foreground="#7FFFFFFF"
+                        Text="CokeeClass 🐱"
+                        VerticalAlignment="Bottom" />
+                </Grid>
+            </Border>
+            <TextBlock
+                FontSize="24"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="0,10"
+                Text="登录" />
+
+            <Grid DataContext="{Binding LoginRequest}" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBox
+                    Grid.Row="0"
+                    Height="40"
+                    HorizontalAlignment="Center"
+                    Margin="15"
+                    MinWidth="280"
+                    Text="{Binding Username, Mode=TwoWay}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Height="40"
+                    HorizontalAlignment="Center"
+                    Margin="5"
+                    MinWidth="280"
+                    Text="{Binding Password, Mode=TwoWay}"
+                    x:Name="textBox" />
+            </Grid>
+            <Grid Grid.Row="3" MinWidth="{Binding ActualWidth, ElementName=textBox, Mode=OneWay}">
+                <CheckBox
+                    Checked="CheckBox_Checked"
+                    Content="记住我"
+                    FontFamily="Microsoft YaHei UI"
+                    HorizontalAlignment="Left"
+                    IsChecked="True"
+                    Margin="5"
+                    Unchecked="CheckBox_Unchecked" />
+                <Button HorizontalAlignment="Right">
+                    <ui:IconAndText Content="忘记密码" Icon="{x:Static ui:FluentSystemIcons.KeyReset_24_Regular}" />
+                </Button>
+            </Grid>
+            <Button
+                Click="Confirm"
+                Grid.Row="4"
+                HorizontalAlignment="Center"
+                MinHeight="40"
+                MinWidth="250"
+                Style="{DynamicResource AccentButtonStyle}"
+                VerticalAlignment="Center">
+
+                <ui:IconAndText Content="登录" Icon="{x:Static ui:FluentSystemIcons.Key_24_Regular}" />
+            </Button>
+        </Grid>
+    </Border>
+</Page>

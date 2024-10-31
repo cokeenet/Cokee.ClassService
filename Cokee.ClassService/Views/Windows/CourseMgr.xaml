@@ -1,0 +1,32 @@
+﻿<Window
+    FontFamily="HarmonyOS_Sans"
+    Height="705"
+    Title="猫圈圈 | 课程管理"
+    Topmost="True"
+    Width="525"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    ui:ThemeManager.IsThemeAware="True"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    x:Class="Cokee.ClassService.Views.Windows.CourseMgr"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="3,3,3,3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border
+                CornerRadius="8,0,0,0"
+                Grid.Column="1"
+                Margin="0">
+            <Frame IsVisibleChanged="CoursesManage_IsVisibleChanged" Source="/Views/Pages/CoursesManage.xaml" />
+        </Border>
+    </Grid>
+</Window>
