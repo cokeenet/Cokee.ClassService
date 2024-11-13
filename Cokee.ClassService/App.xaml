@@ -12,14 +12,14 @@
             <FontFamily x:Key="HarmonyOS_Sans">pack://application:,,,/;component/Fonts/#HarmonyOS_Sans</FontFamily>
             <FontFamily x:Key="Lato">pack://application:,,,/;component/Fonts/#Lato</FontFamily>
 
-            <!-- 定义一个隐式样式，将 FontFamily 设置为 "HarmonyOS_Sans" -->
+            <!-- 定义一个隐式样式，将 FontFamily 设置为 "HarmonyOS_Sans" 
             <Style TargetType="ui:IconAndText">
                 <Setter Property="Margin" Value="1" />
             </Style>
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="Lato" />
                 <Setter Property="FontSize" Value="14" />
-            </Style>
+            </Style>-->
             <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>

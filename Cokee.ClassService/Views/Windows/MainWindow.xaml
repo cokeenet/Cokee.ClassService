@@ -511,7 +511,14 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Debug Log Output" Margin="5" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Debug Log Output" Margin="5" />
+                            <ComboBox Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right"/>
+                        </Grid>
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
                             <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
                         </Controls:ScrollViewerEx>

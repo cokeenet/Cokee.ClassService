@@ -24,11 +24,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="1920" Height="1080">
 
     <Grid Focusable="False" x:Name="MainGrid">
-        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource CardBorderStyle}">
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource CardBorderStyle}" Margin="0,5,5,0" >
             <uix:SimpleStackPanel Margin="3" Spacing="5">
-            <TextBlock Text="111" x:Name="Time"/>
-            <TextBlock Text="111" x:Name="longTime"/>
-                <TextBlock Text="111" x:Name="Countdown"/>
+                <TextBlock d:Text="11:11:11" x:Name="Time" HorizontalAlignment="Right"/>
+                <TextBlock d:Text="2024年12月31日" x:Name="longTime" HorizontalAlignment="Right"/>
+                <TextBlock d:Text="111天" x:Name="Countdown" HorizontalAlignment="Right"/>
+                <Button x:Name="button" Content="Button" HorizontalAlignment="Stretch"/>
             </uix:SimpleStackPanel>
         </Border>
     </Grid>

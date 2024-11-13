@@ -1,8 +1,8 @@
 ﻿<Window
     FontFamily="HarmonyOS_Sans"
-    Height="705"
     Title="猫圈圈 | 设置"
-    Width="525"
+    Height="450"
+    Width="800"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"
     ui:ThemeManager.IsThemeAware="True"
@@ -15,12 +15,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Grid Margin="3,3,3,3">
-        <Border CornerRadius="8,0,0,0" Margin="0">
-            <Frame
-                    Margin="4,8"
-                    ScrollViewer.CanContentScroll="True"
-                    Source="/Views/Pages/Settings.xaml"
-                    x:Name="RootFrame" />
-        </Border>
+        <ui:NavigationView
+         x:Name="NavigationViewControl"
+         Grid.Column="1"
+         AlwaysShowHeader="True"
+         Canvas.ZIndex="0"
+         Header=" " IsFooterSeparatorVisible="{x:Null}"
+         PaneTitle="App Gallery"
+         IsTabStop="False"
+         IsTitleBarAutoPaddingEnabled="False"
+         PaneDisplayMode="Auto"
+         SelectionChanged="OnNavigationViewSelectionChanged"
+         IsSettingsVisible="True">
+            <!--<ui:NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <local:PageHeader
+                     Title="{Binding Header, ElementName=NavigationViewControl}"
+                     Background="Transparent"
+                     BackgroundColorOpacity="1" />
+                </DataTemplate>
+            </ui:NavigationView.HeaderTemplate>
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox
+                 x:Name="controlsSearchBox"
+                 MinWidth="200"
+                 VerticalAlignment="Center"
+                 x:FieldModifier="public"
+                 PlaceholderText="Search"
+                 QuerySubmitted="OnControlsSearchBoxQuerySubmitted"
+                 TextChanged="OnControlsSearchBoxTextChanged" >
+                    <ui:AutoSuggestBox.QueryIcon>
+                        <ui:SymbolIcon Symbol="Find" FontSize="12" RenderTransformOrigin="0.5,0.5"/>
+                    </ui:AutoSuggestBox.QueryIcon>
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>-->
+            <ui:Frame x:Name="rootFrame" Navigating="OnRootFrameNavigating" Navigated="OnRootFrameNavigated" />
+        </ui:NavigationView>
     </Grid>
 </Window>

@@ -5,8 +5,8 @@
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.9.865.24225</AssemblyVersion>
-		<FileVersion>2.9.865.24225</FileVersion>
+		<AssemblyVersion>2.9.884.315</AssemblyVersion>
+		<FileVersion>2.9.884.315</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -15,7 +15,6 @@
 		<Title>Cokee.ClassService</Title>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>Cokee.snk</AssemblyOriginatorKeyFile>
-		<UseWindowsForms>True</UseWindowsForms>
 		<StartupObject>Cokee.ClassService.App</StartupObject>
 		<LangVersion>default</LangVersion>
 		<IsPackable>false</IsPackable>
@@ -100,20 +99,20 @@
 		<PackageReference Include="AForge.Imaging" Version="2.2.5" />
 		<PackageReference Include="AForge.Video" Version="2.2.5" />
 		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
+		<PackageReference Include="Downloader" Version="3.2.1" />
 		<PackageReference Include="ILRepack" Version="2.0.35">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.7.1" />
+		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
 		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
-		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.9.30" />
 		<PackageReference Include="Lierda.WPFHelper" Version="1.0.3" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Sentry" Version="4.10.2" />
-		<PackageReference Include="Sentry.Profiling" Version="4.10.2" />
-		<PackageReference Include="Sentry.Serilog" Version="4.10.2" />
-		<PackageReference Include="Serilog" Version="4.0.2-dev-02226" />
+		<PackageReference Include="Sentry" Version="4.13.0" />
+		<PackageReference Include="Sentry.Profiling" Version="4.13.0" />
+		<PackageReference Include="Sentry.Serilog" Version="4.13.0" />
+		<PackageReference Include="Serilog" Version="4.1.1-dev-02318" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
@@ -135,6 +134,15 @@
 		</Reference>
 		<Reference Include="IAWinFX">
 			<HintPath>Dlls\IAWinFX.dll</HintPath>
+		</Reference>
+		<Reference Include="iNKORE.UI.WPF.Modern">
+		  <HintPath>Dlls\iNKORE.UI.WPF.Modern.dll</HintPath>
+		</Reference>
+		<Reference Include="iNKORE.UI.WPF.Modern.Controls">
+		  <HintPath>..\..\..\Users\Cokee\Downloads\UI.WPF.Modern-main\UI.WPF.Modern-main\source\iNKORE.UI.WPF.Modern.Controls\bin\Release\net6.0-windows10.0.18362.0\iNKORE.UI.WPF.Modern.Controls.dll</HintPath>
+		</Reference>
+		<Reference Include="iNKORE.UI.WPF.Modern.resources">
+		  <HintPath>..\..\..\Users\Cokee\Downloads\UI.WPF.Modern-main\UI.WPF.Modern-main\source\iNKORE.UI.WPF.Modern\bin\Release\net6.0-windows10.0.18362.0\zh-CN\iNKORE.UI.WPF.Modern.resources.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.Ink">
 			<HintPath>Dlls\Microsoft.Ink.dll</HintPath>
@@ -169,7 +177,7 @@
 		<Compile Update="Views\Pages\CoursesManage.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\Pages\Settings.xaml.cs">
+		<Compile Update="Views\Pages\Settings\MainSetting.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\Windows\Random.xaml.cs">

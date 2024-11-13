@@ -1,6 +1,4 @@
-﻿using Cokee.ClassService.Shared;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+
+using Cokee.ClassService.Shared;
 
 using Sex = Cokee.ClassService.Shared.Sex;
 using Student = Cokee.ClassService.Shared.Student;
@@ -205,24 +205,24 @@ namespace Cokee.ClassService.Helper
             Random random = new Random();
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            while (randoms.Count < args.Count)
-            {
-                if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo($"抽取超时.({sw.Elapsed.TotalSeconds}s)"); break; }
+            if (students.Count <= 0) return null;
+                while (randoms.Count < args.Count)
+                {
+                    if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo($"抽取超时.({sw.Elapsed.TotalSeconds}s)"); break; }
 
-                var a = students[random.Next(students.Count)];
-                if (!args.AllowExist && randoms.Exists(f => f.Name == a.Name)) continue;
-                if (!args.AllowExist && RandomHistory.Exists(f => f.Name == a.Name)) continue;
-                if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
-                if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
-                if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
-                randoms.Add(a);
-                i++;
-            }
+                    var a = students[random.Next(students.Count)];
+                    if (!args.AllowExist && randoms.Exists(f => f.Name == a.Name)) continue;
+                    if (!args.AllowExist && RandomHistory.Exists(f => f.Name == a.Name)) continue;
+                    if (!args.AllowMLang && a.IsMinorLang && args.Count <= students.Count) continue;
+                    if (args.SexLimit == SexCombo.Boy && a.Sex == Sex.Girl) continue;
+                    if (args.SexLimit == SexCombo.Girl && a.Sex == Sex.Boy) continue;
+                    randoms.Add(a);
+                    i++;
+                }
 
             //randoms = Catalog.RandomizeList(randoms);
-            StudentExtensions.RandomHistory = StudentExtensions.RandomHistory.Union(randoms).ToList();
-            if (StudentExtensions.RandomHistory.Count >= students.Count) StudentExtensions.RandomHistory.Clear();
-            /// App.bugsnag.Breadcrumbs.Leave($"Random:{args.ToString()}");
+            RandomHistory = RandomHistory.Union(randoms).ToList();
+            if (RandomHistory.Count >= students.Count) { Catalog.ShowInfo($"已抽列表溢出。({RandomHistory.Count}个)", "已自动清除。"); RandomHistory.Clear(); }
             return randoms;
         }
     }

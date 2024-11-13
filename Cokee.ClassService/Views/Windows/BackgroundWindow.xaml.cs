@@ -24,8 +24,7 @@ namespace Cokee.ClassService
         public BackgroundWindow()
         {
             InitializeComponent();
-            Win32Helper.SendMsgToProgman();
-            Win32Helper.SetParent(new WindowInteropHelper(this).Handle, Win32Helper.programHandle);
+            Win32Helper.SetBottom(this);
             //Catalog.ShowInfo(Win32Helper.programHandle.ToString());
         }
 
@@ -56,27 +55,16 @@ namespace Cokee.ClassService
             await Dispatcher.InvokeAsync(() =>
             {
                 Time.Text = DateTime.Now.ToString("HH:mm:ss");
-                Countdown.Text = $"{Catalog.settings.CountDownDate.Subtract(DateTime.Now).Days} 天";
+                Countdown.Text = $"{Catalog.settings.CountDownDate.Subtract(DateTime.Now).TotalDays} 天";
                 longTime.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
             }, DispatcherPriority.Background);
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            //Log.Information("Program Closing.");
-            e.Cancel = true;
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            //Log.Information($"BgWun Closed {e.ToString()}");
-        }
-
-        /* protected override void OnSourceInitialized(EventArgs e)
+         protected override void OnSourceInitialized(EventArgs e)
          {
              base.OnSourceInitialized(e);
              Win32Helper.SetToolWindow(this);
-         }*/
+         }
 
         private void BackWindow_OnKeyDown(object sender, KeyEventArgs e)
         {

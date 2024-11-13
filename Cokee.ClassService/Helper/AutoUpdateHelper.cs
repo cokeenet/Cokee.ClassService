@@ -39,7 +39,7 @@ namespace Cokee.ClassService.Helper
                 }
                 else
                 {
-                    Log.Error("Failed to retrieve remote version.");
+                    Log.Error("Failed to retrieve remote version."  );
                     return null;
                 }
             }

@@ -72,7 +72,22 @@ namespace Cokee.ClassService.Helper
                 return true;
             }, IntPtr.Zero);
         }
-       
+        #region Bottom Window From ZongziTEK
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        private const UInt32 SWP_NOSIZE = 0x0001;
+        private const UInt32 SWP_NOMOVE = 0x0002;
+        private const UInt32 SWP_NOACTIVATE = 0x0010;
+        private const UInt32 SWP_SHOWWINDOW = 0x0040;
+        private static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+
+        public static void SetBottom(Window window)
+        {
+            IntPtr hWnd = new WindowInteropHelper(window).Handle;
+            SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+        }
+        #endregion
         public static void SetToolWindow(Window window)
         {
             const int WS_EX_TOOLWINDOW = 0x80;
@@ -113,7 +128,7 @@ namespace Cokee.ClassService.Helper
                 //快捷方式的描述
                 shortcut.Description = exeName + "_Ink";
                 //设置快捷键(如果有必要的话.)
-                shortcut.Hotkey = "CTRL+ALT+D";
+                //shortcut.Hotkey = "CTRL+ALT+D";
                 shortcut.Save();
                 return true;
             }

@@ -145,7 +145,7 @@ namespace Cokee.ClassService
                 timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
                 inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
                 GetCalendarInfo();
-                CheckBirthDay();
+                //CheckBirthDay();
             }), DispatcherPriority.Normal);
         }
 
@@ -465,7 +465,7 @@ namespace Cokee.ClassService
             Log.Information($"Program Closed {e.ToString()}");
         }
 
-        public async void CheckBirthDay()
+        /*public async void CheckBirthDay()
         {
             await Dispatcher.InvokeAsync(new Action(async () =>
             {
@@ -508,7 +508,7 @@ namespace Cokee.ClassService
                 }
                 else birth.IsOpen = false;
             }));
-        }
+        }*/
 
         private void ShowStickys(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Sticky>();
 

@@ -19,7 +19,7 @@ namespace Cokee.ClassService
         LierdaCracker cracker = new LierdaCracker();
         protected override void OnStartup(StartupEventArgs e)
         {
-            cracker.Cracker();
+            //cracker.Cracker();
             base.OnStartup(e);
             try
             {

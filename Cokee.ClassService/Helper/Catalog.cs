@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -40,7 +41,7 @@ namespace Cokee.ClassService.Helper
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
         public static CapServiceHost CapServiceHost = new CapServiceHost();
-
+        public static BackgroundWindow? backgroundWindow;
         public static async void HandleException(Exception ex, string str = "", bool isSlient = false)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
@@ -280,7 +281,7 @@ namespace Cokee.ClassService.Helper
             });
         }
 
-        public static async void ToggleControlVisible(UIElement uIElement, bool IsForceShow = false)
+        public static async void ToggleControlVisible(UIElement uIElement, bool IsForceShow= false)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
@@ -338,6 +339,32 @@ namespace Cokee.ClassService.Helper
                     fadeOutStoryboard.Begin();
                 }
             });
+        }
+        public static bool IsOutsideOfScreen(FrameworkElement target)
+        {
+            var hwndSource = (HwndSource)PresentationSource.FromVisual(target);
+            if (hwndSource is null)
+            {
+                return true;
+            }
+
+            var hWnd = hwndSource.Handle;
+            var targetBounds = GetPixelBoundsToScreen(target);
+
+            var screens = System.Windows.Forms.Screen.AllScreens;
+            return !screens.Any(x => x.Bounds.IntersectsWith(targetBounds));
+
+            System.Drawing.Rectangle GetPixelBoundsToScreen(FrameworkElement visual)
+            {
+                var pixelBoundsToScreen = Rect.Empty;
+                pixelBoundsToScreen.Union(visual.PointToScreen(new Point(0, 0)));
+                pixelBoundsToScreen.Union(visual.PointToScreen(new Point(visual.ActualWidth, 0)));
+                pixelBoundsToScreen.Union(visual.PointToScreen(new Point(0, visual.ActualHeight)));
+                pixelBoundsToScreen.Union(visual.PointToScreen(new Point(visual.ActualWidth, visual.ActualHeight)));
+                return new System.Drawing.Rectangle(
+                    (int)pixelBoundsToScreen.X, (int)pixelBoundsToScreen.Y,
+                    (int)pixelBoundsToScreen.Width, (int)pixelBoundsToScreen.Height);
+            }
         }
 
         public static async Task<List<T>> RandomizeList<T>(List<T> list)
