@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -74,8 +75,8 @@ namespace Cokee.ClassService
         {
             Exception? ex = e.ExceptionObject as Exception;
             if (ex == null) ex = new Exception("Null异常。");
-            Catalog.HandleException(ex, "未捕获的异常! 尝试重启程序.");
-            // Process.Start(System.Windows.Forms.Application.ExecutablePath);
+            Catalog.HandleException(ex, "<!>未捕获的异常! 尝试重启程序.");
+            Process.Start(System.Windows.Forms.Application.ExecutablePath);
             Environment.Exit(ex.HResult);
         }
 

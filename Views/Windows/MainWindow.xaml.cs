@@ -620,7 +620,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(() =>
+                new Task(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
@@ -638,7 +638,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(() =>
+                new Task(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
