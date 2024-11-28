@@ -109,6 +109,7 @@ namespace Cokee.ClassService.Helper
 
         private static async Task DownloadFile(string fileUrl, string destinationPath)
         {
+            
             using (HttpClient client = new HttpClient())
             {
                 try

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:InkCanvasForClass.IccInkCanvas"
-             mc:Ignorable="d" d:DesignHeight="512" d:DesignWidth="512">
+             mc:Ignorable="d" d:DesignHeight="360" d:DesignWidth="720">
     <UserControl.Resources>
         <DrawingImage x:Key="RectangleEraserImageSource">
             <DrawingImage.Drawing>
@@ -72,7 +72,7 @@
         <Canvas Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type UserControl}}, Path=ActualWidth}"
                 Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type UserControl}}, Path=ActualHeight}"
                 ClipToBounds="True" Loaded="EraserOverlayCanvas_Loaded" x:Name="EraserCanvas" Background="Transparent" x:FieldModifier="private">
-            <Image Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0,0" Width="0" x:Name="EraserFeedback" x:FieldModifier="private">
+            <Image d:Height="100" d:Width="100" Canvas.Left="0" Canvas.Top="0" RenderTransformOrigin="0,0" Width="0" x:Name="EraserFeedback" x:FieldModifier="private">
                 <Image.RenderTransform>
                     <TranslateTransform x:Name="EraserFeedbackTranslateTransform" x:FieldModifier="private"/>
                 </Image.RenderTransform>
@@ -81,8 +81,8 @@
         <Canvas Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type UserControl}}, Path=ActualWidth}"
                 Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type UserControl}}, Path=ActualHeight}"
                 ClipToBounds="True" Loaded="RectangleAreaEraserCanvas_Loaded" x:Name="RectangleAreaEraserCanvas" Background="Transparent" x:FieldModifier="private">
-            <Border Visibility="Collapsed" x:Name="AreaErasingFeedback" x:FieldModifier="private" Width="128" Height="128" BorderBrush="#9971717a" BorderThickness="1" Background="#3371717a">
-                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="68" Height="22" CornerRadius="10" Background="#b91c1c">
+            <Border Visibility="Collapsed" d:Visibility="Visible" x:Name="AreaErasingFeedback" x:FieldModifier="private" Width="128" Height="128" BorderBrush="#66ccff" BorderThickness="1" Background="#3366CCFF">
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="68" Height="22" CornerRadius="10" Background="#66ccff">
                     <TextBlock Margin="8,2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">区域擦除</TextBlock>
                 </Border>
             </Border>

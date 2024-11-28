@@ -1,4 +1,25 @@
-﻿using Cokee.ClassService.Helper;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Net.Http;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+
+using Cokee.ClassService.Helper;
 using Cokee.ClassService.Shared;
 using Cokee.ClassService.Views.Windows;
 
@@ -14,35 +35,6 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Events;
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-
-using Windows.ApplicationModel.Store;
-
-using static Vanara.PInvoke.Shell32;
-
 using Application = System.Windows.Application;
 using Control = System.Windows.Controls.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -50,7 +42,6 @@ using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using MsExcel = Microsoft.Office.Interop.Excel;
 using MsPpt = Microsoft.Office.Interop.PowerPoint;
 using MsWord = Microsoft.Office.Interop.Word;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Point = System.Windows.Point;
 using Timer = System.Timers.Timer;
 
@@ -82,7 +73,7 @@ namespace Cokee.ClassService
             InitializeComponent();
             Catalog.MainWindow = this;
             rancor.RandomResultControl = ranres;
-            inkTool.inkCanvas = inkcanvas;
+            inkTool.iccBoard = IccBoard;
             VerStr.Text =
                 $"CokeeClass 版本{version?.ToString(4)}";
         }
@@ -95,19 +86,19 @@ namespace Cokee.ClassService
             UpdateLayout();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            await Dispatcher.BeginInvoke(new Action(async () =>
             {
-                schedule = await ScheduleExt.LoadFromJsonAsync();
+                //schedule = await ScheduleExt.LoadFromJsonAsync();
                 Log.Logger = new LoggerConfiguration()
                 .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.RichTextBox(richTextBox, LogEventLevel.Verbose)
                 .CreateLogger();
-                if(Catalog.settings.DesktopBgWin)
-                    new BackgroundWindow().Show();
+                if (Catalog.settings.DesktopBgWin)
+                    new DesktopWindow().Show();
                 Catalog.SetWindowStyle(1);
                 SystemEvents.DisplaySettingsChanged += DisplaySettingsChanged;
                 DpiChanged += DisplaySettingsChanged;
@@ -122,7 +113,7 @@ namespace Cokee.ClassService
                 if (!Catalog.IsScrSave)
                 {
                     HwndSource? hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-                    hwndSource.AddHook(usbCard.WndProc);
+                    hwndSource?.AddHook(usbCard.WndProc);
                     if (Catalog.settings.AgentEnable) Catalog.CapServiceHost.StartAgent();
                     if (Catalog.settings.FileWatcherEnable) IntiFileWatcher();
                     Catalog.CheckUpdate();
@@ -132,20 +123,8 @@ namespace Cokee.ClassService
                     tipsText.Visibility = Visibility.Visible;
                     tipsText.Text = "屏保模式";
                 }
-
-                if (Catalog.settings.MultiTouchEnable)
-                {
-                    inkcanvas.StylusDown += MainWindow_StylusDown;
-                    inkcanvas.StylusMove += MainWindow_StylusMove;
-                    inkcanvas.StylusUp += MainWindow_StylusUp;
-                    inkcanvas.TouchDown += MainWindow_TouchDown;
-                }
-                inkcanvas.StrokeCollected += inkcanvas_StrokeCollected;
-                timeMachine.OnRedoStateChanged += TimeMachine_OnRedoStateChanged;
-                timeMachine.OnUndoStateChanged += TimeMachine_OnUndoStateChanged;
-                inkcanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
                 GetCalendarInfo();
-                //CheckBirthDay();
+                CheckBirthDay();
             }), DispatcherPriority.Normal);
         }
 
@@ -214,9 +193,9 @@ namespace Cokee.ClassService
                 ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
         }
 
-        private async void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
+        private void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            await Dispatcher.InvokeAsync(() =>
+            Dispatcher.InvokeAsync(() =>
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
@@ -277,9 +256,9 @@ namespace Cokee.ClassService
             }, DispatcherPriority.Background);
         }
 
-        public async void ToggleCard(bool fasthide = false)
+        public void ToggleCard(bool fasthide = false)
         {
-            await Dispatcher.InvokeAsync(new Action(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
                 DoubleAnimation anim2 = new DoubleAnimation(0, 300, TimeSpan.FromSeconds(1));
                 DoubleAnimation anim1 = new DoubleAnimation(300, 0, TimeSpan.FromSeconds(1));
@@ -316,7 +295,7 @@ namespace Cokee.ClassService
                     };
                     //transT.Y = 0;
                 }
-            }), DispatcherPriority.Background);
+            }), DispatcherPriority.Normal);
         }
 
         private async void StartAnimation(int time = 2, int angle = 180)
@@ -376,9 +355,9 @@ namespace Cokee.ClassService
 
         private Stopwatch floatStopwatch = new Stopwatch();
 
-        private async void FloatGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        private void FloatGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            await Dispatcher.InvokeAsync(new Action(() =>
+            Dispatcher.InvokeAsync(new Action(() =>
             {
                 floatStopwatch.Restart();
                 isDragging = true;
@@ -413,9 +392,9 @@ namespace Cokee.ClassService
             });
         }
 
-        private async void FloatGrid_MouseUp(object sender, MouseButtonEventArgs e)
+        private void FloatGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            await Dispatcher.InvokeAsync(new Action(() =>
+            Dispatcher.Invoke(new Action(() =>
             {
                 floatStopwatch.Stop();
                 StartAnimation();
@@ -427,7 +406,7 @@ namespace Cokee.ClassService
                 if (floatStopwatch.ElapsedMilliseconds > 200) return;
                 if (Catalog.settings.SideCardEnable) ToggleCard();
                 else cardPopup.IsOpen = !cardPopup.IsOpen;
-            }), DispatcherPriority.Background);
+            }), DispatcherPriority.Normal);
         }
 
         private void StuMgr(object sender, RoutedEventArgs e) => Catalog.CreateWindow<StudentMgr>();
@@ -436,7 +415,6 @@ namespace Cokee.ClassService
         {
             await Dispatcher.InvokeAsync(new Action(() =>
             {
-                timeMachine.ClearStrokeHistory();
                 if (inkTool.Visibility == Visibility.Collapsed || inkTool.isPPT)
                 {
                     if (inkTool.isPPT) inkTool.SetCursorMode(0);
@@ -465,7 +443,7 @@ namespace Cokee.ClassService
             Log.Information($"Program Closed {e.ToString()}");
         }
 
-        /*public async void CheckBirthDay()
+        public async void CheckBirthDay()
         {
             await Dispatcher.InvokeAsync(new Action(async () =>
             {
@@ -508,7 +486,7 @@ namespace Cokee.ClassService
                 }
                 else birth.IsOpen = false;
             }));
-        }*/
+        }
 
         private void ShowStickys(object sender, RoutedEventArgs e) => Catalog.CreateWindow<Sticky>();
 
@@ -522,7 +500,7 @@ namespace Cokee.ClassService
 
         private void QuickFix(object sender, RoutedEventArgs e)
         {
-            new BackgroundWindow().Show();
+            new DesktopWindow().Show();
 
             // Catalog.CreateWindow<UserLogin>();
         }
@@ -620,7 +598,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(() =>
+                new Task(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
@@ -638,7 +616,7 @@ namespace Cokee.ClassService
         {
             try
             {
-                new Thread(() =>
+                new Task(() =>
                 {
                     if (pptApplication == null) throw new NullReferenceException("ppt对象不存在。");
                     pptApplication.SlideShowWindows[1].Activate();
@@ -660,31 +638,34 @@ namespace Cokee.ClassService
             try
             {
                 //Log.Information($"CheckOffice Started. TaskStatus:{CheckOfficeTask.Status}");
-                if (ProcessHelper.HasPowerPointProcess() && pptApplication == null)
+                if (ProcessHelper.HasPowerPointProcess())
                 {
-                    pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
-
-                    if (pptApplication != null)
+                    if (pptApplication == null)
                     {
-                        Catalog.ShowInfo("成功捕获PPT程序对象",
-                            pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
-                            pptApplication.ProductCode, InfoBarSeverity.Success);
-                        if (!pptApplication.Name.Contains("Microsoft"))
-                            Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。", InfoBarSeverity.Warning);
-                        pptApplication.PresentationClose += PptApplication_PresentationClose;
-                        pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
-                        pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
-                        pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
-                        if (pptApplication.SlideShowWindows.Count >= 1)
+                        pptApplication = (MsPpt.Application)MarshalForCore.GetActiveObject("PowerPoint.Application");
+                        if (pptApplication != null)
                         {
-                            PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
-                        }
-
-                        if (pptApplication.Presentations.Count >= 1)
-                        {
-                            foreach (MsPpt.Presentation pres in pptApplication.Presentations)
+                            if (pptApplication.Presentations.Count >= 1)
                             {
-                                Catalog.BackupFile(pres.FullName, pres.Name);
+                                foreach (MsPpt.Presentation pres in pptApplication.Presentations)
+                                {
+                                    Catalog.BackupFile(pres.FullName, pres.Name);
+                                }
+                            }
+                            else return;
+                            Catalog.ShowInfo("成功捕获PPT程序对象",
+                                pptApplication.Name + "/版本:" + pptApplication.Version + "/PC:" +
+                                pptApplication.ProductCode, InfoBarSeverity.Success);
+                            if (!pptApplication.Name.Contains("Microsoft"))
+                                Catalog.ShowInfo("警告:不推荐使用WPS。", "高分辨率下WPS无法播放视频。", InfoBarSeverity.Warning);
+                            pptApplication.PresentationClose += PptApplication_PresentationClose;
+                            pptApplication.SlideShowBegin += PptApplication_SlideShowBegin;
+                            pptApplication.SlideShowNextSlide += PptApplication_SlideShowNextSlide;
+                            pptApplication.SlideShowEnd += PptApplication_SlideShowEnd;
+                            pptApplication.ProtectedViewWindowOpen += PptApplication_ProtectedViewWindowOpen;
+                            if (pptApplication.SlideShowWindows.Count >= 1)
+                            {
+                                PptApplication_SlideShowBegin(pptApplication.SlideShowWindows[1]);
                             }
                         }
                     }
@@ -790,16 +771,12 @@ namespace Cokee.ClassService
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                //page = 0;
-                ClearStrokes(true);
+                IccBoard.CurrentPageItem.InkCanvas.Strokes.Clear();
                 pptControls.Visibility = Visibility.Collapsed;
                 Catalog.SetWindowStyle(1);
-                inkcanvas.IsEnabled = false;
                 inkTool.Visibility = Visibility.Collapsed;
-                inkcanvas.Background.Opacity = 0;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo("放映结束.");
-                //IconAnimation(true);
             }), DispatcherPriority.Background);
         }
 
@@ -808,19 +785,16 @@ namespace Cokee.ClassService
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (!inkTool.isPPT) return;
-                //page = Wn.View.CurrentShowPosition;
-                ClearStrokes(true);
                 NowPageText.Text = Wn.View.CurrentShowPosition.ToString();
                 TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
-                //if (strokes[page]!=null)inkcanvas.Strokes = strokes[page];
+                IccBoard.GotoPage(Wn.View.CurrentShowPosition);
             }), DispatcherPriority.Normal);
         }
 
-        private void PptApplication_PresentationClose(MsPpt.Presentation Pres)
+        private void PptApplication_PresentationClose(MsPpt.Presentation? Pres)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                //page = 0;
                 pptControls.Visibility = Visibility.Collapsed;
                 inkTool.isPPT = false;
                 Catalog.ShowInfo($"尝试释放 PPT 对象");
@@ -839,20 +813,45 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void PptApplication_SlideShowBegin(MsPpt.SlideShowWindow Wn)
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void PptApplication_ProtectedViewWindowOpen(MsPpt.ProtectedViewWindow Wn)
         {
             inkTool.isPPT = true;
-            //memoryStreams = new MemoryStream[Wn.Presentation.Slides.Count + 2];
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 Catalog.ShowInfo("放映已开始.");
                 StartInk(null, null);
                 inkTool.SetCursorMode(0);
-                inkcanvas.Background.Opacity = 0;
+                pptControls.Visibility = Visibility.Visible;
+                NowPageText.Text = Wn..CurrentShowPosition.ToString();
+                TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
+                while (IccBoard.IsCurrentLastPage) IccBoard?.RemovePage();
+                IccBoard.GotoPage(Wn.View.CurrentShowPosition);
+                if (pptApplication?.Presentations.Count >= 1)
+                {
+                    foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
+                    {
+                        Catalog.BackupFile(Pres.FullName, Pres.Name);
+                    }
+                }
+            }), DispatcherPriority.Background);
+        }
+        private void PptApplication_SlideShowBegin(MsPpt.SlideShowWindow Wn)
+        {
+            inkTool.isPPT = true;
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Catalog.ShowInfo("放映已开始.");
+                StartInk(null, null);
+                inkTool.SetCursorMode(0);
                 pptControls.Visibility = Visibility.Visible;
                 NowPageText.Text = Wn.View.CurrentShowPosition.ToString();
                 TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
-                //page = Wn.View.CurrentShowPosition;
+                while (IccBoard.IsCurrentLastPage) IccBoard?.RemovePage();
+                IccBoard.GotoPage(Wn.View.CurrentShowPosition);
                 if (pptApplication?.Presentations.Count >= 1)
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)
@@ -864,619 +863,5 @@ namespace Cokee.ClassService
         }
 
         #endregion OfficeObj
-
-        #region Multi-Touch
-
-        private void MainWindow_TouchDown(object sender, TouchEventArgs e)
-        {
-            double boundWidth = e.GetTouchPoint(null).Bounds.Width;
-            if (boundWidth > 20)
-            {
-                inkcanvas.EraserShape = new EllipseStylusShape(boundWidth, boundWidth);
-                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.EraseByPoint;
-                inkcanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-            }
-            else if (!inkTool.isEraser)
-            {
-                TouchDownPointsList[e.TouchDevice.Id] = InkCanvasEditingMode.None;
-                inkcanvas.EditingMode = InkCanvasEditingMode.None;
-            }
-        }
-
-        private void MainWindow_StylusDown(object sender, StylusDownEventArgs e)
-        {
-            TouchDownPointsList[e.StylusDevice.Id] = InkCanvasEditingMode.None;
-        }
-
-        private void inkcanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
-        {
-            try
-            {
-                // 检查是否是压感笔书写
-                if (e.Stroke.StylusPoints.Any(stylusPoint =>
-                        stylusPoint.PressureFactor != 0.5 && stylusPoint.PressureFactor != 0))
-                {
-                    return;
-                }
-
-                double GetPointSpeed(Point point1, Point point2, Point point3)
-                {
-                    return (Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) +
-                                      (point1.Y - point2.Y) * (point1.Y - point2.Y))
-                            + Math.Sqrt((point3.X - point2.X) * (point3.X - point2.X) +
-                                        (point3.Y - point2.Y) * (point3.Y - point2.Y)))
-                           / 20;
-                }
-
-                try
-                {
-                    if (e.Stroke.StylusPoints.Count > 3)
-                    {
-                        Random random = new Random();
-                        double _speed = GetPointSpeed(
-                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(),
-                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint(),
-                            e.Stroke.StylusPoints[random.Next(0, e.Stroke.StylusPoints.Count - 1)].ToPoint());
-                    }
-                }
-                catch
-                {
-                }
-
-                try
-                {
-                    StylusPointCollection stylusPoints = new StylusPointCollection();
-                    int n = e.Stroke.StylusPoints.Count - 1;
-                    double pressure = 0.1;
-                    int x = 10;
-                    if (n == 1) return;
-                    if (n >= x)
-                    {
-                        for (int i = 0; i < n - x; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)0.5;
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-
-                        for (int i = n - x; i <= n; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)((0.5 - pressure) * (n - i) / x + pressure);
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i <= n; i++)
-                        {
-                            StylusPoint point = new StylusPoint();
-
-                            point.PressureFactor = (float)(0.4 * (n - i) / n + pressure);
-                            point.X = e.Stroke.StylusPoints[i].X;
-                            point.Y = e.Stroke.StylusPoints[i].Y;
-                            stylusPoints.Add(point);
-                        }
-                    }
-
-                    e.Stroke.StylusPoints = stylusPoints;
-                }
-                catch
-                {
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void MainWindow_StylusUp(object sender, StylusEventArgs e)
-        {
-            try
-            {
-                if (!inkTool.isEraser)
-                {
-                    inkcanvas.Strokes.Add(GetStrokeVisual(e.StylusDevice.Id).Stroke);
-                    inkcanvas.Children.Remove(GetVisualCanvas(e.StylusDevice.Id));
-                    inkcanvas_StrokeCollected(inkcanvas,
-                        new InkCanvasStrokeCollectedEventArgs(GetStrokeVisual(e.StylusDevice.Id).Stroke));
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-
-            try
-            {
-                StrokeVisualList.Remove(e.StylusDevice.Id);
-                VisualCanvasList.Remove(e.StylusDevice.Id);
-                TouchDownPointsList.Remove(e.StylusDevice.Id);
-                if (StrokeVisualList.Count == 0 || VisualCanvasList.Count == 0 || TouchDownPointsList.Count == 0)
-                {
-                    inkcanvas.Children.Clear();
-                    StrokeVisualList.Clear();
-                    VisualCanvasList.Clear();
-                    TouchDownPointsList.Clear();
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void MainWindow_StylusMove(object sender, StylusEventArgs e)
-        {
-            try
-            {
-                if (inkTool.isEraser) return;
-                if (GetTouchDownPointsList(e.StylusDevice.Id) != InkCanvasEditingMode.None) return;
-                try
-                {
-                    if (e.StylusDevice.StylusButtons[1].StylusButtonState == StylusButtonState.Down) return;
-                }
-                catch
-                {
-                }
-
-                var strokeVisual = GetStrokeVisual(e.StylusDevice.Id);
-                var stylusPointCollection = e.GetStylusPoints(this);
-                foreach (var stylusPoint in stylusPointCollection)
-                {
-                    strokeVisual.Add(new StylusPoint(stylusPoint.X, stylusPoint.Y, stylusPoint.PressureFactor));
-                }
-
-                strokeVisual.ReDraw();
-            }
-            catch
-            {
-            }
-        }
-
-        private StrokeVisual GetStrokeVisual(int id)
-        {
-            if (StrokeVisualList.TryGetValue(id, out var visual))
-            {
-                return visual;
-            }
-
-            var strokeVisual = new StrokeVisual(inkcanvas.DefaultDrawingAttributes.Clone());
-            StrokeVisualList[id] = strokeVisual;
-            StrokeVisualList[id] = strokeVisual;
-            var visualCanvas = new VisualCanvas(strokeVisual);
-            VisualCanvasList[id] = visualCanvas;
-            inkcanvas.Children.Add(visualCanvas);
-
-            return strokeVisual;
-        }
-
-        private VisualCanvas GetVisualCanvas(int id)
-        {
-            if (VisualCanvasList.TryGetValue(id, out var visualCanvas))
-            {
-                return visualCanvas;
-            }
-
-            return null;
-        }
-
-        private InkCanvasEditingMode GetTouchDownPointsList(int id)
-        {
-            if (TouchDownPointsList.TryGetValue(id, out var inkCanvasEditingMode))
-            {
-                return inkCanvasEditingMode;
-            }
-
-            return inkcanvas.EditingMode;
-        }
-
-        private Dictionary<int, InkCanvasEditingMode> TouchDownPointsList { get; } =
-            new Dictionary<int, InkCanvasEditingMode>();
-
-        private Dictionary<int, StrokeVisual> StrokeVisualList { get; } = new Dictionary<int, StrokeVisual>();
-        private Dictionary<int, VisualCanvas> VisualCanvasList { get; } = new Dictionary<int, VisualCanvas>();
-
-        #endregion Multi-Touch
-
-        private StrokeCollection[] strokeCollections = new StrokeCollection[101];
-        private bool[] whiteboadLastModeIsRedo = new bool[101];
-        private StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
-
-        private int CurrentWhiteboardIndex = 1;
-        private int WhiteboardTotalCount = 1;
-        private TimeMachineHistory[][] TimeMachineHistories = new TimeMachineHistory[101][]; //最多99页，0用来存储非白板时的墨迹以便还原
-
-        private void SaveStrokes(bool isBackupMain = false)
-        {
-            if (isBackupMain)
-            {
-                var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
-                TimeMachineHistories[0] = timeMachineHistory;
-                timeMachine.ClearStrokeHistory();
-            }
-            else
-            {
-                var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
-                TimeMachineHistories[CurrentWhiteboardIndex] = timeMachineHistory;
-                timeMachine.ClearStrokeHistory();
-            }
-        }
-
-        public void ClearStrokes(bool isErasedByCode)
-        {
-            _currentCommitType = CommitReason.ClearingCanvas;
-            if (isErasedByCode) _currentCommitType = CommitReason.CodeInput;
-            inkcanvas.Strokes.Clear();
-            _currentCommitType = CommitReason.UserInput;
-        }
-
-        private void RestoreStrokes(bool isBackupMain = false)
-        {
-            try
-            {
-                if (TimeMachineHistories[CurrentWhiteboardIndex] == null) return; //防止白板打开后不居中
-                if (isBackupMain)
-                {
-                    _currentCommitType = CommitReason.CodeInput;
-                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[0]);
-                    foreach (var item in TimeMachineHistories[0])
-                    {
-                        if (item.CommitType == TimeMachineHistoryType.UserInput)
-                        {
-                            if (!item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.ShapeRecognition)
-                        {
-                            if (item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.Rotate)
-                        {
-                            if (item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.Clear)
-                        {
-                            if (!item.StrokeHasBeenCleared)
-                            {
-                                if (item.CurrentStroke != null)
-                                {
-                                    foreach (var currentStroke in item.CurrentStroke)
-                                    {
-                                        if (!inkcanvas.Strokes.Contains(currentStroke))
-                                            inkcanvas.Strokes.Add(currentStroke);
-                                    }
-                                }
-
-                                if (item.ReplacedStroke != null)
-                                {
-                                    foreach (var replacedStroke in item.ReplacedStroke)
-                                    {
-                                        if (inkcanvas.Strokes.Contains(replacedStroke))
-                                            inkcanvas.Strokes.Remove(replacedStroke);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (item.ReplacedStroke != null)
-                                {
-                                    foreach (var replacedStroke in item.ReplacedStroke)
-                                    {
-                                        if (!inkcanvas.Strokes.Contains(replacedStroke))
-                                            inkcanvas.Strokes.Add(replacedStroke);
-                                    }
-                                }
-
-                                if (item.CurrentStroke != null)
-                                {
-                                    foreach (var currentStroke in item.CurrentStroke)
-                                    {
-                                        if (inkcanvas.Strokes.Contains(currentStroke))
-                                            inkcanvas.Strokes.Remove(currentStroke);
-                                    }
-                                }
-                            }
-                        }
-
-                        _currentCommitType = CommitReason.UserInput;
-                    }
-                }
-                else
-                {
-                    _currentCommitType = CommitReason.CodeInput;
-                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[CurrentWhiteboardIndex]);
-                    foreach (var item in TimeMachineHistories[CurrentWhiteboardIndex])
-                    {
-                        if (item.CommitType == TimeMachineHistoryType.UserInput)
-                        {
-                            if (!item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.ShapeRecognition)
-                        {
-                            if (item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.Rotate)
-                        {
-                            if (item.StrokeHasBeenCleared)
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-                            }
-                            else
-                            {
-                                foreach (var strokes in item.CurrentStroke)
-                                {
-                                    if (!inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Add(strokes);
-                                }
-
-                                foreach (var strokes in item.ReplacedStroke)
-                                {
-                                    if (inkcanvas.Strokes.Contains(strokes))
-                                        inkcanvas.Strokes.Remove(strokes);
-                                }
-                            }
-                        }
-                        else if (item.CommitType == TimeMachineHistoryType.Clear)
-                        {
-                            if (!item.StrokeHasBeenCleared)
-                            {
-                                if (item.CurrentStroke != null)
-                                {
-                                    foreach (var currentStroke in item.CurrentStroke)
-                                    {
-                                        if (!inkcanvas.Strokes.Contains(currentStroke))
-                                            inkcanvas.Strokes.Add(currentStroke);
-                                    }
-                                }
-
-                                if (item.ReplacedStroke != null)
-                                {
-                                    foreach (var replacedStroke in item.ReplacedStroke)
-                                    {
-                                        if (inkcanvas.Strokes.Contains(replacedStroke))
-                                            inkcanvas.Strokes.Remove(replacedStroke);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (item.ReplacedStroke != null)
-                                {
-                                    foreach (var replacedStroke in item.ReplacedStroke)
-                                    {
-                                        if (!inkcanvas.Strokes.Contains(replacedStroke))
-                                            inkcanvas.Strokes.Add(replacedStroke);
-                                    }
-                                }
-
-                                if (item.CurrentStroke != null)
-                                {
-                                    foreach (var currentStroke in item.CurrentStroke)
-                                    {
-                                        if (inkcanvas.Strokes.Contains(currentStroke))
-                                            inkcanvas.Strokes.Remove(currentStroke);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    _currentCommitType = CommitReason.UserInput;
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        #region TimeMachine
-
-        public enum CommitReason
-        {
-            UserInput,
-            CodeInput,
-            ShapeDrawing,
-            ShapeRecognition,
-            ClearingCanvas,
-            Rotate
-        }
-
-        public CommitReason _currentCommitType = CommitReason.UserInput;
-        private bool IsEraseByPoint => inkcanvas.EditingMode == InkCanvasEditingMode.EraseByPoint;
-        private StrokeCollection ReplacedStroke;
-        private StrokeCollection AddedStroke;
-        private StrokeCollection CuboidStrokeCollection;
-        public TimeMachine timeMachine = new TimeMachine();
-
-        private void TimeMachine_OnUndoStateChanged(bool status)
-        {
-            var result = status ? Visibility.Visible : Visibility.Collapsed;
-            inkTool.backBtn.Visibility = result;
-            inkTool.backBtn.IsEnabled = status;
-        }
-
-        private void TimeMachine_OnRedoStateChanged(bool status)
-        {
-            var result = status ? Visibility.Visible : Visibility.Collapsed;
-            inkTool.redoBtn.Visibility = result;
-            inkTool.redoBtn.IsEnabled = status;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Catalog.ToggleControlVisible(logview);
-        }
-        private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
-        {
-            if (_currentCommitType == CommitReason.CodeInput || _currentCommitType == CommitReason.ShapeDrawing) return;
-            if (_currentCommitType == CommitReason.Rotate)
-            {
-                timeMachine.CommitStrokeRotateHistory(e.Removed, e.Added);
-                return;
-            }
-
-            if ((e.Added.Count != 0 || e.Removed.Count != 0) && IsEraseByPoint)
-            {
-                if (AddedStroke == null) AddedStroke = new StrokeCollection();
-                if (ReplacedStroke == null) ReplacedStroke = new StrokeCollection();
-                AddedStroke.Add(e.Added);
-                ReplacedStroke.Add(e.Removed);
-                return;
-            }
-
-            if (e.Added.Count != 0)
-            {
-                if (_currentCommitType == CommitReason.ShapeRecognition)
-                {
-                    timeMachine.CommitStrokeShapeHistory(ReplacedStroke, e.Added);
-                    ReplacedStroke = null;
-                    return;
-                }
-
-                timeMachine.CommitStrokeUserInputHistory(e.Added);
-                return;
-            }
-
-            if (e.Removed.Count != 0)
-            {
-                if (_currentCommitType == CommitReason.ShapeRecognition)
-                {
-                    ReplacedStroke = e.Removed;
-                    return;
-                }
-
-                if (!IsEraseByPoint || _currentCommitType == CommitReason.ClearingCanvas)
-                {
-                    timeMachine.CommitStrokeEraseHistory(e.Removed);
-                }
-            }
-        }
-
-        #endregion TimeMachine
     }
 }

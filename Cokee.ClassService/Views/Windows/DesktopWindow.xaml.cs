@@ -18,10 +18,10 @@ namespace Cokee.ClassService
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class BackgroundWindow : Window
+    public partial class DesktopWindow : Window
     {
         public Timer secTimer =new Timer(1000);
-        public BackgroundWindow()
+        public DesktopWindow()
         {
             InitializeComponent();
             Win32Helper.SetBottom(this);
@@ -49,7 +49,6 @@ namespace Cokee.ClassService
                 secTimer.Start();
             }), DispatcherPriority.Normal);
         }
-        public DateTime cd = new DateTime(2025, 06, 07);
         private async void SecondTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             await Dispatcher.InvokeAsync(() =>

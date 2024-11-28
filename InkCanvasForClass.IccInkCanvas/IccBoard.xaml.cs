@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+
 using InkCanvasForClass.IccInkCanvas.Settings;
 using InkCanvasForClass.IccInkCanvas.Utils.Threading;
-using JetBrains.Annotations;
+
 using MatrixTransform = System.Windows.Media.MatrixTransform;
 
-namespace InkCanvasForClass.IccInkCanvas {
+namespace InkCanvasForClass.IccInkCanvas
+{
 
-    public class IccInnerInkCanvasInfo {
+    public class IccInnerInkCanvasInfo
+    {
         public Guid GUID { get; set; }
         public Dispatcher Dispatcher { get; set; }
         public DispatcherContainer Container { get; set; }
     }
 
-    public class TimeMachineStatusUpdatedEventArgs : EventArgs {
-        public TimeMachineStatusUpdatedEventArgs(IccBoardPage page) {
+    public class TimeMachineStatusUpdatedEventArgs : EventArgs
+    {
+        public TimeMachineStatusUpdatedEventArgs(IccBoardPage page)
+        {
             Page = page;
             CanUndo = page.TimeMachine.CanUndo;
             CanRedo = page.TimeMachine.CanRedo;
@@ -46,7 +45,8 @@ namespace InkCanvasForClass.IccInkCanvas {
     /// <summary>
     /// 基于InkCanvas封装的墨迹书写控件
     /// </summary>
-    public partial class IccBoard : UserControl {
+    public partial class IccBoard : UserControl
+    {
 
         public BoardSettings BoardSettings { get; private set; } = new BoardSettings();
 
@@ -60,9 +60,11 @@ namespace InkCanvasForClass.IccInkCanvas {
         #region Properties
 
         private bool _isEditingModePropertyAccessdByCodeBehind = false;
-        public EditingMode EditingMode {
+        public EditingMode EditingMode
+        {
             get => (EditingMode)GetValue(EditingModeProperty);
-            set {
+            set
+            {
                 if (value == EditingMode.ShapeDrawing) throw new Exception("EditingMode.ShapeDrawing 不能被用户手动设定");
                 _isEditingModePropertyAccessdByCodeBehind = true;
                 SetValue(EditingModeProperty, value);
@@ -70,7 +72,7 @@ namespace InkCanvasForClass.IccInkCanvas {
                 UpdateEditingMode();
             }
         }
-        public static readonly System.Windows.DependencyProperty EditingModeProperty =
+        public static readonly DependencyProperty EditingModeProperty =
             System.Windows.DependencyProperty.Register(
                 nameof(EditingMode),
                 typeof(EditingMode),
@@ -78,7 +80,8 @@ namespace InkCanvasForClass.IccInkCanvas {
                 new FrameworkPropertyMetadata(EditingMode.Writing,
                     FrameworkPropertyMetadataOptions.AffectsRender,
                     propertyChangedCallback: OnEditingModePropertyChanged));
-        private static void OnEditingModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        private static void OnEditingModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             var iccboard = d as IccBoard;
             if (iccboard != null && iccboard._isEditingModePropertyAccessdByCodeBehind) return;
             iccboard?.UpdateEditingMode();
@@ -88,11 +91,12 @@ namespace InkCanvasForClass.IccInkCanvas {
 
         #region EditingMode
 
-        private EditingMode _edittingMode;
+        private EditingMode _editingMode;
 
-        private void UpdateEditingMode() {
-            _edittingMode = EditingMode;
-            if (EditingMode == EditingMode.None || EditingMode == EditingMode.NoneWithHitTest) 
+        private void UpdateEditingMode()
+        {
+            _editingMode = EditingMode;
+            if (EditingMode == EditingMode.None || EditingMode == EditingMode.NoneWithHitTest)
                 WrapperInkCanvas.EditingMode = InkCanvasEditingMode.None;
             IsHitTestVisible = EditingMode != EditingMode.None;
             if (EditingMode == EditingMode.Writing) WrapperInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
@@ -100,73 +104,83 @@ namespace InkCanvasForClass.IccInkCanvas {
             RectangleAreaEraserCanvas.Visibility =
                 EditingMode == EditingMode.AreaErasing ? Visibility.Visible : Visibility.Collapsed;
             RoamingHitTestBorder.Visibility = EditingMode == EditingMode.RoamingMode ? Visibility.Visible : Visibility.Collapsed;
+            RaiseEditingModeChangedEvent();
+            RaiseActiveEditingModeChangedEvent();
         }
 
         #endregion
 
         #region Events
 
-        private static readonly System.Windows.RoutedEvent EditingModeChangedEvent = EventManager.RegisterRoutedEvent(
+        private static readonly RoutedEvent EditingModeChangedEvent = EventManager.RegisterRoutedEvent(
             name: "EditingModeChanged",
             routingStrategy: RoutingStrategy.Bubble,
-            handlerType: typeof(System.Windows.RoutedEventHandler),
+            handlerType: typeof(RoutedEventHandler),
             ownerType: typeof(IccBoard));
-        private static readonly System.Windows.RoutedEvent ActiveEditingModeChangedEvent = EventManager.RegisterRoutedEvent(
+        private static readonly RoutedEvent ActiveEditingModeChangedEvent = EventManager.RegisterRoutedEvent(
             name: "ActiveEditingModeChanged",
             routingStrategy: RoutingStrategy.Bubble,
-            handlerType: typeof(System.Windows.RoutedEventHandler),
+            handlerType: typeof(RoutedEventHandler),
             ownerType: typeof(IccBoard));
-        private static readonly System.Windows.RoutedEvent CurrentPageChangedEvent = EventManager.RegisterRoutedEvent(
+        private static readonly RoutedEvent CurrentPageChangedEvent = EventManager.RegisterRoutedEvent(
             name: "CurrentPageChanged",
             routingStrategy: RoutingStrategy.Bubble,
-            handlerType: typeof(System.Windows.RoutedEventHandler),
+            handlerType: typeof(RoutedEventHandler),
             ownerType: typeof(IccBoard));
-        private static readonly System.Windows.RoutedEvent UndoRedoStateChangedEvent = EventManager.RegisterRoutedEvent(
+        private static readonly RoutedEvent UndoRedoStateChangedEvent = EventManager.RegisterRoutedEvent(
             name: "UndoRedoStateChanged",
             routingStrategy: RoutingStrategy.Bubble,
-            handlerType: typeof(System.Windows.RoutedEventHandler),
+            handlerType: typeof(RoutedEventHandler),
             ownerType: typeof(IccBoard));
 
-        public event System.Windows.RoutedEventHandler EditingModeChanged {
+        public event RoutedEventHandler EditingModeChanged
+        {
             add => AddHandler(EditingModeChangedEvent, value);
             remove => RemoveHandler(EditingModeChangedEvent, value);
         }
-        public event System.Windows.RoutedEventHandler ActiveEditingModeChanged {
+        public event RoutedEventHandler ActiveEditingModeChanged
+        {
             add => AddHandler(ActiveEditingModeChangedEvent, value);
             remove => RemoveHandler(ActiveEditingModeChangedEvent, value);
         }
-        public event System.Windows.RoutedEventHandler CurrentPageChanged {
+        public event RoutedEventHandler CurrentPageChanged
+        {
             add => AddHandler(CurrentPageChangedEvent, value);
             remove => RemoveHandler(CurrentPageChangedEvent, value);
         }
         /// <summary>
         /// 该事件接收撤销和重做状态变更的事件（注意，当前页面变更也会触发该事件。该事件接收每一页撤销和重做状态变更的事件，但是不提供具体是哪一页的时光机发生了状态变更，可以用这个事件来更新当前页面的时光机UI状态）
         /// </summary>
-        public event System.Windows.RoutedEventHandler UndoRedoStateChanged {
+        public event RoutedEventHandler UndoRedoStateChanged
+        {
             add => AddHandler(UndoRedoStateChangedEvent, value);
             remove => RemoveHandler(UndoRedoStateChangedEvent, value);
         }
 
         private bool isIgnoreRaiseCurrentPageChangedEvent = false;
 
-        private void RaiseEditingModeChangedEvent() {
+        private void RaiseEditingModeChangedEvent()
+        {
             RoutedEventArgs routedEventArgs = new RoutedEventArgs(routedEvent: EditingModeChangedEvent);
             RaiseEvent(routedEventArgs);
         }
-        private void RaiseActiveEditingModeChangedEvent() {
+        private void RaiseActiveEditingModeChangedEvent()
+        {
             RoutedEventArgs routedEventArgs = new RoutedEventArgs(routedEvent: ActiveEditingModeChangedEvent);
             RaiseEvent(routedEventArgs);
         }
-        private void RaiseCurrentPageChangedEvent() {
+        private void RaiseCurrentPageChangedEvent()
+        {
             if (isIgnoreRaiseCurrentPageChangedEvent) return;
             RoutedEventArgs routedEventArgs = new RoutedEventArgs(routedEvent: CurrentPageChangedEvent);
             RaiseEvent(routedEventArgs);
             RaiseUndoRedoStateChangedEvent(null);
         }
-        private void RaiseUndoRedoStateChangedEvent(TimeMachine t) {
+        private void RaiseUndoRedoStateChangedEvent(TimeMachine t)
+        {
             RoutedEventArgs routedEventArgs = new RoutedEventArgs(routedEvent: UndoRedoStateChangedEvent);
             RaiseEvent(routedEventArgs);
-            if (t != null) TimeMachineStatusUpdated?.Invoke(this, new TimeMachineStatusUpdatedEventArgs(BoardPages.Find(page=>page.TimeMachine.Equals(t))));
+            if (t != null) TimeMachineStatusUpdated?.Invoke(this, new TimeMachineStatusUpdatedEventArgs(BoardPages.Find(page => page.TimeMachine.Equals(t))));
         }
 
         /// <summary>
@@ -178,10 +192,11 @@ namespace InkCanvasForClass.IccInkCanvas {
 
         #region BoardSettings
 
-        private void RegisterEventsForBoardSettings() {
-            BoardSettings.NibWidthChanged += (s,e)=>WrapperInkCanvas.DefaultDrawingAttributes.Width = BoardSettings.NibWidth;
-            BoardSettings.NibHeightChanged += (s,e)=>WrapperInkCanvas.DefaultDrawingAttributes.Height = BoardSettings.NibHeight;
-            BoardSettings.NibColorChanged += (s,e)=>WrapperInkCanvas.DefaultDrawingAttributes.Color = BoardSettings.NibColor;
+        private void RegisterEventsForBoardSettings()
+        {
+            BoardSettings.NibWidthChanged += (s, e) => WrapperInkCanvas.DefaultDrawingAttributes.Width = BoardSettings.NibWidth;
+            BoardSettings.NibHeightChanged += (s, e) => WrapperInkCanvas.DefaultDrawingAttributes.Height = BoardSettings.NibHeight;
+            BoardSettings.NibColorChanged += (s, e) => WrapperInkCanvas.DefaultDrawingAttributes.Color = BoardSettings.NibColor;
         }
 
         #endregion
@@ -215,7 +230,8 @@ namespace InkCanvasForClass.IccInkCanvas {
         private Dictionary<Guid, StylusPointsReplacedEventHandler>
             _innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers = new Dictionary<Guid, StylusPointsReplacedEventHandler>();
 
-        private async Task<IccInnerInkCanvasInfo> AddIccInkCanvas() {
+        private async Task<IccInnerInkCanvasInfo> AddIccInkCanvas()
+        {
             var screenW = SystemParameters.PrimaryScreenWidth;
             var screenH = SystemParameters.PrimaryScreenHeight;
 
@@ -227,12 +243,14 @@ namespace InkCanvasForClass.IccInkCanvas {
 
             var di = new IccDispatcherInkCanvasInfo();
             await di.InitDispatcher();
-            var control = await di.Dispatcher.InvokeAsync(() => new InkCanvas() {
-                Background = new SolidColorBrush(Colors.White),
+            var control = await di.Dispatcher.InvokeAsync(() => new InkCanvas()
+            {
+                Background = new SolidColorBrush(Colors.Transparent),
                 Width = fullWidth,
                 Height = fullHeight,
             });
-            var dc = new DispatcherContainer() {
+            var dc = new DispatcherContainer()
+            {
                 Width = fullWidth,
                 Height = fullHeight,
             };
@@ -240,7 +258,8 @@ namespace InkCanvasForClass.IccInkCanvas {
             InkCanvasHostCanvas.Children.Add(dc);
             Canvas.SetTop(dc, top);
             Canvas.SetLeft(dc, left);
-            var info = new IccInnerInkCanvasInfo() {
+            var info = new IccInnerInkCanvasInfo()
+            {
                 GUID = di.GUID,
                 Dispatcher = di.Dispatcher,
                 Container = dc
@@ -253,15 +272,18 @@ namespace InkCanvasForClass.IccInkCanvas {
             return info;
         }
 
-        private void RemoveIccInkCanvas(IccInnerInkCanvasInfo item) {
+        private void RemoveIccInkCanvas(IccInnerInkCanvasInfo item)
+        {
             item.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Render);
             InkCanvasHostCanvas.Children.Remove(item.Container);
             DispatcherInkCanvasList.Remove(item);
         }
 
-        private void UpdateInnerInkCanvasVisibility(IccBoardPage item) {
+        private void UpdateInnerInkCanvasVisibility(IccBoardPage item)
+        {
             WrapperInkCanvas.Strokes.Clear();
-            foreach (UIElement child in InkCanvasHostCanvas.Children) {
+            foreach (UIElement child in InkCanvasHostCanvas.Children)
+            {
                 child.Visibility = Visibility.Collapsed;
                 if (child.Equals(item.Container)) child.Visibility = Visibility.Visible;
             }
@@ -273,32 +295,43 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="dispatcher"></param>
         /// <param name="container"></param>
         /// <param name="GUID"></param>
-        private void RegisterTimeMachineEventsToInkCanvas(Dispatcher dispatcher, DispatcherContainer container, Guid GUID) {
-            Task.Run(() => {
-                dispatcher.Invoke(() => {
+        private void RegisterTimeMachineEventsToInkCanvas(Dispatcher dispatcher, DispatcherContainer container, Guid GUID)
+        {
+            Task.Run(() =>
+            {
+                dispatcher.Invoke(() =>
+                {
                     var ic = container.Child as InkCanvas;
                     // Strokes_OnStrokesChanged
-                    if (!_innerInkCanvas_Strokes_OnStrokesChanged_wrappers.ContainsKey(GUID)) {
-                        _innerInkCanvas_Strokes_OnStrokesChanged_wrappers.Add(GUID, (o, args) => {
+                    if (!_innerInkCanvas_Strokes_OnStrokesChanged_wrappers.ContainsKey(GUID))
+                    {
+                        _innerInkCanvas_Strokes_OnStrokesChanged_wrappers.Add(GUID, (o, args) =>
+                        {
                             InnerInkCanvas_Strokes_OnStrokesChanged(o, dispatcher, container, GUID, args);
                         });
                         ic.Strokes.StrokesChanged += _innerInkCanvas_Strokes_OnStrokesChanged_wrappers[GUID];
                     }
                     // Stroke_OnDrawingAttributesChanged
-                    if (!_innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.ContainsKey(GUID)) {
-                        _innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.Add(GUID, (o, args) => {
+                    if (!_innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.ContainsKey(GUID))
+                    {
+                        _innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.Add(GUID, (o, args) =>
+                        {
                             InnerInkCanvas_Stroke_OnDrawingAttributesChanged(o, dispatcher, container, GUID, args);
                         });
                     }
                     // Stroke_OnStylusPointsChanged
-                    if (!_innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.ContainsKey(GUID)) {
-                        _innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.Add(GUID, (o, args) => {
+                    if (!_innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.ContainsKey(GUID))
+                    {
+                        _innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.Add(GUID, (o, args) =>
+                        {
                             InnerInkCanvas_Stroke_OnStylusPointsChanged(o, dispatcher, container, GUID, args);
                         });
                     }
                     // Stroke_OnStylusPointsReplaced
-                    if (!_innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.ContainsKey(GUID)) {
-                        _innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.Add(GUID, (o, args) => {
+                    if (!_innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.ContainsKey(GUID))
+                    {
+                        _innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.Add(GUID, (o, args) =>
+                        {
                             InnerInkCanvas_Stroke_OnStylusPointsReplaced(o, dispatcher, container, GUID, args);
                         });
                     }
@@ -312,25 +345,32 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="dispatcher"></param>
         /// <param name="container"></param>
         /// <param name="GUID"></param>
-        private void UnRegisterTimeMachineEventsToInkCanvas(Dispatcher dispatcher, DispatcherContainer container, Guid GUID) {
-            Task.Run(() => {
-                dispatcher.Invoke(() => {
+        private void UnRegisterTimeMachineEventsToInkCanvas(Dispatcher dispatcher, DispatcherContainer container, Guid GUID)
+        {
+            Task.Run(() =>
+            {
+                dispatcher.Invoke(() =>
+                {
                     var ic = container.Child as InkCanvas;
                     // Strokes_OnStrokesChanged
-                    if (_innerInkCanvas_Strokes_OnStrokesChanged_wrappers.ContainsKey(GUID)) {
+                    if (_innerInkCanvas_Strokes_OnStrokesChanged_wrappers.ContainsKey(GUID))
+                    {
                         _innerInkCanvas_Strokes_OnStrokesChanged_wrappers.Remove(GUID);
                         ic.Strokes.StrokesChanged -= _innerInkCanvas_Strokes_OnStrokesChanged_wrappers[GUID];
                     }
                     // Stroke_OnDrawingAttributesChanged
-                    if (_innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.ContainsKey(GUID)) {
+                    if (_innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.ContainsKey(GUID))
+                    {
                         _innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers.Remove(GUID);
                     }
                     // Stroke_OnStylusPointsChanged
-                    if (_innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.ContainsKey(GUID)) {
+                    if (_innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.ContainsKey(GUID))
+                    {
                         _innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers.Remove(GUID);
                     }
                     // Stroke_OnStylusPointsReplaced
-                    if (_innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.ContainsKey(GUID)) {
+                    if (_innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.ContainsKey(GUID))
+                    {
                         _innerInkCanvas_Stroke_OnStylusPointsReplaced_wrappers.Remove(GUID);
                     }
                 });
@@ -358,21 +398,24 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <summary>
         /// 获取总页数
         /// </summary>
-        public int PagesCount {
+        public int PagesCount
+        {
             get => BoardPages.Count;
         }
 
         /// <summary>
         /// 获取当前页面的索引值（如果需要展示页数的话，获取到的还需要加1）
         /// </summary>
-        public int CurrentPage {
+        public int CurrentPage
+        {
             get => CurrentPageIndex;
         }
 
         /// <summary>
         /// 获取到当前页面的 IccBoardPage 对象
         /// </summary>
-        public IccBoardPage CurrentPageItem {
+        public IccBoardPage CurrentPageItem
+        {
             get => BoardPages[CurrentPageIndex];
         }
 
@@ -382,10 +425,12 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="boardPageAppendMode">选择页面插入的模式</param>
         /// <param name="jumpToPageWhenAdded">指定是否在插入页面后跳转到该页面</param>
         /// <returns></returns>
-        public async Task<IccBoardPage> AddPage(BoardPageAppendMode? boardPageAppendMode = BoardPageAppendMode.AppendAfterItem, bool? jumpToPageWhenAdded = true) {
+        public async Task<IccBoardPage> AddPage(BoardPageAppendMode? boardPageAppendMode = BoardPageAppendMode.AppendAfterItem, bool? jumpToPageWhenAdded = true)
+        {
             var info = await AddIccInkCanvas();
-            
-            var page = new IccBoardPage() {
+
+            var page = new IccBoardPage()
+            {
                 Container = info.Container,
                 GUID = info.GUID,
                 Dispatcher = info.Dispatcher,
@@ -397,25 +442,33 @@ namespace InkCanvasForClass.IccInkCanvas {
             var appendMode = boardPageAppendMode ?? BoardPageAppendMode.AppendAfterItem;
             var insertP = 0;
 
-            if (appendMode == BoardPageAppendMode.AppendAfterItem) {
-                insertP = Math.Max(Math.Min(CurrentPageIndex + 1, BoardPages.Count),0);
-            } else if (appendMode == BoardPageAppendMode.AppendBeforeItem) {
-                insertP = Math.Max(Math.Min(CurrentPageIndex - 1, BoardPages.Count),0);
-            } else if (appendMode == BoardPageAppendMode.AppendToListStart) {
+            if (appendMode == BoardPageAppendMode.AppendAfterItem)
+            {
+                insertP = Math.Max(Math.Min(CurrentPageIndex + 1, BoardPages.Count), 0);
+            }
+            else if (appendMode == BoardPageAppendMode.AppendBeforeItem)
+            {
+                insertP = Math.Max(Math.Min(CurrentPageIndex - 1, BoardPages.Count), 0);
+            }
+            else if (appendMode == BoardPageAppendMode.AppendToListStart)
+            {
                 insertP = 0;
-            } else if (appendMode == BoardPageAppendMode.AppendToListEnd) {
+            }
+            else if (appendMode == BoardPageAppendMode.AppendToListEnd)
+            {
                 insertP = BoardPages.Count;
             }
             BoardPages.Insert(insertP, page);
 
             isIgnoreRaiseCurrentPageChangedEvent = false;
 
-            if (jumpToPageWhenAdded??true) {
+            if (jumpToPageWhenAdded ?? true)
+            {
                 UpdateInnerInkCanvasVisibility(page);
                 CurrentPageIndex = BoardPages.IndexOf(page);
                 RaiseCurrentPageChangedEvent();
             }
-            
+
             return page;
         }
 
@@ -429,11 +482,13 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="boardPageAppendMode"></param>
         /// <param name="jumpToPageWhenAdded"></param>
         /// <returns></returns>
-        public IccBoardPage AddPageFromExistedDispatcherInkCanvas(DispatcherContainer container, Dispatcher dispatcher, Guid? GUID, 
-            BoardPageAppendMode? boardPageAppendMode = BoardPageAppendMode.AppendAfterItem, bool? jumpToPageWhenAdded = true) {
-            var page = new IccBoardPage() {
+        public IccBoardPage AddPageFromExistedDispatcherInkCanvas(DispatcherContainer container, Dispatcher dispatcher, Guid? GUID,
+            BoardPageAppendMode? boardPageAppendMode = BoardPageAppendMode.AppendAfterItem, bool? jumpToPageWhenAdded = true)
+        {
+            var page = new IccBoardPage()
+            {
                 Container = container,
-                GUID = GUID??Guid.NewGuid(),
+                GUID = GUID ?? Guid.NewGuid(),
                 Dispatcher = dispatcher,
                 InkCanvas = dispatcher.Invoke(() => container.Child) as InkCanvas
             };
@@ -441,25 +496,33 @@ namespace InkCanvasForClass.IccInkCanvas {
             var appendMode = boardPageAppendMode ?? BoardPageAppendMode.AppendAfterItem;
             var insertP = 0;
 
-            if (appendMode == BoardPageAppendMode.AppendAfterItem) {
-                insertP = Math.Max(Math.Min(CurrentPageIndex + 1, BoardPages.Count),0);
-            } else if (appendMode == BoardPageAppendMode.AppendBeforeItem) {
-                insertP = Math.Max(Math.Min(CurrentPageIndex - 1, BoardPages.Count),0);
-            } else if (appendMode == BoardPageAppendMode.AppendToListStart) {
+            if (appendMode == BoardPageAppendMode.AppendAfterItem)
+            {
+                insertP = Math.Max(Math.Min(CurrentPageIndex + 1, BoardPages.Count), 0);
+            }
+            else if (appendMode == BoardPageAppendMode.AppendBeforeItem)
+            {
+                insertP = Math.Max(Math.Min(CurrentPageIndex - 1, BoardPages.Count), 0);
+            }
+            else if (appendMode == BoardPageAppendMode.AppendToListStart)
+            {
                 insertP = 0;
-            } else if (appendMode == BoardPageAppendMode.AppendToListEnd) {
+            }
+            else if (appendMode == BoardPageAppendMode.AppendToListEnd)
+            {
                 insertP = BoardPages.Count;
             }
             BoardPages.Insert(insertP, page);
 
             isIgnoreRaiseCurrentPageChangedEvent = false;
 
-            if (jumpToPageWhenAdded??true) {
+            if (jumpToPageWhenAdded ?? true)
+            {
                 UpdateInnerInkCanvasVisibility(page);
                 CurrentPageIndex = BoardPages.IndexOf(page);
                 RaiseCurrentPageChangedEvent();
             }
-            
+
             return page;
         }
 
@@ -467,14 +530,16 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// 切换到上一页
         /// </summary>
         /// <param name="step">跳转的页数，默认为1</param>
-        public void GoToPreviousPage(int? step = 1) {
-            var ci = CurrentPageIndex - step??1;
+        public void GoToPreviousPage(int? step = 1)
+        {
+            var ci = CurrentPageIndex - step ?? 1;
             if (ci < 0) ci = 0;
 
             var page = BoardPages[ci];
             UpdateInnerInkCanvasVisibility(page);
 
-            if (!ci.Equals(CurrentPageIndex)) {
+            if (!ci.Equals(CurrentPageIndex))
+            {
                 CurrentPageIndex = ci;
                 RaiseCurrentPageChangedEvent();
             }
@@ -484,14 +549,16 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// 切换到下一页
         /// </summary>
         /// <param name="step">跳转的页数，默认为1</param>
-        public void GoToNextPage(int? step = 1) {
-            var ci = CurrentPageIndex + step??1;
+        public void GoToNextPage(int? step = 1)
+        {
+            var ci = CurrentPageIndex + step ?? 1;
             if (ci > BoardPages.Count - 1) ci = BoardPages.Count - 1;
 
             var page = BoardPages[ci];
             UpdateInnerInkCanvasVisibility(page);
 
-            if (!ci.Equals(CurrentPageIndex)) {
+            if (!ci.Equals(CurrentPageIndex))
+            {
                 CurrentPageIndex = ci;
                 RaiseCurrentPageChangedEvent();
             }
@@ -501,10 +568,12 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// 跳转到指定索引的页面
         /// </summary>
         /// <param name="index">索引</param>
-        public void GotoPage(int index) {
+        public void GotoPage(int index)
+        {
             UpdateInnerInkCanvasVisibility(BoardPages[index]);
 
-            if (!index.Equals(CurrentPageIndex)) {
+            if (!index.Equals(CurrentPageIndex))
+            {
                 CurrentPageIndex = index;
                 RaiseCurrentPageChangedEvent();
             }
@@ -514,11 +583,13 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// 跳转到指定页面
         /// </summary>
         /// <param name="page">页面</param>
-        public void GotoPage(IccBoardPage page) {
+        public void GotoPage(IccBoardPage page)
+        {
             var index = BoardPages.IndexOf(page);
             UpdateInnerInkCanvasVisibility(page);
 
-            if (!index.Equals(CurrentPageIndex)) {
+            if (!index.Equals(CurrentPageIndex))
+            {
                 CurrentPageIndex = index;
                 RaiseCurrentPageChangedEvent();
             }
@@ -534,15 +605,18 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// </summary>
         public bool IsCurrentFirstPage => CurrentPageIndex == 0;
 
-        private async Task _RemovePage(IccBoardPage page, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage) {
+        private async Task _RemovePage(IccBoardPage page, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage)
+        {
             var isCurrent = CurrentPageItem == page;
             isIgnoreRaiseCurrentPageChangedEvent = true;
-            if (isDisposeInstance??true) RemoveIccInkCanvas(DispatcherInkCanvasList.Find(info => info.GUID.Equals(page.GUID)));
-            if (isCurrent) {
+            if (isDisposeInstance ?? true) RemoveIccInkCanvas(DispatcherInkCanvasList.Find(info => info.GUID.Equals(page.GUID)));
+            if (isCurrent)
+            {
                 var switchMode = pageSwitchMode ?? PageSwitchMode.SwitchToPreviousPage;
                 if (IsCurrentFirstPage) GoToNextPage();
                 else if (IsCurrentLastPage) GoToPreviousPage();
-                else if (!IsCurrentFirstPage && !IsCurrentLastPage) {
+                else if (!IsCurrentFirstPage && !IsCurrentLastPage)
+                {
                     if (switchMode == PageSwitchMode.SwitchToPreviousPage) GoToPreviousPage();
                     else if (switchMode == PageSwitchMode.SwitchToNextPage) GoToNextPage();
                 }
@@ -560,7 +634,8 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="index">索引</param>
         /// <param name="isDisposeInstance">指定是否销毁该页面的Dispatcher，销毁后无法再使用该实例添加到Board！</param>
         /// <param name="pageSwitchMode">删除当前激活页面后切换到临近页面的行为，如果删除的页面不是当前页面则不会生效</param>
-        public async Task RemovePageAt(int index, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage) {
+        public async Task RemovePageAt(int index, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage)
+        {
             var page = BoardPages[index];
             await _RemovePage(page, isDisposeInstance, pageSwitchMode);
         }
@@ -570,7 +645,8 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// </summary>
         /// <param name="isDisposeInstance">指定是否销毁该页面的Dispatcher，销毁后无法再使用该实例添加到Board！</param>
         /// <param name="pageSwitchMode">删除当前激活页面后切换到临近页面的行为，如果删除的页面不是当前页面则不会生效</param>
-        public async Task RemovePage(bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage) {
+        public async Task RemovePage(bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage)
+        {
             var page = CurrentPageItem;
             await _RemovePage(page, isDisposeInstance, pageSwitchMode);
         }
@@ -581,7 +657,8 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="page">页面</param>
         /// <param name="isDisposeInstance">指定是否销毁该页面的Dispatcher，销毁后无法再使用该实例添加到Board！</param>
         /// <param name="pageSwitchMode">删除当前激活页面后切换到临近页面的行为，如果删除的页面不是当前页面则不会生效</param>
-        public async Task RemovePage(IccBoardPage page, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage) {
+        public async Task RemovePage(IccBoardPage page, bool? isDisposeInstance = true, PageSwitchMode? pageSwitchMode = PageSwitchMode.SwitchToPreviousPage)
+        {
             await _RemovePage(page, isDisposeInstance, pageSwitchMode);
         }
 
@@ -591,7 +668,8 @@ namespace InkCanvasForClass.IccInkCanvas {
 
         public static readonly Guid StrokeUniqueIdKeyGuid = Guid.Parse("71600a68-0a93-4e71-8120-5a7fad5de7e2");
 
-        private async void WrapperInkCanvas_Loaded(object sender, RoutedEventArgs e) {
+        private async void WrapperInkCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
             var ic = (IccInkCanvas)sender;
 
             // 启动时自动修改 InkCanvas 的大小
@@ -620,25 +698,29 @@ namespace InkCanvasForClass.IccInkCanvas {
             // BoardSettings 事件注册
             RegisterEventsForBoardSettings();
 
-            if (BoardPages.Count == 0) {
+            if (BoardPages.Count == 0)
+            {
                 await AddPage();
             }
         }
 
-        private void IccWrapperInkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e) {
+        private void IccWrapperInkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
             var ic = (IccInkCanvas)sender;
 
             // add unique id to stroke
             e.Stroke.AddPropertyData(StrokeUniqueIdKeyGuid, BoardPages[CurrentPageIndex].LastStrokeID);
             BoardPages[CurrentPageIndex].LastStrokeID += 1L;
 
-            Task.Run(() => {
-                BoardPages[CurrentPageIndex].Dispatcher.Invoke(() => {
+            Task.Run(() =>
+            {
+                BoardPages[CurrentPageIndex].Dispatcher.Invoke(() =>
+                {
                     var _c = (InkCanvas)BoardPages[CurrentPageIndex].Container.Child;
                     _c.Strokes.Add(e.Stroke);
                 });
                 Task.Delay(100);
-                Dispatcher.InvokeAsync(()=>ic.Strokes.Remove(e.Stroke));
+                Dispatcher.InvokeAsync(() => ic.Strokes.Remove(e.Stroke));
             });
         }
 
@@ -649,34 +731,42 @@ namespace InkCanvasForClass.IccInkCanvas {
         private IncrementalStrokeHitTester eraserStrokeHitTester;
         private bool isEraserOverlayPointerDown = false;
 
-        private void EraserOverlayCanvas_Loaded(object sender, RoutedEventArgs e) {
+        private void EraserOverlayCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
             var bd = (Canvas)sender;
-            bd.StylusDown += ((o, args) => {
+            bd.StylusDown += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Canvas)o).CaptureStylus();
                 EraserOverlay_PointerDown(sender);
             });
-            bd.StylusUp += ((o, args) => {
+            bd.StylusUp += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Canvas)o).ReleaseStylusCapture();
                 EraserOverlay_PointerUp(sender);
             });
-            bd.StylusMove += ((o, args) => {
+            bd.StylusMove += ((o, args) =>
+            {
                 e.Handled = true;
                 EraserOverlay_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(this));
             });
-            bd.MouseDown += ((o, args) => {
+            bd.MouseDown += ((o, args) =>
+            {
                 ((Canvas)o).CaptureMouse();
                 EraserOverlay_PointerDown(sender);
             });
-            bd.MouseUp += ((o, args) => {
+            bd.MouseUp += ((o, args) =>
+            {
                 ((Canvas)o).ReleaseMouseCapture();
                 EraserOverlay_PointerUp(sender);
             });
-            bd.MouseMove += ((o, args) => {
+            bd.MouseMove += ((o, args) =>
+            {
                 EraserOverlay_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(this));
             });
-            BoardSettings.EraserTypeChanged += (o, args) => {
+            BoardSettings.EraserTypeChanged += (o, args) =>
+            {
                 if (BoardSettings.EraserType == EraserType.Rectangle)
                     EraserFeedback.Source = FindResource("RectangleEraserImageSource") as DrawingImage;
                 else if (BoardSettings.EraserType == EraserType.Ellipse)
@@ -685,34 +775,41 @@ namespace InkCanvasForClass.IccInkCanvas {
             EraserFeedback.Source = FindResource("RectangleEraserImageSource") as DrawingImage;
         }
 
-        private void EraserOverlay_PointerDown(object sender) {
+        private void EraserOverlay_PointerDown(object sender)
+        {
             if (isEraserOverlayPointerDown) return;
             if (CurrentPageItem.Dispatcher.Invoke(() =>
                     ((InkCanvas)CurrentPageItem.Container.Child).Strokes.Count) == 0) return;
             isEraserOverlayPointerDown = true;
-            EraserFeedback.Width = Math.Max(BoardSettings.EraserSize,10);
+            EraserFeedback.Width = Math.Max(BoardSettings.EraserSize, 10);
             EraserFeedback.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             EraserFeedback.Visibility = Visibility.Collapsed;
 
 
             StylusShape stylusTipShape;
             if (BoardSettings.EraserType == EraserType.Ellipse)
-                stylusTipShape = new EllipseStylusShape(Math.Max(BoardSettings.EraserSize-4, 10),
-                    Math.Max(BoardSettings.EraserSize-4, 10));
-            else stylusTipShape = new RectangleStylusShape(BoardSettings.EraserSize - 4, (BoardSettings.EraserSize-4) * 56 / 38);
+                stylusTipShape = new EllipseStylusShape(Math.Max(BoardSettings.EraserSize - 4, 10),
+                    Math.Max(BoardSettings.EraserSize - 4, 10));
+            else stylusTipShape = new RectangleStylusShape(BoardSettings.EraserSize - 4, (BoardSettings.EraserSize - 4) * 56 / 38);
 
             // init hittester
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 eraserStrokeHitTester = CurrentPageItem.Dispatcher.Invoke(() =>
                     ((InkCanvas)CurrentPageItem.Container.Child).Strokes.GetIncrementalStrokeHitTester(stylusTipShape));
-                CurrentPageItem.Dispatcher.Invoke(() => {
-                    eraserStrokeHitTester.StrokeHit += (obj, e) => {
+                CurrentPageItem.Dispatcher.Invoke(() =>
+                {
+                    eraserStrokeHitTester.StrokeHit += (obj, e) =>
+                    {
                         var stks = ((InkCanvas)CurrentPageItem.Container.Child).Strokes;
                         StrokeCollection eraseResult = e.GetPointEraseResults();
                         StrokeCollection strokesToReplace = new StrokeCollection { e.HitStroke };
-                        if (eraseResult.Any()) {
+                        if (eraseResult.Any())
+                        {
                             stks.Replace(strokesToReplace, eraseResult);
-                        } else {
+                        }
+                        else
+                        {
                             stks.Remove(strokesToReplace);
                         }
                     };
@@ -720,38 +817,45 @@ namespace InkCanvasForClass.IccInkCanvas {
             });
         }
 
-        private void EraserOverlay_PointerUp(object sender) {
+        private void EraserOverlay_PointerUp(object sender)
+        {
             if (!isEraserOverlayPointerDown) return;
             isEraserOverlayPointerDown = false;
             EraserFeedback.Visibility = Visibility.Collapsed;
 
-            if (ReplacedStroke != null || AddedStroke != null) {
+            if (ReplacedStroke != null || AddedStroke != null)
+            {
                 CurrentPageItem.TimeMachine.CommitStrokeEraseHistory(ReplacedStroke, AddedStroke);
                 AddedStroke = null;
                 ReplacedStroke = null;
             }
 
-            Task.Run(() => {
-                CurrentPageItem.Dispatcher.Invoke(() => {
+            Task.Run(() =>
+            {
+                CurrentPageItem.Dispatcher.Invoke(() =>
+                {
                     eraserStrokeHitTester.EndHitTesting();
                 });
                 eraserStrokeHitTester = null;
             });
         }
 
-        private void EraserOverlay_PointerMove(object sender, Point ptInInkCanvas, Point ptInEraserOverlay) {
+        private void EraserOverlay_PointerMove(object sender, Point ptInInkCanvas, Point ptInEraserOverlay)
+        {
             if (!isEraserOverlayPointerDown) return;
             if (EraserFeedback.Visibility == Visibility.Collapsed) EraserFeedback.Visibility = Visibility.Visible;
-            EraserFeedbackTranslateTransform.X = ptInEraserOverlay.X - EraserFeedback.ActualWidth /2;
-            EraserFeedbackTranslateTransform.Y = ptInEraserOverlay.Y  - EraserFeedback.ActualHeight /2;
+            EraserFeedbackTranslateTransform.X = ptInEraserOverlay.X - EraserFeedback.ActualWidth / 2;
+            EraserFeedbackTranslateTransform.Y = ptInEraserOverlay.Y - EraserFeedback.ActualHeight / 2;
 
             // erase stroke
-            try {
-                CurrentPageItem.Dispatcher.Invoke(() => {
+            try
+            {
+                CurrentPageItem.Dispatcher.Invoke(() =>
+                {
                     eraserStrokeHitTester.AddPoint(ptInInkCanvas);
                 });
             }
-            catch{}
+            catch { }
         }
 
         #endregion
@@ -764,48 +868,58 @@ namespace InkCanvasForClass.IccInkCanvas {
         private Point? rectangleAreaEraserCanvas_lastPt;
         private Point? rectangleAreaEraserCanvas_lastPtInIC;
 
-        private void HostCanvas_Loaded(object sender, RoutedEventArgs e) {
+        private void HostCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
             var ca = (Canvas)sender;
             HostCanvasClipGeometry1.Rect = new Rect(new Size(ca.Width, ca.Height));
         }
 
-        private void HostCanvas_SizeChanged(object sender, SizeChangedEventArgs e) {
+        private void HostCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
             HostCanvasClipGeometry1.Rect = new Rect(e.NewSize);
         }
 
-        private void RectangleAreaEraserCanvas_Loaded(object sender, RoutedEventArgs e) {
+        private void RectangleAreaEraserCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
             var ca = (Canvas)sender;
 
-            ca.StylusDown += ((o, args) => {
+            ca.StylusDown += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Canvas)o).CaptureStylus();
                 RectangleAreaEraserCanvas_PointerDown(sender);
             });
-            ca.StylusUp += ((o, args) => {
+            ca.StylusUp += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Canvas)o).ReleaseStylusCapture();
                 RectangleAreaEraserCanvas_PointerUp(sender);
             });
-            ca.StylusMove += ((o, args) => {
+            ca.StylusMove += ((o, args) =>
+            {
                 e.Handled = true;
                 RectangleAreaEraserCanvas_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(this));
             });
-            ca.MouseDown += ((o, args) => {
+            ca.MouseDown += ((o, args) =>
+            {
                 ((Canvas)o).CaptureMouse();
                 RectangleAreaEraserCanvas_PointerDown(sender);
             });
-            ca.MouseUp += ((o, args) => {
+            ca.MouseUp += ((o, args) =>
+            {
                 ((Canvas)o).ReleaseMouseCapture();
                 RectangleAreaEraserCanvas_PointerUp(sender);
             });
-            ca.MouseMove += ((o, args) => {
+            ca.MouseMove += ((o, args) =>
+            {
                 RectangleAreaEraserCanvas_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(this));
             });
 
             AreaErasingFeedback.Visibility = Visibility.Collapsed;
         }
 
-        private void RectangleAreaEraserCanvas_PointerDown(object sender) {
+        private void RectangleAreaEraserCanvas_PointerDown(object sender)
+        {
             if (isRectangleAreaEraserCanvasPointerDown) return;
             isRectangleAreaEraserCanvasPointerDown = true;
 
@@ -816,7 +930,8 @@ namespace InkCanvasForClass.IccInkCanvas {
             rectangleAreaEraserCanvas_lastPtInIC = null;
         }
 
-        private void RectangleAreaEraserCanvas_PointerUp(object sender) {
+        private void RectangleAreaEraserCanvas_PointerUp(object sender)
+        {
             if (!isRectangleAreaEraserCanvasPointerDown) return;
             isRectangleAreaEraserCanvasPointerDown = false;
 
@@ -826,12 +941,15 @@ namespace InkCanvasForClass.IccInkCanvas {
                 rectangleAreaEraserCanvas_lastPtInIC ?? new Point(0, 0));
             if (rect.Width <= 0 || rect.Height <= 0) return;
             var stylusShape = new RectangleStylusShape(rect.Width, rect.Height);
-            Task.Run(() => {
-                CurrentPageItem.Dispatcher.Invoke(() => {
+            Task.Run(() =>
+            {
+                CurrentPageItem.Dispatcher.Invoke(() =>
+                {
                     ((InkCanvas)CurrentPageItem.Container.Child).Strokes.Erase(
                         new Point[] { new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2) }, stylusShape);
                 });
-                if (ReplacedStroke != null || AddedStroke != null) {
+                if (ReplacedStroke != null || AddedStroke != null)
+                {
                     CurrentPageItem.TimeMachine.CommitStrokeEraseHistory(ReplacedStroke, AddedStroke);
                     AddedStroke = null;
                     ReplacedStroke = null;
@@ -847,10 +965,12 @@ namespace InkCanvasForClass.IccInkCanvas {
 
         }
 
-        private void RectangleAreaEraserCanvas_PointerMove(object sender, Point ptInInkCanvas, Point ptInEraserOverlay) {
+        private void RectangleAreaEraserCanvas_PointerMove(object sender, Point ptInInkCanvas, Point ptInEraserOverlay)
+        {
             if (!isRectangleAreaEraserCanvasPointerDown) return;
 
-            if (rectangleAreaEraserCanvas_firstPt == null) {
+            if (rectangleAreaEraserCanvas_firstPt == null)
+            {
                 rectangleAreaEraserCanvas_firstPt = ptInEraserOverlay;
                 rectangleAreaEraserCanvas_firstPtInIC = ptInInkCanvas;
             }
@@ -865,8 +985,8 @@ namespace InkCanvasForClass.IccInkCanvas {
             // update fedback
             if (AreaErasingFeedback.Visibility == Visibility.Collapsed)
                 AreaErasingFeedback.Visibility = Visibility.Visible;
-            Canvas.SetTop(AreaErasingFeedback,Math.Min(((Point)rectangleAreaEraserCanvas_firstPt).Y,((Point)rectangleAreaEraserCanvas_lastPt).Y));
-            Canvas.SetLeft(AreaErasingFeedback,Math.Min(((Point)rectangleAreaEraserCanvas_firstPt).X,((Point)rectangleAreaEraserCanvas_lastPt).X));
+            Canvas.SetTop(AreaErasingFeedback, Math.Min(((Point)rectangleAreaEraserCanvas_firstPt).Y, ((Point)rectangleAreaEraserCanvas_lastPt).Y));
+            Canvas.SetLeft(AreaErasingFeedback, Math.Min(((Point)rectangleAreaEraserCanvas_firstPt).X, ((Point)rectangleAreaEraserCanvas_lastPt).X));
             AreaErasingFeedback.Width = Math.Abs(((Point)rectangleAreaEraserCanvas_firstPt).X - ((Point)rectangleAreaEraserCanvas_lastPt).X);
             AreaErasingFeedback.Height = Math.Abs(((Point)rectangleAreaEraserCanvas_firstPt).Y - ((Point)rectangleAreaEraserCanvas_lastPt).Y);
         }
@@ -906,58 +1026,77 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// </summary>
         /// <param name="page"></param>
         /// <param name="history"></param>
-        private void ApplyHistoryToPage(IccBoardPage page, TimeMachineHistory history) {
+        private void ApplyHistoryToPage(IccBoardPage page, TimeMachineHistory history)
+        {
             _currentCommitType = CommitReason.CodeInput;
 
-            page.Dispatcher.InvokeAsync(() => {
+            page.Dispatcher.InvokeAsync(() =>
+            {
                 var inkcanvas = page.Container.Child as InkCanvas;
 
-                while (!_isTimeMachineThreadTaskDone) {
+                while (!_isTimeMachineThreadTaskDone)
+                {
                     Thread.Sleep(1);
                 }
 
                 _isTimeMachineThreadTaskDone = false;
 
-                if (history.CommitType == TimeMachineHistoryType.UserInput) {
-                    foreach (var strokes in history.CurrentStroke) {
+                if (history.CommitType == TimeMachineHistoryType.UserInput)
+                {
+                    foreach (var strokes in history.CurrentStroke)
+                    {
                         Trace.WriteLine(strokes);
                         if (!inkcanvas.Strokes.Contains(strokes) && !history.StrokeHasBeenCleared) inkcanvas.Strokes.Add(strokes);
-                        else if (inkcanvas.Strokes.Contains(strokes) && history.StrokeHasBeenCleared) {
+                        else if (inkcanvas.Strokes.Contains(strokes) && history.StrokeHasBeenCleared)
+                        {
                             foreach (var _stroke in inkcanvas.Strokes.Where(s =>
                                          s.ContainsPropertyData(StrokeUniqueIdKeyGuid) &&
                                          s.GetPropertyData(StrokeUniqueIdKeyGuid) ==
                                          strokes.GetPropertyData(StrokeUniqueIdKeyGuid)).ToArray()) inkcanvas.Strokes.Remove(_stroke);
                         }
                     }
-                } else if (history.CommitType == TimeMachineHistoryType.ShapeRecognition) {
-                    foreach (var strokes in history.CurrentStroke) {
-                        if (inkcanvas.Strokes.Contains(strokes) && history.StrokeHasBeenCleared) 
+                }
+                else if (history.CommitType == TimeMachineHistoryType.ShapeRecognition)
+                {
+                    foreach (var strokes in history.CurrentStroke)
+                    {
+                        if (inkcanvas.Strokes.Contains(strokes) && history.StrokeHasBeenCleared)
                             foreach (var _stroke in inkcanvas.Strokes.Where(s =>
                                          s.ContainsPropertyData(StrokeUniqueIdKeyGuid) &&
                                          s.GetPropertyData(StrokeUniqueIdKeyGuid) ==
                                          strokes.GetPropertyData(StrokeUniqueIdKeyGuid)).ToArray()) inkcanvas.Strokes.Remove(_stroke);
                         else if (!inkcanvas.Strokes.Contains(strokes) && !history.StrokeHasBeenCleared) inkcanvas.Strokes.Add(strokes);
                     }
-                    foreach (var strokes in history.ReplacedStroke) {
-                        if (!inkcanvas.Strokes.Contains(strokes) && !history.StrokeHasBeenCleared) 
+                    foreach (var strokes in history.ReplacedStroke)
+                    {
+                        if (!inkcanvas.Strokes.Contains(strokes) && !history.StrokeHasBeenCleared)
                             foreach (var _stroke in inkcanvas.Strokes.Where(s =>
                                          s.ContainsPropertyData(StrokeUniqueIdKeyGuid) &&
                                          s.GetPropertyData(StrokeUniqueIdKeyGuid) ==
                                          strokes.GetPropertyData(StrokeUniqueIdKeyGuid)).ToArray()) inkcanvas.Strokes.Remove(_stroke);
                         else if (inkcanvas.Strokes.Contains(strokes) && history.StrokeHasBeenCleared) inkcanvas.Strokes.Add(strokes);
                     }
-                } else if (history.CommitType == TimeMachineHistoryType.StylusPoints) {
-                    foreach (var currentStroke in history.StylusPointsDictionary) {
-                        if (inkcanvas.Strokes.Contains(currentStroke.Key)) 
+                }
+                else if (history.CommitType == TimeMachineHistoryType.StylusPoints)
+                {
+                    foreach (var currentStroke in history.StylusPointsDictionary)
+                    {
+                        if (inkcanvas.Strokes.Contains(currentStroke.Key))
                             currentStroke.Key.StylusPoints = history.StrokeHasBeenCleared ? currentStroke.Value.Item1 : currentStroke.Value.Item2;
                     }
-                } else if (history.CommitType == TimeMachineHistoryType.DrawingAttributes) {
-                    foreach (var currentStroke in history.DrawingAttributes) {
+                }
+                else if (history.CommitType == TimeMachineHistoryType.DrawingAttributes)
+                {
+                    foreach (var currentStroke in history.DrawingAttributes)
+                    {
                         if (inkcanvas.Strokes.Contains(currentStroke.Key))
                             currentStroke.Key.DrawingAttributes = history.StrokeHasBeenCleared ? currentStroke.Value.Item1 : currentStroke.Value.Item2;
                     }
-                } else if (history.CommitType == TimeMachineHistoryType.Erased) {
-                    if (!history.StrokeHasBeenCleared) {
+                }
+                else if (history.CommitType == TimeMachineHistoryType.Erased)
+                {
+                    if (!history.StrokeHasBeenCleared)
+                    {
                         if (history.CurrentStroke != null)
                             foreach (var currentStroke in history.CurrentStroke)
                                 if (!inkcanvas.Strokes.Contains(currentStroke))
@@ -967,7 +1106,9 @@ namespace InkCanvasForClass.IccInkCanvas {
                             foreach (var replacedStroke in history.ReplacedStroke)
                                 if (inkcanvas.Strokes.Contains(replacedStroke))
                                     inkcanvas.Strokes.Remove(replacedStroke);
-                    } else {
+                    }
+                    else
+                    {
                         if (history.ReplacedStroke != null)
                             foreach (var replacedStroke in history.ReplacedStroke)
                                 if (!inkcanvas.Strokes.Contains(replacedStroke))
@@ -990,9 +1131,11 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// </summary>
         /// <param name="page"></param>
         /// <param name="histories"></param>
-        private void ApplyHistoriesToPage(IccBoardPage page, TimeMachineHistory[] histories) {
-            foreach (var timeMachineHistory in histories) {
-                ApplyHistoryToPage(page,timeMachineHistory);
+        private void ApplyHistoriesToPage(IccBoardPage page, TimeMachineHistory[] histories)
+        {
+            foreach (var timeMachineHistory in histories)
+            {
+                ApplyHistoryToPage(page, timeMachineHistory);
             }
         }
 
@@ -1005,10 +1148,12 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="GUID">InkCanvas（也是页面的）GUID</param>
         /// <param name="eventArgs">StrokeCollectionChangedEventArgs事件</param>
         private void InnerInkCanvas_Strokes_OnStrokesChanged(object sender, Dispatcher dispatcher,
-            DispatcherContainer container, Guid GUID, StrokeCollectionChangedEventArgs eventArgs) {
-            Trace.WriteLine($"GUID：{GUID} 触发了Strokes_OnStrokesChanged，第{BoardPages.IndexOf(BoardPages.Find(page=>page.GUID.Equals(GUID)))+1}页");
+            DispatcherContainer container, Guid GUID, StrokeCollectionChangedEventArgs eventArgs)
+        {
+            Trace.WriteLine($"GUID：{GUID} 触发了Strokes_OnStrokesChanged，第{BoardPages.IndexOf(BoardPages.Find(page => page.GUID.Equals(GUID))) + 1}页");
 
-            foreach (var stroke in eventArgs?.Removed) {
+            foreach (var stroke in eventArgs?.Removed)
+            {
                 stroke.DrawingAttributesChanged -=
                     _innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers[GUID];
                 stroke.StylusPointsReplaced -=
@@ -1016,7 +1161,8 @@ namespace InkCanvasForClass.IccInkCanvas {
                 stroke.StylusPointsChanged -=
                     _innerInkCanvas_Stroke_OnStylusPointsChanged_wrappers[GUID];
             }
-            foreach (var stroke in eventArgs?.Added) {
+            foreach (var stroke in eventArgs?.Added)
+            {
                 stroke.DrawingAttributesChanged +=
                     _innerInkCanvas_Stroke_OnDrawingAttributesChanged_wrappers[GUID];
                 stroke.StylusPointsReplaced +=
@@ -1029,38 +1175,48 @@ namespace InkCanvasForClass.IccInkCanvas {
 
             // 橡皮擦擦除墨迹和时光机对接
             if ((eventArgs?.Added.Count != 0 || eventArgs?.Removed.Count != 0) &&
-                (_edittingMode == EditingMode.GeometryErasing || _edittingMode == EditingMode.AreaErasing)) {
+                (_editingMode == EditingMode.GeometryErasing || _editingMode == EditingMode.AreaErasing))
+            {
                 if (AddedStroke == null) AddedStroke = new StrokeCollection();
                 if (ReplacedStroke == null) ReplacedStroke = new StrokeCollection();
-                try {
+                try
+                {
                     AddedStroke.Add(eventArgs.Added);
                     ReplacedStroke.Add(eventArgs.Removed);
                 }
-                catch {}
+                catch { }
                 Trace.WriteLine(ReplacedStroke.Count);
                 return;
             }
 
             // 有新墨迹
-            if (eventArgs.Added.Count != 0) {
+            if (eventArgs.Added.Count != 0)
+            {
                 // 判断是否是形状识别新增的墨迹
-                if (_currentCommitType == CommitReason.ShapeRecognition) {
-                    BoardPages.Find(page=>page.GUID==GUID).TimeMachine.CommitStrokeShapeHistory(ReplacedStroke, eventArgs.Added);
+                if (_currentCommitType == CommitReason.ShapeRecognition)
+                {
+                    BoardPages.Find(page => page.GUID == GUID).TimeMachine.CommitStrokeShapeHistory(ReplacedStroke, eventArgs.Added);
                     ReplacedStroke = null;
                     return;
-                } else {
-                    BoardPages.Find(page=>page.GUID==GUID).TimeMachine.CommitStrokeUserInputHistory(eventArgs.Added);
+                }
+                else
+                {
+                    BoardPages.Find(page => page.GUID == GUID).TimeMachine.CommitStrokeUserInputHistory(eventArgs.Added);
                     return;
                 }
             }
 
             // 有被删除的墨迹
-            if (eventArgs.Removed.Count != 0) {
-                if (_currentCommitType == CommitReason.ShapeRecognition) {
+            if (eventArgs.Removed.Count != 0)
+            {
+                if (_currentCommitType == CommitReason.ShapeRecognition)
+                {
                     ReplacedStroke = eventArgs.Removed;
                     return;
-                } else if ((_edittingMode == EditingMode.GeometryErasing || _edittingMode == EditingMode.AreaErasing) || _currentCommitType == CommitReason.ClearingCanvas) {
-                    BoardPages.Find(page=>page.GUID==GUID).TimeMachine.CommitStrokeEraseHistory(eventArgs.Removed);
+                }
+                else if ((_editingMode == EditingMode.GeometryErasing || _editingMode == EditingMode.AreaErasing) || _currentCommitType == CommitReason.ClearingCanvas)
+                {
+                    BoardPages.Find(page => page.GUID == GUID).TimeMachine.CommitStrokeEraseHistory(eventArgs.Removed);
                     return;
                 }
             }
@@ -1075,8 +1231,9 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="GUID">InkCanvas（也是页面的）GUID</param>
         /// <param name="eventArgs">PropertyDataChangedEventArgs事件</param>
         private void InnerInkCanvas_Stroke_OnDrawingAttributesChanged(object sender, Dispatcher dispatcher,
-            DispatcherContainer container, Guid GUID, PropertyDataChangedEventArgs eventArgs) {
-            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnDrawingAttributesChanged，第{BoardPages.IndexOf(BoardPages.Find(page=>page.GUID.Equals(GUID)))+1}页");
+            DispatcherContainer container, Guid GUID, PropertyDataChangedEventArgs eventArgs)
+        {
+            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnDrawingAttributesChanged，第{BoardPages.IndexOf(BoardPages.Find(page => page.GUID.Equals(GUID))) + 1}页");
         }
 
         /// <summary>
@@ -1088,8 +1245,9 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="GUID">InkCanvas（也是页面的）GUID</param>
         /// <param name="eventArgs">EventArgs事件</param>
         private void InnerInkCanvas_Stroke_OnStylusPointsChanged(object sender, Dispatcher dispatcher,
-            DispatcherContainer container, Guid GUID, EventArgs eventArgs) {
-            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnStylusPointsChanged，第{BoardPages.IndexOf(BoardPages.Find(page=>page.GUID.Equals(GUID)))+1}页");
+            DispatcherContainer container, Guid GUID, EventArgs eventArgs)
+        {
+            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnStylusPointsChanged，第{BoardPages.IndexOf(BoardPages.Find(page => page.GUID.Equals(GUID))) + 1}页");
         }
 
         /// <summary>
@@ -1101,8 +1259,9 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <param name="GUID">InkCanvas（也是页面的）GUID</param>
         /// <param name="eventArgs">StylusPointsReplacedEventArgs事件</param>
         private void InnerInkCanvas_Stroke_OnStylusPointsReplaced(object sender, Dispatcher dispatcher,
-            DispatcherContainer container, Guid GUID, StylusPointsReplacedEventArgs eventArgs) {
-            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnStylusPointsReplaced，第{BoardPages.IndexOf(BoardPages.Find(page=>page.GUID.Equals(GUID)))+1}页");
+            DispatcherContainer container, Guid GUID, StylusPointsReplacedEventArgs eventArgs)
+        {
+            Trace.WriteLine($"GUID：{GUID} 触发了Stroke_OnStylusPointsReplaced，第{BoardPages.IndexOf(BoardPages.Find(page => page.GUID.Equals(GUID))) + 1}页");
         }
 
         #endregion
@@ -1127,42 +1286,48 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// <summary>
         /// 撤销（仅针对当前激活页面）
         /// </summary>
-        public void Undo() {
+        public void Undo()
+        {
             if (!_isTimeMachineThreadTaskDone) return;
             var history = CurrentPageItem.TimeMachine.Undo(false);
-            if (history != null) ApplyHistoryToPage(CurrentPageItem,history);
+            if (history != null) ApplyHistoryToPage(CurrentPageItem, history);
         }
 
         /// <summary>
         /// 多步撤销（仅针对当前激活页面）
         /// </summary>
-        public void Undo(int steps = 1) {
+        public void Undo(int steps = 1)
+        {
             if (!_isTimeMachineThreadTaskDone) return;
             var histories = CurrentPageItem.TimeMachine.Undo(steps);
             if (histories.Length <= 0) return;
-            foreach (var history in histories) {
-                ApplyHistoryToPage(CurrentPageItem,history);
+            foreach (var history in histories)
+            {
+                ApplyHistoryToPage(CurrentPageItem, history);
             }
         }
 
         /// <summary>
         /// 重做（仅针对当前激活页面）
         /// </summary>
-        public void Redo() {
+        public void Redo()
+        {
             if (!_isTimeMachineThreadTaskDone) return;
             var history = CurrentPageItem.TimeMachine.Redo(false);
-            if (history != null) ApplyHistoryToPage(CurrentPageItem,history);
+            if (history != null) ApplyHistoryToPage(CurrentPageItem, history);
         }
 
         /// <summary>
         /// 多步撤销（仅针对当前激活页面）
         /// </summary>
-        public void Redo(int steps = 1) {
+        public void Redo(int steps = 1)
+        {
             if (!_isTimeMachineThreadTaskDone) return;
             var histories = CurrentPageItem.TimeMachine.Redo(steps);
             if (histories.Length <= 0) return;
-            foreach (var history in histories) {
-                ApplyHistoryToPage(CurrentPageItem,history);
+            foreach (var history in histories)
+            {
+                ApplyHistoryToPage(CurrentPageItem, history);
             }
         }
 
@@ -1176,32 +1341,39 @@ namespace InkCanvasForClass.IccInkCanvas {
         private Point? roamingLastPoint;
         private Matrix? roamingMatrix = null;
 
-        private void RoamingHitTestBorder_Loaded(object sender, RoutedEventArgs e) {
+        private void RoamingHitTestBorder_Loaded(object sender, RoutedEventArgs e)
+        {
             var rh = (Border)sender;
 
-            rh.StylusDown += ((o, args) => {
+            rh.StylusDown += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Border)o).CaptureStylus();
                 RoamingHitTestBorder_PointerDown(sender);
             });
-            rh.StylusUp += ((o, args) => {
+            rh.StylusUp += ((o, args) =>
+            {
                 e.Handled = true;
                 if (args.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus) ((Border)o).ReleaseStylusCapture();
                 RoamingHitTestBorder_PointerUp(sender);
             });
-            rh.StylusMove += ((o, args) => {
+            rh.StylusMove += ((o, args) =>
+            {
                 e.Handled = true;
                 RoamingHitTestBorder_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(null));
             });
-            rh.MouseDown += ((o, args) => {
+            rh.MouseDown += ((o, args) =>
+            {
                 ((Border)o).CaptureMouse();
                 RoamingHitTestBorder_PointerDown(sender);
             });
-            rh.MouseUp += ((o, args) => {
+            rh.MouseUp += ((o, args) =>
+            {
                 ((Border)o).ReleaseMouseCapture();
                 RoamingHitTestBorder_PointerUp(sender);
             });
-            rh.MouseMove += ((o, args) => {
+            rh.MouseMove += ((o, args) =>
+            {
                 RoamingHitTestBorder_PointerMove(sender, args.GetPosition(WrapperInkCanvas), args.GetPosition(null));
             });
         }
@@ -1211,14 +1383,16 @@ namespace InkCanvasForClass.IccInkCanvas {
         /// </summary>
         /// <param name="page"></param>
         /// <param name="matrix"></param>
-        private void _SetPageMatrixTransform(IccBoardPage page, Matrix matrix) {
+        private void _SetPageMatrixTransform(IccBoardPage page, Matrix matrix)
+        {
             if (page.Container.RenderTransformOrigin != new Point(0, 0))
                 page.Container.RenderTransformOrigin = new Point(0, 0);
             page.Container.RenderTransform = new MatrixTransform(matrix);
             WrapperInkCanvasMatrixTransform.Matrix = matrix;
         }
 
-        private void RoamingHitTestBorder_PointerDown(object sender) {
+        private void RoamingHitTestBorder_PointerDown(object sender)
+        {
             if (isRoamingHitTestBorderPointerDown) return;
             isRoamingHitTestBorderPointerDown = true;
 
@@ -1227,7 +1401,8 @@ namespace InkCanvasForClass.IccInkCanvas {
             roamingMatrix = null;
         }
 
-        private void RoamingHitTestBorder_PointerUp(object sender) {
+        private void RoamingHitTestBorder_PointerUp(object sender)
+        {
             if (!isRoamingHitTestBorderPointerDown) return;
             isRoamingHitTestBorderPointerDown = false;
 
@@ -1238,26 +1413,28 @@ namespace InkCanvasForClass.IccInkCanvas {
             roamingMatrix = null;
         }
 
-        private void RoamingHitTestBorder_PointerMove(object sender, Point ptInInkCanvas, Point ptAbsolute) {
+        private void RoamingHitTestBorder_PointerMove(object sender, Point ptInInkCanvas, Point ptAbsolute)
+        {
             if (!isRoamingHitTestBorderPointerDown) return;
 
             if (roamingFirstPoint == null) roamingFirstPoint = ptAbsolute;
             roamingLastPoint = ptAbsolute;
 
             if (roamingMatrix == null) roamingMatrix = CurrentPageItem.TransformMatrix;
-            
+
             var deltaX = (roamingLastPoint ?? new Point(0, 0)).X - (roamingFirstPoint ?? new Point(0, 0)).X;
             var deltaY = (roamingLastPoint ?? new Point(0, 0)).Y - (roamingFirstPoint ?? new Point(0, 0)).Y;
 
-            var mt = roamingMatrix??new Matrix();
-            mt.Translate(deltaX,deltaY);
-            
-            _SetPageMatrixTransform(CurrentPageItem,mt);
+            var mt = roamingMatrix ?? new Matrix();
+            mt.Translate(deltaX, deltaY);
+
+            _SetPageMatrixTransform(CurrentPageItem, mt);
         }
 
         #endregion
 
-        public IccBoard() {
+        public IccBoard()
+        {
             InitializeComponent();
         }
 

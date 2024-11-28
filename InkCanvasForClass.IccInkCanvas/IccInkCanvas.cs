@@ -300,8 +300,6 @@ namespace InkCanvasForClass.IccInkCanvas {
             InkCanvasStrokeCollectedEventArgs args =
                 new InkCanvasStrokeCollectedEventArgs(customStroke);
             base.OnStrokeCollected(args);
-
-            Trace.WriteLine("dfsffdsdfdfsfds");
         }
 
         public event EventHandler<RoutedEventArgs> DeleteKeyCommandFired;

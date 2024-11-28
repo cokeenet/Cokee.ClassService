@@ -1,8 +1,9 @@
 ﻿<Window
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Title="猫圈圈 | 设置"
-    Height="450"
-    Width="800"
+    Height="650"
+    Width="1000"
+    Topmost="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d"
     ui:ThemeManager.IsThemeAware="True"
@@ -13,43 +14,24 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Grid Margin="3,3,3,3">
         <ui:NavigationView
          x:Name="NavigationViewControl"
-         Grid.Column="1"
-         AlwaysShowHeader="True"
-         Canvas.ZIndex="0"
-         Header=" " IsFooterSeparatorVisible="{x:Null}"
-         PaneTitle="App Gallery"
-         IsTabStop="False"
+         IsBackButtonVisible="Collapsed"
+         IsFooterSeparatorVisible="{x:Null}"
          IsTitleBarAutoPaddingEnabled="False"
-         PaneDisplayMode="Auto"
-         SelectionChanged="OnNavigationViewSelectionChanged"
-         IsSettingsVisible="True">
-            <!--<ui:NavigationView.HeaderTemplate>
-                <DataTemplate>
-                    <local:PageHeader
-                     Title="{Binding Header, ElementName=NavigationViewControl}"
-                     Background="Transparent"
-                     BackgroundColorOpacity="1" />
-                </DataTemplate>
-            </ui:NavigationView.HeaderTemplate>
-            <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox
-                 x:Name="controlsSearchBox"
-                 MinWidth="200"
-                 VerticalAlignment="Center"
-                 x:FieldModifier="public"
-                 PlaceholderText="Search"
-                 QuerySubmitted="OnControlsSearchBoxQuerySubmitted"
-                 TextChanged="OnControlsSearchBoxTextChanged" >
-                    <ui:AutoSuggestBox.QueryIcon>
-                        <ui:SymbolIcon Symbol="Find" FontSize="12" RenderTransformOrigin="0.5,0.5"/>
-                    </ui:AutoSuggestBox.QueryIcon>
-                </ui:AutoSuggestBox>
-            </ui:NavigationView.AutoSuggestBox>-->
-            <ui:Frame x:Name="rootFrame" Navigating="OnRootFrameNavigating" Navigated="OnRootFrameNavigated" />
+         PaneDisplayMode="Left"
+         SelectionChanged="OnNavigationViewSelectionChanged">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="首选项" IsSelected="True">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.BuildingHome_24_Regular}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+            <ui:Frame Margin="5" x:Name="rootFrame" Navigating="OnRootFrameNavigating" Navigated="OnRootFrameNavigated" Source="/Views/Pages/Settings/MainSetting.xaml" ScrollViewer.CanContentScroll="True"/>
         </ui:NavigationView>
     </Grid>
 </Window>

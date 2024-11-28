@@ -5,8 +5,8 @@
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.9.884.315</AssemblyVersion>
-		<FileVersion>2.9.884.315</FileVersion>
+		<AssemblyVersion>2.9.903.333</AssemblyVersion>
+		<FileVersion>2.9.903.333</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -43,6 +43,14 @@
 	  <EmbeddedResource Remove="Output\**" />
 	  <None Remove="Output\**" />
 	  <Page Remove="Output\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Views\Pages\Settings\MainSetting - 复制.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Remove="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	</ItemGroup>
 
 
@@ -104,7 +112,6 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
 		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
 		<PackageReference Include="Lierda.WPFHelper" Version="1.0.3" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
@@ -113,6 +120,7 @@
 		<PackageReference Include="Sentry.Profiling" Version="4.13.0" />
 		<PackageReference Include="Sentry.Serilog" Version="4.13.0" />
 		<PackageReference Include="Serilog" Version="4.1.1-dev-02318" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10398" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
@@ -123,35 +131,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="DirectShowLib-2005">
-			<HintPath>Dlls\DirectShowLib-2005.dll</HintPath>
-		</Reference>
-		<Reference Include="IACore">
-			<HintPath>Dlls\IACore.dll</HintPath>
-		</Reference>
-		<Reference Include="IALoader">
-			<HintPath>Dlls\IALoader.dll</HintPath>
-		</Reference>
-		<Reference Include="IAWinFX">
-			<HintPath>Dlls\IAWinFX.dll</HintPath>
+		<Reference Include="iNKORE.UI.WPF">
+		  <HintPath>Dlls\iNKORE.UI.WPF.dll</HintPath>
 		</Reference>
 		<Reference Include="iNKORE.UI.WPF.Modern">
 		  <HintPath>Dlls\iNKORE.UI.WPF.Modern.dll</HintPath>
 		</Reference>
 		<Reference Include="iNKORE.UI.WPF.Modern.Controls">
-		  <HintPath>..\..\..\Users\Cokee\Downloads\UI.WPF.Modern-main\UI.WPF.Modern-main\source\iNKORE.UI.WPF.Modern.Controls\bin\Release\net6.0-windows10.0.18362.0\iNKORE.UI.WPF.Modern.Controls.dll</HintPath>
-		</Reference>
-		<Reference Include="iNKORE.UI.WPF.Modern.resources">
-		  <HintPath>..\..\..\Users\Cokee\Downloads\UI.WPF.Modern-main\UI.WPF.Modern-main\source\iNKORE.UI.WPF.Modern\bin\Release\net6.0-windows10.0.18362.0\zh-CN\iNKORE.UI.WPF.Modern.resources.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.Ink">
-			<HintPath>Dlls\Microsoft.Ink.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.Ink.Analysis">
-			<HintPath>Dlls\Microsoft.Ink.Analysis.dll</HintPath>
-		</Reference>
-		<Reference Include="WPFMediaKit">
-			<HintPath>Dlls\WPFMediaKit.dll</HintPath>
+		  <HintPath>Dlls\iNKORE.UI.WPF.Modern.Controls.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -171,6 +158,17 @@
 		<Resource Include="Resources\HeadPics\7.jpg" />
 		<Resource Include="Resources\HeadPics\8.jpg" />
 		<EmbeddedResource Include="Resources\Segoe Fluent Icons.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml" />
+	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml.cs">
+	    <SubType>Code</SubType>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\InkCanvasForClass.IccInkCanvas\InkCanvasForClass.IccInkCanvas.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
