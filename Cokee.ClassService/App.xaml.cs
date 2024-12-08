@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -41,7 +42,7 @@ namespace Cokee.ClassService
                     //TimeSpan.FromMilliseconds(500)
                 ));
                 options.IsGlobalModeEnabled = true;
-                options.Distribution=App.Current.
+                options.Distribution=Catalog.Version?.ToString(4);
             });
             Timeline.DesiredFrameRateProperty.OverrideMetadata(
                 typeof(Timeline),

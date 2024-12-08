@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,9 @@ namespace Cokee.ClassService.Helper
         public static User? user = null;
         public static ApiClient apiClient = new ApiClient();
         public static CapServiceHost CapServiceHost = new CapServiceHost();
-        public static DesktopWindow? desktopWindow;
+        public static DesktopWindow? desktopWindow; 
+        public static Version? Version = Assembly.GetExecutingAssembly().GetName().Version;
+
         public static async void HandleException(Exception ex, string str = "", bool isSlient = false)
         {
             await Application.Current.Dispatcher.InvokeAsync(async () =>
@@ -115,7 +118,7 @@ namespace Cokee.ClassService.Helper
                 infoMessageQueue.Enqueue((title, content, severity));
 
                 // Process the first message in the queue if InfoBar is closed
-                if (!MainWindow.infobar.IsOpen)
+                if (!MainWindow.infoBar.IsOpen)
                 {
                     ShowNextMessage();
                 }
@@ -131,7 +134,7 @@ namespace Cokee.ClassService.Helper
                 if (MainWindow == null) return;
 
                 // Show the message
-                var infobar = MainWindow.infobar;
+                var infobar = MainWindow.infoBar;
                 var infobarTran = MainWindow.infobarTran;
 
                 infobar.Title = title;
@@ -141,12 +144,12 @@ namespace Cokee.ClassService.Helper
                 Log.Information($"Snack消息:{title} {content}");
                 // Start the show animation
                 DoubleAnimation showAnim = new DoubleAnimation(
-                    infobar.ActualHeight + 100,
+                    infobar.ActualWidth + 100,
                     0,
                     TimeSpan.FromSeconds(1),
                     FillBehavior.HoldEnd);
                 showAnim.EasingFunction = Catalog.easingFunction;
-                infobarTran.BeginAnimation(TranslateTransform.YProperty, showAnim);
+                infobarTran.BeginAnimation(TranslateTransform.XProperty, showAnim);
 
                 // After the delay, hide the message and process the next one
                 await Task.Delay(3000);
@@ -160,13 +163,13 @@ namespace Cokee.ClassService.Helper
             {
                 if (MainWindow == null) return;
 
-                var infobar = MainWindow.infobar;
+                var infobar = MainWindow.infoBar;
                 var infobarTran = MainWindow.infobarTran;
 
                 // Start the hide animation
                 DoubleAnimation hideAnim = new DoubleAnimation(
                     0,
-                    infobar.ActualHeight + 100,
+                    infobar.ActualWidth + 100,
                     TimeSpan.FromSeconds(1),
                     FillBehavior.Stop);
                 hideAnim.EasingFunction = Catalog.easingFunction;
@@ -176,7 +179,7 @@ namespace Cokee.ClassService.Helper
                     infoMessageQueue.Dequeue(); // Remove the message from the queue
                     ShowNextMessage(); // Process the next message
                 };
-                infobarTran?.BeginAnimation(TranslateTransform.YProperty, hideAnim);
+                infobarTran?.BeginAnimation(TranslateTransform.XProperty, hideAnim);
             }
         }
 

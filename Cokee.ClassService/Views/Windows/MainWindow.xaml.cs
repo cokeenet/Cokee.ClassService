@@ -65,7 +65,6 @@ namespace Cokee.ClassService
         public FileSystemWatcher desktopWatcher = new FileSystemWatcher(
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), Catalog.settings.FileWatcherFilter);
 
-        private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         private Task CheckOfficeTask;
 
         public MainWindow()
@@ -75,7 +74,7 @@ namespace Cokee.ClassService
             rancor.RandomResultControl = ranres;
             inkTool.iccBoard = IccBoard;
             VerStr.Text =
-                $"CokeeClass 版本{version?.ToString(4)}";
+                $"CokeeClass 版本{Catalog.Version?.ToString(4)}";
         }
 
         private void DisplaySettingsChanged(object? sender, EventArgs e)
@@ -826,10 +825,10 @@ namespace Cokee.ClassService
                 StartInk(null, null);
                 inkTool.SetCursorMode(0);
                 pptControls.Visibility = Visibility.Visible;
-                NowPageText.Text = Wn..CurrentShowPosition.ToString();
+                NowPageText.Text = Wn.Presentation.Slides.Count.ToString();
                 TotalPageText.Text = Wn.Presentation.Slides.Count.ToString();
                 while (IccBoard.IsCurrentLastPage) IccBoard?.RemovePage();
-                IccBoard.GotoPage(Wn.View.CurrentShowPosition);
+                //IccBoard.GotoPage(Wn);
                 if (pptApplication?.Presentations.Count >= 1)
                 {
                     foreach (MsPpt.Presentation Pres in pptApplication.Presentations)

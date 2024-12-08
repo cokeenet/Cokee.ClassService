@@ -31,7 +31,7 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
- 
+
     <Grid Focusable="False" x:Name="MainGrid">
 
         <Grid x:Name="inkGrid">
@@ -321,7 +321,7 @@
                         <TextBlock
                             Foreground="White"
                             Margin="5" FontSize="14"
-                            Text="猫圈圈 版本1.0.1111"
+                            Text="CokeeClass 猫圈圈 版本2.9.905.343"
                             x:Name="VerStr">
                             <TextBlock.Effect>
                                 <DropShadowEffect Opacity="0.3" />
@@ -345,6 +345,21 @@
                         </emoji:EmojiedTextBlock>
                     </Grid>
                 </uix:SimpleStackPanel>
+            </uix:SimpleStackPanel>
+        </Border>
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,60,0,0">
+            <uix:SimpleStackPanel>
+                <ui:InfoBar 
+                    Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
+                    VerticalAlignment="Bottom"
+                    x:Name="infoBar"
+                    d:IsOpen="True" Margin="10" d:Width="350" d:Height="300"
+                    IsClosable="False" HorizontalAlignment="Center"
+                    MaxWidth="350" MaxHeight="400">
+            <ui:InfoBar.RenderTransform>
+                <TranslateTransform x:Name="infobarTran" X="0"/>
+            </ui:InfoBar.RenderTransform>
+        </ui:InfoBar>
             </uix:SimpleStackPanel>
         </Border>
         <Popup
@@ -502,11 +517,11 @@
                         </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Debug Log Output" Margin="5" />
-                            <ComboBox Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right"/>
+                            <ComboBox x:Name="logItemBox" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right"/>
                         </Grid>
                         <Controls:ScrollViewerEx Grid.Row="1" Margin="5">
                             <RichTextBox Background="Black" x:Name="richTextBox" IsEnabled="False" IsReadOnly="True" />
@@ -527,12 +542,5 @@
             d:IsHidden="True"
             d:Visibility="Visible"
             x:Name="usbCard" />
-        <ui:InfoBar Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
-            VerticalAlignment="Bottom"
-            x:Name="infobar" d:IsOpen="True" Margin="0,0,0,100" IsClosable="False" HorizontalAlignment="Center" MaxWidth="450" MaxHeight="400">
-            <ui:InfoBar.RenderTransform>
-                <TranslateTransform x:Name="infobarTran" />
-            </ui:InfoBar.RenderTransform>
-        </ui:InfoBar>
     </Grid>
 </Window>
