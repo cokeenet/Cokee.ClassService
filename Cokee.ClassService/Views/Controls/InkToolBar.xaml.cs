@@ -109,7 +109,7 @@ namespace Cokee.ClassService.Views.Controls
                     case "Cursor":
                         SetBtnState(curBtn);
                         isEraser = false;
-                        iccBoard.EditingMode = EditingMode.Select;
+                        iccBoard.EditingMode = EditingMode.NoneWithHitTest;
                         break;
 
                     case "Pen":
@@ -218,8 +218,8 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     case "WhiteBoard":
                         SolidColorBrush s1 = new(Color.FromRgb(0x0E, 0x25, 0x1D));
-                        SolidColorBrush s2 = new(Colors.White);
-                        s1.Opacity = 1;
+                         s1.Opacity = 1;SolidColorBrush s2 = new(Colors.White);
+                       
                         s2.Opacity = 0.01;
                         if (En) { iccBoard.Background = s1; isWhiteBoard = true; }
                         else { iccBoard.Background = s2; isWhiteBoard = false; }

@@ -1,0 +1,247 @@
+﻿<UserControl
+    Width="Auto"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.InkToolBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf">
+    
+    <Border ui:ThemeManager.RequestedTheme="Default"
+        VerticalAlignment="Stretch"
+        x:Name="card" Style="{StaticResource CardBorderStyle}" Padding="0">
+        <Grid x:Name="mainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition MinWidth="84" />
+                <ColumnDefinition MinWidth="84" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Click="Button_Click"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Cursor"
+                VerticalAlignment="Stretch"
+                x:Name="curBtn">
+                <ui:IconAndText Content="指针" Icon="{x:Static ui:FluentSystemIcons.Cursor_24_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Pen"
+                VerticalAlignment="Stretch"
+                Style="{DynamicResource AccentButtonStyle}"
+                x:Name="penBtn">
+                <ui:IconAndText Content="笔" Icon="{x:Static ui:FluentSystemIcons.Pen_24_Filled}" />
+            </Button>
+
+            <Button
+                Click="Button_Click"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                MouseRightButtonDown="ClearScr"
+                Tag="Eraser"
+                VerticalAlignment="Stretch"
+                x:Name="eraserBtn">
+                <ui:IconAndText Content="橡皮" Icon="{x:Static ui:FluentSystemIcons.Eraser_24_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="3"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Back"
+                VerticalAlignment="Stretch"
+                Visibility="Collapsed"
+                x:Name="backBtn">
+                <ui:IconAndText Content="撤销" Icon="{x:Static ui:FluentSystemIcons.ArrowStepBack_20_Filled}" />
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="4"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="More"
+                VerticalAlignment="Stretch"
+                x:Name="moreBtn">
+                <ui:IconAndText Content="更多" Icon="{x:Static ui:FluentSystemIcons.MoreHorizontal_48_Filled}" />
+                <ui:FlyoutService.Flyout>
+                    <ui:Flyout
+                Placement="Top"
+                x:Name="moreMenu">
+                        <StackPanel x:Name="moreCard"
+                    DataContext="{Binding AppSettings}"
+                    HorizontalAlignment="Center">
+                            <TextBlock
+                            FontSize="16"
+                            Grid.Row="0"
+                            Margin="5"
+                            Text="书写菜单" />
+                            <StackPanel Grid.Row="1">
+                                <Button
+                                Click="Button_Click"
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Tag="Redo"
+                                VerticalAlignment="Stretch"
+                                x:Name="redoBtn">
+                                    <ui:IconAndText Content="重做" Icon="{x:Static ui:FluentSystemIcons.ArrowRedo_48_Regular}" />
+                                </Button>
+                                <Button
+                                Click="Button_Click"
+                                HorizontalAlignment="Stretch"
+                                Margin="5"
+                                Tag="Select"
+                                VerticalAlignment="Stretch">
+
+                                    <ui:IconAndText Content="选择" Icon="{x:Static ui:FluentSystemIcons.SelectObject_24_Regular}" />
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </ui:Flyout>
+                </ui:FlyoutService.Flyout>
+            </Button>
+            <Button
+                Click="Button_Click"
+                Grid.Column="5"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                Tag="Exit"
+                VerticalAlignment="Stretch"
+                x:Name="exitBtn">
+                <ui:IconAndText Content="退出" Icon="{x:Static ui:FluentSystemIcons.ArrowExit_20_Filled}" />
+            </Button>
+            <ikw:XamlCachedElements>
+                <ui:Flyout x:Name="colorFlyout" Placement="Top" ShowMode="Auto">
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Grid x:Name="colorGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+FontSize="16"
+Grid.ColumnSpan="2"
+Grid.Row="0"
+Margin="5"
+Text="色板" HorizontalAlignment="Left" />
+                            <StackPanel Grid.Row="1" Grid.RowSpan="3">
+                                <Slider
+    HorizontalAlignment="Center"
+    Maximum="18"
+    Minimum="1"
+    Orientation="Vertical"
+    Value="3.5"
+    ValueChanged="Slider_ValueChanged"
+    x:Name="penSlider" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="90" />
+                                <TextBlock
+    FontSize="12"
+    Margin="5"
+    Text="粗细" />
+                            </StackPanel>
+                            <Button
+Background="Red"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50">
+                                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.CheckmarkCircle_48_Regular}" />
+                            </Button>
+                            <Button
+Background="CornflowerBlue"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF306C00"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="Black"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF321EB5"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF66D552"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="White"
+Click="ColorBtn"
+FontSize="17"
+Foreground="Black"
+Grid.Column="3"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FFFF8B00"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="3"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF4EA1B7"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="3"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                        </Grid>
+                    </Border>
+                </ui:Flyout>
+            </ikw:XamlCachedElements>
+        </Grid>
+    </Border>
+</UserControl>

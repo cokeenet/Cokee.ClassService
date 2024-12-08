@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InkCanvasForClass.IccInkCanvas.Settings;
+using InkCanvasForClass.IccInkCanvas.Utils.Threading;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,10 +12,6 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using InkCanvasForClass.IccInkCanvas.Settings;
-using InkCanvasForClass.IccInkCanvas.Utils.Threading;
-
 using MatrixTransform = System.Windows.Media.MatrixTransform;
 
 namespace InkCanvasForClass.IccInkCanvas
@@ -95,11 +93,23 @@ namespace InkCanvasForClass.IccInkCanvas
 
         private void UpdateEditingMode()
         {
+            SolidColorBrush s1 = new SolidColorBrush(Colors.Transparent);
+            s1.Opacity = 0; SolidColorBrush s2 = new SolidColorBrush(Colors.White);
+
+            s2.Opacity = 0.01;
+            
             _editingMode = EditingMode;
             if (EditingMode == EditingMode.None || EditingMode == EditingMode.NoneWithHitTest)
+            {
+                Background = s1;
                 WrapperInkCanvas.EditingMode = InkCanvasEditingMode.None;
+            }
             IsHitTestVisible = EditingMode != EditingMode.None;
-            if (EditingMode == EditingMode.Writing) WrapperInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            if (EditingMode == EditingMode.Writing)
+            {
+                Background = s2;
+                WrapperInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            }
             EraserCanvas.Visibility = EditingMode == EditingMode.GeometryErasing ? Visibility.Visible : Visibility.Collapsed;
             RectangleAreaEraserCanvas.Visibility =
                 EditingMode == EditingMode.AreaErasing ? Visibility.Visible : Visibility.Collapsed;

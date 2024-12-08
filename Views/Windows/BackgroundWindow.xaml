@@ -1,0 +1,35 @@
+﻿<Window AllowsTransparency="True"
+    Background="{x:Null}"
+    Focusable="False"
+    FontSize="16"
+    KeyDown="BackWindow_OnKeyDown"
+    Left="0"
+    Loaded="Window_Loaded"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    Top="0"
+    WindowStartupLocation="Manual"
+    WindowState="Maximized"
+    WindowStyle="None"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.BackgroundWindow"
+    xmlns:emoji="http://schemas.inkore.net/lib/ui/wpf/emojis"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="1920" Height="1080">
+
+    <Grid Focusable="False" x:Name="MainGrid">
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource CardBorderStyle}">
+            <uix:SimpleStackPanel Margin="3" Spacing="5">
+            <TextBlock Text="111" x:Name="Time"/>
+            <TextBlock Text="111" x:Name="longTime"/>
+                <TextBlock Text="111" x:Name="Countdown"/>
+            </uix:SimpleStackPanel>
+        </Border>
+    </Grid>
+</Window>
