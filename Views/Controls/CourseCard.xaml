@@ -1,0 +1,44 @@
+﻿<UserControl
+    FontFamily="Cairo"
+    Height="120"
+    HorizontalAlignment="Right"
+    Margin="0,20,20,0"
+    VerticalAlignment="Top"
+    Width="300"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.CourseCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.RenderTransform>
+        <TranslateTransform X="330" x:Name="transT" d:X="0" />
+    </UserControl.RenderTransform>
+    <Border Style="{StaticResource CardBorderStyle}" VerticalAlignment="Stretch">
+        <Grid VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                FontSize="24"
+                HorizontalAlignment="Left"
+                Margin="0,15,0,15"
+                VerticalAlignment="Center"
+                d:Text="22:00 下一节:没课了"
+                x:Name="title" />
+            <TextBlock
+                FontSize="18"
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                Margin="0,15,0,15"
+                d:Text="本节课程:语文课 结束"
+                x:Name="subtitle" />
+        </Grid>
+    </Border>
+</UserControl>

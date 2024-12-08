@@ -1,0 +1,52 @@
+﻿<UserControl
+    Height="450"
+    Width="500"
+    mc:Ignorable="d"
+    x:Class="Cokee.ClassService.Views.Controls.RandomResult"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:Cokee.ClassService.Helper"
+    xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <helper:VisibilityConverter x:Key="VisibilityConverter" />
+        <helper:LevelConverter x:Key="LevelConverter" />
+        <helper:HeadPicUrlConverter x:Key="HeadPicUrlConverter" />
+    </UserControl.Resources>
+    <Border VerticalAlignment="Stretch" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                FontSize="18"
+                HorizontalAlignment="Center"
+                Margin="15"
+                Text="抽取结果"
+                VerticalAlignment="Center"
+                x:Name="title" />
+            <TextBlock
+                FontSize="14"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="5"
+                Text="{Binding ItemsSource.Length, StringFormat=共 \{0\} 人}"
+                VerticalAlignment="Top"
+                d:Text="共 111 人" />
+            <local:ScrollViewerEx Grid.Row="2" Margin="5">
+                <local:StudentsViewer ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:RandomResult}}}" Columns="4" d:ItemsSource="{d:SampleData}"/>
+            </local:ScrollViewerEx>
+            <Button
+                Click="Confirm"
+                Grid.Row="3" Margin="15"
+                Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                <ui:IconAndText Content="确认" Icon="{x:Static ui:FluentSystemIcons.Checkmark_48_Regular}" />
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,26 @@
+﻿<Window
+    FontFamily="HarmonyOS_Sans"
+    Height="705"
+    Title="猫圈圈 | 设置"
+    Width="525"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    ui:ThemeManager.IsThemeAware="True"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    x:Class="Cokee.ClassService.Views.Windows.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <Grid Margin="3,3,3,3">
+        <Border CornerRadius="8,0,0,0" Margin="0">
+            <Frame
+                    Margin="4,8"
+                    ScrollViewer.CanContentScroll="True"
+                    Source="/Views/Pages/Settings.xaml"
+                    x:Name="RootFrame" />
+        </Border>
+    </Grid>
+</Window>
