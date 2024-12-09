@@ -348,19 +348,28 @@
             </uix:SimpleStackPanel>
         </Border>
         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,60,0,0">
-            <uix:SimpleStackPanel>
-                <ui:InfoBar 
+            <ItemsControl d:ItemsSource="{d:SampleData ItemCount=10}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ui:InfoBar 
                     Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
-                    VerticalAlignment="Bottom"
-                    x:Name="infoBar"
-                    d:IsOpen="True" Margin="10" d:Width="350" d:Height="300"
+                    d:IsOpen="True" Margin="10" d:Width="350"
                     IsClosable="False" HorizontalAlignment="Center"
                     MaxWidth="350" MaxHeight="400">
-            <ui:InfoBar.RenderTransform>
-                <TranslateTransform x:Name="infobarTran" X="0"/>
-            </ui:InfoBar.RenderTransform>
-        </ui:InfoBar>
-            </uix:SimpleStackPanel>
+                            <ui:InfoBar.RenderTransform>
+                                <TranslateTransform x:Name="infobarTran" X="0"/>
+                            </ui:InfoBar.RenderTransform>
+                            <ui:InfoBar.Effect>
+                                <DropShadowEffect Opacity="0.2"/>
+                            </ui:InfoBar.Effect>
+                        </ui:InfoBar>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Border>
         <Popup
             AllowsTransparency="True"
@@ -446,7 +455,7 @@
                 Width="80"
                 x:Name="head">
                 <ui:PersonPicture.Effect>
-                    <DropShadowEffect ShadowDepth="1" />
+                    <DropShadowEffect Opacity="0.2" />
                 </ui:PersonPicture.Effect>
                 <ui:PersonPicture.RenderTransform>
                     <TransformGroup>
@@ -502,10 +511,13 @@
             Visibility="Collapsed"
             d:Visibility="Visible"
             Width="520" Margin="5" Padding="5"
-            x:Name="logview">
+            x:Name="logview" d:IsHidden="True">
             <Border.Background>
                 <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" />
             </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.2"/>
+            </Border.Effect>
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
                 <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}" Background="{x:Null}" >
                     <Grid>

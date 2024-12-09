@@ -38,6 +38,10 @@ namespace Cokee.ClassService.Views.Controls
                         penSlider.Value = iccBoard.BoardSettings.NibHeight;
                     };
                     moreCard.DataContext = Catalog.settings;
+                    iccBoard.TimeMachineStatusUpdated += (a, b) => 
+                    {
+                        if(b.CanRedo)redoBtn.Visibility= Visibility.Visible;
+                    };
                     iccBoard.ActiveEditingModeChanged += (a, b) =>
                     {
                         switch (iccBoard.EditingMode)
@@ -72,6 +76,11 @@ namespace Cokee.ClassService.Views.Controls
                     }
                 };
             }
+        }
+
+        private void IccBoard_UndoRedoStateChanged(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetCursorMode(int mode)
@@ -176,7 +185,7 @@ namespace Cokee.ClassService.Views.Controls
             //iccBoard.Undo()
         }
 
-        private void SetBtnState(Button? btn)
+        private void SetBtnState(Button btn,string? content)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -184,15 +193,17 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     button.Style = (Style)this.FindResource(ThemeKeys.DefaultButtonStyleKey);
                 }
-                if (btn != null) btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
+                if (btn == null) return;
+                btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
+                btn.Content = content;
             }, DispatcherPriority.Normal);
         }
 
-        private void ClearScr(object sender, MouseButtonEventArgs e) => iccBoard.CurrentPageItem.InkCanvas.Strokes.Clear();
+        private void ClearScr(object sender, MouseButtonEventArgs e) => iccBoard?.CurrentPageItem.InkCanvas.Strokes.Clear();
 
         private void ColorBtn(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
+            Button? button = sender as Button;
             if (button != null && sender is Button)
             {
                 iccBoard.BoardSettings.NibColor = (button.Background as SolidColorBrush).Color;
