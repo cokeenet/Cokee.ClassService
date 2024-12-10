@@ -78,10 +78,7 @@ namespace Cokee.ClassService.Views.Controls
             }
         }
 
-        private void IccBoard_UndoRedoStateChanged(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public void SetCursorMode(int mode)
         {
