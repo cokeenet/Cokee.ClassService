@@ -178,6 +178,7 @@ namespace Cokee.ClassService.Views.Controls
 
         public void ReleaseInk()
         {
+            iccBoard.RemovePage();
             Visibility = Visibility.Collapsed;
             //iccBoard.Undo()
         }
