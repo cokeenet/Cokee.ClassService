@@ -182,7 +182,7 @@ namespace Cokee.ClassService.Views.Controls
             //iccBoard.Undo()
         }
 
-        private void SetBtnState(Button btn,string? content)
+        private void SetBtnState(Button btn,string? content=null)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
