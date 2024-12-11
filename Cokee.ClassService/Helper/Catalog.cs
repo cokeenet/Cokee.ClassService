@@ -23,6 +23,12 @@ using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
+    public class Notification 
+    {
+        public string? Title;
+        public string? Content;
+        public InfoBarSeverity? Severity;
+    }
     public static class Catalog
     {
         public static string CONFIG_DISK = @"D:\";
