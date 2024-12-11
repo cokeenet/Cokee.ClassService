@@ -198,14 +198,9 @@ namespace Cokee.ClassService
             {
                 time.Text = DateTime.Now.ToString("HH:mm:ss");
                 time1.Text = DateTime.Now.ToString("HH:mm:ss");
-                /*longDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
-                var status = schedule.GetNowCourse();
-                if (status.NowStatus == CourseNowStatus.EndOfLesson || status.NowStatus == CourseNowStatus.Upcoming)
-                {
-                    courseCard.Show(status);
-                    StartAnimation(10, 3600);
-                }
-                */
+                var status = Win32Helper.IsForegroundMaximized();
+                if (status) Catalog.SetWindowStyle(1);
+                else Catalog.SetWindowStyle(0);
                 if (Catalog.settings.OfficeFunctionEnable)
                 {
                     if (CheckOfficeTask.Status == TaskStatus.Created) CheckOfficeTask.Start();

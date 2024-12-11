@@ -20,6 +20,7 @@
 		<IsPackable>false</IsPackable>
 		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

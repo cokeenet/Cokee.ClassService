@@ -348,7 +348,7 @@
             </uix:SimpleStackPanel>
         </Border>
         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,60,0,0">
-            <ItemsControl d:ItemsSource="{d:SampleData ItemCount=10}">
+            <ItemsControl x:Name="infos" d:ItemsSource="{d:SampleData ItemCount=10}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
@@ -357,11 +357,11 @@
                     <DataTemplate>
                         <ui:InfoBar 
                     Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
-                    d:IsOpen="True" Margin="10" d:Width="350"
-                    IsClosable="False" HorizontalAlignment="Center"
-                    MaxWidth="350" MaxHeight="400">
+                    d:IsOpen="True" Margin="10" d:Width="350" Title="{Binding Title}"
+                    IsClosable="False" HorizontalAlignment="Center" Content="{Binding Content}"
+                    MaxWidth="350" MaxHeight="500">
                             <ui:InfoBar.RenderTransform>
-                                <TranslateTransform x:Name="infobarTran" X="0"/>
+                                <TranslateTransform x:Name="infobarTran" X="{Binding AnimX}"/>
                             </ui:InfoBar.RenderTransform>
                             <ui:InfoBar.Effect>
                                 <DropShadowEffect Opacity="0.2"/>

@@ -1,17 +1,36 @@
-﻿using System;
+﻿using IWshRuntimeLibrary;
+using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
-using IWshRuntimeLibrary;
 using File = System.IO.File;
 
 namespace Cokee.ClassService.Helper
 {
     public static class Win32Helper
-    {
+    {// 导入用户32位DLL中的GetForegroundWindow函数
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        // 导入用户32位DLL中的GetWindowPlacement函数
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+
+        // 定义WINDOWPLACEMENT结构
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWPLACEMENT
+        {
+            public int length;
+            public int flags;
+            public int showCmd;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
+            public System.Drawing.Rectangle rcNormalPosition;
+        }
+
+        // 定义窗口状态常量
+        public const int SW_SHOWMAXIMIZED = 3;
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hwnd, int index);
 
@@ -47,7 +66,24 @@ namespace Cokee.ClassService.Helper
         public const uint SC_MONITORPOWER = 0xF170;
 
         public static IntPtr programHandle = IntPtr.Zero;
+        public static bool IsForegroundMaximized()
+        {
+            // 获取前台窗口句柄
+            IntPtr hWnd = GetForegroundWindow();
 
+            // 创建WINDOWPLACEMENT结构
+            WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
+            placement.length = Marshal.SizeOf(placement);
+
+            // 获取窗口位置信息
+            if (GetWindowPlacement(hWnd, ref placement))
+            {
+                // 检查窗口是否最大化
+                bool isMaximized = (placement.showCmd == SW_SHOWMAXIMIZED);
+                return isMaximized;
+            }
+            return false;
+        }
         public static void SendMsgToProgman()
         {
             // 桌面窗口句柄，在外部定义，用于将自己的窗口作为子窗口放入
@@ -173,10 +209,10 @@ namespace Cokee.ClassService.Helper
 
     #endregion 开机自启
 
-    
-    
 
-    
+
+
+
 
     internal static class ProcessHelper
     {
