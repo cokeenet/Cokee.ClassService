@@ -1,9 +1,12 @@
 ﻿//using AutoUpdaterDotNET;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,18 +19,65 @@ using System.Windows.Threading;
 using Cokee.ClassService.Shared;
 
 using iNKORE.UI.WPF.Modern.Controls;
-
 using Sentry;
-
 using Serilog;
+
+using static Vanara.PInvoke.ComCtl32;
 
 namespace Cokee.ClassService.Helper
 {
-    public class Notification 
+    public class Notification : INotifyPropertyChanged
     {
-        public string? Title;
-        public string? Content;
-        public InfoBarSeverity? Severity;
+        private string? _title;
+        private string? _content;
+        private InfoBarSeverity _severity;
+        private double _animX;
+
+        public string? Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+
+        public string? Content
+        {
+            get => _content;
+            set => SetProperty(ref _content, value);
+        }
+
+        public InfoBarSeverity Severity
+        {
+            get => _severity;
+            set => SetProperty(ref _severity, value);
+        }
+
+        // 用于动画的属性，表示 InfoBar 的初始 X 位置
+        public double AnimX
+        {
+            get => _animX;
+            set => SetProperty(ref _animX, value);
+        }
+
+        // 实现 INotifyPropertyChanged 接口
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // 一个帮助方法，用于设置属性并触发 PropertyChanged 事件
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(storage, value))
+            {
+                return false;
+            }
+
+            storage = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
     }
     public static class Catalog
     {
@@ -108,89 +158,47 @@ namespace Cokee.ClassService.Helper
         public static void MoveTo(Point point)
         {
         }
-
         public static void ShowInfo(string? title = "", string content = "  ", InfoBarSeverity severity = InfoBarSeverity.Informational)
         {
-            Application.Current.Dispatcher.InvokeAsync(() =>
+            if (MainWindow == null) return;
+            // 创建新的 Notification 对象
+            var notification = new Notification
             {
-                if (MainWindow == null) return;
-                // Ensure the message queue is initialized
-                if (infoMessageQueue == null)
+                Title = title,
+                Content = content,
+                Severity = severity,
+                AnimX = 350 // 设置动画的起始位置
+            };
+
+            // 将新的 Notification 添加到 ItemsControl 的数据源中
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // 确保 infos 控件已经初始化
+                if (MainWindow?.infos.ItemsSource is ObservableCollection<Notification> notifications)
                 {
-                    infoMessageQueue = new Queue<(string Title, string Content, InfoBarSeverity Severity)>();
+                    notifications.Add(notification);
                 }
-
-                // Add the new message to the queue
-                infoMessageQueue.Enqueue((title, content, severity));
-
-                // Process the first message in the queue if InfoBar is closed
-                if (!MainWindow.infoBar.IsOpen)
+                else
                 {
-                    ShowNextMessage();
+                    // 如果 infos 控件没有绑定到 ObservableCollection，初始化一个新的集合并设置为数据源
+                    var newCollection = new ObservableCollection<Notification> { notification };
+                    MainWindow.infos.ItemsSource = newCollection;
                 }
-                //else HideCurrentMessageAndProcessNext();
-            }, DispatcherPriority.Background);
+            });
+
+            // 触发动画效果
+            // 这里假设您已经在 XAML 中定义了动画，并在代码后面绑定了动画的触发器
+            // 您可能需要根据您的具体动画逻辑来调整这部分代码
+            TriggerInfoBarAnimation(notification);
         }
 
-        private static async void ShowNextMessage()
+        private static void TriggerInfoBarAnimation(Notification notification)
         {
-            if (infoMessageQueue.Count > 0)
-            {
-                var (title, content, severity) = infoMessageQueue.Peek(); // Get the first message without removing it
-                if (MainWindow == null) return;
-
-                // Show the message
-                var infobar = MainWindow.infoBar;
-                var infobarTran = MainWindow.infobarTran;
-
-                infobar.Title = title;
-                infobar.Message = content;
-                infobar.Severity = severity;
-                infobar.IsOpen = true;
-                Log.Information($"Snack消息:{title} {content}");
-                // Start the show animation
-                DoubleAnimation showAnim = new DoubleAnimation(
-                    infobar.ActualWidth + 100,
-                    0,
-                    TimeSpan.FromSeconds(1),
-                    FillBehavior.HoldEnd);
-                showAnim.EasingFunction = Catalog.easingFunction;
-                infobarTran.BeginAnimation(TranslateTransform.XProperty, showAnim);
-
-                // After the delay, hide the message and process the next one
-                await Task.Delay(3000);
-                HideCurrentMessageAndProcessNext();
-            }
+            // 这里只是一个示例，您需要根据您的具体动画逻辑来实现
+            // 例如，您可以使用 DataTriggers 或者 Storyboards 来实现动画效果
+            // 以下代码假设您有一个方法来开始动画
+            // BeginAnimation("infobarTran.X", newDoubleAnimation(...));
         }
-
-        private static void HideCurrentMessageAndProcessNext()
-        {
-            if (infoMessageQueue.Any())
-            {
-                if (MainWindow == null) return;
-
-                var infobar = MainWindow.infoBar;
-                var infobarTran = MainWindow.infobarTran;
-
-                // Start the hide animation
-                DoubleAnimation hideAnim = new DoubleAnimation(
-                    0,
-                    infobar.ActualWidth + 100,
-                    TimeSpan.FromSeconds(1),
-                    FillBehavior.Stop);
-                hideAnim.EasingFunction = Catalog.easingFunction;
-                hideAnim.Completed += (a, b) =>
-                {
-                    infobar.IsOpen = false;
-                    infoMessageQueue.Dequeue(); // Remove the message from the queue
-                    ShowNextMessage(); // Process the next message
-                };
-                infobarTran?.BeginAnimation(TranslateTransform.XProperty, hideAnim);
-            }
-        }
-
-        private static Queue<(string Title, string Content, InfoBarSeverity Severity)> infoMessageQueue;
-
         public static async void CreateWindow<T>(bool allowMulti = false) where T : Window, new()
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>

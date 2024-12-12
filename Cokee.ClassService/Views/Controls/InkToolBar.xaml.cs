@@ -25,7 +25,6 @@ namespace Cokee.ClassService.Views.Controls
     {
         public IccBoard? iccBoard;
         public bool isPPT = false, isWhiteBoard, isEraser;
-
         public InkToolBar()
         {
             InitializeComponent();

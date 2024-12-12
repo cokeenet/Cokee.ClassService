@@ -208,7 +208,7 @@ namespace Cokee.ClassService.Helper
             if (students.Count <= 0) return null;
                 while (randoms.Count < args.Count)
                 {
-                    if (sw.ElapsedMilliseconds >= 3000) { Catalog.ShowInfo($"抽取超时.({sw.Elapsed.TotalSeconds}s)"); break; }
+                    if (sw.ElapsedMilliseconds >= 2000) { Catalog.ShowInfo($"抽取超时.({sw.Elapsed.TotalSeconds}s)"); break; }
 
                     var a = students[random.Next(students.Count)];
                     if (!args.AllowExist && randoms.Exists(f => f.Name == a.Name)) continue;

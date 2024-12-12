@@ -352,17 +352,49 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <ui:InfoBar 
-                    Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
-                    d:IsOpen="True" Margin="10" d:Width="350" Title="{Binding Title}"
-                    IsClosable="False" HorizontalAlignment="Center" Content="{Binding Content}"
-                    MaxWidth="350" MaxHeight="500">
+                x:Name="InfoBarControl"
+                Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
+                Margin="10" 
+                HorizontalAlignment="Center" 
+                Title="{Binding Title}"
+                Severity="{Binding Severity}"
+                Content="{Binding Content}"
+                MaxWidth="350" MaxHeight="500">
                             <ui:InfoBar.RenderTransform>
-                                <TranslateTransform x:Name="infobarTran" X="{Binding AnimX}"/>
+                                <TranslateTransform x:Name="InfoBarTransform"/>
                             </ui:InfoBar.RenderTransform>
+                            <ui:InfoBar.Triggers>
+                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
+                                                 Storyboard.TargetProperty="X"
+                                                 From="{Binding AnimX}"
+                                                 To="0"
+                                                 Duration="0:0:0.5">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <BackEase Amplitude="0.3"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
+                                                 Storyboard.TargetProperty="X"
+                                                 From="0"
+                                                 To="{Binding AnimX}"
+                                                 BeginTime="0:0:3"
+                                                 Duration="0:0:0.5">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <BackEase Amplitude="0.3"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </ui:InfoBar.Triggers>
                             <ui:InfoBar.Effect>
                                 <DropShadowEffect Opacity="0.2"/>
                             </ui:InfoBar.Effect>
@@ -511,13 +543,10 @@
             Visibility="Collapsed"
             d:Visibility="Visible"
             Width="520" Margin="5" Padding="5"
-            x:Name="logview" d:IsHidden="True">
+            x:Name="logview">
             <Border.Background>
                 <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" />
             </Border.Background>
-            <Border.Effect>
-                <DropShadowEffect Opacity="0.2"/>
-            </Border.Effect>
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
                 <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}" Background="{x:Null}" >
                     <Grid>

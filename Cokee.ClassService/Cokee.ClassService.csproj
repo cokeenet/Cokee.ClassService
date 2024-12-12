@@ -5,8 +5,8 @@
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.9.343.1</AssemblyVersion>
-		<FileVersion>2.9.343.1</FileVersion>
+		<AssemblyVersion>2.9.347.1</AssemblyVersion>
+		<FileVersion>2.9.347.1</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>

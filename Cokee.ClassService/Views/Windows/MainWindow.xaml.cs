@@ -807,10 +807,7 @@ namespace Cokee.ClassService
             }), DispatcherPriority.Background);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        private void Button_Click(object sender, RoutedEventArgs e)=>Catalog.ToggleControlVisible(logview);
         private void PptApplication_ProtectedViewWindowOpen(MsPpt.ProtectedViewWindow Wn)
         {
             inkTool.isPPT = true;
