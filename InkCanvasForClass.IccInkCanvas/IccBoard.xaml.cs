@@ -94,10 +94,8 @@ namespace InkCanvasForClass.IccInkCanvas
         private void UpdateEditingMode()
         {
             SolidColorBrush s1 = new SolidColorBrush(Colors.Transparent);
-            s1.Opacity = 0; SolidColorBrush s2 = new SolidColorBrush(Colors.White);
-
+            SolidColorBrush s2 = new SolidColorBrush(Colors.White);
             s2.Opacity = 0.01;
-            
             _editingMode = EditingMode;
             if (EditingMode == EditingMode.None || EditingMode == EditingMode.NoneWithHitTest)
             {

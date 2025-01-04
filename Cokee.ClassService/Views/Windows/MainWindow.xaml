@@ -31,20 +31,28 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Window.Resources>
+        <Storyboard x:Key="ShowInfoBar">
+            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
+                         Storyboard.TargetProperty="X"
+                         From="{Binding ActualWidth, ElementName=infos}"
+                         To="0"
+                         Duration="0:0:0.5" />
+        </Storyboard>
 
+        <Storyboard x:Key="HideInfoBar">
+            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
+                         Storyboard.TargetProperty="X"
+                         From="0"
+                         To="{Binding ActualWidth, ElementName=infos}"
+                         Duration="0:0:3"/>
+        </Storyboard>
+    </Window.Resources>
     <Grid Focusable="False" x:Name="MainGrid">
 
         <Grid x:Name="inkGrid">
             <icc:IccBoard Background="Transparent"
                 Focusable="False" EditingMode="NoneWithHitTest" Name="IccBoard"/>
-            <Controls:InkToolBar
-                Background="#4C484848"
-                Focusable="False"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Visibility="Collapsed"
-                d:Visibility="Visible"
-                x:Name="inkTool" />
             <Grid
                 Focusable="False"
                 Visibility="Collapsed"
@@ -75,13 +83,7 @@
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
-                            x:Name="pptPage">
-                            <Run Text="11" FontSize="12" x:Name="NowPageText" />
-                            <LineBreak />
-                            <Run Text="————" FontSize="8" />
-                            <LineBreak />
-                            <Run Text="123" FontSize="12" x:Name="TotalPageText" />
-                        </TextBlock>
+                            x:Name="pptPage"><Run Text="11" FontSize="12" x:Name="NowPageText" /><LineBreak /><Run Text="————" FontSize="8" /><LineBreak /><Run Text="123" FontSize="12" x:Name="TotalPageText" /></TextBlock>
                         <Button
                             Click="PptDown"
                             Focusable="False"
@@ -118,13 +120,7 @@
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             TextAlignment="Center"
-                            x:Name="pptPage1">
-                            <Run Text="{Binding Text, ElementName=NowPageText,Mode=OneWay}" FontSize="12" />
-                            <LineBreak />
-                            <Run Text="————" FontSize="8" />
-                            <LineBreak />
-                            <Run Text="{Binding Text, ElementName=TotalPageText,Mode=OneWay}" FontSize="12" />
-                        </TextBlock>
+                            x:Name="pptPage1"><Run Text="{Binding Text, ElementName=NowPageText, Mode=OneWay}" FontSize="12" /><LineBreak /><Run Text="————" FontSize="8" /><LineBreak /><Run Text="{Binding Text, ElementName=TotalPageText, Mode=OneWay}" FontSize="12" /></TextBlock>
                         <Button
                             Click="PptDown"
                             Focusable="False"
@@ -137,6 +133,16 @@
                         </Button>
                     </Grid>
                 </Border>
+            </Grid>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Controls:InkToolBar 
+                    Background="#4C484848"
+                    Focusable="False" 
+                    Grid.Column="1"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Bottom" 
+                    Visibility="Collapsed" 
+                    d:Visibility="Visible" x:Name="inkTool" />
             </Grid>
         </Grid>
         <Border ui:ThemeManager.RequestedTheme="Dark"
@@ -321,7 +327,7 @@
                         <TextBlock
                             Foreground="White"
                             Margin="5" FontSize="14"
-                            Text="CokeeClass 猫圈圈 版本2.9.905.343"
+                            Text="CokeeClass 版本2.9.905.343"
                             x:Name="VerStr">
                             <TextBlock.Effect>
                                 <DropShadowEffect Opacity="0.3" />
@@ -356,48 +362,23 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ui:InfoBar 
-                x:Name="InfoBarControl"
+                        <ui:InfoBar
                 Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}"
                 Margin="10" 
                 HorizontalAlignment="Center" 
                 Title="{Binding Title}"
                 Severity="{Binding Severity}"
                 Content="{Binding Content}"
-                MaxWidth="350" MaxHeight="500">
-                            <ui:InfoBar.RenderTransform>
-                                <TranslateTransform x:Name="InfoBarTransform"/>
-                            </ui:InfoBar.RenderTransform>
+                MaxWidth="350" MaxHeight="500" 
+                Visibility="{Binding Visibility, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}">
                             <ui:InfoBar.Triggers>
                                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
-                                                 Storyboard.TargetProperty="X"
-                                                 From="{Binding AnimX}"
-                                                 To="0"
-                                                 Duration="0:0:0.5">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <BackEase Amplitude="0.3"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                            <DoubleAnimation Storyboard.TargetName="InfoBarTransform"
-                                                 Storyboard.TargetProperty="X"
-                                                 From="0"
-                                                 To="{Binding AnimX}"
-                                                 BeginTime="0:0:3"
-                                                 Duration="0:0:0.5">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <BackEase Amplitude="0.3"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
+                                    <BeginStoryboard Storyboard="{StaticResource ShowInfoBar}" />
                                 </EventTrigger>
                             </ui:InfoBar.Triggers>
-                            <ui:InfoBar.Effect>
-                                <DropShadowEffect Opacity="0.2"/>
-                            </ui:InfoBar.Effect>
+                            <ui:InfoBar.RenderTransform>
+                                <TranslateTransform x:Name="InfoBarTransform" X="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" />
+                            </ui:InfoBar.RenderTransform>
                         </ui:InfoBar>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -545,7 +526,7 @@
             Width="520" Margin="5" Padding="5"
             x:Name="logview">
             <Border.Background>
-                <ImageBrush ImageSource="/Resources/CardBackground/3.jpg" />
+                <ImageBrush ImageSource="/Resources/CardBackground/1.png" />
             </Border.Background>
             <TabControl ui:TabControlHelper.IsAddTabButtonVisible="False">
                 <TabItem Header="LogViewer" IsSelected="True" ui:TabItemHelper.Icon="{x:Static ui:FluentSystemIcons.TargetEdit_24_Regular}" Background="{x:Null}" >

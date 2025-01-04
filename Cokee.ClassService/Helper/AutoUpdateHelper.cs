@@ -1,34 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+
+using Downloader;
 
 using Serilog;
 
 namespace Cokee.ClassService.Helper
 {
-    internal class AutoUpdateHelper
+    public class AutoUpdateHelper
     {
-        public static async Task<string> CheckForUpdates(string proxy = null)
+        public static DownloadService downloader = new DownloadService(new DownloadConfiguration()
+        {
+            ChunkCount = 8, // Number of file parts, default is 1
+            ParallelDownload = true, // Download parts in parallel (default is false) 
+            MaxTryAgainOnFailover = 5,// the maximum number of times to fail
+        });
+        public static async Task<string> CheckForUpdates(string? proxy = null)
         {
             try
             {
-                string localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 string remoteAddress = proxy;
-                remoteAddress += "https://gitea.bliemhax.com/kriastans/InkCanvasForClass/raw/branch/master/AutomaticUpdateVersionControl.txt";
+                remoteAddress += "https://gitee.com/cokee/classservice/raw/master/vcs.txt";
                 string remoteVersion = await GetRemoteVersion(remoteAddress);
 
                 if (remoteVersion != null)
                 {
-                    Version local = new Version(localVersion);
+                    Version local = Assembly.GetExecutingAssembly().GetName().Version;
                     Version remote = new Version(remoteVersion);
                     if (remote > local)
                     {
@@ -39,7 +44,7 @@ namespace Cokee.ClassService.Helper
                 }
                 else
                 {
-                    Log.Error("Failed to retrieve remote version."  );
+                    Log.Error("Failed to retrieve remote version.");
                     return null;
                 }
             }
@@ -63,8 +68,8 @@ namespace Cokee.ClassService.Helper
                 }
                 catch (HttpRequestException ex)
                 {
-                        Log.Error($"AutoUpdate | HTTP request error: {ex.Message}");
-                    }
+                    Log.Error($"AutoUpdate | HTTP request error: {ex.Message}");
+                }
                 catch (Exception ex)
                 {
                     Log.Error($"AutoUpdate | Error: {ex.Message}");
@@ -109,7 +114,6 @@ namespace Cokee.ClassService.Helper
 
         private static async Task DownloadFile(string fileUrl, string destinationPath)
         {
-            
             using (HttpClient client = new HttpClient())
             {
                 try

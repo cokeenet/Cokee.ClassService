@@ -32,6 +32,10 @@ namespace Cokee.ClassService.Views.Controls
             {
                 if (iccBoard != null)
                 {
+                    iccBoard.BoardSettings.NibTypeChanged += (a, b) =>
+                    {
+                        
+                    };
                     iccBoard.BoardSettings.NibHeightChanged += (a, b) =>
                     {
                         penSlider.Value = iccBoard.BoardSettings.NibHeight;
@@ -39,7 +43,11 @@ namespace Cokee.ClassService.Views.Controls
                     moreCard.DataContext = Catalog.settings;
                     iccBoard.TimeMachineStatusUpdated += (a, b) => 
                     {
-                        if(b.CanRedo)redoBtn.Visibility= Visibility.Visible;
+                        if (b.Page == iccBoard.CurrentPageItem)
+                        {
+                            if(b.CanRedo) redoBtn.Visibility = Visibility.Visible;
+                            if (b.CanUndo) undoBtn.Visibility = Visibility.Visible;
+                        }
                     };
                     iccBoard.ActiveEditingModeChanged += (a, b) =>
                     {
@@ -192,7 +200,7 @@ namespace Cokee.ClassService.Views.Controls
                 }
                 if (btn == null) return;
                 btn.Style = (Style)this.FindResource(ThemeKeys.AccentButtonStyleKey);
-                btn.Content = content;
+                if (content != null)btn.Content = content;
             }, DispatcherPriority.Normal);
         }
 

@@ -89,7 +89,6 @@ namespace Cokee.ClassService
         {
             await Dispatcher.BeginInvoke(new Action(async () =>
             {
-                //schedule = await ScheduleExt.LoadFromJsonAsync();
                 Log.Logger = new LoggerConfiguration()
                 .WriteTo.File($"D:\\DeviceLogs\\{DateTime.Now:yyyy-MM}\\{DateTime.Now:MM-dd}.txt",
                     outputTemplate:
@@ -124,7 +123,31 @@ namespace Cokee.ClassService
                 }
                 GetCalendarInfo();
                 CheckBirthDay();
+                AutoUpdateHelper.downloader.DownloadStarted += DownloadStarted;
+                AutoUpdateHelper.downloader.ChunkDownloadProgressChanged += ChunkDownloadProgressChanged; ;
+                AutoUpdateHelper.downloader.DownloadProgressChanged += DownloadProgressChanged; ;
+                AutoUpdateHelper.downloader.DownloadFileCompleted += DownloadFileCompleted; ;
             }), DispatcherPriority.Normal);
+        }
+
+        private void DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DownloadProgressChanged(object? sender, Downloader.DownloadProgressChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ChunkDownloadProgressChanged(object? sender, Downloader.DownloadProgressChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DownloadStarted(object? sender, Downloader.DownloadStartedEventArgs e)
+        {
+            
         }
 
         private void MonitorOff(object sender, RoutedEventArgs e)
