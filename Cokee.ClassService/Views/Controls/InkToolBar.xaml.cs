@@ -3,18 +3,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
 using Cokee.ClassService.Helper;
 
-using InkCanvasForClass.IccInkCanvas;
-using InkCanvasForClass.IccInkCanvas.Settings;
-
 using iNKORE.UI.WPF.Modern;
 using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
+
+using NAudio.Gui;
 
 namespace Cokee.ClassService.Views.Controls
 {
@@ -23,126 +23,123 @@ namespace Cokee.ClassService.Views.Controls
     /// </summary>
     public partial class InkToolBar : UserControl
     {
-        public IccBoard? iccBoard;
+        public InkCanvas? inkCanvas;
         public bool isPPT = false, isWhiteBoard, isEraser;
         public InkToolBar()
         {
             InitializeComponent();
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                if (iccBoard != null)
+
+                if (inkCanvas != null)
                 {
-                    iccBoard.BoardSettings.NibTypeChanged += (a, b) =>
+                    inkCanvas.DefaultDrawingAttributesReplaced += (a, b) =>
                     {
-                        
+                        penSlider.Value = b.NewDrawingAttributes.Width;
                     };
-                    iccBoard.BoardSettings.NibHeightChanged += (a, b) =>
+                    inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
+                    inkCanvas.ActiveEditingModeChanged += (a, b) =>
                     {
-                        penSlider.Value = iccBoard.BoardSettings.NibHeight;
+                        if (inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.ActiveEditingMode == InkCanvasEditingMode.EraseByStroke) isEraser = true;
+                        else isEraser = false;
                     };
                     moreCard.DataContext = Catalog.settings;
-                    iccBoard.TimeMachineStatusUpdated += (a, b) => 
+
+                    IsVisibleChanged += (a, b) =>
                     {
-                        if (b.Page == iccBoard.CurrentPageItem)
+                        if ((bool)b.NewValue && !isPPT)
                         {
-                            if(b.CanRedo) redoBtn.Visibility = Visibility.Visible;
-                            if (b.CanUndo) undoBtn.Visibility = Visibility.Visible;
+                            SetCursorMode(1);
                         }
-                    };
-                    iccBoard.ActiveEditingModeChanged += (a, b) =>
-                    {
-                        switch (iccBoard.EditingMode)
+                        else
                         {
-                            case EditingMode.NoneWithHitTest:
-                                SetBtnState(curBtn);
-                                break;
-                            case EditingMode.Select:
-                                SetBtnState(curBtn);
-                                break;
-                            case EditingMode.Writing:
-                                SetBtnState(penBtn);
-                                break;
-                            case EditingMode.GeometryErasing:
-                                SetBtnState(eraserBtn);
-                                break;
-                            case EditingMode.AreaErasing:
-                                SetBtnState(eraserBtn);
-                                break;
+                            SetCursorMode(0);
                         }
                     };
                 }
-                IsVisibleChanged += (a, b) =>
-                {
-                    if ((bool)b.NewValue && !isPPT)
-                    {
-                        SetCursorMode(1);
-                    }
-                    else
-                    {
-                        SetCursorMode(0);
-                    }
-                };
             }
         }
 
-       
+
+
+
 
         public void SetCursorMode(int mode)
         {
-            Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                if (iccBoard == null) return;
+                if (inkCanvas == null) return;
                 if (mode == 0)
                 {
                     SetBtnState(curBtn);
-                    iccBoard.EditingMode = EditingMode.NoneWithHitTest;
+                    inkCanvas.IsEnabled = false;
+                    inkCanvas.Background.Opacity = 0;
                 }
                 else if (mode == 1)
                 {
+                    inkCanvas.IsEnabled = true;
+                    inkCanvas.Background.Opacity = 0.01;
                     SetBtnState(penBtn);
-                    iccBoard.EditingMode = EditingMode.Writing;
+                    inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 }
             }, DispatcherPriority.Normal);
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (iccBoard != null)
-                iccBoard.BoardSettings.NibWidth = e.NewValue;
+            if (inkCanvas != null)
+            {
+                inkCanvas.DefaultDrawingAttributes.Height = e.NewValue;
+                inkCanvas.DefaultDrawingAttributes.Width = e.NewValue;
+            }
         }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var btn = (Button)sender;
-                if (iccBoard == null) return;
                 switch (btn.Tag.ToString())
                 {
                     case "Cursor":
                         SetBtnState(curBtn);
                         isEraser = false;
-                        iccBoard.EditingMode = EditingMode.NoneWithHitTest;
+                        if (!isWhiteBoard)
+                        {
+                            inkCanvas.Background.Opacity = 0;
+                            inkCanvas.IsEnabled = false;
+                        }
+                        else inkCanvas.EditingMode = InkCanvasEditingMode.Select;
                         break;
 
                     case "Pen":
                         if (colorFlyout.IsOpen) colorFlyout.Hide();
                         else if (penBtn.Style == this.FindResource(ThemeKeys.AccentButtonStyleKey)) colorFlyout.ShowAt(penBtn);
+                        inkCanvas.IsEnabled = true;
                         isEraser = false;
+                        if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
                         SetBtnState(penBtn);
-                        iccBoard.EditingMode = EditingMode.Writing;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                         break;
 
                     case "Eraser":
                         SetBtnState(eraserBtn);
+                        inkCanvas.IsEnabled = true;
                         isEraser = true;
-                        iccBoard.EditingMode = EditingMode.GeometryErasing;
+                        if (!isWhiteBoard) inkCanvas.Background.Opacity = 0.01;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                        //inkCanvas.EditingMode = !Catalog.settings.EraseByPointEnable ? InkCanvasEditingMode.EraseByStroke : InkCanvasEditingMode.EraseByPoint;
                         break;
 
                     case "Back":
+                        var th = Catalog.MainWindow.timeMachine.Undo();
                         try
                         {
-                            iccBoard?.Undo();
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            if (th.StrokeHasBeenCleared) inkCanvas.Strokes.Remove(th.CurrentStroke);
+                            else inkCanvas.Strokes.Add(th.CurrentStroke);
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {
@@ -151,9 +148,14 @@ namespace Cokee.ClassService.Views.Controls
                         break;
 
                     case "Redo":
+                        var th1 = Catalog.MainWindow.timeMachine.Redo();
                         try
                         {
-                            iccBoard.Redo();
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.CodeInput;
+                            if (!th1.StrokeHasBeenCleared) inkCanvas.Strokes.Add(th1.CurrentStroke);
+                            else inkCanvas.Strokes.Remove(th1.CurrentStroke);
+
+                            Catalog.MainWindow._currentCommitType = MainWindow.CommitReason.UserInput;
                         }
                         catch (Exception ex)
                         {
@@ -167,7 +169,7 @@ namespace Cokee.ClassService.Views.Controls
 
                     case "Select":
                         SetBtnState(null);
-                        iccBoard.EditingMode = EditingMode.Select;
+                        inkCanvas.EditingMode = InkCanvasEditingMode.Select;
                         break;
 
                     case "Exit":
@@ -185,9 +187,11 @@ namespace Cokee.ClassService.Views.Controls
 
         public void ReleaseInk()
         {
-            iccBoard.RemovePage();
+            inkCanvas.IsEnabled = false;
+            isEraser = false;
+            Catalog.MainWindow?.ClearStrokes(true);
+            inkCanvas.Background.Opacity = 0;
             Visibility = Visibility.Collapsed;
-            //iccBoard.Undo()
         }
 
         private void SetBtnState(Button btn,string? content=null)
@@ -204,14 +208,14 @@ namespace Cokee.ClassService.Views.Controls
             }, DispatcherPriority.Normal);
         }
 
-        private void ClearScr(object sender, MouseButtonEventArgs e) => iccBoard?.CurrentPageItem.InkCanvas.Strokes.Clear();
+        private void ClearScr(object sender, MouseButtonEventArgs e) => Catalog.MainWindow.ClearStrokes(true);
 
         private void ColorBtn(object sender, RoutedEventArgs e)
         {
             Button? button = sender as Button;
             if (button != null && sender is Button)
             {
-                iccBoard.BoardSettings.NibColor = (button.Background as SolidColorBrush).Color;
+                inkCanvas.DefaultDrawingAttributes.Color = (button.Background as SolidColorBrush).Color;
                 foreach (var item in colorGrid.Children)
                 {
                     if (item is Button)
@@ -234,11 +238,11 @@ namespace Cokee.ClassService.Views.Controls
                 {
                     case "WhiteBoard":
                         SolidColorBrush s1 = new(Color.FromRgb(0x0E, 0x25, 0x1D));
-                         s1.Opacity = 1;SolidColorBrush s2 = new(Colors.White);
-                       
+                        SolidColorBrush s2 = new(Colors.White);
+                        s1.Opacity = 1;
                         s2.Opacity = 0.01;
-                        if (En) { iccBoard.Background = s1; isWhiteBoard = true; }
-                        else { iccBoard.Background = s2; isWhiteBoard = false; }
+                        if (En) { inkCanvas.Background = s1; isWhiteBoard = true; }
+                        else { inkCanvas.Background = s2; isWhiteBoard = false; }
                         break;
 
                     case "EraseByShape":

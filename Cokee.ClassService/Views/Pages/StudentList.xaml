@@ -23,10 +23,15 @@
                 <Controls:StudentsViewer x:Name="Students" Columns="7"
                 d:ItemsSource="{d:SampleData ItemCount=61}" />
             </Controls:ScrollViewerEx>
-            <StatusBar Grid.Row="1" Margin="5">
+            <StatusBar Grid.Row="1" Margin="10,5,5,5" Background="{x:Null}">
+                <StatusBarItem>
+                    <TextBlock d:Text="阜阳师大附中" x:Name="schoolName" />
+                </StatusBarItem>
+                <Separator/>
                 <StatusBarItem>
                     <TextBlock d:Text="高一一班" x:Name="className" />
                 </StatusBarItem>
+                <Separator/>
                 <StatusBarItem>
                     <TextBlock d:Text="共 56 名学生" x:Name="stuCount" HorizontalAlignment="Left" />
                 </StatusBarItem>
@@ -43,8 +48,7 @@
             Width="500"
             x:Name="randomres" />
         <Controls:NewStudent x:Name="newstu"
-            Height="400"
-            Background="{ui:ThemeResource SystemColorButtonFaceColor}"
+            Height="450"
             Visibility="Collapsed"
             Width="500" />
         <Controls:StudentInfo

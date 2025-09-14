@@ -23,6 +23,9 @@ namespace Cokee.ClassService.Shared
         public string? HeadPicUrl { get; set; } = "/Resources/head.jpg";
         public string? Password { get; set; }
         public PasswordType? PasswordType { get; set; }
+        public int Height { get; set; } = 0; // cm
+        public Subject ProSubject { get; set; } = Subject.None;
+        public Subject WeakSubject { get; set; } = Subject.None;
         public int EnrollClassID { get; set; }
 
         // 外键
@@ -34,12 +37,25 @@ namespace Cokee.ClassService.Shared
     {
         None,
         Boy,
-        Girl
+        Girl 
     }
 
     public enum Sex
     {
         Girl,
         Boy
+    }
+    public enum Subject 
+    {
+        None,
+        Chinese,
+        Math,
+        English,
+        Physics,
+        Chemistry,
+        Biology,
+        Politics,
+        History,
+        Geography
     }
 }

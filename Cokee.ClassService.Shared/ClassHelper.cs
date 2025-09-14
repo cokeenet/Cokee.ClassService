@@ -32,7 +32,8 @@ public enum GradeType
 {
     Primary1, Primary2, Primary3, Primary4, Primary5, Primary6,
     Mid1, Mid2, Mid3,
-    High1, High2, High3
+    High1, High2, High3,
+    College1, College2, College3, College4
 }
 
 public class ClassInfoRequest

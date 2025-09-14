@@ -94,7 +94,7 @@ namespace Cokee.ClassService.Helper
                     return true;
                 }
 
-                string downloadUrl = $"{proxy}https://github.com/ChangSakura/Ink-Canvas/releases/download/v{version}/Ink.Canvas.Annotation.V{version}.Setup.exe";
+                string downloadUrl = $"{proxy}https://gitee.com/cokee/classservice/releases/download/v{version}/Ink.Canvas.Annotation.V{version}.Setup.exe";
 
                 SaveDownloadStatus(false);
                 await DownloadFile(downloadUrl, $"{updatesFolderPath}\\Ink.Canvas.Annotation.V{version}.Setup.exe");

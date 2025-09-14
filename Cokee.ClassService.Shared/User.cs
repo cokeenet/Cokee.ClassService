@@ -22,7 +22,7 @@ public class User
     public string Password { get; set; }
 
     [JsonIgnore]
-    public PasswordType PasswordType { get; set; }
+    public PasswordType PasswordType { get; set; } = PasswordType.Hash;
 
     public string SchoolName { get; set; }
 

@@ -122,7 +122,126 @@
             </Button>
             <ikw:XamlCachedElements>
                 <ui:Flyout x:Name="colorFlyout" Placement="Top" ShowMode="Auto">
-                    
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Grid x:Name="colorGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+FontSize="16"
+Grid.ColumnSpan="2"
+Grid.Row="0"
+Margin="5"
+Text="色板" HorizontalAlignment="Left" />
+                            <StackPanel Grid.Row="1" Grid.RowSpan="3">
+                                <Slider
+    HorizontalAlignment="Center"
+    Maximum="18"
+    Minimum="1"
+    Orientation="Vertical"
+    Value="3.5"
+    ValueChanged="Slider_ValueChanged"
+    x:Name="penSlider" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="90" />
+                                <TextBlock
+    FontSize="12"
+    Margin="5"
+    Text="粗细" />
+                            </StackPanel>
+                            <Button
+Background="Red"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50">
+                                <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.CheckmarkCircle_48_Regular}" />
+                            </Button>
+                            <Button
+Background="CornflowerBlue"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF306C00"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="1"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="Black"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF321EB5"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF66D552"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="2"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="White"
+Click="ColorBtn"
+FontSize="17"
+Foreground="Black"
+Grid.Column="3"
+Grid.Row="1"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FFFF8B00"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="3"
+Grid.Row="2"
+Height="30"
+Margin="5"
+Width="50" />
+                            <Button
+Background="#FF4EA1B7"
+Click="ColorBtn"
+FontSize="17"
+Grid.Column="3"
+Grid.Row="3"
+Height="30"
+Margin="5"
+Width="50" />
+                        </Grid>
+                    </Border>
                 </ui:Flyout>
             </ikw:XamlCachedElements>
         </Grid>

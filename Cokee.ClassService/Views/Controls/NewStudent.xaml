@@ -7,8 +7,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="500">
-    <Border VerticalAlignment="Stretch" Style="{StaticResource CardBorderStyle}">
+             d:DesignHeight="450" d:DesignWidth="500">
+    <Border Style="{StaticResource ThemeBackground}">
         <Grid Margin="0,10,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -17,10 +17,35 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock Text="批量添加" HorizontalAlignment="Center" FontSize="18" VerticalAlignment="Center" Margin="5" />
-            <TextBlock Text="说明:直接复制Excel列表 第一列姓名 第二列性别 第三列生日" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" Margin="5" />
-            <ScrollViewer Grid.Row="2">
-                <TextBox x:Name="stutb" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap" />
-            </ScrollViewer>
+            <TabControl Grid.Row="1" ui:TabControlHelper.IsAddTabButtonVisible="False">
+                <TabItem Header="文本导入-Excel复制">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="说明:直接复制Excel列表 第一列姓名 第二列性别 第三列生日" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" Margin="5" />
+                    <ScrollViewer Grid.Row="2">
+                            <TextBox x:Name="stutb" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="导入Excel">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="说明:自动识别列，列名需要为姓名，性别，生日，身高(可选)，职位(可选)" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" Margin="5" />
+                        <ScrollViewer Grid.Row="2">
+                            <TextBox x:Name="" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            
             <Grid Grid.Row="3" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />

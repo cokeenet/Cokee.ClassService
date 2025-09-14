@@ -5,8 +5,6 @@
 		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>2.9.347.1</AssemblyVersion>
-		<FileVersion>2.9.347.1</FileVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
 		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
@@ -22,7 +20,16 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-
+	<PropertyGroup>
+		<GenerateInstaller Condition="'$(GenerateInstaller)' == ''">false</GenerateInstaller>
+		<InnoSetupPath Condition="'$(InnoSetupPath)' == ''">E:\Program Files (x86)\Inno Setup 6\ISCC.exe</InnoSetupPath>
+		<ISSFilePath Condition="'$(ISSFilePath)' == ''">$(MSBuildProjectDirectory)\setup.iss</ISSFilePath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Version>2.9.365.24225</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<WarningLevel>9999</WarningLevel>
 	</PropertyGroup>
@@ -49,9 +56,6 @@
 	<ItemGroup>
 	  <Compile Remove="Views\Pages\Settings\MainSetting - 复制.xaml.cs" />
 	  <Compile Remove="Views\Windows\UserLogin.xaml.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Page Remove="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	  <Page Remove="Views\Windows\UserLogin.xaml" />
 	</ItemGroup>
@@ -201,6 +205,11 @@
 			<SubType>Code</SubType>
 		</Compile>
 	</ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'ReleaseWithInstaller'">
+		<OutputPath>bin\ReleaseWithInstaller\</OutputPath>
+		<GenerateInstaller>true</GenerateInstaller>
+	</PropertyGroup>
 
+	
 	<Import Project="..\Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems" Label="Shared" />
 </Project>

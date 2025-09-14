@@ -38,7 +38,7 @@ namespace Cokee.ClassService.Views.Pages
                     {
                         var d = (DriveInfo)diskComboBox.SelectedItem;
 
-                        dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
+                     //   dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(d.Name);
                     });
                     break;
 
@@ -53,7 +53,7 @@ namespace Cokee.ClassService.Views.Pages
                             {
                                 Directory.Delete(item.Path, true);
                                 Catalog.ShowInfo($"Deleted v{item.Version} dir {item.Name} with {item.Files} files.");
-                                dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
+                             //   dirlist.ItemsSource = Catalog.CapServiceHost.EnumPicDirs(di.Name);
                             });
                         }
                         catch (Exception ex)
@@ -66,7 +66,7 @@ namespace Cokee.ClassService.Views.Pages
 
                 case "3":
                     var x = (DriveInfo)diskComboBox.SelectedItem;
-                    Catalog.CapServiceHost.StartTask(x.Name);
+                   // Catalog.CapServiceHost.StartTask(x.Name);
                     break;
 
                 case "4":
@@ -88,10 +88,10 @@ namespace Cokee.ClassService.Views.Pages
                     }); break;
 
                 case "5":
-                    Catalog.CapServiceHost.DoCapAction();
+                  //  Catalog.CapServiceHost.DoCapAction();
                     break;
                 case "6":
-                    Catalog.CapServiceHost.CancleTask();
+                  //  Catalog.CapServiceHost.CancleTask();
                     break;
             }
         }
@@ -127,7 +127,7 @@ namespace Cokee.ClassService.Views.Pages
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                captime.Text = $"ActTime:{Catalog.CapServiceHost.GetLastCapTime()?.ToString("HH:mm:ss")}";
+                //captime.Text = $"ActTime:{Catalog.CapServiceHost.GetLastCapTime()?.ToString("HH:mm:ss")}";
             });
         }
     }

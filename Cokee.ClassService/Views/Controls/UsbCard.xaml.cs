@@ -177,11 +177,11 @@ namespace Cokee.ClassService.Views.Controls
 
         private void SymbolIcon_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (File.Exists(disk + "picDisk"))
+           /* if (File.Exists(disk + "picDisk"))
             {
                 Catalog.CapServiceHost.StartTask(disk);
             }
-            else Catalog.ShowInfo("nonTag");
+            else Catalog.ShowInfo("nonTag");*/
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
