@@ -10,12 +10,13 @@
         <ResourceDictionary>
             <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
             <FontFamily x:Key="Lato">pack://application:,,,/;component/Fonts/#Lato</FontFamily>
+            <FontFamily x:Key="ZhuziAYuan">pack://application:,,,/;component/Fonts/#ZhuziAYuan</FontFamily>
 
             <Style TargetType="ui:IconAndText">
                 <Setter Property="Margin" Value="1" />
             </Style>
             <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Lato" />
+                <Setter Property="FontFamily" Value="ZhuziAYuan" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
             <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.ExpanderCardStyleKey}}" TargetType="Expander">

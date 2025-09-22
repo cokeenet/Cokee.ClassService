@@ -21,7 +21,7 @@ namespace Cokee.ClassService.Helper
         {
             ChunkCount = 8, // Number of file parts, default is 1
             ParallelDownload = true, // Download parts in parallel (default is false) 
-            MaxTryAgainOnFailover = 5,// the maximum number of times to fail
+            MaxTryAgainOnFailure = 5,// the maximum number of times to fail
         });
         public static async Task<string> CheckForUpdates(string? proxy = null)
         {

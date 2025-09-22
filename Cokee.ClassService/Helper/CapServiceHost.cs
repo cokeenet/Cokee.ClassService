@@ -39,12 +39,12 @@ namespace Cokee.ClassService.Helper
         }
     }
 
-    public class CapServiceHost
+    /*public class CapServiceHost
     {
         public BackgroundWorker picBackgroundWorker = new BackgroundWorker();
         public Stopwatch sw = new Stopwatch();
         public int copieditems = 0, copieddirs = 0;
-        public static CapService? service;
+        //public static CapService? service;
 
         public CapServiceHost()
         {
@@ -75,24 +75,25 @@ namespace Cokee.ClassService.Helper
 
         public void StartAgent()
         {
-            service = new CapService();
-            service.Start();
+            //service = new CapService();
+            //service.Start();
         }
 
         public void StopAgent()
         {
-            service?.Dispose();
-            service = null;
+            //service?.Dispose();
+            //service = null;
         }
         public void DoCapAction()
         {
-            if (service == null)
-                service.isfast = true;
-            service?.CapAction();
+            //if (service == null)
+             //   service.isfast = true;
+            //service?.CapAction();
         }
         public DateTime? GetLastCapTime()
         {
-            return service?.lastCapTime;
+            return DateTime.Now;
+            //return service?.lastCapTime;
         }
 
         public List<PicDirectoryInfo> EnumPicDirs(string disk = "D:\\")
@@ -188,5 +189,5 @@ namespace Cokee.ClassService.Helper
             Log.Information($"All Done. IsCancelled:{e.Cancel}");
             e.Result = $"{copieddirs} dirs,copied {copieditems - existed} items";
         }
-    }
+    }*/
 }

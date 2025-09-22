@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationIcon>head.ico</ApplicationIcon>
-		<Copyright>Copyright ©2024 Cokee Technologies.</Copyright>
+		<Copyright>Copyright ©2025 Cokee Technologies.</Copyright>
 		<Description>A Student Manage Software for your Classroom</Description>
 		<Authors>Cokee</Authors>
 		<Title>Cokee.ClassService</Title>
@@ -54,8 +54,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Helper\CapService.cs" />
 	  <Compile Remove="Views\Pages\Settings\MainSetting - 复制.xaml.cs" />
 	  <Compile Remove="Views\Windows\UserLogin.xaml.cs" />
+	  <None Remove="Resources\ZhuziAYuan.TTF" />
 	  <Page Remove="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	  <Page Remove="Views\Windows\UserLogin.xaml" />
 	</ItemGroup>
@@ -110,30 +112,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AForge" Version="2.2.5" />
-		<PackageReference Include="AForge.Imaging" Version="2.2.5" />
-		<PackageReference Include="AForge.Video" Version="2.2.5" />
-		<PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
-		<PackageReference Include="Downloader" Version="3.2.1" />
-		<PackageReference Include="ILRepack" Version="2.0.35">
+		<PackageReference Include="Downloader" Version="4.0.3" />
+		<PackageReference Include="ILRepack" Version="2.0.44">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
-		<PackageReference Include="Lierda.WPFHelper" Version="1.0.3" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Sentry" Version="4.13.0" />
-		<PackageReference Include="Sentry.Profiling" Version="4.13.0" />
-		<PackageReference Include="Sentry.Serilog" Version="4.13.0" />
-		<PackageReference Include="Serilog" Version="4.1.1-dev-02318" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10398" />
-		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="Sentry" Version="5.15.0" />
+		<PackageReference Include="Sentry.Profiling" Version="5.15.0" />
+		<PackageReference Include="Sentry.Serilog" Version="5.15.0" />
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-		<PackageReference Include="Vanara.PInvoke.Magnification" Version="4.0.4" />
-		<PackageReference Include="Vanara.PInvoke.Shell32" Version="4.0.4" />
-		<PackageReference Include="Vanara.PInvoke.User32" Version="4.0.4" />
+		<PackageReference Include="Vanara.PInvoke.Magnification" Version="4.2.1" />
+		<PackageReference Include="Vanara.PInvoke.Shell32" Version="4.2.1" />
+		<PackageReference Include="Vanara.PInvoke.User32" Version="4.2.1" />
 		<PackageReference Include="WpfScreenHelper" Version="2.1.1" />
 	</ItemGroup>
 
@@ -152,6 +149,7 @@
 	<ItemGroup>
 		<Content Include="head.ico" />
 		<EmbeddedResource Include="Resources\HarmonyOS_Sans.ttf" />
+		<EmbeddedResource Include="Resources\ZhuziAYuan.ttf" />
 		<Resource Include="Resources\CardBackground\1.png" />
 		<Resource Include="Resources\CardBackground\3.jpg" />
 		<Resource Include="Resources\head.jpg" />
@@ -168,6 +166,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="Helper\CapService.cs" />
 	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml.cs">
 	    <SubType>Code</SubType>
@@ -179,10 +178,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\InkCanvasForClass.IccInkCanvas\InkCanvasForClass.IccInkCanvas.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Pages\SeatManage.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<Compile Update="Views\Pages\CoursesManage.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
@@ -204,6 +212,20 @@
 		<Compile Update="Views\Windows\CourseMgr.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'ReleaseWithInstaller'">
 		<OutputPath>bin\ReleaseWithInstaller\</OutputPath>

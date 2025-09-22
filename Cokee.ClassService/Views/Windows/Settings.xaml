@@ -23,6 +23,7 @@
          IsFooterSeparatorVisible="{x:Null}"
          IsTitleBarAutoPaddingEnabled="False"
          PaneDisplayMode="Left"
+         IsPaneOpen="False"
          SelectionChanged="OnNavigationViewSelectionChanged">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="首选项" IsSelected="True">

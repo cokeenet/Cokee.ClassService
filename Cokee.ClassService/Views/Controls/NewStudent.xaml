@@ -40,7 +40,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="说明:自动识别列，列名需要为姓名，性别，生日，身高(可选)，职位(可选)" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Center" Grid.Row="1" Margin="5" />
                         <ScrollViewer Grid.Row="2">
-                            <TextBox x:Name="" MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap" />
+                            <TextBox MinHeight="250" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"/>
                         </ScrollViewer>
                     </Grid>
                 </TabItem>

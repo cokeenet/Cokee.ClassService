@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Cokee.ClassService.Helper;
-using Lierda.WPFHelper;
+//using Lierda.WPFHelper;
 using Sentry;
 using Sentry.Profiling;
 
@@ -17,7 +17,7 @@ namespace Cokee.ClassService
     /// </summary>
     public partial class App : Application
     {
-        LierdaCracker cracker = new LierdaCracker();
+        //LierdaCracker cracker = new LierdaCracker();
         protected override void OnStartup(StartupEventArgs e)
         {
             //cracker.Cracker();

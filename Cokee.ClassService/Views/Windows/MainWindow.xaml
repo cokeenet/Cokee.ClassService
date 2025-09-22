@@ -347,7 +347,7 @@
                             Foreground="Tomato"
                             Grid.Row="1" x:Name="slogan"
                             Margin="5" FontSize="14"
-                            Text="CokeeTech 秋坂科技">
+                            Text="CokeeTech 秋坂科技" FontFamily="Agency FB">
                             <TextBlock.Effect>
                                 <DropShadowEffect Opacity="0.3" />
                             </TextBlock.Effect></TextBlock>
