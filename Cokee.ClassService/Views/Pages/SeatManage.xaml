@@ -1,6 +1,6 @@
 ﻿<Page
 
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Height="540"
     Title="SeatManage"
     Width="900"

@@ -54,7 +54,8 @@ namespace Cokee.ClassService
             await Dispatcher.InvokeAsync(() =>
             {
                 Time.Text = DateTime.Now.ToString("HH:mm:ss");
-                Countdown.Text = $"{Catalog.settings.CountDownDate.Subtract(DateTime.Now).TotalDays} 天";
+                if(Catalog.settings.CountDownDate.HasValue)
+                    Countdown.Text = $"{Catalog.settings.CountDownDate?.Subtract(DateTime.Now).TotalDays} 天";
                 longTime.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
             }, DispatcherPriority.Background);
         }

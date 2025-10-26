@@ -5,7 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uix="http://schemas.inkore.net/lib/ui/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" FontFamily="HarmonyOS_Sans" Visibility="Collapsed" d:Visibility="Visible">
+             mc:Ignorable="d" FontFamily="Lato" Visibility="Collapsed" d:Visibility="Visible">
     <Border  BorderBrush="#FFE0BFBF" BorderThickness="2,2,2,2" CornerRadius="8" Style="{StaticResource ThemeBackground}" Padding="0"
               x:Name="usb" Grid.Column="1" VerticalAlignment="Stretch">
         <Border.RenderTransform>

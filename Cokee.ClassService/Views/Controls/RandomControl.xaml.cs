@@ -111,7 +111,7 @@ namespace Cokee.ClassService.Views.Controls
         private async void ConfirmBtn(object sender, RoutedEventArgs e)
         {
             Catalog.ToggleControlVisible(this);
-            var a = await StudentExtensions.GetRandom(await StudentExtensions.Load(), randomArgs);
+            var a = await StudentExtensions.GetRandomAsync(await StudentExtensions.LoadAsync(), randomArgs);
             if (RandomResultControl != null)
             {
                 RandomResultControl.ItemsSource = a;

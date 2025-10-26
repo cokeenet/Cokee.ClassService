@@ -27,8 +27,8 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<Version>2.9.365.24225</Version>
-		<FileVersion>$(Version)</FileVersion>
-		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>2.9.376.9429</FileVersion>
+		<AssemblyVersion>2.9.376.9429</AssemblyVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<WarningLevel>9999</WarningLevel>
@@ -57,7 +57,7 @@
 	  <Compile Remove="Helper\CapService.cs" />
 	  <Compile Remove="Views\Pages\Settings\MainSetting - 复制.xaml.cs" />
 	  <Compile Remove="Views\Windows\UserLogin.xaml.cs" />
-	  <None Remove="Resources\ZhuziAYuan.TTF" />
+	  <None Remove="Resources\Lato.ttf" />
 	  <Page Remove="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	  <Page Remove="Views\Windows\UserLogin.xaml" />
 	</ItemGroup>
@@ -117,14 +117,16 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
 		<PackageReference Include="iNKORE.UI.WPF.Emojis" Version="0.3.6.4" />
+		<PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.10.1" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Sentry" Version="5.15.0" />
-		<PackageReference Include="Sentry.Profiling" Version="5.15.0" />
-		<PackageReference Include="Sentry.Serilog" Version="5.15.0" />
-		<PackageReference Include="Serilog" Version="4.3.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="Sentry" Version="5.16.1" />
+		<PackageReference Include="Sentry.Profiling" Version="5.16.1" />
+		<PackageReference Include="Sentry.Serilog" Version="5.16.1" />
+		<PackageReference Include="Serilog" Version="4.3.1-dev-02385" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.3-dev-02320" />
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
@@ -135,21 +137,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="iNKORE.UI.WPF">
-		  <HintPath>Dlls\iNKORE.UI.WPF.dll</HintPath>
-		</Reference>
-		<Reference Include="iNKORE.UI.WPF.Modern">
-		  <HintPath>Dlls\iNKORE.UI.WPF.Modern.dll</HintPath>
-		</Reference>
-		<Reference Include="iNKORE.UI.WPF.Modern.Controls">
-		  <HintPath>Dlls\iNKORE.UI.WPF.Modern.Controls.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
 		<Content Include="head.ico" />
 		<EmbeddedResource Include="Resources\HarmonyOS_Sans.ttf" />
-		<EmbeddedResource Include="Resources\ZhuziAYuan.ttf" />
+		<EmbeddedResource Include="Resources\Lato.ttf" />
 		<Resource Include="Resources\CardBackground\1.png" />
 		<Resource Include="Resources\CardBackground\3.jpg" />
 		<Resource Include="Resources\head.jpg" />

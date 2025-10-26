@@ -2,7 +2,7 @@
     MaxWidth="750"
     MinWidth="390"
     MaxHeight="500"
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Title="猫圈圈 | 随机抽取"
     Topmost="True"
     WindowStartupLocation="CenterScreen"

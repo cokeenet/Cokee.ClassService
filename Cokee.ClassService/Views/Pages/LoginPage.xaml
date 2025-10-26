@@ -1,5 +1,5 @@
 ﻿<Page
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Height="600"
     Title="LoginPage"
     Width="500"

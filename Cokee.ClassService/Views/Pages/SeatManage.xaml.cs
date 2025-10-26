@@ -45,7 +45,7 @@ namespace Cokee.ClassService.Views.Pages
                         Students.StudentClick += Card_MouseDown;
                         Students.StudentRightClick += Card_MouseRightButtonDown;
                         studentInfo.EditStudent += StudentInfo_EditStudent;
-                        var a = await StudentExtensions.Load();
+                        var a = await StudentExtensions.LoadAsync();
                         students = new ObservableCollection<Student>(a.Students);
                         if (students != null)
                         {
@@ -67,7 +67,7 @@ namespace Cokee.ClassService.Views.Pages
 
         public async void SaveData()
         {
-            await StudentExtensions.Save(students.ToList());
+            await StudentExtensions.SaveAsync(students.ToList());
             //students = new ObservableCollection<Student>();
             //Students.ItemsSource = students;
             Catalog.ShowInfo("数据已保存.");

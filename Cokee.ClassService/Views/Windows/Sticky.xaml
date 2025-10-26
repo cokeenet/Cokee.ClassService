@@ -1,41 +1,52 @@
 ﻿<Window
-    FontFamily="HarmonyOS_Sans"
-    Height="695"
-    Title="Sticky"
-    Topmost="True"
-    Width="1150"
-    WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d"
-    ui:ThemeManager.IsThemeAware="True"
-    ui:WindowHelper.SystemBackdropType="Mica"
-    ui:WindowHelper.UseModernWindowStyle="True"
     x:Class="Cokee.ClassService.Views.Windows.Sticky"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Cokee.ClassService.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    Title="梦想板"
+    Width="1150"
+    Height="695"
+    ui:ThemeManager.IsThemeAware="True"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    FontFamily="Lato"
+    Topmost="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Grid Margin="3,3,3,3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button VerticalAlignment="Top">
-            <ui:IconAndText Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}" Content="添加" Orientation="Vertical" />
+        <Button VerticalAlignment="Top" Margin="5">
+            <ui:IconAndText
+                Content="添加"
+                Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}"
+                Orientation="Vertical" />
         </Button>
-        <local:ScrollViewerEx
-            Grid.Column="1"
+
+        <local:PostNote
+            x:Name="postNote"
             HorizontalAlignment="Center"
-            HorizontalScrollBarVisibility="Auto"
-            Margin="0"
             VerticalAlignment="Center"
-            x:Name="Sclview">
-            <ItemsControl ui:ScrollViewerHelper.AutoHideScrollBars="False"
-                ItemsSource="{Binding StickyItems}"
+            Background="{ui:AcrylicBrush}"
+            Visibility="Collapsed" />
+        <local:ScrollViewerEx
+            x:Name="Sclview"
+            Grid.Column="1"
+            Margin="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            HorizontalScrollBarVisibility="Auto">
+            <ItemsControl
+                x:Name="Stickys"
                 VerticalAlignment="Center"
                 d:ItemsSource="{d:SampleData ItemCount=50}"
-                x:Name="Stickys">
+                ui:ScrollViewerHelper.AutoHideScrollBars="False"
+                ItemsSource="{Binding StickyItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -43,7 +54,10 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:StickyNote DataContext="{Binding Name}" Margin="10" RenderTransformOrigin="0.5,0.5">
+                        <local:StickyNote
+                            Margin="10"
+                            DataContext="{Binding Name}"
+                            RenderTransformOrigin="0.5,0.5">
                             <local:StickyNote.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
@@ -56,8 +70,11 @@
         </local:ScrollViewerEx>
         <StatusBar
             Grid.Column="1"
-            VerticalAlignment="Bottom">
-            <StatusBarItem Content="共 -- 人" x:Name="count" />
+            Margin="10"
+            VerticalAlignment="Bottom"
+            Background="{x:Null}">
+            <StatusBarItem x:Name="count" Content="共 -- 人" />
         </StatusBar>
+
     </Grid>
 </Window>

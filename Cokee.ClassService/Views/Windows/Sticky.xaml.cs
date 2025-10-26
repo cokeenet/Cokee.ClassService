@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 using Cokee.ClassService.Helper;
@@ -28,18 +29,24 @@ namespace Cokee.ClassService.Views.Windows
 
         public void LoadSticky()
         {
-            List<StickyItem> list = new List<StickyItem>();
-            var dir = new DirectoryInfo(Catalog.INK_DIR);
-            foreach (FileInfo item in dir.GetFiles("*.ink"))
+            Dispatcher.Invoke(new Action(() =>
             {
-                list.Add(new StickyItem(item.Name));
-            }
-            Sclview.Visibility = Visibility.Visible;
-            Stickys.ItemsSource = list;
+                List<StickyItem> list = new List<StickyItem>();
+                var dir = new DirectoryInfo(Catalog.INK_DIR);
+                var a = dir.GetFiles("*.ink");
+                count.Content = $"共{a.Length}人";
+                foreach (FileInfo item in a)
+                {
+                    list.Add(new StickyItem(item.Name));
+                }
+                Sclview.Visibility = Visibility.Visible;
+                Stickys.ItemsSource = list;
+            }));
         }
 
         private void NavigationItem_Click(object sender, RoutedEventArgs e)
         {
+            Catalog.ToggleControlVisible(postNote);
         }
     }
 }

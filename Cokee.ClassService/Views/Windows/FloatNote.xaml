@@ -1,5 +1,5 @@
 ﻿<Window
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Height="505"
     Title="猫圈圈 | FloatNote"
     Topmost="True"

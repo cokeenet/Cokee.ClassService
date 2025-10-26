@@ -1,6 +1,6 @@
 ﻿<ui:Page
     DataContext="{Binding AppSettings}"
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Title="Settings"
     d:DesignHeight="900"
     d:DesignWidth="511"

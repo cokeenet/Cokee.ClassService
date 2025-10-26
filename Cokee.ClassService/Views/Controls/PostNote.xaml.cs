@@ -33,7 +33,7 @@ namespace Cokee.ClassService.Views.Controls
             InitializeComponent();
             if (!DesignerProperties.GetIsInDesignMode(this)) IsVisibleChanged += async (a, c) =>
             {
-                var b = await StudentExtensions.Load();
+                var b = await StudentExtensions.LoadAsync();
                 List<Student> students = new List<Student>(b.Students);
                 List<string> str = new List<string>();
                 foreach (var item in students)

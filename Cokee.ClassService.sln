@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33815.320
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11121.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cokee.ClassService", "Cokee.ClassService\Cokee.ClassService.csproj", "{8EF10612-ADF8-4A1F-A08A-9920F07D0835}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cokee.ClassService.Server", "Cokee.ClassService.Server\Cokee.ClassService.Server.csproj", "{1328E4EC-8BF2-46F4-A830-334FE0156669}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Cokee.ClassService.Shared", "Cokee.ClassService.Shared\Cokee.ClassService.Shared.shproj", "{FDDD91A5-8ABA-44FF-AF08-9AB8EE0B4EE4}"
 EndProject
@@ -25,14 +23,6 @@ Global
 		{8EF10612-ADF8-4A1F-A08A-9920F07D0835}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EF10612-ADF8-4A1F-A08A-9920F07D0835}.Release|x64.ActiveCfg = Release|x64
 		{8EF10612-ADF8-4A1F-A08A-9920F07D0835}.Release|x64.Build.0 = Release|x64
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Debug|x64.Build.0 = Debug|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Release|x64.ActiveCfg = Release|Any CPU
-		{1328E4EC-8BF2-46F4-A830-334FE0156669}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,7 +31,6 @@ Global
 		SolutionGuid = {4D8AD1A9-3F20-46FE-9A79-F0EE6742B956}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems*{1328e4ec-8bf2-46f4-a830-334fe0156669}*SharedItemsImports = 5
 		Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems*{8ef10612-adf8-4a1f-a08a-9920f07d0835}*SharedItemsImports = 5
 		Cokee.ClassService.Shared\Cokee.ClassService.Shared.projitems*{fddd91a5-8aba-44ff-af08-9ab8ee0b4ee4}*SharedItemsImports = 13
 	EndGlobalSection

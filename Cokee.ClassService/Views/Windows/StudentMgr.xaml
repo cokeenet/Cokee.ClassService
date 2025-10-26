@@ -1,5 +1,5 @@
 ﻿<Window
-    FontFamily="HarmonyOS_Sans"
+    FontFamily="Lato"
     Height="625"
     Title="猫圈圈 | 学生管理"
     Topmost="True"

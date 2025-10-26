@@ -59,19 +59,19 @@ namespace Cokee.ClassService.Views.Pages
             switch (((Button)sender).Tag)
             {
                 case "0":
-                    Catalog.ReleaseComObject(mainWindow.wordApplication, "Word");
-                    mainWindow.wordApplication = null;
+                    Catalog.ReleaseComObject(mainWindow.WordApplication, "Word");
+                    mainWindow.WordApplication = null;
 
                     break;
 
                 case "1":
-                    Catalog.ReleaseComObject(mainWindow.excelApplication, "Excel");
-                    mainWindow.excelApplication = null;
+                    Catalog.ReleaseComObject(mainWindow.ExcelApplication, "Excel");
+                    mainWindow.ExcelApplication = null;
                     break;
 
                 case "2":
-                    Catalog.ReleaseComObject(mainWindow.pptApplication, "PPT");
-                    mainWindow.pptApplication = null;
+                    Catalog.ReleaseComObject(mainWindow.PptApplication, "PPT");
+                    mainWindow.PptApplication = null;
                     break;
             }
         }
