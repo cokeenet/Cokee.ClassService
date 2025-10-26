@@ -3,6 +3,8 @@
 using Cokee.ClassService.Helper;
 using Cokee.ClassService.Views.Pages;
 
+using iNKORE.UI.WPF.Modern.Controls;
+
 namespace Cokee.ClassService.Views.Windows
 {
     /// <summary>
@@ -22,13 +24,32 @@ namespace Cokee.ClassService.Views.Windows
 
         private void OnNavigationViewSelectionChanged(iNKORE.UI.WPF.Modern.Controls.NavigationView sender, iNKORE.UI.WPF.Modern.Controls.NavigationViewSelectionChangedEventArgs args)
         {
-
-            if (args.IsSettingsSelected)
+            
+            if (args.SelectedItem is NavigationViewItem)
             {
-                if (rootFrame.CurrentSourcePageType != typeof(MainSetting))
+                var a = args.SelectedItem as NavigationViewItem;
+                switch (a?.Tag)
                 {
-                    rootFrame.Navigate(typeof(MainSetting));
+                    case "0":
+                        if (rootFrame.CurrentSourcePageType != typeof(MainSetting))
+                        {
+                            rootFrame.Navigate(typeof(MainSetting));
+                        }
+                        break;
+                    case "1":
+                        if (rootFrame.CurrentSourcePageType != typeof(About))
+                        {
+                            rootFrame.Navigate(typeof(About));
+                        }
+                        break;
+                    default:
+                        if (rootFrame.CurrentSourcePageType != typeof(MainSetting))
+                        {
+                            rootFrame.Navigate(typeof(MainSetting));
+                        }
+                        break;
                 }
+                
             }
             else
             {/*

@@ -27,8 +27,8 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<Version>2.9.365.24225</Version>
-		<FileVersion>2.9.376.9429</FileVersion>
-		<AssemblyVersion>2.9.376.9429</AssemblyVersion>
+		<FileVersion>2.9.384.9430</FileVersion>
+		<AssemblyVersion>2.9.384.9430</AssemblyVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<WarningLevel>9999</WarningLevel>
@@ -58,7 +58,6 @@
 	  <Compile Remove="Views\Pages\Settings\MainSetting - 复制.xaml.cs" />
 	  <Compile Remove="Views\Windows\UserLogin.xaml.cs" />
 	  <None Remove="Resources\Lato.ttf" />
-	  <Page Remove="Views\Pages\Settings\MainSetting - 复制.xaml" />
 	  <Page Remove="Views\Windows\UserLogin.xaml" />
 	</ItemGroup>
 
@@ -157,10 +156,6 @@
 
 	<ItemGroup>
 	  <None Include="Helper\CapService.cs" />
-	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml" />
-	  <None Include="Views\Pages\Settings\MainSetting - 复制.xaml.cs">
-	    <SubType>Code</SubType>
-	  </None>
 	  <None Include="Views\Windows\UserLogin.xaml" />
 	  <None Include="Views\Windows\UserLogin.xaml.cs">
 	    <SubType>Code</SubType>
@@ -183,6 +178,9 @@
 		</Compile>
 		<Compile Update="Views\Pages\CoursesManage.xaml.cs">
 			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\Pages\Settings\About.xaml.cs">
+		  <SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\Pages\Settings\MainSetting.xaml.cs">
 			<SubType>Code</SubType>

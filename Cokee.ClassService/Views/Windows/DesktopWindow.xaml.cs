@@ -56,7 +56,8 @@ namespace Cokee.ClassService
                 Time.Text = DateTime.Now.ToString("HH:mm:ss");
                 if(Catalog.settings.CountDownDate.HasValue)
                     Countdown.Text = $"{Catalog.settings.CountDownDate?.Subtract(DateTime.Now).TotalDays} 天";
-                longTime.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
+                else Countdown.Visibility=Visibility.Collapsed;
+                    longTime.Text = DateTime.Now.ToString("yyyy年MM月dd日 ddd");
             }, DispatcherPriority.Background);
         }
 

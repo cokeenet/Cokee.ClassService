@@ -3,6 +3,7 @@ using System.Windows.Ink;
 
 namespace Cokee.ClassService.Helper
 {
+    //Thanks to OpenSource Project WXRIW/Ink-Canvas
     public class TimeMachine
     {
         private readonly List<TimeMachineHistory> _currentStrokeHistory = new List<TimeMachineHistory>();

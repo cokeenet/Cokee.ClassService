@@ -1,0 +1,36 @@
+﻿<ui:Page
+    x:Class="Cokee.ClassService.Views.Pages.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:Cokee.ClassService.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cokee.ClassService.Helper"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Cokee.ClassService.Views.Pages"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    x:Name="AboutPage"
+    Title="Settings"
+    d:DesignHeight="617"
+    d:DesignWidth="663"
+    FontFamily="Lato"
+    mc:Ignorable="d">
+    <Grid>
+        <Controls:ScrollViewerEx>
+            <StackPanel>
+                <TextBlock
+                    Margin="5"
+                    FontSize="16"
+                    Text="关于 CokeeClass" />
+                <TextBlock
+                    Margin="5"
+                    FontSize="14"
+                    Text="作者:大连东软信息学院 人工智能学院 计算机25010 曹阳" />
+
+                <TextBlock
+                    Margin="5"
+                    FontSize="14"
+                    Text="使用GPLv3许可证。开源在Github User:cokeenet/CokeeClass。于高中时期编写，作为参赛作品，该页面未完工。" />
+            </StackPanel>
+        </Controls:ScrollViewerEx>
+    </Grid>
+</ui:Page>

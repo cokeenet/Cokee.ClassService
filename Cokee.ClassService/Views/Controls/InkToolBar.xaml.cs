@@ -63,7 +63,7 @@ namespace Cokee.ClassService.Views.Controls
             };
 
             // 设置橡皮擦形状
-            inkCanvas.EraserShape = new RectangleStylusShape(3000, 5500, 90);
+            inkCanvas.EraserShape = new RectangleStylusShape(300, 500);
 
             // 编辑模式变更事件（判断是否为橡皮擦模式）
             inkCanvas.ActiveEditingModeChanged += (s, e) =>
@@ -212,9 +212,7 @@ namespace Cokee.ClassService.Views.Controls
                 inkCanvas.Background.Opacity = 0.01;
 
             // 根据设置选择橡皮擦模式（点擦除/线擦除）
-            inkCanvas.EditingMode = Catalog.settings.EraseByPointEnable
-                ? InkCanvasEditingMode.EraseByPoint
-                : InkCanvasEditingMode.EraseByStroke;
+            inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
         }
 
         /// <summary>
@@ -233,7 +231,7 @@ namespace Cokee.ClassService.Views.Controls
                 Catalog.MainWindow.CurrentCommitType = MainWindow.CommitReason.CodeInput;
 
                 // 根据历史记录执行撤销操作
-                if (history.StrokeHasBeenCleared)
+                if (!history.StrokeHasBeenCleared)
                     inkCanvas.Strokes.Add(history.CurrentStroke);  // 恢复被清除的笔画
                 else
                     inkCanvas.Strokes.Remove(history.CurrentStroke);  // 移除已添加的笔画
@@ -262,7 +260,7 @@ namespace Cokee.ClassService.Views.Controls
                 Catalog.MainWindow.CurrentCommitType = MainWindow.CommitReason.CodeInput;
 
                 // 根据历史记录执行重做操作
-                if (!history.StrokeHasBeenCleared)
+                if (history.StrokeHasBeenCleared)
                     inkCanvas.Strokes.Add(history.CurrentStroke);  // 重新添加笔画
                 else
                     inkCanvas.Strokes.Remove(history.CurrentStroke);  // 重新清除笔画

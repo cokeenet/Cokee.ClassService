@@ -21,19 +21,15 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button VerticalAlignment="Top" Margin="5">
+        <Button
+            Margin="5"
+            VerticalAlignment="Top"
+            Click="NavigationItem_Click">
             <ui:IconAndText
                 Content="添加"
                 Icon="{x:Static ui:FluentSystemIcons.Add_16_Regular}"
                 Orientation="Vertical" />
         </Button>
-
-        <local:PostNote
-            x:Name="postNote"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="{ui:AcrylicBrush}"
-            Visibility="Collapsed" />
         <local:ScrollViewerEx
             x:Name="Sclview"
             Grid.Column="1"
@@ -75,6 +71,13 @@
             Background="{x:Null}">
             <StatusBarItem x:Name="count" Content="共 -- 人" />
         </StatusBar>
+        <local:PostNote
+            x:Name="postNote"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{ui:AcrylicBrush}"
+            Visibility="Collapsed" />
 
     </Grid>
 </Window>

@@ -55,7 +55,7 @@ namespace Cokee.ClassService.Helper
         /// <summary>
         /// 倒计时日期
         /// </summary>
-        public DateTime? CountDownDate { get; set; }
+        public DateTime? CountDownDate { get; set; } = null;
 
         /// <summary>
         /// 倒计时名称

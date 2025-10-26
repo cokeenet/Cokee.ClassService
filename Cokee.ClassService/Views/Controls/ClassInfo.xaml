@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Cokee.ClassService.Views.Controls.StudentInfo"
+    x:Class="Cokee.ClassService.Views.Controls.ClassInfo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Cokee.ClassService.Views.Controls"
@@ -186,7 +186,7 @@
                                     VerticalAlignment="Top"
                                     FontSize="12"
                                     Opacity="0.615"
-                                    Text="生日前一天/当天会显示信息提醒"
+                                    Text="将使用QQ头像作为用户头像"
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="WrapWithOverflow" />
 

@@ -11,7 +11,6 @@ using Cokee.ClassService.Helper;
 namespace Cokee.ClassService.Views.Controls
 {
     /// <summary>
-    /// 可触摸滚动的ScrollViewer控件
     /// </summary>
     public class ToggleableCard : Border
     {

@@ -159,7 +159,7 @@ namespace Cokee.ClassService.Helper
         public static List<Student> RandomHistory { get; } = new List<Student>();
 
         /// <summary>
-        /// 创建简单班级实例
+        /// 创建简单班级实例---TODO
         /// </summary>
         /// <param name="students">学生列表</param>
         /// <returns>班级实例</returns>
@@ -169,10 +169,10 @@ namespace Cokee.ClassService.Helper
             {
                 Students = students ?? new List<Student>(),
                 Name = string.Empty,
-                SchoolName = "阜阳师范大学教育集团",
-                Grade = GradeType.High2,
+                SchoolName = "大连东软信息学院",
+                Grade = GradeType.College1,
                 ID = 0,
-                CreatedTime = new DateTime(2022, 09, 01)
+                CreatedTime = new DateTime(2025, 09, 07)
             };
         }
 
